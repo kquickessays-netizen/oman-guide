@@ -1,0 +1,22 @@
+{
+  "name": "Exploring Oman — wadis, beaches & itineraries",
+  "short_name": "Explore Oman",
+  "description": "Wadis, beaches and hidden corners of Oman, with maps and a trip planner. By @hussain_explores.",
+  "start_url": "./index.html#/wadis",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf6f0",
+  "theme_color": "#0d5c63",
+  "categories": ["travel", "navigation", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Plan my trip", "url": "./index.html#/planner" },
+    { "name": "Wadis", "url": "./index.html#/wadis" },
+    { "name": "Beaches", "url": "./index.html#/beaches" }
+  ]
+}

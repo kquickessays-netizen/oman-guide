@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d5c63">
+<title>Exploring Oman — wadis, beaches &amp; itineraries</title>
+<meta name="description" content="Wadis, beaches and hidden corners of Oman — maps, logistics and a trip planner, from a licensed Omani guide.">
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Explore Oman">
+
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- ============================ HEADER ============================ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#/wadis">
+      <span class="brand-mark">🇴🇲</span>
+      <span class="brand-text">
+        <strong>Exploring Oman</strong>
+        <small id="brandSub">by @hussain_explores</small>
+      </span>
+    </a>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="Search">🔍</button>
+      <button class="pill pill-ghost" id="unlockBtn">Unlock</button>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs" role="tablist"></nav>
+</header>
+
+<!-- ============================ SEARCH ============================ -->
+<div class="searchbar" id="searchbar" hidden>
+  <input type="search" id="searchInput" placeholder="Search wadis, beaches, spots…" autocomplete="off">
+  <button class="icon-btn" id="searchClose" aria-label="Close search">✕</button>
+</div>
+
+<!-- ============================= MAIN ============================= -->
+<main id="view" class="view"></main>
+
+<!-- ========================= DETAIL SHEET ========================= -->
+<div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+<section class="sheet" id="sheet" hidden aria-modal="true" role="dialog">
+  <button class="sheet-close" id="sheetClose" aria-label="Close">✕</button>
+  <div class="sheet-body" id="sheetBody"></div>
+</section>
+
+<!-- ========================= UNLOCK MODAL ========================= -->
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="sheet-close" id="modalClose" aria-label="Close">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ============================ TOAST ============================= -->
+<div class="toast" id="toast" hidden></div>
+
+<script src="data/content.js"></script>
+<script src="js/unlock.js"></script>
+<script src="js/planner.js"></script>
+<script src="js/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+  }
+</script>
+</body>
+</html>
