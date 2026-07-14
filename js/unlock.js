@@ -18,17 +18,11 @@
 
 const Unlock = (() => {
 
-  // buyLinks key  →  what a key for that product unlocks ("*" = everything)
+  // ONE product. One key. It unlocks everything ("*") — spots, itineraries and
+  // the Planner. (There used to be nine per-tab products; the tabs merged into
+  // Explore + Salalah, so the products merged into one.)
   const GRANTS = {
-    bundle:      "*",
-    wadis:       "wadis",
-    beaches:     "beaches",
-    mountains:   "mountains",
-    salalah:     "salalah",
-    experiences: "experiences",
-    food:        "food",
-    shopping:    "shopping",
-    itineraries: "itineraries"
+    bundle: "*"
   };
 
   // "https://hussain.gumroad.com/l/oman-bundle?x=1"  →  "oman-bundle"

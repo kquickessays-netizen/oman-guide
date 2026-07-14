@@ -51,9 +51,13 @@
     toastT = setTimeout(() => (t.hidden = true), 2600);
   }
 
-  /* ------------------------------------------------------------------ items */
-  function itemsFor(cat) {
-    const list = cat === "itineraries" ? D.itineraries : D.spots.filter(s => s.cat === cat);
+  /* ------------------------------------------------------------------ items
+     A tab declares which spot categories it contains (`cats`). Explore holds
+     six of them; Salalah holds one. The type chips do the rest. */
+  function itemsFor(tabId) {
+    const meta = D.categories.find(c => c.id === tabId) || {};
+    const cats = meta.cats || [tabId];
+    const list = tabId === "itineraries" ? D.itineraries : D.spots.filter(s => cats.includes(s.cat));
     if (!query) return list;
     const q = query.toLowerCase();
     // Locked items are excluded from search — matching by name would confirm
@@ -66,11 +70,33 @@
     );
   }
 
-  /* --------------------------------------------------------- type filtering */
-  /* Every spot carries a `type` ("Beach", "Mountain", "Mall", "Souq"…). Each
-     tab builds a filter row from the types actually present in it, so Salalah
-     reads at a glance: 3 beaches, 2 waterfalls, a mall, a souq, a fort. */
-  let typeFilter = null;              // null = "All"
+  /* --------------------------------------------------------- filtering
+     TWO levels, on purpose:
+
+     GROUP  the broad bucket — Wadis, Beaches, Mountains, Experiences, Food,
+            Shopping. This is what the FILTER CHIPS are: six of them, not twenty.
+            A spot's group is its `cat`, unless it carries an explicit `group`
+            (the Salalah spots do — they're all cat:"salalah", but a beach in
+            Dhofar is still a beach).
+
+     TYPE   the fine sub-tag — Canyon, Waterfall, Mall, Souq, Coffee, Fort…
+            It is NOT a filter chip. It's the little chip ON the card, telling
+            you what kind of thing this particular one is.                     */
+  let typeFilter = null;              // holds a GROUP id; null = "All"
+
+  const GROUPS = {
+    wadis:       { label: "Wadis",       icon: "💧" },
+    beaches:     { label: "Beaches",     icon: "🏖️" },
+    mountains:   { label: "Mountains",   icon: "⛰️" },
+    experiences: { label: "Experiences", icon: "⭐" },
+    food:        { label: "Food",        icon: "🍽️" },
+    shopping:    { label: "Shopping",    icon: "🛍️" },
+    salalah:     { label: "Salalah",     icon: "🌴" },
+    itineraries: { label: "Itineraries", icon: "🗺️" }
+  };
+
+  const groupOf = item => item.group || item.cat || "itineraries";
+  const groupLabel = g => (GROUPS[g] ? GROUPS[g].icon + " " + GROUPS[g].label : g);
 
   const TYPE_ICON = {
     "Beach": "🏖️", "Mountain": "⛰️", "Wadi": "💧", "Waterfall": "🌊", "Canyon": "🧗",
@@ -82,17 +108,44 @@
   };
   const typeChipLabel = t => (TYPE_ICON[t] ? TYPE_ICON[t] + " " : "") + t;
 
-  /* Types present in a tab, most common first, then alphabetical. */
+  /* The GROUPS present in a tab, in the order they're declared above (so the
+     chips always read Wadis → Beaches → Mountains → Experiences → Food →
+     Shopping, never a jumble that reshuffles as spots are added). */
   function typesIn(items) {
     const counts = new Map();
-    items.forEach(i => { if (i.type) counts.set(i.type, (counts.get(i.type) || 0) + 1); });
+    items.forEach(i => {
+      const g = groupOf(i);
+      counts.set(g, (counts.get(g) || 0) + 1);
+    });
+    const order = Object.keys(GROUPS);
     return [...counts.entries()]
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]))
       .map(([t, n]) => ({ type: t, n }));
   }
 
+  /* List ⇄ Map. The map isn't a tab any more — it's a view of the tab you're on,
+     showing exactly the spots you've filtered to. */
+  let viewMode = "list";
+
+  function viewSwitch(onChange) {
+    const w = el("div", "viewswitch");
+    [["list", "☰", "List"], ["map", "📍", "Map"]].forEach(([mode, icon, label]) => {
+      const b = el("button", "vs" + (viewMode === mode ? " on" : ""), `${icon} <span>${label}</span>`);
+      b.type = "button";
+      b.setAttribute("aria-pressed", viewMode === mode ? "true" : "false");
+      b.onclick = () => {
+        if (viewMode === mode) return;
+        viewMode = mode;
+        if (window.Analytics) Analytics.track("view_mode", { mode: mode });
+        onChange();
+      };
+      w.appendChild(b);
+    });
+    return w;
+  }
+
   /* The filter row. Hidden when a tab has fewer than two types (nothing to
-     filter) — no point showing "All / Wadi" on the Wadis tab. */
+     filter) — no point showing "All / Wadi" on a single-type tab. */
   function typeFilterRow(items, onChange) {
     const types = typesIn(items);
     if (types.length < 2) return null;
@@ -105,13 +158,13 @@
       b.setAttribute("aria-pressed", typeFilter === value ? "true" : "false");
       b.onclick = () => {
         typeFilter = (typeFilter === value) ? null : value;   // tap again = clear
-        if (window.Analytics && value) Analytics.track("type_filter", { type: value || "all" });
+        if (window.Analytics && value) Analytics.track("type_filter", { group: value || "all" });
         onChange();
       };
       return b;
     };
     row.appendChild(mk("All", null, items.length));
-    types.forEach(t => row.appendChild(mk(typeChipLabel(t.type), t.type, t.n)));
+    types.forEach(t => row.appendChild(mk(groupLabel(t.type), t.type, t.n)));
     return row;
   }
 
@@ -142,7 +195,8 @@
     return `<p class="body">${esc(v)}</p>`;
   }
 
-  const isUnlocked = item => item.free || Unlock.has(item.cat || "itineraries");
+  /* One product now: a key unlocks everything. */
+  const isUnlocked = item => item.free || Unlock.hasBundle();
 
   /* Locked items render as anonymous "hidden spot" cards — no name, photo,
      location or stats until purchase. The names still exist in the shipped
@@ -154,36 +208,27 @@
   const singularOf = item => SINGULAR[item.cat || "itineraries"] || "spot";
 
   /* ------------------------------------------------------------- price block
-     Every locked thing shows BOTH doors: this guide, or the whole pack.       */
-  // "wadis, beaches, mountains, …" — built from the live tab list so adding a
-  // category never leaves a stale sales pitch behind.
-  const tabListText = () => D.categories.filter(c => !c.special).map(c => c.label.toLowerCase()).join(", ");
+     ONE product. One price, one key, everything. */
+  const lockedCount = () => D.spots.filter(s => !s.free).length +
+                            (D.itineraries || []).filter(i => !i.free).length;
 
-  function priceBlock(cat, compact) {
-    const catLabel = (D.categories.find(c => c.id === cat) || {}).label || "this guide";
-    const single = D.meta.buyLinks[cat] || D.meta.buyLinks.bundle;
-    const à_la_carte = D.categories.filter(c => !c.special).length * D.meta.singlePriceNum;
-    const saving = à_la_carte - D.meta.bundlePriceNum;
-
-    const w = el("div", "pricebox" + (compact ? " compact" : ""));
+  function priceBlock(_cat, compact) {
+    const w = el("div", "pricebox one" + (compact ? " compact" : ""));
     w.innerHTML = `
-      <div class="price-opt">
-        <div class="price-opt-head">
-          <span class="price-name">${esc(catLabel)} guide</span>
-          <span class="price-tag">${D.meta.singlePrice}</span>
-        </div>
-        <p>Just this one. Every spot in the ${esc(catLabel.toLowerCase())} tab, unlocked — and every monthly update to it, free, forever.</p>
-        <a class="btn-buy" href="${single}" target="_blank" rel="noopener">Get the ${esc(catLabel)} guide — ${D.meta.singlePrice}</a>
-      </div>
-      <div class="price-or">or</div>
       <div class="price-opt best">
-        <div class="price-badge">Best value · saves $${saving}</div>
+        <div class="price-badge">One payment · updates free forever</div>
         <div class="price-opt-head">
-          <span class="price-name">Complete Oman Pack</span>
+          <span class="price-name">Exploring Oman — the full guide</span>
           <span class="price-tag">${D.meta.bundlePrice}</span>
         </div>
-        <p>Every tab — ${esc(tabListText())} — <strong>plus the trip Planner</strong>. One payment, once. New spots, new prices and whole new tabs land every month — yours free, forever, including the tabs that don't exist yet.</p>
-        <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get everything — ${D.meta.bundlePrice}</a>
+        <ul class="bulletlist">
+          <li>All <strong>${lockedCount()}</strong> locked spots — the remote wadis, the empty beaches, the mountain villages, the south.</li>
+          <li>Every itinerary: 3-day, 5-day and the 7-day loop.</li>
+          <li><strong>The trip Planner</strong> — a route built around your days, pace and fitness.</li>
+          <li>New spots and re-checked prices every month. Free, forever. No subscription.</li>
+        </ul>
+        <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get the full guide — ${D.meta.bundlePrice}</a>
+        <p class="price-fine">One key. Works on any phone — paste it again if you switch.</p>
       </div>`;
     return w;
   }
@@ -280,16 +325,11 @@
     } else {
       const veil = el("div", "lock-veil");
       veil.appendChild(el("p", null,
-        "🔒 The name, photo, exact location, full write-up, hike &amp; swim times, my packing list and insider tips are in the paid guide. " +
-        "<span class=\"lock-forever\">Buy once — every monthly update after that is free.</span>"));
+        "🔒 The name, photo, exact location, full write-up, hike &amp; swim times, packing list and insider tips are in the paid guide. " +
+        "<span class=\"lock-forever\">One payment unlocks every locked spot — and every update, forever.</span>"));
       const acts = el("div", "lock-actions");
 
-      const buy = el("a", "btn-buy", `This guide — ${D.meta.singlePrice}`);
-      buy.href = D.meta.buyLinks[item.cat || "itineraries"] || D.meta.buyLinks.bundle;
-      buy.target = "_blank"; buy.rel = "noopener";
-      buy.onclick = e => e.stopPropagation();
-
-      const bundle = el("a", "btn-buy gold", `Whole bundle — ${D.meta.bundlePrice}`);
+      const bundle = el("a", "btn-buy gold", `Unlock everything — ${D.meta.bundlePrice}`);
       bundle.href = D.meta.buyLinks.bundle;
       bundle.target = "_blank"; bundle.rel = "noopener";
       bundle.onclick = e => e.stopPropagation();
@@ -297,7 +337,7 @@
       const kb = el("button", "btn-key", "I have a key");
       kb.onclick = e => { e.stopPropagation(); openUnlock(); };
 
-      acts.appendChild(buy); acts.appendChild(bundle); acts.appendChild(kb);
+      acts.appendChild(bundle); acts.appendChild(kb);
       veil.appendChild(acts);
       body.appendChild(veil);
     }
@@ -524,37 +564,65 @@
       return;
     }
 
-    // Filter row — "All · 🏖️ Beach 3 · 🌊 Waterfall 2 · 🏬 Mall 1 …"
+    /* ---- the control bar: filter chips + list/map switch ------------------ */
+    const bar = el("div", "filterbar");
     const row = typeFilterRow(items, () => renderCategory(cat));
-    if (row) view.appendChild(row);
+    if (row) bar.appendChild(row);
+    bar.appendChild(viewSwitch(() => renderCategory(cat)));
+    view.appendChild(bar);
 
-    const shown = typeFilter ? items.filter(i => i.type === typeFilter) : items;
+    const shown = typeFilter ? items.filter(i => groupOf(i) === typeFilter) : items;
 
     if (!shown.length) {
       view.appendChild(el("div", "empty",
-        `<div class="big">🤷</div><p>No ${esc(typeFilter.toLowerCase())} in this guide yet.</p>`));
+        `<div class="big">🤷</div><p>Nothing in ${esc(groupLabel(typeFilter))} yet.</p>`));
       return;
     }
 
-    const grid = el("div", "grid");
-    let lockN = 0;
-    shown.forEach(i => grid.appendChild(card(i, isUnlocked(i) ? 0 : ++lockN)));
-    view.appendChild(grid);
+    /* ---- map view -------------------------------------------------------- */
+    if (viewMode === "map") {
+      view.appendChild(mapPanel(shown));
+      return;
+    }
 
-    const lockedCount = shown.filter(i => !isUnlocked(i)).length;
-    if (lockedCount && !Unlock.hasBundle()) {
+    /* ---- list view ------------------------------------------------------- */
+    let lockN = 0;
+    const addCards = (list, parent) =>
+      list.forEach(i => parent.appendChild(card(i, isUnlocked(i) ? 0 : ++lockN)));
+
+    // Unfiltered and long? Break it into type sections with headers — a 50-card
+    // flat scroll is a wall. One chip tapped = one clean grid, no headers.
+    if (!typeFilter && !query && shown.length > 12) {
+      typesIn(shown).forEach(t => {
+        const grp = shown.filter(i => groupOf(i) === t.type);
+        const h = el("div", "group-head");
+        h.innerHTML = `<h2>${esc(groupLabel(t.type))}</h2><span class="group-n">${t.n}</span>`;
+        h.onclick = () => { typeFilter = t.type; renderCategory(cat); };
+        view.appendChild(h);
+        const g = el("div", "grid");
+        addCards(grp, g);
+        view.appendChild(g);
+      });
+    } else {
+      const grid = el("div", "grid");
+      addCards(shown, grid);
+      view.appendChild(grid);
+    }
+
+    const lockedShown = shown.filter(i => !isUnlocked(i)).length;
+    if (lockedShown && !Unlock.hasBundle()) {
       const h = el("div", "section-head");
-      h.innerHTML = `<h2>${lockedCount} more in this guide 🔒</h2>` +
-        `<p>Two ways in — pick whichever suits. Either way it's one payment, and every monthly update after it is free.</p>`;
+      h.innerHTML = `<h2>${lockedShown} locked here 🔒</h2>` +
+        `<p>One payment unlocks all ${lockedCount()} locked spots in the guide, the itineraries and the Planner — and every update after that.</p>`;
       view.appendChild(h);
       view.appendChild(priceBlock(cat));
     }
   }
 
   /* ------------------------------------------------------------------- about */
-  function renderAbout() {
+  function renderAbout(append) {
     const m = D.meta;
-    clearView();
+    if (!append) clearView();          // the More tab appends About under the map
     const w = el("div", "about");
     w.innerHTML = `
       <div class="about-hero">
@@ -665,9 +733,9 @@
 
     if (!Unlock.hasBundle()) {
       const h = el("div", "section-head");
-      h.innerHTML = `<h2>Support the guide</h2><p>It's how the updates keep coming.</p>`;
+      h.innerHTML = `<h2>Support the guide</h2><p>It's how the monthly updates keep coming.</p>`;
       view.appendChild(h);
-      view.appendChild(priceBlock("wadis"));
+      view.appendChild(priceBlock(null));
     }
   }
 
@@ -686,32 +754,26 @@
     head.appendChild(el("p", null, "Tell me what you like and how long you've got. I'll route it — real drive times, sensible days, every stop pinned in Google Maps, and nothing that puts you in a wadi you shouldn't be in."));
     view.appendChild(head);
 
-    // The Planner is bundle-only: no form, no teaser, no free Day 1. Non-buyers
-    // see the pitch and the single door in — the Complete Oman Pack.
+    // The Planner is paid: no form, no teaser, no free Day 1. Non-buyers see the
+    // pitch, the price, and the hand-built itineraries underneath.
     if (!Unlock.hasBundle()) {
       const p = el("div", "promo");
       p.innerHTML = `
-        <h3>🔒 The Planner comes with the Complete Oman Pack</h3>
-        <p>It builds your whole trip: days clustered by region so you never backtrack, real drive times, heat-smart start times, every stop pinned in Google Maps and the full route drawn on one map. It's not sold separately — it's included with the pack, along with every guide in the app.</p>`;
+        <h3>🔒 The Planner is part of the full guide</h3>
+        <ul class="bulletlist">
+          <li>Days clustered by region, so you never backtrack.</li>
+          <li>Real drive times between every stop.</li>
+          <li>Heat-smart start times — 06:30 in summer, hot spots in the cool hours.</li>
+          <li>Every stop pinned in Google Maps, and the whole route drawn on one map.</li>
+        </ul>`;
       view.appendChild(p);
-
-      const w = el("div", "pricebox compact");
-      w.innerHTML = `
-        <div class="price-opt best">
-          <div class="price-badge">Includes the Planner</div>
-          <div class="price-opt-head">
-            <span class="price-name">Complete Oman Pack</span>
-            <span class="price-tag">${D.meta.bundlePrice}</span>
-          </div>
-          <p>Every tab — ${esc(tabListText())} — <strong>plus the trip Planner</strong>. One payment, once. New spots, new prices and whole new tabs land every month — yours free, forever, including the tabs that don't exist yet.</p>
-          <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get everything — ${D.meta.bundlePrice}</a>
-        </div>`;
-      view.appendChild(w);
+      view.appendChild(priceBlock(null, true));
 
       const kb = el("button", "btn-key", "I have a key");
       kb.style.marginTop = "12px";
       kb.onclick = openUnlock;
       view.appendChild(kb);
+      renderItinerarySection();
       return;
     }
 
@@ -861,6 +923,23 @@
     };
     form.appendChild(go);
     view.appendChild(form);
+    renderItinerarySection();
+  }
+
+  /* The hand-built routes, shown under the planner on the Plan tab. */
+  function renderItinerarySection() {
+    const items = D.itineraries || [];
+    if (!items.length) return;
+
+    const h = el("div", "section-head");
+    h.innerHTML = `<h2>Or follow one of mine 🗺️</h2>` +
+      `<p>Fixed routes, day by day — where to go, in what order, where to sleep.</p>`;
+    view.appendChild(h);
+
+    const grid = el("div", "grid");
+    let lockN = 0;
+    items.forEach(i => grid.appendChild(card(i, isUnlocked(i) ? 0 : ++lockN)));
+    view.appendChild(grid);
   }
 
   function question(title, sub, fill) {
@@ -1049,34 +1128,23 @@
                        salalah: "#16a34a", experiences: "#7c3aed", food: "#dc2626",
                        shopping: "#be185d" };
 
-  function renderMap() {
-    clearView();
-    // Locked spots stay OFF the map — even an unnamed pin gives the location
-    // away, and the location is exactly what's being sold.
-    const hiddenCount = D.spots.filter(s => !isUnlocked(s)).length;
-
-    const head = el("div", "cat-head");
-    head.appendChild(el("h1", null, "📍 The map"));
-    head.appendChild(el("p", null, hiddenCount
-      ? "Your unlocked spots, on one map. Tap a pin."
-      : "Every spot in the guide, on one map. Tap a pin."));
-    view.appendChild(head);
-
-    const legend = el("div", "map-legend");
-    D.categories.filter(c => !c.special && c.id !== "itineraries").forEach(c => {
-      legend.appendChild(el("span", "map-key",
-        `<span class="dot" style="background:${CAT_COLORS[c.id] || "#666"}"></span>${esc(c.label)}`));
-    });
-    view.appendChild(legend);
+  /* The map is no longer a tab of its own — it's a VIEW of whatever tab you're
+     on. mapPanel() takes the spots that tab is showing (already type-filtered)
+     and returns the panel. Locked spots stay OFF it: even an unnamed pin gives
+     the location away, and the location is exactly what's being sold. */
+  function mapPanel(spots) {
+    const box = el("div", "mappanel");
+    const shown = spots.filter(s => s.coords && isUnlocked(s));
+    const hiddenCount = spots.filter(s => !isUnlocked(s)).length;
 
     if (hiddenCount) {
       const note = el("div", "promo");
-      note.innerHTML = `<p>🔒 <strong>${hiddenCount} more pins</strong> appear here when you unlock — the hidden wadis, beaches and spots most visitors never find.</p>`;
-      view.appendChild(note);
+      note.innerHTML = `<p>🔒 <strong>${hiddenCount} more pins</strong> appear here when you unlock — the spots most visitors never find.</p>`;
+      box.appendChild(note);
     }
 
     const wrap = el("div", "mapwrap", `<div class="map-loading">Loading the map…</div>`);
-    view.appendChild(wrap);
+    box.appendChild(wrap);
 
     loadLeaflet().then(L => {
       wrap.innerHTML = "";
@@ -1086,12 +1154,14 @@
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
 
-      D.spots.filter(s => s.coords && isUnlocked(s)).forEach(s => {
+      const bounds = [];
+      shown.forEach(s => {
         const mk = L.circleMarker(s.coords, {
           radius: 8, weight: 2, color: "#fff",
           fillColor: CAT_COLORS[s.cat] || "#666",
           fillOpacity: 0.95
         }).addTo(map);
+        bounds.push(s.coords);
 
         const pop = document.createElement("div");
         pop.className = "map-pop";
@@ -1103,19 +1173,32 @@
         pop.appendChild(btn);
         mk.bindPopup(pop);
       });
+      if (bounds.length) map.fitBounds(bounds, { padding: [30, 30], maxZoom: 11 });
     }).catch(() => {
       wrap.innerHTML = "";
       wrap.classList.add("mapwrap-fallback");
       wrap.appendChild(el("p", "map-loading",
         "The map needs an internet connection the first time it loads. Every pin still works:"));
       const list = el("div", "pinrow");
-      D.spots.filter(s => s.mapUrl && isUnlocked(s)).forEach(s => {
+      shown.filter(s => s.mapUrl).forEach(s => {
         const a = el("a", "pin", "📍 " + esc(s.name));
         a.href = s.mapUrl; a.target = "_blank"; a.rel = "noopener";
         list.appendChild(a);
       });
       wrap.appendChild(list);
     });
+
+    return box;
+  }
+
+  /* Legacy #/map — kept so old links land somewhere sensible. */
+  function renderMap() {
+    clearView();
+    const head = el("div", "cat-head");
+    head.appendChild(el("h1", null, "📍 The map"));
+    head.appendChild(el("p", null, "Every unlocked spot in the guide. Tap a pin."));
+    view.appendChild(head);
+    view.appendChild(mapPanel(D.spots));
   }
 
   /* ------------------------------------------------------------------- info
@@ -1223,12 +1306,22 @@
     return box;
   }
 
-  /* ------------------------------------------------------------------ router */
+  /* ------------------------------------------------------------------ router
+     Five tabs. Old bookmarks (#/wadis, #/beaches, #/map…) still work — they're
+     redirected to the tab that now contains them. */
+  const LEGACY = {
+    wadis: "explore", beaches: "explore", mountains: "explore",
+    experiences: "explore", food: "explore", shopping: "explore",
+    itineraries: "plan", planner: "plan", more: "about"
+    // #/map still resolves: renderMap() is kept for old links.
+  };
+
   let lastCat = null;
   function route() {
-    const cat = location.hash.replace("#/", "") || "wadis";
-    const known = D.categories.find(c => c.id === cat) ? cat : "wadis";
-    if (known !== lastCat) { typeFilter = null; lastCat = known; }  // fresh tab, no filter
+    let cat = location.hash.replace("#/", "") || "explore";
+    if (!D.categories.find(c => c.id === cat) && LEGACY[cat]) cat = LEGACY[cat];
+    const known = D.categories.find(c => c.id === cat) ? cat : "explore";
+    if (known !== lastCat) { typeFilter = null; viewMode = "list"; lastCat = known; }  // fresh tab
     renderTabs(known);
     renderUnlockBtn();
     const meta = D.categories.find(c => c.id === known);

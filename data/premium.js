@@ -85,25 +85,10 @@ window.OMAN_PREMIUM = {
     guideNote: ""
   },
 
-  "wadi-tiwi": {
-    gettingThere: [
-      "2–2.5 hrs from Muscat, right next to Wadi Shab off Route 17.",
-      "Drive the paved road ~10km into the wadi, through plantations and villages.",
-      "It's steep and narrow — go slowly, this is someone's street.",
-      "Continuing to Mibam? 4×4, mandatory."
-    ],
-    whatYoullDo: [
-      "[REWRITE IN YOUR OWN VOICE.]",
-      "The drive is the highlight: terraced plantations, cliffside villages.",
-      "Park up and walk to the blue pools.",
-      "Far fewer people than Wadi Shab, minutes away."
-    ],
-    tips: [
-      "[Pair it with Wadi Shab in one day — they're minutes apart.]",
-      "[The road is tight — mind the villagers, this is their street.]"
-    ],
-    guideNote: "I trust [Guide name] for the Tiwi + Shab combo."
-  },
+  /* NOTE: wadi-tiwi, wadi-tanuf, yiti-qantab, nizwa, misfat-al-abriyeen,
+     al-hoota-cave, jabal-akhdar, khor-rori, ayn-razat, shop-seeb-souq and
+     cafe-qaha are now FREE spots — their write-ups live in content.js, because
+     this file only loads for buyers. Don't add them back here. */
 
   "wadi-dayqah": {
     gettingThere: [
@@ -124,27 +109,6 @@ window.OMAN_PREMIUM = {
       "[Bring cash — card isn't reliable here.]"
     ],
     guideNote: "Boat and watersport hire on site (Husaak run the adventure park). Book ahead at weekends."
-  },
-
-  "wadi-tanuf": {
-    gettingThere: [
-      "30 min from Nizwa on Route 21, signposted to Tanuf.",
-      "2WD reaches the ruins and the wadi mouth.",
-      "The dirt track deeper in is rough — that part wants a 4×4."
-    ],
-    whatYoullDo: [
-      "[YOUR ROUTE.]",
-      "Start at the ruins of old Tanuf — bombed out in the 1950s and left standing.",
-      "Walk up into the gorge: palm groves, falaj channels, turquoise pools under small waterfalls.",
-      "Water's up? Swim. Water's down? Still one of the better short gorge walks in the country.",
-      "Either way it's usually empty."
-    ],
-    tips: [
-      "[Walk the ruins first, in the morning light, before the gorge.]",
-      "[Water levels swing hard with the season — check before you commit to a swim day.]",
-      "[Pairs perfectly with Al Hoota Cave and Misfat in one Nizwa day.]"
-    ],
-    guideNote: ""
   },
 
   "wadi-ghul": {
@@ -289,26 +253,6 @@ window.OMAN_PREMIUM = {
     guideNote: "Guided access only — book through the reserve directly."
   },
 
-  "yiti-qantab": {
-    gettingThere: [
-      "Qantab: 20–25 min from central Muscat on the coastal road.",
-      "Yiti: 30–45 min.",
-      "Any car. This is the 'I've got three hours' option."
-    ],
-    whatYoullDo: [
-      "[YOUR TAKE.]",
-      "Swim.",
-      "Walk the headland.",
-      "Kayak, if you've brought one.",
-      "Don't plan a day around it — plan an evening."
-    ],
-    tips: [
-      "[Late afternoon — the cliffs go gold.]",
-      "[Midweek it's basically empty.]"
-    ],
-    guideNote: ""
-  },
-
   "as-sifah": {
     gettingThere: [
       "About an hour from Muscat via the Qantab–Yiti road — scenic, some rough sections.",
@@ -368,27 +312,6 @@ window.OMAN_PREMIUM = {
       "[Evening. The site is lit, the museum is air-conditioned, and the midday heat is nobody's friend.]",
       "[The buggy is worth it with kids — the site is bigger than it looks.]",
       "[Pair with a sunset walk on Al Haffa beach and dinner nearby.]"
-    ],
-    guideNote: ""
-  },
-
-  "khor-rori": {
-    gettingThere: [
-      "35–40 min east of Salalah, signposted off the Taqah–Mirbat road, just past the Wadi Darbat turnoff.",
-      "Paved to the gate, then a short dusty track up to the hilltop car park.",
-      "A few rials per car."
-    ],
-    whatYoullDo: [
-      "[YOUR ROUTE.]",
-      "Walk the 2,000-year-old walls of Sumhuram, above the lagoon — the frankincense port that traded with Rome and India.",
-      "Then drive down to the lagoon mouth.",
-      "Flamingos and herons on the water; camels on the sand bar where the khor meets the sea.",
-      "Come late afternoon — the light turns the whole thing gold."
-    ],
-    tips: [
-      "[Combine Darbat + Khor Rori in one day — same road.]",
-      "[The beach at the sand bar is one of the quietly great picnic spots in Dhofar.]",
-      "[Weekdays: you'll have the ruins nearly alone.]"
     ],
     guideNote: ""
   },
@@ -454,26 +377,6 @@ window.OMAN_PREMIUM = {
       "[Go early or late — the desert side of the mountains is hotter than Salalah.]",
       "[Buy your actual frankincense in Al Haffa souq afterwards, now you know what you're looking at.]",
       "[If you're pushing on to the Empty Quarter, this is the free warm-up act.]"
-    ],
-    guideNote: ""
-  },
-
-  "ayn-razat": {
-    gettingThere: [
-      "25 min northeast of Salalah. Paved, signposted, any car.",
-      "Free parking by the gardens."
-    ],
-    whatYoullDo: [
-      "[YOUR ROUTINE.]",
-      "The spring rises at the cliff base and feeds a falaj through ornamental gardens.",
-      "This is where Salalah families picnic — go with it.",
-      "Climb the steps to the small cave in the cliff for the view over the greenery.",
-      "In khareef the hillside above runs green and the birdlife goes berserk."
-    ],
-    tips: [
-      "[Mornings are quiet; Friday afternoons are the full family scene — pick your vibe.]",
-      "[Combine with Ayn Athum and the other springs along the mountain base in khareef.]",
-      "[No swimming in the spring — it feeds the irrigation channels.]"
     ],
     guideNote: ""
   },
@@ -605,89 +508,6 @@ window.OMAN_PREMIUM = {
     guideNote: ""
   },
 
-  "nizwa": {
-    gettingThere: [
-      "1.5–2 hrs from Muscat via Route 15. Easy paved drive, any car.",
-      "Fort and souq are a few minutes' walk apart in the centre.",
-      "Pair it with Jabal Akhdar, Al Hoota or Misfat — all on the same road inland."
-    ],
-    whatYoullDo: [
-      "[YOUR ROUTE — the fort tower, the souq stalls, the Friday goat market if you time it.]",
-      "Climb the fort tower for the view over the date palms.",
-      "Then walk the souq: silver, dates, pottery, spices.",
-      "Friday at 7am: the livestock souq. Get there early — it's over by 9."
-    ],
-    tips: [
-      "[Friday, ~7am, for the livestock souq. It's the real spectacle and it's over by 9.]",
-      "[The fort tower bakes at midday. Early or late.]",
-      "[Buy dates here, not at the airport.]"
-    ],
-    guideNote: ""
-  },
-
-  "misfat-al-abriyeen": {
-    gettingThere: [
-      "2 hrs from Muscat, 30 min from Nizwa. Any car.",
-      "Park outside the village.",
-      "Walk in — cars aren't allowed through the old alleys."
-    ],
-    whatYoullDo: [
-      "[YOUR TAKE — and where you'd sit for the view.]",
-      "Walk down through the mud-brick alleys with the falaj running beside your feet.",
-      "Come out into the terraced gardens below: date palms, bananas, mangoes.",
-      "It takes an hour. You'll want two.",
-      "Village guesthouses will put you up for the night — that's the way to do it."
-    ],
-    tips: [
-      "[Late afternoon light on the terraces is the whole reason to come.]",
-      "[People live here. Don't photograph doorways and windows without asking.]",
-      "[Stay the night — the village empties after 5pm and it's a different place.]"
-    ],
-    guideNote: ""
-  },
-
-  "al-hoota-cave": {
-    gettingThere: [
-      "At the foot of Jabal Shams near Al Hamra — 2 hrs from Muscat. Any car, proper parking.",
-      "Entry is roughly OMR 7 for adult foreign visitors, OMR 3.5 for children.",
-      "Slots are timed and they sell out. Book, or turn up early."
-    ],
-    whatYoullDo: [
-      "[YOUR TAKE.]",
-      "A little electric train takes you into the mountain.",
-      "You walk the lit 500m section: stalactites, a subterranean lake.",
-      "Look for the blind cave fish — they live nowhere else on earth.",
-      "Two million years old, and the only show cave on the Arabian Peninsula."
-    ],
-    tips: [
-      "[Slots are timed and they do sell out. Book, or turn up early.]",
-      "[The perfect midday stop on a hot Nizwa day — you're underground while the sun is at its worst.]",
-      "[It closes some days. Check before you drive out there.]"
-    ],
-    guideNote: ""
-  },
-
-  "jabal-akhdar": {
-    gettingThere: [
-      "2 hrs from Muscat.",
-      "There's a police checkpoint at the bottom of the mountain road.",
-      "They WILL turn you back in a 2WD. This isn't a suggestion, it's enforced.",
-      "4×4 only. No exceptions."
-    ],
-    whatYoullDo: [
-      "[YOUR ROUTE — which village loop you'd walk.]",
-      "Walk the terraced-village loop: Al Ayn → Ash Shirayjah → Al Aqr.",
-      "The paths run down through rose terraces and pomegranate orchards, with the canyon opening below.",
-      "Two to three hours. One of the best easy hikes in the country."
-    ],
-    tips: [
-      "[4×4 or you don't get up the mountain. The checkpoint is real.]",
-      "[Mar–Apr for the rose harvest and the rosewater distilleries.]",
-      "[It's cold up there in the evening. Bring a layer.]"
-    ],
-    guideNote: ""
-  },
-
   "musandam-dhow": {
     gettingThere: [
       "Khasab is the base.",
@@ -711,15 +531,6 @@ window.OMAN_PREMIUM = {
   },
 
   /* ════════════════════════════════════════════════════════════════ FOOD */
-  "cafe-qaha": {
-    whatYoullDo: [
-      "[Your order.]",
-      "Omani coffee culture with a modern room around it.",
-      "White, blue, calm, unhurried. Nobody is rushing you out."
-    ],
-    tips: ["[Your go-to order.]"],
-    guideNote: ""
-  },
   "cafe-azura": {
     whatYoullDo: [
       "[Your order — and which beans you take home.]",
@@ -793,27 +604,6 @@ window.OMAN_PREMIUM = {
   },
 
   /* ═══════════════════════════════════════════════════════════ SHOPPING */
-  "shop-seeb-souq": {
-    gettingThere: [
-      "On the Seeb corniche — 25 min from central Muscat.",
-      "Park along the waterfront.",
-      "The souq runs back from the fish market."
-    ],
-    whatYoullDo: [
-      "[YOUR ROUTINE — when you go, what you buy, which corner has the good dates.]",
-      "Start at the fish market early — the auction is loud, fast and completely real.",
-      "Then the covered lanes: dates by the kilo at half the tourist-shop price.",
-      "Kummas, abayas, household stalls.",
-      "This is shopping the way Muscat actually does it."
-    ],
-    tips: [
-      "[Which dates stall you buy from, and what a fair per-kilo price is.]",
-      "[Fish market timing — what hour the auction peaks.]",
-      "[Where you get breakfast after.]"
-    ],
-    guideNote: ""
-  },
-
   "shop-nizwa-souq": {
     gettingThere: [
       "Under Nizwa Fort — 1h45 from Muscat.",

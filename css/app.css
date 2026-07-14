@@ -114,11 +114,32 @@ img{max-width:100%;display:block}
 .cat-head h1{font-size:26px;letter-spacing:-.5px}
 .cat-head p{margin:6px 0 0;color:var(--muted);font-size:14.5px}
 
-/* --------------------------------------------------- type filter row (tabs) */
+/* --------------------------------------------------- the control bar (tabs)
+   Filter chips on the left, a List/Map switch on the right, sitting on one
+   card so it reads as a designed control instead of loose buttons. */
+.filterbar{
+  display:flex;align-items:center;gap:10px;
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  box-shadow:var(--shadow);padding:8px 8px 8px 10px;margin:0 0 18px;
+  position:sticky;top:0;z-index:40;
+}
+.viewswitch{
+  display:flex;gap:2px;flex:0 0 auto;margin-left:auto;
+  background:var(--sand-2);border-radius:999px;padding:3px;
+}
+.vs{
+  display:inline-flex;align-items:center;gap:5px;
+  font:inherit;font-size:12.5px;font-weight:700;line-height:1;
+  padding:7px 11px;border-radius:999px;cursor:pointer;
+  background:transparent;border:0;color:var(--muted);white-space:nowrap;
+}
+.vs.on{background:#fff;color:var(--water-dark);box-shadow:var(--shadow)}
+@media(max-width:520px){ .vs span{display:none} .vs{padding:7px 9px} }
+
 /* "All · 🏖️ Beach 3 · 🌊 Waterfall 2 · 🏬 Mall 1" — a scrollable row of
    filter chips built from the types actually present in the tab. */
 .typefilter{
-  display:flex;gap:8px;overflow-x:auto;margin:0 0 16px;padding:2px 0 8px;
+  display:flex;gap:7px;overflow-x:auto;padding:2px;flex:1 1 auto;min-width:0;
   -webkit-overflow-scrolling:touch;scrollbar-width:none;
 }
 .typefilter::-webkit-scrollbar{display:none}
@@ -136,6 +157,26 @@ img{max-width:100%;display:block}
 }
 .tfchip.on{background:var(--water-dark,#14564a);color:#fff;border-color:var(--water-dark,#14564a)}
 .tfchip.on .tfn{background:rgba(255,255,255,.22);color:#fff}
+
+/* Type sections inside a long, unfiltered tab — "💧 Wadi (9)" and so on.
+   Tapping a header filters to that type. */
+.group-head{
+  display:flex;align-items:center;gap:9px;cursor:pointer;
+  margin:26px 0 12px;padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+}
+.group-head:first-of-type{margin-top:4px}
+.group-head h2{font-size:17px;letter-spacing:-.2px;margin:0}
+.group-head .group-n{
+  font-size:11.5px;font-weight:800;color:var(--water-dark);
+  background:var(--water-soft);border-radius:999px;padding:3px 8px;
+}
+.group-head::after{content:"filter →";margin-left:auto;font-size:11.5px;font-weight:700;color:var(--muted)}
+.group-head:hover::after{color:var(--water)}
+
+/* The map, shown inside a tab instead of on its own screen */
+.mappanel{margin-bottom:10px}
+.mappanel .mapwrap{height:60vh;min-height:340px}
 
 /* ------------------------------------------------------------------- cards */
 .grid{display:grid;gap:14px}
@@ -468,6 +509,16 @@ img{max-width:100%;display:block}
 }
 .pricebox.compact .price-opt{padding:14px}
 .pricebox.compact .price-tag{font-size:19px}
+
+/* ONE product now — a single card, full width, no "or" column. */
+.pricebox.one{grid-template-columns:1fr !important}
+.pricebox.one .price-opt{padding:20px 18px}
+.pricebox.one .bulletlist{margin:4px 0 14px}
+.pricebox.one .bulletlist li{font-size:14px;color:#37423d;margin-bottom:7px}
+.price-fine{font-size:12px;color:var(--muted);margin:9px 0 0;text-align:center}
+
+/* More tab: breathing room between the map and the About block */
+.about{margin-top:6px}
 .btn-buy.gold{background:var(--gold)}
 .lock-actions .btn-buy{flex:1 1 auto;text-align:center}
 

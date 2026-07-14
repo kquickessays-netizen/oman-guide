@@ -10,15 +10,25 @@
    FIELD REFERENCE
      id            unique slug, no spaces            "wadi-shab"
      cat           wadis | beaches | mountains | salalah | experiences |
-                   food | shopping | itineraries          ← which TAB it lives in
-     type          what KIND of place it is — shown as a chip on the card and
-                   used to build the filter row at the top of each tab:
+                   food | shopping | itineraries
+                   ← WHICH TAB it lives in. Explore shows six of these;
+                     the Salalah tab shows cat:"salalah".
+
+     group         THE FILTER CHIP. The broad bucket: wadis | beaches |
+                   mountains | experiences | food | shopping.
+                   Defaults to `cat`, so you only set it when the two differ —
+                   which is exactly the Salalah spots: they're all cat:"salalah"
+                   (so they sit in the Salalah tab) but a beach in Dhofar is
+                   still group:"beaches".
+                   SIX chips, not twenty. Don't invent new ones.
+
+     type          THE SUB-TAG ON THE CARD. What kind of thing this particular
+                   one is — invent freely, it doesn't add a filter chip:
                    Beach · Mountain · Wadi · Waterfall · Canyon · Cave · Spring ·
                    Viewpoint · Village · Fort · Museum · Ruins · Mosque · Souq ·
                    Mall · Shop · Desert · Snorkel · Boat trip · Swim spot ·
                    Wildlife · Nature · Hike · Dam · Coffee · Omani food ·
-                   Dinner · Sweets     (reuse an existing one where you can —
-                   every new word adds another filter chip)
+                   Dinner · Sweets
      sub           optional sub-label shown as a chip ("Coffee", "Seafood"…)
      name, tagline, blurb
      free          true = visible to everyone (your shop window)
@@ -57,10 +67,11 @@ window.OMAN_DATA = {
     instagram: "https://instagram.com/hussain_explores",
     instagramHandle: "@hussain_explores",
 
-    bundlePrice: "$20",
-    bundlePriceNum: 20,
-    singlePrice: "$8",
-    singlePriceNum: 8,
+    // ONE product, ONE price, ONE key. It unlocks every locked spot, both extra
+    // itineraries and the Planner — forever, updates included. (There used to be
+    // nine per-tab guides; the tabs merged, so the products did too.)
+    bundlePrice: "$9.99",
+    bundlePriceNum: 9.99,
 
     // Shown in the banner at the top of every tab. Change the date each month —
     // this line is the whole reason an app beats a PDF.
@@ -75,6 +86,9 @@ window.OMAN_DATA = {
     // publish (newest first). This is the proof behind "updated monthly".
     changelog: [
       { date: "July 2026", items: [
+        "Simpler app: five tabs instead of twelve. Everything in the north lives in Explore, and you filter it with the type chips — 💧 wadis, 🏖️ beaches, ⛰️ mountains, ☕ coffee, 🛍️ souqs.",
+        "One price: $9.99 unlocks the whole guide — every locked spot, every itinerary and the Planner. No more separate guides to buy.",
+        "Bigger free tier: 31 spots are now free, including Wadi Tiwi, Nizwa, Misfat, Jabal Akhdar, Al Hoota Cave, Khor Rori and Ayn Razat.",
         "Every spot now carries a type tag — beach, mountain, mall, souq, waterfall, fort — and each tab has a filter row, so Salalah reads at a glance.",
         "Bimmah Sinkhole moved out of Beaches: it's an experience, not a beach.",
         "New: Mountains tab — Jabal Shams, Jabal Akhdar, Wakan, Bilad Sayt, Sharaf Al Alamayn and more.",
@@ -91,17 +105,11 @@ window.OMAN_DATA = {
       ]}
     ],
 
-    // >>> PASTE YOUR REAL GUMROAD LINKS HERE <<<
+    // >>> PASTE YOUR REAL GUMROAD LINK HERE — one product, that's it. <<<
+    //     js/unlock.js reads the permalink out of this URL, so there is
+    //     nothing else to edit anywhere. See delivery/GUMROAD-SETUP.md.
     buyLinks: {
-      bundle: "https://gumroad.com/l/YOUR-BUNDLE",
-      wadis: "https://gumroad.com/l/YOUR-WADIS",
-      beaches: "https://gumroad.com/l/YOUR-BEACHES",
-      mountains: "https://gumroad.com/l/YOUR-MOUNTAINS",
-      salalah: "https://gumroad.com/l/YOUR-SALALAH",
-      experiences: "https://gumroad.com/l/YOUR-EXPERIENCES",
-      food: "https://gumroad.com/l/YOUR-FOOD",
-      shopping: "https://gumroad.com/l/YOUR-SHOPPING",
-      itineraries: "https://gumroad.com/l/YOUR-ITINERARIES"
+      bundle: "https://gumroad.com/l/YOUR-BUNDLE"
     },
 
     // >>> AFFILIATE SLOTS — one link each, dropped in everywhere relevant.
@@ -143,63 +151,39 @@ window.OMAN_DATA = {
   // `intro` = the explainer at the top of the tab. Give it an ARRAY and it
   // renders as a bullet list (preferred — nobody reads paragraphs on a phone).
   // A plain string still works and renders as one line.
+  /* FIVE tabs. `cats` = which spot categories a tab shows — the old per-subject
+     tabs (wadis, beaches, mountains…) are now TYPE CHIPS inside Explore, built
+     automatically from each spot's `type`. A spot's `cat` still exists: it's how
+     the data is organised, not how it's navigated. */
   categories: [
-    { id: "info",         label: "Info",        icon: "ℹ️", blurb: "Rules, money, SIMs, transport — read before you land.", special: "info" },
-    { id: "wadis",        label: "Wadis",       icon: "💧", blurb: "Canyons, emerald pools and waterfalls.",
+    { id: "info",     label: "Info",    icon: "ℹ️", blurb: "Rules, money, SIMs, transport — read before you land.", special: "info" },
+
+    { id: "explore",  label: "Explore", icon: "🧭", blurb: "Everything in the north — wadis, beaches, mountains, food, souqs.",
+      cats: ["wadis", "beaches", "mountains", "experiences", "food", "shopping"],
       intro: [
-        "A wadi is a desert river valley — dry gravel most of the year, then a chain of emerald pools and waterfalls between canyon walls.",
-        "No two are alike: some are a flat stroll, some are a swim through a cave, some are a full day of bouldering.",
-        "Every one below has honest difficulty notes, real timings and a map pin.",
-        "Start with the free ones — that's how you'll see what the paid guide gives you."
+        "Every spot outside Dhofar, in one place.",
+        "Filter with the chips: 💧 Wadis · 🏖️ Beaches · ⛰️ Mountains · ⭐ Experiences · 🍽️ Food · 🛍️ Shopping.",
+        "Each card carries a small tag saying exactly what it is — canyon, cave, souq, mall, fort.",
+        "Every one has a map pin, real timings, honest difficulty notes and what to bring.",
+        "🔒 cards are in the paid guide — one payment, everything, forever."
       ] },
-    { id: "beaches",      label: "Beaches",     icon: "🏖️", blurb: "3,000 km of coast, and most of it empty.",
-      intro: [
-        "More coastline than the rest of the Gulf combined — and almost nobody on it.",
-        "White-sand bays under mountains, snorkel reefs, turtle beaches.",
-        "Wild camping on the sand is legal here, and normal.",
-        "These are the stretches I actually drive to."
-      ] },
-    { id: "mountains",    label: "Mountains",   icon: "⛰️", blurb: "The Hajar range — cliff villages, canyons and cold air.",
-      intro: [
-        "The Hajar range rises to 3,000m — roses, pomegranates and cold nights, an hour from the beach.",
-        "Arabia's grand canyon, mud-brick villages stacked into cliffs, and the country's best hikes.",
-        "Most of it needs a 4×4. All of it needs a jacket, whatever the month."
-      ] },
-    { id: "salalah",      label: "Salalah",     icon: "🌴", blurb: "Dhofar — the monsoon-green south.",
+
+    { id: "salalah",  label: "Salalah", icon: "🌴", blurb: "Dhofar — the monsoon-green south.",
+      cats: ["salalah"],
       intro: [
         "A separate trip, not a day out of Muscat — 1,000km south, so you fly.",
         "Late June to early September: the khareef monsoon turns the coast green, waterfalls run, camels graze in fog.",
         "Any other month: a warm, quiet escape — empty beaches and the frankincense coast.",
-        "Both versions are in this tab. Use the filter chips to jump to beaches, waterfalls, forts or the mall."
+        "Same chips as Explore — 🏖️ Beaches · 💧 Wadis · ⛰️ Mountains · ⭐ Experiences · 🛍️ Shopping — and each card says what it actually is: waterfall, spring, fort, souq, mall."
       ] },
-    { id: "experiences",  label: "Experiences", icon: "⭐", blurb: "The things worth building a whole day around.",
+
+    { id: "plan",     label: "Plan",    icon: "🗺️", blurb: "Build your own trip — or follow one of mine.", special: "planner",
       intro: [
-        "Not wadis, not beaches — the rest of the best of Oman.",
-        "The mosque that changes how people see the country. A night in the dunes. The souq at dusk. The reef islands offshore.",
-        "If a first-timer gave me one week, most of it would come from this tab."
+        "Answer five questions and the planner routes a trip around you — days, pace, interests, fitness, vehicle, heat.",
+        "Or scroll down for the hand-built routes: 3 days, 5 days, 7 days."
       ] },
-    { id: "food",         label: "Food",        icon: "🍽️", blurb: "Coffee, shuwa and seafood — where I actually eat.",
-      intro: [
-        "Omani food is the Gulf's best-kept secret: shuwa slow-cooked underground for a day, grilled kingfish, halwa stirred in copper pots.",
-        "Dates and cardamom coffee are how you're welcomed everywhere. Accept both.",
-        "These are the places I take visitors — coffee before a wadi run, and the dinner that ends the trip."
-      ] },
-    { id: "shopping",     label: "Shopping",    icon: "🛍️", blurb: "Souqs, speciality shops and the malls.",
-      intro: [
-        "The old souqs — frankincense, silver, dates. Haggling expected.",
-        "The speciality shops — better than anything in the airport.",
-        "The malls — in an Omani summer they're less about shopping and more about surviving midday.",
-        "What to buy, and what it should cost, below."
-      ] },
-    { id: "itineraries",  label: "Itineraries", icon: "🗺️", blurb: "Done-for-you routes. Just follow along.",
-      intro: [
-        "Fixed routes, day by day: where to go, in what order, where to sleep.",
-        "Want one built around you instead? Answer five questions in the Planner tab.",
-        "These are the hand-built classics."
-      ] },
-    { id: "planner",      label: "Planner",     icon: "🧭", blurb: "Build your own trip in 60 seconds.", special: "planner" },
-    { id: "map",          label: "Map",         icon: "📍", blurb: "Every spot in the guide, on one map.", special: "map" },
-    { id: "about",        label: "About",       icon: "👋", blurb: "Who's behind this.", special: "about" }
+
+    { id: "about",    label: "About",   icon: "👋", blurb: "Who's behind this.", special: "about" }
   ],
 
   /* Region model — the planner clusters days by region and costs the drive
@@ -440,7 +424,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "wadi-tiwi", cat: "wadis", free: false, type: "Wadi",
+      id: "wadi-tiwi", cat: "wadis", free: true, type: "Wadi",
       name: "Wadi Tiwi",
       tagline: "Wadi Shab's quieter, prettier neighbour.",
       blurb: "Right next to Wadi Shab but with a fraction of the crowds. Terraced date plantations, blue pools, and tiny villages clinging to the cliffs as you drive deeper in.",
@@ -469,6 +453,21 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry fee": "Free"
       },
+      gettingThere: [
+        "2–2.5 hrs from Muscat, right next to Wadi Shab off Route 17.",
+        "Drive the paved road ~10km into the wadi, through plantations and villages.",
+        "It's steep and narrow — go slowly, this is someone's street.",
+        "Continuing to Mibam? 4×4, mandatory."
+      ],
+      whatYoullDo: [
+        "The drive is the highlight: terraced plantations, cliffside villages.",
+        "Park up and walk to the blue pools.",
+        "Far fewer people than Wadi Shab, minutes away."
+      ],
+      tips: [
+        "Pair it with Wadi Shab in one day — they're minutes apart.",
+        "The road is tight. Mind the villagers: this is their street, not a track."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Tiwi+Oman",
       verify: true
     },
@@ -506,7 +505,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "wadi-tanuf", cat: "wadis", free: false, type: "Wadi",
+      id: "wadi-tanuf", cat: "wadis", free: true, type: "Wadi",
       name: "Wadi Tanuf",
       tagline: "A ruined village, a gorge, and almost nobody there.",
       blurb: "Palm groves, turquoise pools under small waterfalls, and the bombed-out ruins of old Tanuf village at the mouth of the gorge. Half an hour from Nizwa and a fraction of the traffic.",
@@ -535,6 +534,22 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry fee": "Free"
       },
+      gettingThere: [
+        "30 min from Nizwa on Route 21, signposted to Tanuf.",
+        "2WD reaches the ruins and the wadi mouth.",
+        "The dirt track deeper in is rough — that part wants a 4×4."
+      ],
+      whatYoullDo: [
+        "Start at the ruins of old Tanuf — bombed out in the 1950s and left standing.",
+        "Walk up into the gorge: palm groves, falaj channels, turquoise pools under small waterfalls.",
+        "Water's up? Swim. Water's down? Still one of the better short gorge walks in the country.",
+        "Either way it's usually empty."
+      ],
+      tips: [
+        "Walk the ruins first, in the morning light, before the gorge.",
+        "Water levels swing hard with the season — check before you commit to a swim day.",
+        "Pairs perfectly with Al Hoota Cave and Misfat in one Nizwa day."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Tanuf+Oman",
       verify: true
     },
@@ -812,7 +827,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "yiti-qantab", cat: "beaches", free: false, type: "Beach",
+      id: "yiti-qantab", cat: "beaches", free: true, type: "Beach",
       name: "Yiti & Qantab",
       tagline: "Quiet coves 30 minutes from the city.",
       blurb: "When I want the coast without the drive, I come here. Calm coves and dramatic cliffs just outside Muscat — great for a quick swim, a sunset, or kayaking around the headlands.",
@@ -839,6 +854,21 @@ window.OMAN_DATA = {
         "Best time": "Late afternoon",
         "Entry": "Free"
       },
+      gettingThere: [
+        "Qantab: 20–25 min from central Muscat on the coastal road.",
+        "Yiti: 30–45 min.",
+        "Any car. This is the 'I've got three hours' option."
+      ],
+      whatYoullDo: [
+        "Swim.",
+        "Walk the headland.",
+        "Kayak, if you've brought one.",
+        "Don't plan a day around it — plan an evening."
+      ],
+      tips: [
+        "Late afternoon — the cliffs go gold.",
+        "Midweek it's basically empty."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Qantab+Beach+Oman",
       verify: true
     },
@@ -905,7 +935,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "mughsail", cat: "salalah", free: true, type: "Beach",
+      id: "mughsail", cat: "salalah", free: true, group: "beaches", type: "Beach",
       name: "Mughsail Beach",
       tagline: "Blowholes, cliffs and a beach that doesn't look like the rest of Oman.",
       blurb: "Golden sand, dramatic cliffs, and natural blowholes that fire seawater into the air. Green in the khareef — a sentence you can't write about anywhere else in the Gulf.",
@@ -1207,7 +1237,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "nizwa", cat: "experiences", free: false, type: "Fort",
+      id: "nizwa", cat: "experiences", free: true, type: "Fort",
       name: "Nizwa Fort & Souq",
       tagline: "Old Oman, still very much alive.",
       blurb: "The fort tower, the souq stalls — silver, dates, pottery, spices — and, if you time it for a Friday morning, the livestock souq, which is a genuine spectacle.",
@@ -1233,11 +1263,26 @@ window.OMAN_DATA = {
         "Best time": "Friday morning (livestock souq)",
         "Entry": "Fort OMR 5 / kids OMR 3. Souq free"
       },
+      gettingThere: [
+        "1.5–2 hrs from Muscat via Route 15. Easy paved drive, any car.",
+        "Fort and souq are a few minutes' walk apart in the centre.",
+        "Pair it with Jabal Akhdar, Al Hoota or Misfat — all on the same road inland."
+      ],
+      whatYoullDo: [
+        "Climb the fort tower for the view over the date palms.",
+        "Then walk the souq: silver, dates, pottery, spices.",
+        "Friday at 7am: the livestock souq. Get there early — it's over by 9."
+      ],
+      tips: [
+        "Friday, ~7am, for the livestock souq. It's the real spectacle and it's over by 9.",
+        "The fort tower bakes at midday. Early or late.",
+        "Buy dates here, not at the airport."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Nizwa+Fort+Oman",
       verify: true
     },
     {
-      id: "misfat-al-abriyeen", cat: "mountains", free: false, type: "Village",
+      id: "misfat-al-abriyeen", cat: "mountains", free: true, type: "Village",
       name: "Misfat Al Abriyeen",
       tagline: "A mud-brick village in the mountains that time forgot to ruin.",
       blurb: "Terraced gardens, falaj channels running through the alleys, and old stone houses stacked into the hillside. Walk it slowly — and stay the night in a village guesthouse if you can.",
@@ -1264,11 +1309,27 @@ window.OMAN_DATA = {
         "Best time": "Late afternoon",
         "Entry": "Free (park outside the village)"
       },
+      gettingThere: [
+        "2 hrs from Muscat, 30 min from Nizwa. Any car.",
+        "Park outside the village.",
+        "Walk in — cars aren't allowed through the old alleys."
+      ],
+      whatYoullDo: [
+        "Walk down through the mud-brick alleys with the falaj running beside your feet.",
+        "Come out into the terraced gardens below: date palms, bananas, mangoes.",
+        "It takes an hour. You'll want two.",
+        "Village guesthouses will put you up for the night — that's the way to do it."
+      ],
+      tips: [
+        "Late afternoon light on the terraces is the whole reason to come.",
+        "People live here. Don't photograph doorways and windows without asking.",
+        "Stay the night — the village empties after 5pm and it's a different place."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Misfat+Al+Abriyeen+Oman",
       verify: true
     },
     {
-      id: "al-hoota-cave", cat: "mountains", free: false, type: "Cave",
+      id: "al-hoota-cave", cat: "mountains", free: true, type: "Cave",
       name: "Al Hoota Cave",
       tagline: "Two million years old, and the only show cave in Arabia.",
       blurb: "4.5km of cave under the foot of Jabal Shams, with 500m of it opened up and lit. A little train takes you in. It's the easy win on a mountain day — and blissfully cool.",
@@ -1294,11 +1355,27 @@ window.OMAN_DATA = {
         "Entry": "~OMR 7 adults / OMR 3.5 children (foreign visitors)",
         "Booking": "Recommended — timed slots"
       },
+      gettingThere: [
+        "At the foot of Jabal Shams near Al Hamra — 2 hrs from Muscat. Any car, proper parking.",
+        "Entry is roughly OMR 7 for adult foreign visitors, OMR 3.5 for children.",
+        "Slots are timed and they sell out. Book, or turn up early."
+      ],
+      whatYoullDo: [
+        "A little electric train takes you into the mountain.",
+        "You walk the lit 500m section: stalactites, a subterranean lake.",
+        "Look for the blind cave fish — they live nowhere else on earth.",
+        "Two million years old, and the only show cave on the Arabian Peninsula."
+      ],
+      tips: [
+        "Slots are timed and they do sell out. Book, or turn up early.",
+        "The perfect midday stop on a hot Nizwa day — you're underground while the sun is at its worst.",
+        "It closes some days. Check before you drive out there."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Hoota+Cave+Oman",
       verify: true
     },
     {
-      id: "jabal-akhdar", cat: "mountains", free: false, type: "Mountain",
+      id: "jabal-akhdar", cat: "mountains", free: true, type: "Mountain",
       name: "Jabal Akhdar",
       tagline: "Rose terraces, cold air, and villages hanging off a cliff.",
       blurb: "The Green Mountain — cool enough to grow roses and pomegranates, high enough that you'll want a jacket in the evening. The terraced village walk is one of the best easy hikes in Oman.",
@@ -1325,6 +1402,22 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr (roses Mar–Apr)",
         "Entry": "Free"
       },
+      gettingThere: [
+        "2 hrs from Muscat.",
+        "There's a police checkpoint at the bottom of the mountain road.",
+        "They WILL turn you back in a 2WD. This isn't a suggestion, it's enforced.",
+        "4×4 only. No exceptions."
+      ],
+      whatYoullDo: [
+        "Walk the terraced-village loop: Al Ayn → Ash Shirayjah → Al Aqr.",
+        "The paths run down through rose terraces and pomegranate orchards, with the canyon opening below.",
+        "Two to three hours. One of the best easy hikes in the country."
+      ],
+      tips: [
+        "4×4 or you don't get up the mountain. The checkpoint is real.",
+        "Mar–Apr for the rose harvest and the rosewater distilleries.",
+        "It's cold up there in the evening. Bring a layer."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Jabal+Akhdar+Oman",
       verify: true
     },
@@ -1477,7 +1570,7 @@ window.OMAN_DATA = {
        Dhofar is a flight, not a day trip — the planner knows (region "dhofar"
        is fly:true) and only routes these on a Salalah-based plan.            */
     {
-      id: "wadi-darbat", cat: "salalah", free: true, type: "Waterfall",
+      id: "wadi-darbat", cat: "salalah", free: true, group: "wadis", type: "Waterfall",
       name: "Wadi Darbat",
       tagline: "Waterfalls, green meadows and camels in the mist.",
       blurb: "In khareef season this valley turns into something that shouldn't exist in Arabia: waterfalls pouring off a travertine cliff, lakes, mist, and camels grazing on actual grass. The rest of the year it's a calm green valley with a lake and boat rides — still the first place I'd send anyone in Dhofar.",
@@ -1524,7 +1617,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "al-baleed", cat: "salalah", free: false, type: "Museum",
+      id: "al-baleed", cat: "salalah", free: false, group: "experiences", type: "Museum",
       name: "Al Baleed & the Frankincense Museum",
       tagline: "The port that shipped frankincense to Rome — lit up at night.",
       blurb: "A UNESCO archaeological park on the Salalah waterfront: the ruins of the medieval trading port of Zafar, a lagoon full of birdlife, and the Museum of the Frankincense Land, which is the best hour of history in the south.",
@@ -1554,7 +1647,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "khor-rori", cat: "salalah", free: false, type: "Ruins",
+      id: "khor-rori", cat: "salalah", free: true, group: "experiences", type: "Ruins",
       name: "Khor Rori & Sumhuram",
       tagline: "2,000-year-old ruins above a lagoon full of flamingos.",
       blurb: "The ancient port of Sumhuram — once the edge of the frankincense trade, now a hilltop ruin looking down on a blue lagoon where the wadi meets the sea. Flamingos in the water, camels on the beach, and almost nobody there on a weekday.",
@@ -1580,11 +1673,27 @@ window.OMAN_DATA = {
         "Entry": "A few OMR per car",
         "UNESCO": "Land of Frankincense site"
       },
+      gettingThere: [
+        "35–40 min east of Salalah, signposted off the Taqah–Mirbat road, just past the Wadi Darbat turnoff.",
+        "Paved to the gate, then a short dusty track up to the hilltop car park.",
+        "A few rials per car."
+      ],
+      whatYoullDo: [
+        "Walk the 2,000-year-old walls of Sumhuram, above the lagoon — the frankincense port that traded with Rome and India.",
+        "Then drive down to the lagoon mouth.",
+        "Flamingos and herons on the water; camels on the sand bar where the khor meets the sea.",
+        "Come late afternoon — the light turns the whole thing gold."
+      ],
+      tips: [
+        "Combine Darbat + Khor Rori in one day — same road.",
+        "The beach at the sand bar is one of the quietly great picnic spots in Dhofar.",
+        "Weekdays: you'll have the ruins nearly alone."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Sumhuram+Khor+Rori+Oman",
       verify: true
     },
     {
-      id: "jabal-samhan", cat: "salalah", free: false, type: "Mountain",
+      id: "jabal-samhan", cat: "salalah", free: false, group: "mountains", type: "Mountain",
       name: "Jabal Samhan viewpoint",
       tagline: "A kilometre of cliff, straight down to the coastal plain.",
       blurb: "The Dhofar mountains end in a sheer escarpment, and the Jabal Samhan viewpoint sits right on the lip of it — the coastal plain and the sea a vertical kilometre below. This is also Arabian leopard country; you won't see one, but it changes how the mountain feels.",
@@ -1614,7 +1723,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "fazayah-beach", cat: "salalah", free: false, type: "Beach",
+      id: "fazayah-beach", cat: "salalah", free: false, group: "beaches", type: "Beach",
       name: "Fazayah Beach",
       tagline: "The empty white coves past the end of the road.",
       blurb: "Keep going west past Mughsail, over the mountain switchbacks, and drop down a steep track to a string of white-sand coves with cliffs behind and usually nobody on them but camels. The best beach in the south, and it makes you work for it.",
@@ -1645,7 +1754,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "wadi-dawkah", cat: "salalah", free: false, type: "Nature",
+      id: "wadi-dawkah", cat: "salalah", free: false, group: "experiences", type: "Nature",
       name: "Wadi Dawkah frankincense park",
       tagline: "The trees that made Oman rich for 2,000 years.",
       blurb: "A protected valley of wild frankincense trees on the desert side of the mountains — the actual source of the trade that built the ports at Al Baleed and Sumhuram. Twenty minutes among the trees ties the whole frankincense story together.",
@@ -1675,7 +1784,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "ayn-razat", cat: "salalah", free: false, type: "Spring",
+      id: "ayn-razat", cat: "salalah", free: true, group: "wadis", type: "Spring",
       name: "Ayn Razat",
       tagline: "Spring water, gardens and a cave — Salalah's easiest hour.",
       blurb: "A natural spring at the foot of the mountains feeding a strip of ornamental gardens — running water year-round, lush and loud with birds in khareef, and a small cave in the cliff above. The local picnic spot, and a gentle first stop after landing.",
@@ -1701,11 +1810,26 @@ window.OMAN_DATA = {
         "Best time": "Morning",
         "Entry": "Free"
       },
+      gettingThere: [
+        "25 min northeast of Salalah. Paved, signposted, any car.",
+        "Free parking by the gardens."
+      ],
+      whatYoullDo: [
+        "The spring rises at the cliff base and feeds a falaj through ornamental gardens.",
+        "This is where Salalah families picnic — go with it.",
+        "Climb the steps to the small cave in the cliff for the view over the greenery.",
+        "In khareef the hillside above runs green and the birdlife goes berserk."
+      ],
+      tips: [
+        "Mornings are quiet; Friday afternoons are the full family scene — pick your vibe.",
+        "Combine with Ayn Athum and the other springs along the mountain base in khareef.",
+        "No swimming in the spring — it feeds the irrigation channels."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Ayn+Razat+Salalah+Oman",
       verify: true
     },
     {
-      id: "haffa-souq", cat: "salalah", free: true, type: "Souq",
+      id: "haffa-souq", cat: "salalah", free: true, group: "shopping", type: "Souq",
       name: "Al Haffa Souq",
       tagline: "Frankincense by the scoop, a street back from the sea.",
       blurb: "The old frankincense souq near the corniche — sacks of resin graded by colour, bakhoor, Dhofari incense burners, and the smell that tells you you're in Salalah and nowhere else. Come at dusk when the town wakes up.",
@@ -1734,7 +1858,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "salalah-gardens-mall", cat: "salalah", free: true, type: "Mall",
+      id: "salalah-gardens-mall", cat: "salalah", free: true, group: "shopping", type: "Mall",
       name: "Salalah Gardens Mall",
       tagline: "The AC hours — where Salalah goes at midday.",
       blurb: "The city's main mall: supermarket, food court, cafés and cinema. Not a sight — a tool. It's where you restock, cool down between the morning and the late afternoon, and where the kids forgive you for the long drive.",
@@ -1762,7 +1886,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "dahariz-beach", cat: "salalah", free: true, type: "Beach",
+      id: "dahariz-beach", cat: "salalah", free: true, group: "beaches", type: "Beach",
       name: "Dahariz Beach",
       tagline: "Salalah's own beach — coconut palms to the sand.",
       blurb: "The long city beach on the east side of town, backed by coconut plantations. Outside khareef it's calm, warm and swimmable ten minutes from your hotel; in khareef the sea turns wild and you walk it instead.",
@@ -1792,7 +1916,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "taqah-castle", cat: "salalah", free: false, type: "Fort",
+      id: "taqah-castle", cat: "salalah", free: false, group: "experiences", type: "Fort",
       name: "Taqah Castle",
       tagline: "A wali's house with the best small museum in the south.",
       blurb: "A restored 19th-century fortified residence in Taqah town — rooms set out as they were lived in, rifle slits over the bay, and a rooftop view along the coast. Twenty minutes from Khor Rori; do them together.",
@@ -1821,7 +1945,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "ayn-athum", cat: "salalah", free: false, type: "Waterfall",
+      id: "ayn-athum", cat: "salalah", free: false, group: "wadis", type: "Waterfall",
       name: "Ayn Athum",
       tagline: "The khareef waterfall the tour buses haven't found yet.",
       blurb: "A spring at the foot of the mountains that turns into a proper waterfall in the monsoon — mist, green cliffs, and far fewer people than Wadi Darbat. Outside khareef it's a quiet pool under the trees.",
@@ -1903,7 +2027,7 @@ window.OMAN_DATA = {
       tips: ["Portions are big. Two mains between three people is usually enough."]
     },
     {
-      id: "cafe-qaha", cat: "food", sub: "Coffee", free: false, type: "Coffee",
+      id: "cafe-qaha", cat: "food", sub: "Coffee", free: true, type: "Coffee",
       name: "Qaha Specialty Coffee",
       tagline: "Omani coffee culture, modernised.",
       blurb: "White-and-blue, calm, and serious about the coffee. The slow morning where you're not going anywhere in a hurry.",
@@ -1917,6 +2041,13 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"], guide: "",
       stats: { "Type": "Specialty coffee", "Area": "Al Maha St", "Price": "$", "Best for": "A slow morning", "Book?": "Walk-in" },
+      whatYoullDo: [
+        "Omani coffee culture with a modern room around it.",
+        "White, blue, calm, unhurried. Nobody is rushing you out."
+      ],
+      tips: [
+        "The quiet one of the specialty cafés — good before an early drive."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Qaha+Specialty+Coffee+Muscat",
       verify: true
     },
@@ -1975,7 +2106,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "food-bin-ateeq-salalah", cat: "food", sub: "Traditional", free: true, type: "Omani food",
+      id: "food-bin-ateeq-salalah", cat: "salalah", sub: "Traditional", free: true, group: "food", type: "Omani food",
       name: "Bin Ateeq (Salalah)",
       tagline: "The Salalah branch of the floor-cushion classic.",
       blurb: "Same formula as the Muscat original: private majlis rooms, cushions on the floor, big plates of Omani rice and meat. The reliable lunch between a morning in the mountains and an afternoon on the coast.",
@@ -2048,7 +2179,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "shop-seeb-souq", cat: "shopping", sub: "Traditional souq", free: false, type: "Souq",
+      id: "shop-seeb-souq", cat: "shopping", sub: "Traditional souq", free: true, type: "Souq",
       name: "Seeb Souq",
       tagline: "Where Muscat actually shops — fish, dates and zero tourists.",
       blurb: "A working local souq on the Seeb waterfront: the morning fish auction, dates by the kilo, abayas and kummas. Nothing here is staged for visitors — that's the point.",
@@ -2062,6 +2193,21 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","culture","food","photography"], guide: "",
       stats: { "Type": "Local souq", "Best time": "Early morning (fish) or after 5pm", "Haggling": "Gentle", "Cards": "Cash mostly", "Best buys": "Dates, fish, kummas" },
+      gettingThere: [
+        "On the Seeb corniche — 25 min from central Muscat.",
+        "Park along the waterfront.",
+        "The souq runs back from the fish market."
+      ],
+      whatYoullDo: [
+        "Start at the fish market early — the auction is loud, fast and completely real.",
+        "Then the covered lanes: dates by the kilo at half the tourist-shop price.",
+        "Kummas, abayas, household stalls.",
+        "This is shopping the way Muscat actually does it."
+      ],
+      tips: [
+        "Early morning, or you miss the fish auction entirely.",
+        "Buy dates here rather than in the tourist souqs — same dates, half the price."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Seeb+Souq",
       verify: true
     },
