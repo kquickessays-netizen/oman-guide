@@ -1006,6 +1006,7 @@
   $("#unlockBtn").onclick = openUnlock;
   $("#sheetClose").onclick = closeSheet;
   $("#sheetBackdrop").onclick = closeSheet;
+  $("#modalClose").onclick = closeModal;
   $("#modalBackdrop").onclick = e => { if (e.target === $("#modalBackdrop")) closeModal(); };
   document.addEventListener("keydown", e => { if (e.key === "Escape") { closeSheet(); closeModal(); } });
 
