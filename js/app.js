@@ -115,6 +115,33 @@
     return row;
   }
 
+  /* ------------------------------------------------------------------ steps
+     Nobody reads a wall of text on a phone at 6am. Any field that can be a
+     paragraph can instead be an ARRAY of short lines, and it renders as a
+     numbered step list. Strings still work — they just render as one line.
+        gettingThere: ["Drive the coast road east, ~1h20 from Muscat.",
+                       "Park at the free lot by the bridge.",
+                       "Take the boat across — 1 OMR return."]                */
+  function steps(v, cls) {
+    if (Array.isArray(v)) {
+      if (!v.length) return "";
+      return `<ol class="${cls || "steplist"}">` +
+             v.map(s => `<li>${esc(s)}</li>`).join("") + `</ol>`;
+    }
+    return `<p class="body">${esc(v)}</p>`;
+  }
+
+  /* Same idea, but bulleted and unnumbered — for "what you'll do" style lists
+     and the tab intros, where order doesn't matter. */
+  function bullets(v, cls) {
+    if (Array.isArray(v)) {
+      if (!v.length) return "";
+      return `<ul class="${cls || "bulletlist"}">` +
+             v.map(s => `<li>${esc(s)}</li>`).join("") + `</ul>`;
+    }
+    return `<p class="body">${esc(v)}</p>`;
+  }
+
   const isUnlocked = item => item.free || Unlock.has(item.cat || "itineraries");
 
   /* Locked items render as anonymous "hidden spot" cards — no name, photo,
@@ -145,7 +172,7 @@
           <span class="price-name">${esc(catLabel)} guide</span>
           <span class="price-tag">${D.meta.singlePrice}</span>
         </div>
-        <p>Just this one. Every spot in the ${esc(catLabel.toLowerCase())} tab, unlocked.</p>
+        <p>Just this one. Every spot in the ${esc(catLabel.toLowerCase())} tab, unlocked — and every monthly update to it, free, forever.</p>
         <a class="btn-buy" href="${single}" target="_blank" rel="noopener">Get the ${esc(catLabel)} guide — ${D.meta.singlePrice}</a>
       </div>
       <div class="price-or">or</div>
@@ -155,7 +182,7 @@
           <span class="price-name">Complete Oman Pack</span>
           <span class="price-tag">${D.meta.bundlePrice}</span>
         </div>
-        <p>Every tab — ${esc(tabListText())} — <strong>plus the trip Planner</strong>. Updated free, forever.</p>
+        <p>Every tab — ${esc(tabListText())} — <strong>plus the trip Planner</strong>. One payment, once. New spots, new prices and whole new tabs land every month — yours free, forever, including the tabs that don't exist yet.</p>
         <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get everything — ${D.meta.bundlePrice}</a>
       </div>`;
     return w;
@@ -183,17 +210,17 @@
     else { b.textContent = "Unlock"; b.className = "pill pill-ghost"; }
   }
 
-  /* --------------------------------------------------------- living banner */
-  function livingBanner() {
-    const b = el("div", "living");
-    b.innerHTML = `
-      <span class="pulse"></span>
-      <div>
-        <strong>This is a living guide, not a PDF.</strong>
-        ${esc(D.meta.updateNote)}
-        <span class="living-date">Last updated ${esc(D.meta.lastUpdated)}</span>
-      </div>`;
-    return b;
+  /* ----------------------------------------------------------- living line
+     One small line in the header, above the tabs, on every screen. It used to
+     be a fat banner repeated inside each tab — this says the same thing in a
+     tenth of the space. */
+  function renderLivingLine() {
+    const l = $("#livingLine");
+    if (!l) return;
+    l.innerHTML =
+      `<span class="pulse"></span>` +
+      `<span class="ll-main"><strong>Living guide</strong> · updated ${esc(D.meta.lastUpdated)}</span>` +
+      `<span class="ll-sub">Buy once · updates free forever</span>`;
   }
 
   /* ------------------------------------------------------------------- card */
@@ -253,7 +280,8 @@
     } else {
       const veil = el("div", "lock-veil");
       veil.appendChild(el("p", null,
-        "🔒 The name, photo, exact location, full write-up, hike &amp; swim times, my packing list and insider tips are in the paid guide."));
+        "🔒 The name, photo, exact location, full write-up, hike &amp; swim times, my packing list and insider tips are in the paid guide. " +
+        "<span class=\"lock-forever\">Buy once — every monthly update after that is free.</span>"));
       const acts = el("div", "lock-actions");
 
       const buy = el("a", "btn-buy", `This guide — ${D.meta.singlePrice}`);
@@ -355,8 +383,8 @@
         h += `</div>`;
       }
 
-      if (gettingThere) h += `<h3 class="sec">Getting there</h3><p class="body">${esc(gettingThere)}</p>` + nextFig();
-      if (whatYoullDo)  h += `<h3 class="sec">What you'll do</h3><p class="body">${esc(whatYoullDo)}</p>` + nextFig();
+      if (gettingThere) h += `<h3 class="sec">Getting there</h3>${steps(gettingThere)}` + nextFig();
+      if (whatYoullDo)  h += `<h3 class="sec">What you'll do</h3>${bullets(whatYoullDo)}` + nextFig();
 
       // Spot-specific booking link — THE tour for THIS place (a Wadi Shab boat
       // + hike tour, the Daymaniyat snorkel boat…). Set per spot as
@@ -435,7 +463,7 @@
     } else {
       b.innerHTML = `
         <h2>Unlock the full guide</h2>
-        <p>Bought on Gumroad? Paste the licence key from your receipt email.</p>
+        <p>Bought on Gumroad? Paste the licence key from your receipt email. It's yours for good — same key on a new phone, and every monthly update lands automatically.</p>
         <div class="field">
           <label for="keyIn">Licence key</label>
           <input id="keyIn" placeholder="XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX" autocapitalize="characters" spellcheck="false">
@@ -482,13 +510,13 @@
     const items = itemsFor(cat);
 
     clearView();
-    view.appendChild(livingBanner());
 
     const head = el("div", "cat-head");
     head.appendChild(el("h1", null, esc(meta.label)));
     head.appendChild(el("p", null, esc(meta.blurb)));
     // The tab explainer — what a wadi even is, why Salalah is its own trip…
-    if (meta.intro) head.appendChild(el("p", "cat-intro", esc(meta.intro)));
+    // String = one line. Array = a tight bullet list (preferred: no walls of text).
+    if (meta.intro) head.appendChild(el("div", "cat-intro", bullets(meta.intro, "intro-list")));
     view.appendChild(head);
 
     if (!items.length) {
@@ -516,7 +544,8 @@
     const lockedCount = shown.filter(i => !isUnlocked(i)).length;
     if (lockedCount && !Unlock.hasBundle()) {
       const h = el("div", "section-head");
-      h.innerHTML = `<h2>${lockedCount} more in this guide 🔒</h2><p>Two ways in — pick whichever suits.</p>`;
+      h.innerHTML = `<h2>${lockedCount} more in this guide 🔒</h2>` +
+        `<p>Two ways in — pick whichever suits. Either way it's one payment, and every monthly update after it is free.</p>`;
       view.appendChild(h);
       view.appendChild(priceBlock(cat));
     }
@@ -542,15 +571,33 @@
       </div>
 
       <div class="about-body">
-        <p>I'm an Omani content creator and a licensed tour guide, and I've spent years chasing waterfalls, swimming through canyons and hiking into the quiet corners of this country — filming all of it. My wadi videos have been watched over a million times, and the question I get more than any other is always the same:</p>
+        <ul class="bulletlist">
+          <li>Omani content creator and licensed tour guide.</li>
+          <li>Years spent chasing waterfalls, swimming canyons and hiking the quiet corners — filming all of it.</li>
+          <li>My wadi videos have been watched over a million times.</li>
+        </ul>
         <p class="pull">“Where is this, and how do I get there?”</p>
-        <p>This app is my answer. Every wadi, beach and hidden corner I'd send a friend to, with the maps, the drive times, the hike and swim times, and the honest difficulty notes — so you can actually go, and go safely.</p>
+        <ul class="bulletlist">
+          <li>That's the question I get every single day. This app is the answer.</li>
+          <li>Every wadi, beach and hidden corner I'd send a friend to.</li>
+          <li>Map pins, drive times, hike and swim times, honest difficulty notes.</li>
+        </ul>
 
         <h3>Why an app and not a PDF</h3>
-        <p>Because Oman changes. Entry fees go up, roads wash out in a flood, a wadi that took two hours last winter takes four this one. A PDF is out of date the day you download it. This gets updated every month, and if you've bought it, you get every update free, forever. That's the whole point.</p>
+        <ul class="bulletlist">
+          <li>Oman changes: fees go up, roads wash out, a two-hour wadi becomes a four-hour one.</li>
+          <li>A PDF is out of date the day you download it.</li>
+          <li>This is updated every month.</li>
+          <li>Buy it once and every update after that is free, forever — including tabs that don't exist yet.</li>
+        </ul>
 
         <h3>One ask</h3>
-        <p>Respect these places. Take your rubbish out, dress modestly at the village wadis, don't touch the coral or the turtles, and leave it all as beautiful as you found it. Shukran. 🤍</p>
+        <ul class="bulletlist">
+          <li>Take your rubbish out with you.</li>
+          <li>Dress modestly at the village wadis.</li>
+          <li>Don't touch the coral or the turtles.</li>
+          <li>Leave it as beautiful as you found it. Shukran. 🤍</li>
+        </ul>
       </div>
 
       <div class="about-contact">
@@ -656,7 +703,7 @@
             <span class="price-name">Complete Oman Pack</span>
             <span class="price-tag">${D.meta.bundlePrice}</span>
           </div>
-          <p>Every tab — ${esc(tabListText())} — <strong>plus the trip Planner</strong>. Updated free, forever.</p>
+          <p>Every tab — ${esc(tabListText())} — <strong>plus the trip Planner</strong>. One payment, once. New spots, new prices and whole new tabs land every month — yours free, forever, including the tabs that don't exist yet.</p>
           <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get everything — ${D.meta.bundlePrice}</a>
         </div>`;
       view.appendChild(w);
@@ -1080,7 +1127,6 @@
     const info = D.info || {};
     const aff = D.meta.affiliates;
     clearView();
-    view.appendChild(livingBanner());
 
     const head = el("div", "cat-head");
     head.appendChild(el("h1", null, "ℹ️ Before you land"));
@@ -1221,6 +1267,7 @@
 
   window.addEventListener("hashchange", route);
   $("#brandSub").textContent = D.meta.creator;
+  renderLivingLine();
 
   Unlock.init().finally(route);
 })();
