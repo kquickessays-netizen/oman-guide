@@ -7,6 +7,30 @@
   const el = (t, c, h) => { const e = document.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e; };
   const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
 
+  /* Every affiliate link goes out the door wearing your name tag — utm_* and
+     your personal ref code from meta.affRef, so the operator's dashboard (and
+     your commission) can attribute the click. Skips params that are empty and
+     leaves whatever the URL already carries untouched. */
+  function affLink(url) {
+    if (!url) return url;
+    const ref = (D.meta.affRef || {});
+    try {
+      const u = new URL(url);
+      ["utm_source", "utm_medium", "ref"].forEach(k => {
+        if (ref[k] && !u.searchParams.has(k)) u.searchParams.set(k, ref[k]);
+      });
+      return u.toString();
+    } catch { return url; }
+  }
+
+  /* "Use code HUSSAIN10 — 10% off" chip, rendered after affiliate buttons
+     once a code exists in meta.affRef. Empty code = empty string. */
+  function discountChip() {
+    const ref = (D.meta.affRef || {});
+    if (!ref.discountCode) return "";
+    return `<span class="discount-chip">🎟️ ${esc(ref.discountLabel || "Discount with code")} <strong>${esc(ref.discountCode)}</strong></span>`;
+  }
+
   const view = $("#view");
   let query = "";
 
@@ -36,9 +60,59 @@
     // what's behind the paywall ("Mibam" → 1 locked result = the name leaked).
     return list.filter(s =>
       isUnlocked(s) &&
-      (s.name + " " + s.tagline + " " + (s.blurb || "") + " " + (s.sub || "") + " " + (s.tags || []).join(" "))
+      (s.name + " " + s.tagline + " " + (s.blurb || "") + " " + (s.sub || "") +
+       " " + (s.type || "") + " " + (s.tags || []).join(" "))
         .toLowerCase().includes(q)
     );
+  }
+
+  /* --------------------------------------------------------- type filtering */
+  /* Every spot carries a `type` ("Beach", "Mountain", "Mall", "Souq"…). Each
+     tab builds a filter row from the types actually present in it, so Salalah
+     reads at a glance: 3 beaches, 2 waterfalls, a mall, a souq, a fort. */
+  let typeFilter = null;              // null = "All"
+
+  const TYPE_ICON = {
+    "Beach": "🏖️", "Mountain": "⛰️", "Wadi": "💧", "Waterfall": "🌊", "Canyon": "🧗",
+    "Cave": "🕳️", "Spring": "🌿", "Viewpoint": "👁️", "Village": "🏡", "Fort": "🏰",
+    "Museum": "🏛️", "Ruins": "🏺", "Mosque": "🕌", "Souq": "🛍️", "Mall": "🏬",
+    "Shop": "🛒", "Desert": "🐪", "Snorkel": "🐠", "Boat trip": "⛵",
+    "Swim spot": "🏊", "Wildlife": "🐢", "Nature": "🌳", "Hike": "🥾", "Dam": "🏞️",
+    "Coffee": "☕", "Omani food": "🍲", "Dinner": "🍽️", "Sweets": "🍬"
+  };
+  const typeChipLabel = t => (TYPE_ICON[t] ? TYPE_ICON[t] + " " : "") + t;
+
+  /* Types present in a tab, most common first, then alphabetical. */
+  function typesIn(items) {
+    const counts = new Map();
+    items.forEach(i => { if (i.type) counts.set(i.type, (counts.get(i.type) || 0) + 1); });
+    return [...counts.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([t, n]) => ({ type: t, n }));
+  }
+
+  /* The filter row. Hidden when a tab has fewer than two types (nothing to
+     filter) — no point showing "All / Wadi" on the Wadis tab. */
+  function typeFilterRow(items, onChange) {
+    const types = typesIn(items);
+    if (types.length < 2) return null;
+
+    const row = el("div", "typefilter");
+    const mk = (label, value, count) => {
+      const b = el("button", "tfchip" + (typeFilter === value ? " on" : ""),
+        `${esc(label)} <span class="tfn">${count}</span>`);
+      b.type = "button";
+      b.setAttribute("aria-pressed", typeFilter === value ? "true" : "false");
+      b.onclick = () => {
+        typeFilter = (typeFilter === value) ? null : value;   // tap again = clear
+        if (window.Analytics && value) Analytics.track("type_filter", { type: value || "all" });
+        onChange();
+      };
+      return b;
+    };
+    row.appendChild(mk("All", null, items.length));
+    types.forEach(t => row.appendChild(mk(typeChipLabel(t.type), t.type, t.n)));
+    return row;
   }
 
   const isUnlocked = item => item.free || Unlock.has(item.cat || "itineraries");
@@ -47,12 +121,17 @@
      location or stats until purchase. The names still exist in the shipped
      data files (accepted trade-off of the static paywall), but nothing in
      the UI reveals them. */
-  const SINGULAR = { wadis: "wadi", beaches: "beach", experiences: "experience",
+  const SINGULAR = { wadis: "wadi", beaches: "beach", mountains: "mountain spot",
+                     salalah: "Salalah spot", experiences: "experience",
                      food: "food spot", shopping: "shop", itineraries: "itinerary" };
   const singularOf = item => SINGULAR[item.cat || "itineraries"] || "spot";
 
   /* ------------------------------------------------------------- price block
      Every locked thing shows BOTH doors: this guide, or the whole pack.       */
+  // "wadis, beaches, mountains, …" — built from the live tab list so adding a
+  // category never leaves a stale sales pitch behind.
+  const tabListText = () => D.categories.filter(c => !c.special).map(c => c.label.toLowerCase()).join(", ");
+
   function priceBlock(cat, compact) {
     const catLabel = (D.categories.find(c => c.id === cat) || {}).label || "this guide";
     const single = D.meta.buyLinks[cat] || D.meta.buyLinks.bundle;
@@ -76,7 +155,7 @@
           <span class="price-name">Complete Oman Pack</span>
           <span class="price-tag">${D.meta.bundlePrice}</span>
         </div>
-        <p>Every tab — wadis, beaches, experiences, food, itineraries — <strong>plus the trip Planner</strong>. Updated free, forever.</p>
+        <p>Every tab — ${esc(tabListText())} — <strong>plus the trip Planner</strong>. Updated free, forever.</p>
         <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get everything — ${D.meta.bundlePrice}</a>
       </div>`;
     return w;
@@ -93,8 +172,8 @@
       b.onclick = () => (location.hash = "#/" + c.id);
       tabs.appendChild(b);
     });
-    const sel = tabs.querySelector('[aria-selected="true"]');
-    if (sel) sel.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+    // The tab bar wraps now (every tab visible at once), so there's nothing to
+    // scroll into view — and scrollIntoView here would jog the whole page.
   }
 
   function renderUnlockBtn() {
@@ -137,13 +216,18 @@
     const kick = el("div", "card-kicker");
     kick.appendChild(el("span", "chip " + (unlocked ? "chip-free" : "chip-lock"),
       unlocked ? (item.free ? "Free preview" : "✓ Unlocked") : "🔒 Locked"));
+    // What kind of place this is — shown on locked cards too (it says what
+    // you're buying without giving away which spot it is).
+    if (item.type) kick.appendChild(el("span", "chip chip-type", esc(typeChipLabel(item.type))));
     if (unlocked) {
-      if (item.sub) kick.appendChild(el("span", "chip", esc(item.sub)));
+      if (item.sub && item.sub !== item.type) kick.appendChild(el("span", "chip", esc(item.sub)));
       if (item.stats && /Hard/.test(item.stats.Difficulty || "")) kick.appendChild(el("span", "chip chip-hard", "Hard"));
       if (item.guide === "required") kick.appendChild(el("span", "chip", "Guide required"));
       if (item.needs4x4) kick.appendChild(el("span", "chip", "4×4"));
       if (item.months && !item.months.includes(new Date().getMonth() + 1))
-        kick.appendChild(el("span", "chip chip-season", `🌡️ Best ${Planner.monthsLabel(item.months)}`));
+        kick.appendChild(el("span", "chip chip-season", item.region === "dhofar"
+          ? `🌿 Khareef ${Planner.monthsLabel(item.months)}`
+          : `🌡️ Best ${Planner.monthsLabel(item.months)}`));
     }
     body.appendChild(kick);
 
@@ -209,6 +293,7 @@
          `${item.img && item.imgCredit ? `<span class="imgcredit">${esc(item.imgCredit)}</span>` : ""}</div>`;
     h += `<div class="sheet-inner">`;
     h += `<h2>${esc(item.name)}</h2><p class="tagline">${esc(item.tagline)}</p>`;
+    if (item.type) h += `<div class="card-kicker"><span class="chip chip-type">${esc(typeChipLabel(item.type))}</span></div>`;
     if (item.blurb) h += `<p class="body">${esc(item.blurb)}</p>`;
 
     if (item.stats) {
@@ -217,7 +302,9 @@
     }
 
     if (item.months && !item.months.includes(new Date().getMonth() + 1)) {
-      h += `<div class="heatnote">🌡️ <strong>Best ${esc(Planner.monthsLabel(item.months))}.</strong> Doable now too — go at first light or after 4pm, skip the midday hours, and carry more water than feels reasonable.</div>`;
+      h += item.region === "dhofar"
+        ? `<div class="heatnote">🌿 <strong>Greenest ${esc(Planner.monthsLabel(item.months))} — the khareef.</strong> Lovely outside it too: sunny, calm and quiet. Just don't expect the waterfalls.</div>`
+        : `<div class="heatnote">🌡️ <strong>Best ${esc(Planner.monthsLabel(item.months))}.</strong> Doable now too — go at first light or after 4pm, skip the midday hours, and carry more water than feels reasonable.</div>`;
     }
 
     if (item.mapUrl) {
@@ -237,14 +324,28 @@
           }
         }
       });
-      if (aff.hotel) h += `<a class="affbtn" href="${aff.hotel}" target="_blank" rel="noopener">Book the stays on this route →</a>`;
-      if (aff.car) h += `<a class="affbtn" href="${aff.car}" target="_blank" rel="noopener">Rent a car →</a>`;
+      if (aff.hotel) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.hotel)}" target="_blank" rel="noopener">Book the stays on this route →</a>`;
+      if (aff.car) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.car)}" target="_blank" rel="noopener">Rent a car →</a>`;
 
     } else {
       const gettingThere = item.gettingThere || prem.gettingThere;
       const whatYoullDo  = item.whatYoullDo  || prem.whatYoullDo;
       const tips         = item.tips         || prem.tips;
       const guideNote    = prem.guideNote;
+
+      // Extra photos, dealt out between the sections below — one after
+      // "Getting there", one after "What you'll do", the rest after the tips.
+      // gallery entries: "path.jpg" or { src, credit, caption }.
+      const gal = [...(item.gallery || []), ...(prem.gallery || [])]
+        .map(g => (typeof g === "string" ? { src: g } : g))
+        .filter(g => g.src);
+      const nextFig = () => {
+        const g = gal.shift();
+        if (!g) return "";
+        return `<figure class="sheet-fig"><img src="${g.src}" loading="lazy" alt="${esc(g.caption || item.name)}">` +
+               `${g.caption ? `<figcaption>${esc(g.caption)}${g.credit ? ` <span class="imgcredit">${esc(g.credit)}</span>` : ""}</figcaption>`
+                            : g.credit ? `<figcaption><span class="imgcredit">${esc(g.credit)}</span></figcaption>` : ""}</figure>`;
+      };
 
       // Hike / swim times, called out
       if (item.hikeTime || item.swimTime) {
@@ -254,8 +355,17 @@
         h += `</div>`;
       }
 
-      if (gettingThere) h += `<h3 class="sec">Getting there</h3><p class="body">${esc(gettingThere)}</p>`;
-      if (whatYoullDo)  h += `<h3 class="sec">What you'll do</h3><p class="body">${esc(whatYoullDo)}</p>`;
+      if (gettingThere) h += `<h3 class="sec">Getting there</h3><p class="body">${esc(gettingThere)}</p>` + nextFig();
+      if (whatYoullDo)  h += `<h3 class="sec">What you'll do</h3><p class="body">${esc(whatYoullDo)}</p>` + nextFig();
+
+      // Spot-specific booking link — THE tour for THIS place (a Wadi Shab boat
+      // + hike tour, the Daymaniyat snorkel boat…). Set per spot as
+      // aff: { url, label } in content.js or premium.js; beats the generic
+      // tours link because it's exactly what the reader is looking at.
+      const spotAff = item.aff || prem.aff;
+      if (spotAff && spotAff.url) {
+        h += `<a class="affbtn aff-primary" data-spot="${esc(item.id)}" href="${affLink(spotAff.url)}" target="_blank" rel="noopener">${esc(spotAff.label || "Book this trip →")}</a>` + discountChip();
+      }
 
       // The packing list
       if (item.bring) {
@@ -269,20 +379,22 @@
                item.bring.optional.map(x => `<li>${esc(x)}</li>`).join("") + `</ul></div>`;
         }
         h += `</div>`;
-        if (aff.gear) h += `<a class="affbtn" href="${aff.gear}" target="_blank" rel="noopener">My exact gear list →</a>`;
+        if (aff.gear) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.gear)}" target="_blank" rel="noopener">My exact gear list →</a>`;
       }
 
       if (tips && tips.length) {
         h += `<div class="tipbox"><strong>My insider tips</strong><ul>` +
              tips.map(t => `<li>${esc(t)}</li>`).join("") + `</ul></div>`;
       }
+      while (gal.length) h += nextFig();   // whatever's left, in a row at the end
       if (guideNote) {
         h += `<div class="guidebox"><strong>🧭 Go with a guide</strong><p>${esc(guideNote)}</p>`;
-        if (aff.guide) h += `<a class="affbtn" href="${aff.guide}" target="_blank" rel="noopener">Book a guided trip →</a>`;
+        const guideLink = aff.guide || aff.tours;
+        if (guideLink) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(guideLink)}" target="_blank" rel="noopener">Book a guided trip →</a>` + discountChip();
         h += `</div>`;
       }
-      if (item.needs4x4 && aff.car) h += `<a class="affbtn" href="${aff.car}" target="_blank" rel="noopener">You'll need a 4×4 — rent one →</a>`;
-      if (aff.esim) h += `<a class="affbtn" href="${aff.esim}" target="_blank" rel="noopener">Get an Oman eSIM (maps off-grid) →</a>`;
+      if (item.needs4x4 && aff.car) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.car)}" target="_blank" rel="noopener">You'll need a 4×4 — rent one →</a>`;
+      if (aff.esim) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.esim)}" target="_blank" rel="noopener">Get an Oman eSIM (maps off-grid) →</a>`;
     }
 
     if (item.needsFirstHand) {
@@ -297,6 +409,7 @@
     $("#sheetBackdrop").hidden = false;
     document.body.style.overflow = "hidden";
     $("#sheet").scrollTop = 0;
+    if (window.Analytics) Analytics.track("spot", { id: item.id, cat: item.cat || "itineraries" });
   }
 
   function closeSheet() {
@@ -342,6 +455,7 @@
         const r = await Unlock.verify(input.value);
         btn.disabled = false; btn.textContent = "Unlock";
         if (r.ok) {
+          if (window.Analytics) Analytics.track("unlock", { grants: r.grants });
           msg.innerHTML = `<div class="msg ok">Unlocked. Everything's open.</div>`;
           renderUnlockBtn();
           setTimeout(() => { closeModal(); route(); toast("Unlocked — enjoy 🇴🇲"); }, 700);
@@ -373,6 +487,8 @@
     const head = el("div", "cat-head");
     head.appendChild(el("h1", null, esc(meta.label)));
     head.appendChild(el("p", null, esc(meta.blurb)));
+    // The tab explainer — what a wadi even is, why Salalah is its own trip…
+    if (meta.intro) head.appendChild(el("p", "cat-intro", esc(meta.intro)));
     view.appendChild(head);
 
     if (!items.length) {
@@ -380,12 +496,24 @@
       return;
     }
 
+    // Filter row — "All · 🏖️ Beach 3 · 🌊 Waterfall 2 · 🏬 Mall 1 …"
+    const row = typeFilterRow(items, () => renderCategory(cat));
+    if (row) view.appendChild(row);
+
+    const shown = typeFilter ? items.filter(i => i.type === typeFilter) : items;
+
+    if (!shown.length) {
+      view.appendChild(el("div", "empty",
+        `<div class="big">🤷</div><p>No ${esc(typeFilter.toLowerCase())} in this guide yet.</p>`));
+      return;
+    }
+
     const grid = el("div", "grid");
     let lockN = 0;
-    items.forEach(i => grid.appendChild(card(i, isUnlocked(i) ? 0 : ++lockN)));
+    shown.forEach(i => grid.appendChild(card(i, isUnlocked(i) ? 0 : ++lockN)));
     view.appendChild(grid);
 
-    const lockedCount = items.filter(i => !isUnlocked(i)).length;
+    const lockedCount = shown.filter(i => !isUnlocked(i)).length;
     if (lockedCount && !Unlock.hasBundle()) {
       const h = el("div", "section-head");
       h.innerHTML = `<h2>${lockedCount} more in this guide 🔒</h2><p>Two ways in — pick whichever suits.</p>`;
@@ -443,6 +571,29 @@
         Been somewhere from this guide? Tag <strong>${esc(m.instagramHandle)}</strong> — I repost my favourites. See you out there. 🇴🇲
       </div>`;
 
+    // Email list — appears only once meta.backend is configured (see
+    // delivery/BACKEND-SETUP.md); with no backend there's nowhere to save it.
+    if (window.Analytics && Analytics.enabled) {
+      const sub = el("div", "about-subscribe");
+      sub.innerHTML = `
+        <h3>📬 New spots, monthly</h3>
+        <p>One email when the guide updates — new spots, road conditions, season notes. No spam, ever.</p>
+        <div class="subrow">
+          <input type="email" id="subEmail" placeholder="you@email.com" autocomplete="email">
+          <button class="pill" id="subBtn">Sign me up</button>
+        </div>
+        <div id="subMsg"></div>`;
+      sub.querySelector("#subBtn").onclick = async () => {
+        const em = sub.querySelector("#subEmail").value.trim();
+        const msg = sub.querySelector("#subMsg");
+        if (!/^\S+@\S+\.\S+$/.test(em)) { msg.innerHTML = `<div class="msg err">That doesn't look like an email.</div>`; return; }
+        const r = await Analytics.subscribe(em);
+        msg.innerHTML = r.ok ? `<div class="msg ok">You're on the list. 🇴🇲</div>`
+                             : `<div class="msg err">Couldn't sign you up — try again in a bit.</div>`;
+      };
+      w.appendChild(sub);
+    }
+
     // "What's new" — the receipts behind the buy-once-updated-forever promise.
     if (m.changelog && m.changelog.length) {
       const log = el("div", "about-changelog");
@@ -477,7 +628,8 @@
   const prefs = {
     days: 5, month: new Date().getMonth() + 1, pace: "balanced",
     interests: ["swimming", "hiking", "culture"],
-    fitness: 3, has4x4: true, canSwim: true, kids: false, base: "muscat"
+    fitness: 3, has4x4: true, canSwim: true, kids: false, base: "muscat",
+    heatStyle: "early"
   };
 
   function renderPlanner() {
@@ -504,7 +656,7 @@
             <span class="price-name">Complete Oman Pack</span>
             <span class="price-tag">${D.meta.bundlePrice}</span>
           </div>
-          <p>Every tab — wadis, beaches, experiences, food, shopping, itineraries — <strong>plus the trip Planner</strong>. Updated free, forever.</p>
+          <p>Every tab — ${esc(tabListText())} — <strong>plus the trip Planner</strong>. Updated free, forever.</p>
           <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get everything — ${D.meta.bundlePrice}</a>
         </div>`;
       view.appendChild(w);
@@ -553,6 +705,38 @@
       sel.onchange = () => (prefs.month = +sel.value);
       const f = el("div", "field"); f.appendChild(sel);
       w.appendChild(f);
+    }));
+
+    // heat style — only bites May–Sep up north, but it's cheap to always ask
+    form.appendChild(question("If it's hot, how do you want to play it?", "Matters most May–September up north. The planner shifts your whole clock around this.", w => {
+      const o = el("div", "opts");
+      [["early", "🌅 Dawn starts — beat the heat"], ["late", "🌇 Slow mornings — hot stuff late"]].forEach(([k, label]) => {
+        const b = el("button", "opt", label);
+        b.setAttribute("aria-pressed", String(prefs.heatStyle === k));
+        b.onclick = () => {
+          prefs.heatStyle = k;
+          o.querySelectorAll(".opt").forEach(x => x.setAttribute("aria-pressed", "false"));
+          b.setAttribute("aria-pressed", "true");
+        };
+        o.appendChild(b);
+      });
+      w.appendChild(o);
+    }));
+
+    // base — Salalah is 1,000km from Muscat, so it's a different trip entirely
+    form.appendChild(question("Where are you based?", "Muscat covers the north. Salalah is its own trip — you fly between them.", w => {
+      const o = el("div", "opts");
+      [["muscat", "🏙️ Muscat & the north"], ["dhofar", "🌴 Salalah & Dhofar"]].forEach(([k, label]) => {
+        const b = el("button", "opt", label);
+        b.setAttribute("aria-pressed", String(prefs.base === k));
+        b.onclick = () => {
+          prefs.base = k;
+          o.querySelectorAll(".opt").forEach(x => x.setAttribute("aria-pressed", "false"));
+          b.setAttribute("aria-pressed", "true");
+        };
+        o.appendChild(b);
+      });
+      w.appendChild(o);
     }));
 
     // interests
@@ -624,6 +808,7 @@
 
     const go = el("button", "btn-full", "Build my trip →");
     go.onclick = () => {
+      if (window.Analytics) Analytics.track("plan", { days: prefs.days, pace: prefs.pace, base: prefs.base, month: prefs.month, heatStyle: prefs.heatStyle, interests: prefs.interests });
       renderPlan(Planner.build(prefs));
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -667,9 +852,11 @@
       const leg = el("div", "leg" + (l.type === "drive" ? " drive" : ""));
       leg.appendChild(el("div", "leg-time", Planner.fmt(l.t)));
       const main = el("div", "leg-main");
-      const icon = l.type === "drive" ? "🚗 " : l.type === "sleep" ? "🌙 " : "📍 ";
+      const icon = l.type === "drive" ? "🚗 " : l.type === "sleep" ? "🌙 "
+                 : l.type === "note"  ? (l.icon || "☕") + " " : "📍 ";
       main.appendChild(el("strong", null, icon + esc(l.title) + (l.dur && l.type === "drive" ? ` · ${Planner.dur(l.dur)}` : "")));
       if (l.note) main.appendChild(el("div", "leg-note", esc(l.note)));
+      if (l.fixNote) main.appendChild(el("div", "leg-note heat", esc(l.fixNote)));
       if (l.heatNote) main.appendChild(el("div", "leg-note heat", esc(l.heatNote)));
 
       if (l.spot) {
@@ -811,7 +998,9 @@
     return leafletLoading;
   }
 
-  const CAT_COLORS = { wadis: "#0d8abc", beaches: "#d97706", experiences: "#7c3aed", food: "#dc2626" };
+  const CAT_COLORS = { wadis: "#0d8abc", beaches: "#d97706", mountains: "#0f766e",
+                       salalah: "#16a34a", experiences: "#7c3aed", food: "#dc2626",
+                       shopping: "#be185d" };
 
   function renderMap() {
     clearView();
@@ -909,7 +1098,8 @@
         const link = it.affiliate && aff[it.affiliate];
         if (link) {
           const a = el("a", "affbtn", esc(it.affLabel || "Link →"));
-          a.href = link; a.target = "_blank"; a.rel = "noopener";
+          a.href = affLink(link); a.target = "_blank"; a.rel = "noopener";
+          a.dataset.spot = "info";
           row.querySelector(".info-body").appendChild(a);
         }
         s.appendChild(row);
@@ -988,9 +1178,11 @@
   }
 
   /* ------------------------------------------------------------------ router */
+  let lastCat = null;
   function route() {
     const cat = location.hash.replace("#/", "") || "wadis";
     const known = D.categories.find(c => c.id === cat) ? cat : "wadis";
+    if (known !== lastCat) { typeFilter = null; lastCat = known; }  // fresh tab, no filter
     renderTabs(known);
     renderUnlockBtn();
     const meta = D.categories.find(c => c.id === known);
@@ -1021,6 +1213,7 @@
   };
   $("#searchInput").oninput = e => {
     query = e.target.value.trim();
+    typeFilter = null;                       // searching clears the type filter
     const cat = location.hash.replace("#/", "") || "wadis";
     const meta = D.categories.find(c => c.id === cat);
     if (meta && !meta.special) renderCategory(cat);

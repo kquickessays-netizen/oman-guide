@@ -73,19 +73,27 @@ img{max-width:100%;display:block}
 .pill-unlocked{background:#e7f4ea;color:#1e6b39}
 
 /* -------------------------------------------------------------------- tabs */
+/* The tabs WRAP instead of scrolling sideways — on a phone you can see every
+   tab at once (3 rows of 3-4) instead of discovering them by swiping. */
 .tabs{
   max-width:var(--maxw);margin:0 auto;
-  display:flex;gap:6px;padding:0 12px 8px;
-  overflow-x:auto;scrollbar-width:none;
+  display:flex;flex-wrap:wrap;gap:6px;padding:0 10px 10px;
 }
-.tabs::-webkit-scrollbar{display:none}
 .tab{
-  flex:0 0 auto;padding:8px 14px;border-radius:999px;
+  flex:0 1 auto;padding:8px 12px;border-radius:999px;
   font-size:14px;font-weight:600;color:var(--muted);
-  background:transparent;border:1px solid transparent;white-space:nowrap;
+  background:#fff;border:1px solid var(--line);white-space:nowrap;
 }
-.tab[aria-selected="true"]{background:var(--water);color:#fff}
+.tab[aria-selected="true"]{background:var(--water);color:#fff;border-color:var(--water)}
 .tab .t-icon{margin-right:5px}
+
+/* Narrow phones: shrink the chips a touch so the whole set still fits in
+   three tidy rows rather than spilling into five. */
+@media(max-width:420px){
+  .tabs{gap:5px;padding:0 8px 10px}
+  .tab{padding:7px 10px;font-size:13px}
+  .tab .t-icon{margin-right:3px}
+}
 
 /* ------------------------------------------------------------------ search */
 .searchbar{
@@ -105,6 +113,29 @@ img{max-width:100%;display:block}
 .cat-head{margin-bottom:18px}
 .cat-head h1{font-size:26px;letter-spacing:-.5px}
 .cat-head p{margin:6px 0 0;color:var(--muted);font-size:14.5px}
+
+/* --------------------------------------------------- type filter row (tabs) */
+/* "All · 🏖️ Beach 3 · 🌊 Waterfall 2 · 🏬 Mall 1" — a scrollable row of
+   filter chips built from the types actually present in the tab. */
+.typefilter{
+  display:flex;gap:8px;overflow-x:auto;margin:0 0 16px;padding:2px 0 8px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.typefilter::-webkit-scrollbar{display:none}
+.tfchip{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;
+  font:inherit;font-size:13px;font-weight:600;line-height:1;
+  padding:8px 12px;border-radius:999px;cursor:pointer;
+  background:#fff;color:var(--ink);border:1px solid var(--line);
+  transition:background .12s ease,border-color .12s ease,color .12s ease;
+}
+.tfchip:hover{border-color:var(--water)}
+.tfchip .tfn{
+  font-size:11px;font-weight:700;color:var(--muted);
+  background:var(--sand-2);border-radius:999px;padding:2px 6px;min-width:18px;text-align:center;
+}
+.tfchip.on{background:var(--water-dark,#14564a);color:#fff;border-color:var(--water-dark,#14564a)}
+.tfchip.on .tfn{background:rgba(255,255,255,.22);color:#fff}
 
 /* ------------------------------------------------------------------- cards */
 .grid{display:grid;gap:14px}
@@ -132,6 +163,7 @@ img{max-width:100%;display:block}
 .chip-free{background:#e7f4ea;color:#1e6b39}
 .chip-lock{background:var(--gold-soft);color:var(--gold)}
 .chip-hard{background:#fbe9e6;color:var(--danger)}
+.chip-type{background:var(--sand-2);color:#4c5a54;border:1px solid var(--line);text-transform:none;letter-spacing:0;font-size:11px}
 .card h3{font-size:18.5px;letter-spacing:-.3px;margin-bottom:4px}
 .card .tagline{color:var(--muted);font-size:14px;margin:0 0 10px}
 .card .blurb{font-size:14.5px;margin:0 0 12px;color:#3d4a45}
@@ -560,6 +592,17 @@ e 2.2s infinite;
 .imgcredit{position:absolute;right:8px;bottom:6px;font-size:10px;color:#fff;
   background:rgba(0,0,0,.45);padding:2px 8px;border-radius:8px;max-width:85%;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* spot-specific booking button + discount code chip */
+.affbtn.aff-primary{background:var(--accent, #0d8abc);color:#fff;font-weight:600}
+.discount-chip{display:inline-block;margin:6px 0 0 8px;font-size:12px;color:var(--muted);
+  border:1px dashed var(--line);border-radius:8px;padding:3px 8px}
+.discount-chip strong{color:var(--ink);letter-spacing:.4px}
+
+/* in-sheet gallery figures — photos dealt out between the text sections */
+.sheet-fig{margin:14px 0}
+.sheet-fig img{width:100%;border-radius:12px;display:block;max-height:340px;object-fit:cover}
+.sheet-fig figcaption{font-size:12px;color:var(--muted);margin-top:5px;position:relative}
+.sheet-fig figcaption .imgcredit{position:static;background:none;color:var(--muted);padding:0;white-space:normal}
 .about-credits{margin-top:14px;background:#fff;border:1px solid var(--line);
   border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow)}
 .about-credits h3{margin-bottom:6px}
@@ -568,3 +611,17 @@ e 2.2s infinite;
 @media (max-width:640px){.about-credits ul{columns:1}}
 .about-credits li{font-size:12px;color:var(--muted);margin:3px 0;break-inside:avoid}
 .about-credits li strong{color:var(--ink);font-weight:600}
+
+/* ============================================================== TAB INTROS */
+.cat-intro{margin-top:10px !important;font-size:14px;line-height:1.65;color:var(--ink) !important;
+  background:#fff;border:1px solid var(--line);border-left:4px solid var(--water);
+  border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow)}
+
+/* =========================================================== EMAIL SIGNUP */
+.about-subscribe{margin-top:14px;background:#fff;border:1px solid var(--line);
+  border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow)}
+.about-subscribe p{color:var(--muted);font-size:13.5px;margin:4px 0 12px}
+.subrow{display:flex;gap:8px}
+.subrow input{flex:1;min-width:0;padding:10px 14px;border:1px solid var(--line);
+  border-radius:12px;font-size:14px;background:var(--sand-2)}
+.subrow input:focus{outline:2px solid var(--water);border-color:transparent}

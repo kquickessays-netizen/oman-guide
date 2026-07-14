@@ -20,25 +20,15 @@ app/
 
 ---
 
-## The three things you must do before selling
+## The two things you must do before selling
 
-**1. Paste your Gumroad links** → `data/content.js`, the `buyLinks` block near the top.
+**1. Paste your Gumroad links** → `data/content.js`, the `buyLinks` block near the top. That's the *only* place they go: the buy buttons AND the licence-key check both read from it (`js/unlock.js` pulls the permalink out of each URL itself — nothing to edit in that file).
 
-**2. Turn on licence keys in Gumroad, then paste the permalinks** → `js/unlock.js`, the `GUMROAD` block.
-
-In Gumroad: your product → **Settings → check "Generate a licence key per sale"**. The *permalink* is the last bit of the product URL — `gumroad.com/l/oman-bundle` → `"oman-bundle"`.
-
-```js
-const GUMROAD = {
-  bundle: { permalink: "oman-bundle", grants: "*" },        // "*" = unlocks everything
-  wadis:  { permalink: "oman-wadis",  grants: "wadis" },    // unlocks one tab
-  ...
-};
-```
+In Gumroad, every product needs: **Settings → "Generate a licence key per sale" → ON.** Full walkthrough in `delivery/GUMROAD-SETUP.md`.
 
 The bundle key unlocks every tab **and the Planner**. That's the whole reason to buy the bundle.
 
-**3. Paste your affiliate links** → `data/content.js`, the `affiliates` block. One link each; the app drops them in everywhere they're relevant automatically.
+**2. Paste your affiliate links** → `data/content.js`, the `affiliates` block. One link each; the app drops them in everywhere they're relevant automatically.
 
 ---
 

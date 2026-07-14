@@ -4,27 +4,48 @@
    HOW IT WORKS
    1. Buyer purchases on Gumroad. Gumroad emails them a licence key.
       (Turn this on: Gumroad product → Settings → check "Generate a licence key
-       per sale". Then copy the product's *permalink* into GUMROAD below.)
+       per sale".)
    2. Buyer taps Unlock, pastes the key.
    3. We POST it to Gumroad's public verify endpoint. If it's a real, unrefunded
       sale, we store the unlock in localStorage and load premium.js.
 
    The bundle key unlocks EVERYTHING. A single-guide key unlocks that tab only.
+
+   ⚙️ NOTHING TO EDIT IN THIS FILE. The product permalinks are read straight out
+   of `meta.buyLinks` in data/content.js — paste your 9 Gumroad URLs there and
+   both the buy buttons and the key check are wired at once.
    ========================================================================== */
 
 const Unlock = (() => {
 
-  // >>> SET THESE. The permalink is the bit after gumroad.com/l/  <<<
-  // e.g. https://hussain.gumroad.com/l/oman-bundle  →  permalink: "oman-bundle"
-  const GUMROAD = {
-    bundle:      { permalink: "YOUR-BUNDLE",      grants: "*" },
-    wadis:       { permalink: "YOUR-WADIS",       grants: "wadis" },
-    beaches:     { permalink: "YOUR-BEACHES",     grants: "beaches" },
-    experiences: { permalink: "YOUR-EXPERIENCES", grants: "experiences" },
-    food:        { permalink: "YOUR-FOOD",        grants: "food" },
-    shopping:    { permalink: "YOUR-SHOPPING",    grants: "shopping" },
-    itineraries: { permalink: "YOUR-ITINERARIES", grants: "itineraries" }
+  // buyLinks key  →  what a key for that product unlocks ("*" = everything)
+  const GRANTS = {
+    bundle:      "*",
+    wadis:       "wadis",
+    beaches:     "beaches",
+    mountains:   "mountains",
+    salalah:     "salalah",
+    experiences: "experiences",
+    food:        "food",
+    shopping:    "shopping",
+    itineraries: "itineraries"
   };
+
+  // "https://hussain.gumroad.com/l/oman-bundle?x=1"  →  "oman-bundle"
+  function permalinkOf(url) {
+    const m = /gumroad\.com\/l\/([^/?#\s]+)/i.exec(url || "");
+    return m ? m[1] : "";
+  }
+
+  /* The configured products, read live from content.js. Placeholder links
+     (gumroad.com/l/YOUR-…) are ignored, so a half-finished setup still works
+     for the guides you HAVE published. */
+  function products() {
+    const links = (window.OMAN_DATA && window.OMAN_DATA.meta && window.OMAN_DATA.meta.buyLinks) || {};
+    return Object.keys(GRANTS)
+      .map(name => ({ name: name, permalink: permalinkOf(links[name]), grants: GRANTS[name] }))
+      .filter(p => p.permalink && !/^your-/i.test(p.permalink));
+  }
 
   // Master keys that always work — for you, for press, for refunds/gifts.
   // Stored as SHA-256 HASHES so the plaintext never ships to visitors (this
@@ -67,6 +88,7 @@ const Unlock = (() => {
   function isAnythingOwned(){ return state.grants.length > 0; }
   function grants()         { return state.grants.slice(); }
   function key()            { return state.key; }
+  function email()          { return state.email; }   // buyer email from Gumroad (analytics)
 
   /* ------------------------------------------------------- premium content */
   let premiumLoading = null;
@@ -107,20 +129,19 @@ const Unlock = (() => {
     }
 
     // 2. try each configured product until one verifies
-    const products = Object.entries(GUMROAD).filter(
-      ([, p]) => p.permalink && !p.permalink.startsWith("YOUR-")
-    );
+    const list = products();
 
-    if (!products.length) {
+    if (!list.length) {
       return {
         ok: false,
-        error: "No Gumroad products configured yet. Open app/js/unlock.js and paste your product permalinks into GUMROAD."
+        error: "No Gumroad products configured yet. Paste your product links into meta.buyLinks in data/content.js."
       };
     }
 
     let networkFailed = false;
 
-    for (const [name, prod] of products) {
+    for (const prod of list) {
+      const name = prod.name;
       try {
         const body = new URLSearchParams({
           product_permalink: prod.permalink,
@@ -168,5 +189,5 @@ const Unlock = (() => {
     return Promise.resolve();
   }
 
-  return { has, hasBundle, isAnythingOwned, grants, key, verify, reset, init, loadPremium, detail, GUMROAD };
+  return { has, hasBundle, isAnythingOwned, grants, key, email, verify, reset, init, loadPremium, detail, products };
 })();

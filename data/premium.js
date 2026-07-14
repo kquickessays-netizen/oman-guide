@@ -192,13 +192,91 @@ window.OMAN_PREMIUM = {
     guideNote: "Boat hire is arranged on the beach — agree the price and the return time up front."
   },
 
-  "mughsail": {
-    gettingThere: "Fly to Salalah (~1,000km from Muscat — this is a separate trip, not a day out). Mughsail is ~40 min west of Salalah on a good road.",
-    whatYoullDo: "[YOUR TAKE — and whether you'd send someone in khareef or in winter.] Golden sand, sheer cliffs, and natural blowholes that fire seawater metres into the air when the swell is right. In khareef season (Jul–Sep) the whole of Dhofar turns green, which is unlike anywhere else in Arabia.",
+  /* ═════════════════════════════════════════════════════════════ SALALAH */
+  "al-baleed": {
+    gettingThere: "On the Salalah waterfront next to the Hilton side of town — any car or an OTaxi. Entry is a few rials per car and includes the Museum of the Frankincense Land. Open into the evening.",
+    whatYoullDo: "[YOUR ROUTE — museum first or ruins first, and why.] Do the museum first for the story — the frankincense trade, the dhows, the ports — then walk or take the buggy around the excavated city of Zafar as the light drops. The lagoon edge is full of herons and, in season, flamingos. At dusk the ruins are lit and the temperature finally behaves.",
     tips: [
-      "[The blowholes need a swell. Flat sea = nothing happens.]",
-      "[Khareef (Jul–Sep) is green and misty; winter is sunny and swimmable. Two different trips.]",
-      "[Drive on to Fazayah if you have the time and a 4×4 — emptier, and better.]"
+      "[Evening. The site is lit, the museum is air-conditioned, and the midday heat is nobody's friend.]",
+      "[The buggy is worth it with kids — the site is bigger than it looks.]",
+      "[Pair with a sunset walk on Al Haffa beach and dinner nearby.]"
+    ],
+    guideNote: ""
+  },
+
+  "khor-rori": {
+    gettingThere: "~35–40 min east of Salalah, signposted off the Taqah–Mirbat road just past Wadi Darbat's turnoff. Paved to the gate, then a short dusty track to the hilltop car park. A few rials per car.",
+    whatYoullDo: "[YOUR ROUTE.] Walk the 2,000-year-old walls of Sumhuram above the lagoon — this was the frankincense port that traded with Rome and India. Then drive down to the lagoon mouth: flamingos and herons on the water, camels wandering the sand bar where the khor meets the sea. Late afternoon light turns the whole thing gold.",
+    tips: [
+      "[Combine Darbat + Khor Rori in one day — same road.]",
+      "[The beach at the sand bar is one of the quietly great picnic spots in Dhofar.]",
+      "[Weekdays: you'll have the ruins nearly alone.]"
+    ],
+    guideNote: ""
+  },
+
+  "jabal-samhan": {
+    gettingThere: "~1.5 hrs east of Salalah: through Taqah and Mirbat, then the switchback road up the plateau — paved the whole way, any car, but check your brakes for the descent. Combine with Tawi Atayr sinkhole and the baobab valley on the way.",
+    whatYoullDo: "[YOUR TAKE — sunrise or sunset, and where exactly you stand.] Park at the viewpoint and walk the rim: the escarpment drops the best part of a kilometre to the coastal plain, and on a clear day you can trace the whole shoreline toward Mirbat. This is the heart of the Arabian leopard reserve — you won't see one, but the emptiness is the point.",
+    tips: [
+      "[Avoid khareef for this one — the plateau sits inside the fog Jul–Aug and there is no view.]",
+      "[It's windy and 10 degrees cooler up top. Jacket.]",
+      "[Fuel up in Mirbat — stations are sparse on the mountain.]"
+    ],
+    guideNote: ""
+  },
+
+  "fazayah-beach": {
+    gettingThere: "West from Salalah past Mughsail (~1.5 hrs total): the road climbs the Sarfait switchbacks, then a signed graded track drops steeply to the coves. The descent is the 4×4 part — low gear, no drama in the dry. Nothing down there but sand and camels: bring everything.",
+    whatYoullDo: "[YOUR ROUTINE — which cove, and what time the light works.] A string of white-sand coves under pale cliffs, usually empty except for camels cooling their feet in the shallows. Outside khareef the water is calm and clear — swim, snorkel the rocky ends, stay for sunset. In khareef the sea is dangerous; go for the view, not the water.",
+    tips: [
+      "[The first cove gets the (few) visitors — walk one further.]",
+      "[No shade, no water, no signal in the coves. Plan like it's a mini-expedition.]",
+      "[Sunset from the descent track, looking back down the coast, is the photograph.]"
+    ],
+    guideNote: ""
+  },
+
+  "wadi-dawkah": {
+    gettingThere: "~45 min north of Salalah on the Thumrait road (Route 31) — signposted, paved, any car. It's on the way to the Empty Quarter, so it slots naturally into a desert day.",
+    whatYoullDo: "[YOUR TAKE — why this ties the frankincense story together.] Walk among a couple of thousand wild Boswellia sacra trees in their natural wadi — the same groves that supplied the ports at Sumhuram and Al Baleed for two millennia. Look for the dried resin beads on cut bark. Twenty minutes here makes the museums make sense.",
+    tips: [
+      "[Go early or late — the desert side of the mountains is hotter than Salalah.]",
+      "[Buy your actual frankincense in Al Haffa souq afterwards, now you know what you're looking at.]",
+      "[If you're pushing on to the Empty Quarter, this is the free warm-up act.]"
+    ],
+    guideNote: ""
+  },
+
+  "ayn-razat": {
+    gettingThere: "~25 min northeast of Salalah — paved, signposted, any car. Free parking by the gardens.",
+    whatYoullDo: "[YOUR ROUTINE.] The spring rises at the cliff base and feeds a falaj through a strip of ornamental gardens — this is where Salalah families picnic. Climb the steps to the small cave in the cliff for the view over the greenery. In khareef the whole hillside above runs green and the birdlife goes berserk.",
+    tips: [
+      "[Mornings are quiet; Friday afternoons are the full family scene — pick your vibe.]",
+      "[Combine with Ayn Athum and the other springs along the mountain base in khareef.]",
+      "[No swimming in the spring — it feeds the irrigation channels.]"
+    ],
+    guideNote: ""
+  },
+
+  "taqah-castle": {
+    gettingThere: "~35 min east of Salalah on the coast road, in the middle of Taqah town — any car, park by the square. Twenty minutes short of Khor Rori, so do them on the same run east.",
+    whatYoullDo: "[YOUR TAKE — what stuck with you inside.] The restored wali's residence: living quarters laid out as they were used, the majlis, the women's rooms, rifle slits covering the bay, and a rooftop with the view along the Taqah coast. It's small — under an hour — but it's the best window into pre-1970 Dhofari life you'll get.",
+    tips: [
+      "[Confirm opening days — small forts keep small hours, and Fridays are unreliable.]",
+      "[Rooftop late afternoon for the light along the coast.]",
+      "[Stack it: Taqah Castle → Khor Rori → Wadi Darbat is one natural day east.]"
+    ],
+    guideNote: ""
+  },
+
+  "ayn-athum": {
+    gettingThere: "~25 min northeast of Salalah at the foot of the mountains — paved to the parking, any car. Signage is thin; follow the maps pin, not the road signs.",
+    whatYoullDo: "[YOUR ROUTINE — when you go and where you stand.] In khareef the spring becomes a waterfall off the green cliff, with mist rolling through the trees — the Darbat scene without the buses. Outside the monsoon it's a quiet pool and a shady walk. Ten minutes from Ayn Razat, so see both.",
+    tips: [
+      "[Peak flow late July–August; just after khareef it's still green and empty.]",
+      "[Wet rock everywhere in season — grip matters more than it looks.]",
+      "[No swimming — it feeds the falaj, same as Razat.]"
     ],
     guideNote: ""
   },
@@ -227,16 +305,27 @@ window.OMAN_PREMIUM = {
     guideNote: "Pick a camp. Researched candidates: Oman Wahiba Sands Desert Tours, Magic Camps, Zahara Tours, Sunshine Tours. I stay at [camp name]."
   },
 
-  "jabal-shams": {
-    gettingThere: "~3.5–4 hrs from Muscat, or ~1.5 hrs on from Nizwa. Paved most of the way; a 4×4 is recommended for the final approach to the trailhead near Al Khitaym village.",
-    whatYoullDo: "[YOUR ROUTE — the trail along the rim, the abandoned village at the turnaround, the views into the canyon. Be clear about the exposure for anyone nervous with heights.] The W6 Balcony Walk is waymarked red–white–yellow and follows a ledge cut into the cliff face.",
+  /* ═══════════════════════════════════════════════════════════ MOUNTAINS */
+  "balad-sayt": {
+    gettingThere: "Two ways in, both 4×4: over the Sharaf Al Alamayn pass from Al Hamra (the spectacular way), or up Wadi Bani Awf from the Rustaq side (the long way, past Snake Gorge). Either way it's a real graded mountain road — confident driving, low gear, and don't do it in rain. Park at the village edge; walk in.",
+    whatYoullDo: "[YOUR ROUTE — where you stop for THE photo, and how you've seen tourists get it wrong.] The village sits in a natural amphitheatre — green terraces below, mud-brick houses stacked above, mountains sealing it in on every side. Wander the lanes quietly (people live here; dress modestly, ask before photographing anyone), then climb to the track above the football pitch for the classic panorama.",
     tips: [
-      "[Start early — the shade goes and it's a long walk back.]",
-      "[More water than you think. There is none on the trail.]",
-      "[A jacket. It's 2,000m and the wind is cold even in summer.]",
-      "[Pair it with Wadi Ghul below — same canyon, opposite perspective.]"
+      "[The famous shot is from the track above the village, late afternoon.]",
+      "[Combine into a loop: Al Hamra → Sharaf Al Alamayn → Balad Sayt → Snake Gorge viewpoint → Rustaq.]",
+      "[This is a conservative village that has been very patient with Instagram. Be the visitor that keeps it that way.]"
     ],
-    guideNote: "Doable alone if you're fit, but a guide makes the drive and the exposed sections easier."
+    guideNote: "If the mountain road worries you, a guide-driver turns a white-knuckle day into a great one. [Guide name] does this loop well."
+  },
+
+  "sharaf-al-alamayn": {
+    gettingThere: "From Al Hamra the paved road climbs to the pass and the tarmac ends near the top (~45 min); from the Bani Awf side it's graded track the whole way up. 4×4 either way. The viewpoint is at the crest — park and walk the rim.",
+    whatYoullDo: "[YOUR TAKE — sunset ritual, where you set up.] Stand on the rim at ~2,000m with the western Hajar collapsing away beneath you — ridgelines to the horizon, Wadi Bani Awf's villages tiny below. Sunset turns the whole range copper. Bring the flask, stay past the colour, and drive down in the last light carefully.",
+    tips: [
+      "[It is COLD up here after sunset, even in May. Nobody believes it.]",
+      "[The W9 trail to Balad Sayt starts near the pass — a serious, brilliant day hike if you arrange a pickup below.]",
+      "[Full moon nights up here are something else entirely.]"
+    ],
+    guideNote: ""
   },
 
   "nizwa": {
