@@ -32,13 +32,24 @@
     const list = cat === "itineraries" ? D.itineraries : D.spots.filter(s => s.cat === cat);
     if (!query) return list;
     const q = query.toLowerCase();
+    // Locked items are excluded from search — matching by name would confirm
+    // what's behind the paywall ("Mibam" → 1 locked result = the name leaked).
     return list.filter(s =>
+      isUnlocked(s) &&
       (s.name + " " + s.tagline + " " + (s.blurb || "") + " " + (s.sub || "") + " " + (s.tags || []).join(" "))
         .toLowerCase().includes(q)
     );
   }
 
   const isUnlocked = item => item.free || Unlock.has(item.cat || "itineraries");
+
+  /* Locked items render as anonymous "hidden spot" cards — no name, photo,
+     location or stats until purchase. The names still exist in the shipped
+     data files (accepted trade-off of the static paywall), but nothing in
+     the UI reveals them. */
+  const SINGULAR = { wadis: "wadi", beaches: "beach", experiences: "experience",
+                     food: "food spot", shopping: "shop", itineraries: "itinerary" };
+  const singularOf = item => SINGULAR[item.cat || "itineraries"] || "spot";
 
   /* ------------------------------------------------------------- price block
      Every locked thing shows BOTH doors: this guide, or the whole pack.       */
@@ -107,13 +118,18 @@
   }
 
   /* ------------------------------------------------------------------- card */
-  function card(item) {
+  function card(item, lockNum) {
     const unlocked = isUnlocked(item);
     const c = el("article", "card" + (unlocked ? "" : " locked"));
 
     const media = el("div", "card-media");
-    if (item.img) media.style.backgroundImage = `url("${item.img}")`;
-    else media.textContent = "📷 " + item.name;
+    if (unlocked) {
+      if (item.img) media.style.backgroundImage = `url("${item.img}")`;
+      else media.textContent = "📷 " + item.name;
+    } else {
+      media.classList.add("card-media-locked");
+      media.textContent = "🔒";
+    }
     c.appendChild(media);
 
     const body = el("div", "card-body");
@@ -121,23 +137,30 @@
     const kick = el("div", "card-kicker");
     kick.appendChild(el("span", "chip " + (unlocked ? "chip-free" : "chip-lock"),
       unlocked ? (item.free ? "Free preview" : "✓ Unlocked") : "🔒 Locked"));
-    if (item.sub) kick.appendChild(el("span", "chip", esc(item.sub)));
-    if (item.stats && /Hard/.test(item.stats.Difficulty || "")) kick.appendChild(el("span", "chip chip-hard", "Hard"));
-    if (item.guide === "required") kick.appendChild(el("span", "chip", "Guide required"));
-    if (item.needs4x4) kick.appendChild(el("span", "chip", "4×4"));
-    if (item.months && !item.months.includes(new Date().getMonth() + 1))
-      kick.appendChild(el("span", "chip chip-season", `🌡️ Best ${Planner.monthsLabel(item.months)}`));
+    if (unlocked) {
+      if (item.sub) kick.appendChild(el("span", "chip", esc(item.sub)));
+      if (item.stats && /Hard/.test(item.stats.Difficulty || "")) kick.appendChild(el("span", "chip chip-hard", "Hard"));
+      if (item.guide === "required") kick.appendChild(el("span", "chip", "Guide required"));
+      if (item.needs4x4) kick.appendChild(el("span", "chip", "4×4"));
+      if (item.months && !item.months.includes(new Date().getMonth() + 1))
+        kick.appendChild(el("span", "chip chip-season", `🌡️ Best ${Planner.monthsLabel(item.months)}`));
+    }
     body.appendChild(kick);
 
-    body.appendChild(el("h3", null, esc(item.name)));
-    body.appendChild(el("p", "tagline", esc(item.tagline)));
-    if (item.blurb) body.appendChild(el("p", "blurb", esc(item.blurb)));
+    if (unlocked) {
+      body.appendChild(el("h3", null, esc(item.name)));
+      body.appendChild(el("p", "tagline", esc(item.tagline)));
+      if (item.blurb) body.appendChild(el("p", "blurb", esc(item.blurb)));
 
-    if (item.stats) {
-      const mr = el("div", "metarow");
-      Object.entries(item.stats).slice(0, 3).forEach(([k, v]) =>
-        mr.appendChild(el("span", "meta", `${esc(k)}: <strong>${esc(v)}</strong>`)));
-      body.appendChild(mr);
+      if (item.stats) {
+        const mr = el("div", "metarow");
+        Object.entries(item.stats).slice(0, 3).forEach(([k, v]) =>
+          mr.appendChild(el("span", "meta", `${esc(k)}: <strong>${esc(v)}</strong>`)));
+        body.appendChild(mr);
+      }
+    } else {
+      body.appendChild(el("h3", null, `Hidden ${singularOf(item)}${lockNum ? " #" + lockNum : ""}`));
+      body.appendChild(el("p", "tagline", "Unlock to reveal this one."));
     }
 
     if (unlocked) {
@@ -146,7 +169,7 @@
     } else {
       const veil = el("div", "lock-veil");
       veil.appendChild(el("p", null,
-        "🔒 The full write-up, exact route, hike &amp; swim times, my packing list and insider tips are in the paid guide."));
+        "🔒 The name, photo, exact location, full write-up, hike &amp; swim times, my packing list and insider tips are in the paid guide."));
       const acts = el("div", "lock-actions");
 
       const buy = el("a", "btn-buy", `This guide — ${D.meta.singlePrice}`);
@@ -205,7 +228,9 @@
       days.forEach(d => {
         h += `<h3 class="sec">${esc(d.title)}</h3><p class="body">${esc(d.body)}</p>`;
         if (d.spots && d.spots.length) {
-          const pins = d.spots.map(id => D.spots.find(s => s.id === id)).filter(Boolean);
+          // Only pin spots the reader has access to — a free itinerary must
+          // not reveal the names of locked spots.
+          const pins = d.spots.map(id => D.spots.find(s => s.id === id)).filter(Boolean).filter(isUnlocked);
           if (pins.length) {
             h += `<div class="pinrow">` + pins.map(s =>
               `<a class="pin" href="${s.mapUrl}" target="_blank" rel="noopener">📍 ${esc(s.name)}</a>`).join("") + `</div>`;
@@ -356,7 +381,8 @@
     }
 
     const grid = el("div", "grid");
-    items.forEach(i => grid.appendChild(card(i)));
+    let lockN = 0;
+    items.forEach(i => grid.appendChild(card(i, isUnlocked(i) ? 0 : ++lockN)));
     view.appendChild(grid);
 
     const lockedCount = items.filter(i => !isUnlocked(i)).length;
@@ -428,7 +454,9 @@
 
     // Photo credits — attribution for the CC-licensed images (legally required
     // for CC BY / CC BY-SA; collected here rather than stamped on every card).
-    const credited = [...D.spots, ...(D.itineraries || [])].filter(s => s.img && s.imgCredit);
+    // Locked spots' photos aren't displayed, so they aren't credited either —
+    // crediting them would leak the names.
+    const credited = [...D.spots, ...(D.itineraries || [])].filter(s => s.img && s.imgCredit && isUnlocked(s));
     if (credited.length) {
       const cr = el("div", "about-credits");
       cr.innerHTML = `<h3>📷 Photo credits</h3><p class="credits-note">Photos from Wikimedia Commons under free licences, gratefully used:</p>` +
@@ -459,16 +487,33 @@
     head.appendChild(el("p", null, "Tell me what you like and how long you've got. I'll route it — real drive times, sensible days, every stop pinned in Google Maps, and nothing that puts you in a wadi you shouldn't be in."));
     view.appendChild(head);
 
-    // Non-buyers get the REAL planner, not a canned demo: they fill the form,
-    // it routes their actual trip, and they see Day 1 in full — the rest of
-    // the days render as locked teasers in renderPlan(). Nothing sells the
-    // bundle like its own output with their name on it.
+    // The Planner is bundle-only: no form, no teaser, no free Day 1. Non-buyers
+    // see the pitch and the single door in — the Complete Oman Pack.
     if (!Unlock.hasBundle()) {
       const p = el("div", "promo");
       p.innerHTML = `
-        <h3>Try it free — Day 1 is on me</h3>
-        <p>Fill this in and it routes your trip for real: regions clustered, drives budgeted, every stop pinned. You'll see <strong>your first day in full</strong> — the whole route unlocks with the Complete Oman Pack.</p>`;
+        <h3>🔒 The Planner comes with the Complete Oman Pack</h3>
+        <p>It builds your whole trip: days clustered by region so you never backtrack, real drive times, heat-smart start times, every stop pinned in Google Maps and the full route drawn on one map. It's not sold separately — it's included with the pack, along with every guide in the app.</p>`;
       view.appendChild(p);
+
+      const w = el("div", "pricebox compact");
+      w.innerHTML = `
+        <div class="price-opt best">
+          <div class="price-badge">Includes the Planner</div>
+          <div class="price-opt-head">
+            <span class="price-name">Complete Oman Pack</span>
+            <span class="price-tag">${D.meta.bundlePrice}</span>
+          </div>
+          <p>Every tab — wadis, beaches, experiences, food, shopping, itineraries — <strong>plus the trip Planner</strong>. Updated free, forever.</p>
+          <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get everything — ${D.meta.bundlePrice}</a>
+        </div>`;
+      view.appendChild(w);
+
+      const kb = el("button", "btn-key", "I have a key");
+      kb.style.marginTop = "12px";
+      kb.onclick = openUnlock;
+      view.appendChild(kb);
+      return;
     }
 
     const form = el("div");
@@ -653,6 +698,9 @@
   }
 
   function renderPlan(plan) {
+    // Bundle-only, no exceptions — belt and braces on top of renderPlanner's
+    // gate, in case a future code path calls this directly.
+    if (!Unlock.hasBundle()) { renderPlanner(); return; }
     clearView();
 
     const back = el("button", "pill pill-ghost", "← Change my answers");
@@ -686,25 +734,8 @@
 
     plan.warnings.forEach(w => view.appendChild(el("div", "plan-warn", esc(w))));
 
-    if (Unlock.hasBundle()) {
-      plan.days.forEach(d => view.appendChild(dayCard(d)));
-      if (plan.totalSpots) view.appendChild(routeMap(plan));
-    } else {
-      // The teaser: Day 1 in full, the rest as locked skeletons — enough to
-      // prove the route exists, not enough to follow it.
-      view.appendChild(dayCard(plan.days[0]));
-      plan.days.slice(1).forEach(d => {
-        const row = el("div", "plan-day plan-day-locked");
-        row.innerHTML = `
-          <div class="plan-day-head"><strong>Day ${d.n}</strong><span>🔒</span></div>
-          <div class="plan-day-body"><p class="leg-note">${d.spots.length} stop${d.spots.length === 1 ? "" : "s"}${d.driveHours ? " · 🚗 " + Planner.dur(d.driveHours) + " driving" : ""}${d.stayIn ? " · sleeps in " + esc(d.stayIn) : ""} — unlocked with the pack</p></div>`;
-        view.appendChild(row);
-      });
-      const veil = el("div", "lock-veil");
-      veil.innerHTML = `<p>🔒 That's your real route — ${plan.totalSpots} stops already sequenced. The pack opens every day, the whole trip drawn on a map, the day-by-day Google Maps links and the packing lists.</p>`;
-      view.appendChild(veil);
-      view.appendChild(priceBlock("wadis"));
-    }
+    plan.days.forEach(d => view.appendChild(dayCard(d)));
+    if (plan.totalSpots) view.appendChild(routeMap(plan));
 
     if (plan.missed.length) {
       const m = el("div", "promo");
@@ -784,9 +815,15 @@
 
   function renderMap() {
     clearView();
+    // Locked spots stay OFF the map — even an unnamed pin gives the location
+    // away, and the location is exactly what's being sold.
+    const hiddenCount = D.spots.filter(s => !isUnlocked(s)).length;
+
     const head = el("div", "cat-head");
     head.appendChild(el("h1", null, "📍 The map"));
-    head.appendChild(el("p", null, "Every spot in the guide, on one map. Tap a pin."));
+    head.appendChild(el("p", null, hiddenCount
+      ? "Your unlocked spots, on one map. Tap a pin."
+      : "Every spot in the guide, on one map. Tap a pin."));
     view.appendChild(head);
 
     const legend = el("div", "map-legend");
@@ -795,6 +832,12 @@
         `<span class="dot" style="background:${CAT_COLORS[c.id] || "#666"}"></span>${esc(c.label)}`));
     });
     view.appendChild(legend);
+
+    if (hiddenCount) {
+      const note = el("div", "promo");
+      note.innerHTML = `<p>🔒 <strong>${hiddenCount} more pins</strong> appear here when you unlock — the hidden wadis, beaches and spots most visitors never find.</p>`;
+      view.appendChild(note);
+    }
 
     const wrap = el("div", "mapwrap", `<div class="map-loading">Loading the map…</div>`);
     view.appendChild(wrap);
@@ -807,21 +850,20 @@
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
 
-      D.spots.filter(s => s.coords).forEach(s => {
-        const unlocked = isUnlocked(s);
+      D.spots.filter(s => s.coords && isUnlocked(s)).forEach(s => {
         const mk = L.circleMarker(s.coords, {
           radius: 8, weight: 2, color: "#fff",
           fillColor: CAT_COLORS[s.cat] || "#666",
-          fillOpacity: unlocked ? 0.95 : 0.5
+          fillOpacity: 0.95
         }).addTo(map);
 
         const pop = document.createElement("div");
         pop.className = "map-pop";
-        pop.innerHTML = `<strong>${unlocked ? "" : "🔒 "}${esc(s.name)}</strong><p>${esc(s.tagline)}</p>`;
+        pop.innerHTML = `<strong>${esc(s.name)}</strong><p>${esc(s.tagline)}</p>`;
         const btn = document.createElement("button");
         btn.className = "pin";
-        btn.textContent = unlocked ? "Details →" : "🔒 Unlock the full write-up";
-        btn.onclick = () => { map.closePopup(); unlocked ? openSheet(s) : openUnlock(); };
+        btn.textContent = "Details →";
+        btn.onclick = () => { map.closePopup(); openSheet(s); };
         pop.appendChild(btn);
         mk.bindPopup(pop);
       });
@@ -831,7 +873,7 @@
       wrap.appendChild(el("p", "map-loading",
         "The map needs an internet connection the first time it loads. Every pin still works:"));
       const list = el("div", "pinrow");
-      D.spots.filter(s => s.mapUrl).forEach(s => {
+      D.spots.filter(s => s.mapUrl && isUnlocked(s)).forEach(s => {
         const a = el("a", "pin", "📍 " + esc(s.name));
         a.href = s.mapUrl; a.target = "_blank"; a.rel = "noopener";
         list.appendChild(a);

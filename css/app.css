@@ -141,8 +141,12 @@ img{max-width:100%;display:block}
   background:var(--sand-2);color:#4c5a54;
 }
 
-/* locked cards */
+/* locked cards — anonymous by design: no photo, no name, just the lock */
 .card.locked .card-media{filter:saturate(.35)}
+.card-media-locked{
+  font-size:36px;
+  background:linear-gradient(135deg,var(--sand-2),var(--gold-soft));
+}
 .lock-veil{
   margin-top:12px;padding:13px 14px;border-radius:12px;
   background:linear-gradient(180deg,#fffdf8,var(--gold-soft));
