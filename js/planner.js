@@ -25,15 +25,72 @@ const Planner = (() => {
     packed:   { hours: 11,   label: "Packed",   note: "Up early, in bed late." }
   };
 
-  const HOP = 0.5;            // hours: driving between two spots in one region
+  /* ------------------------------------------------------------ drive times
+     Two spots in the same region are NOT "a short hop". Wadi Shab to Ras Al
+     Jinz is 100km of coast road; Nizwa to Jabal Shams is 90 minutes up a
+     mountain. So every leg is now costed from the spots' own coordinates:
+
+       road km  = straight line × a detour factor: 1.15 on a long highway run,
+                  1.3 locally, 1.45 on a mountain track (they switchback)
+       speed    = 90 km/h highway · 80 main road · 70 secondary · 45 in town,
+                  and 42 km/h if either end needs a 4×4 — a graded track is slow
+                  whatever the map says
+       + 9 min  = parking, finding the trailhead, getting everyone out of the car
+
+     Sanity-checked against the real drives: Wadi Shab → Ras Al Jinz ≈ 1h20,
+     Nizwa → Jabal Shams ≈ 1h40, Fins → Bimmah ≈ 20 min. Cross-region legs still
+     prefer `driveMatrix` in content.js — those are your own numbers, and a real
+     number beats a modelled one. The model only fills the gaps.               */
+  function haversine(a, b) {
+    if (!a || !b) return 0;
+    const R = 6371, rad = x => x * Math.PI / 180;
+    const dLat = rad(b[0] - a[0]), dLon = rad(b[1] - a[1]);
+    const s = Math.sin(dLat / 2) ** 2 +
+              Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLon / 2) ** 2;
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(s)));
+  }
+
+  function roadKm(a, b, rough) {
+    const straight = haversine(a, b);
+    const detour = rough ? 1.45 : (straight > 40 ? 1.15 : 1.3);
+    return straight * detour;
+  }
+
+  /* Hours between two coordinate pairs. rough = either end is 4×4 country. */
+  function legHours(a, b, rough) {
+    if (!a || !b) return 0.5;
+    const km = roadKm(a, b, rough);
+    if (km < 1) return 0;
+    const kmh = rough ? 42
+              : km > 80 ? 90
+              : km > 35 ? 80
+              : km > 12 ? 70
+              : 45;
+    return km / kmh + 0.15;
+  }
+
+  const regionCoords = r => {
+    const reg = window.OMAN_DATA.regions[r];
+    return reg && reg.coords;
+  };
+
+  const HOP = 0.5;            // fallback only — used when a spot has no coords
   const DAY_START = 8;        // 08:00
   const MAX_DRIVE_IN_DAY = 4; // hours of driving before a day stops being a holiday
 
   /* ---------------------------------------------------------------- helpers */
   function drive(a, b) {
     if (a === b) return 0;
-    const D = window.OMAN_DATA.driveMatrix;
-    return (D[a + "|" + b] ?? D[b + "|" + a] ?? 180) / 60; // hours
+    const M = window.OMAN_DATA.driveMatrix;
+    const mins = M[a + "|" + b] ?? M[b + "|" + a];
+    if (mins != null) return mins / 60;                        // your own number
+    return legHours(regionCoords(a), regionCoords(b), false);  // modelled fallback
+  }
+
+  /* The drive between two spots (or from the town you slept in to a spot). */
+  function hop(fromCoords, toSpot, fromRough) {
+    if (!fromCoords || !toSpot.coords) return HOP;
+    return legHours(fromCoords, toSpot.coords, fromRough || toSpot.needs4x4);
   }
 
   function fmt(h) {
@@ -289,7 +346,9 @@ const Planner = (() => {
           if (used.has(c.spot.id)) continue;
           if (c.spot.region !== reg) continue;
           if (c.spot.overnight) continue;
-          const cost = HOP + c.spot.hours;
+          // Cost it from the anchor: a spot 90 minutes away is not the same
+          // proposition as one 15 minutes away, and the budget must know it.
+          const cost = hop(anchor.spot.coords, c.spot, anchor.spot.needs4x4) + c.spot.hours;
           if (cost + reserve > left) continue;
           picks.push(c.spot);
           left -= cost;
@@ -308,6 +367,9 @@ const Planner = (() => {
 
       let placed = 0;
       let lunchDone = false;
+      // Where the car currently is: the town we drove to, then each spot in turn.
+      let atCoords = regionCoords(reg);
+      let atRough = false;
       picks.forEach(s => {
         // A hard visiting window (Grand Mosque 8–11am): wait for the doors if
         // we're early, and if the day can no longer fit it, put it back in the
@@ -323,9 +385,21 @@ const Planner = (() => {
         }
 
         if (placed > 0) {
-          day.legs.push({ type: "drive", t: clock, dur: HOP, title: "Short hop", note: "Same area — barely a drive." });
-          clock += HOP;
-          day.driveHours += HOP;
+          // Real distance, real road, real time — no more flat "short hop".
+          const h = hop(atCoords, s, atRough);
+          if (h > 0.05) {
+            const rough = atRough || s.needs4x4;
+            const km = Math.round(roadKm(atCoords, s.coords, rough));
+            day.legs.push({
+              type: "drive", t: clock, dur: h,
+              title: `Drive → ${s.name}`,
+              note: km
+                ? `~${km} km${rough ? " — mountain track / 4×4, so it's slow going" : ""}`
+                : ""
+            });
+            clock += h;
+            day.driveHours += h;
+          }
         }
 
         // A real lunch once the clock crosses midday — a food spot from the
@@ -335,10 +409,18 @@ const Planner = (() => {
           lunchDone = true;
           const f = lunchSpot(p, reg, used);
           if (f) {
+            const lh = hop(atCoords, f, atRough);
+            if (lh > 0.05) {
+              day.legs.push({ type: "drive", t: clock, dur: lh, title: `Drive → ${f.name}`, note: "Lunch stop." });
+              clock += lh;
+              day.driveHours += lh;
+            }
             day.legs.push({ type: "spot", t: clock, dur: 1, spot: f, title: "Lunch — " + f.name, note: f.tagline });
             day.spots.push(f);
             used.add(f.id);
             clock += 1;
+            atCoords = f.coords || atCoords;
+            atRough = false;
           } else {
             day.legs.push({ type: "note", icon: "🍽️", t: clock, title: "Lunch break", note: `Shawarma, grilled chicken or karak in ${D.regions[reg].base} — cheap, everywhere, exactly right.` });
             clock += 0.75;
@@ -348,6 +430,8 @@ const Planner = (() => {
         addSpot(day, s, clock, isHot(s, p), win ? `🕌 Visitor window ${fmt(win[0])}–${fmt(win[1])} — this slot is fixed. Closed Fridays.` : null);
         clock += s.hours;
         placed++;
+        atCoords = s.coords || atCoords;    // the car is here now
+        atRough = !!s.needs4x4;
       });
 
       /* ---- where do we sleep? -------------------------------------------------- */
@@ -364,26 +448,31 @@ const Planner = (() => {
         day.legs.push({ type: "sleep", t: clock, title: "Stay in " + D.regions[reg].base, note: "Closer to tomorrow this way." });
 
       } else if (anchor.mode === "last") {
-        if (anchor.homeward > 0) {
+        // From where the car actually is — the last spot — not from the town.
+        const backHome = Math.max(anchor.homeward,
+                                  legHours(atCoords, regionCoords(home), atRough));
+        if (backHome > 0) {
           day.legs.push({
-            type: "drive", t: clock, dur: anchor.homeward,
+            type: "drive", t: clock, dur: backHome,
             title: `Drive back to ${D.regions[home].base}`, note: "Home in time for the flight."
           });
-          clock += anchor.homeward;
-          day.driveHours += anchor.homeward;
+          clock += backHome;
+          day.driveHours += backHome;
         }
         base = home;
         day.stayIn = D.regions[home].base;
         day.stayRegion = home;
 
       } else { // roundtrip
-        if (anchor.out > 0) {
+        const backBase = Math.max(anchor.out,
+                                  legHours(atCoords, regionCoords(base), atRough));
+        if (backBase > 0) {
           day.legs.push({
-            type: "drive", t: clock, dur: anchor.out,
+            type: "drive", t: clock, dur: backBase,
             title: `Drive back to ${D.regions[base].base}`, note: ""
           });
-          clock += anchor.out;
-          day.driveHours += anchor.out;
+          clock += backBase;
+          day.driveHours += backBase;
         }
         day.stayIn = D.regions[base].base;
         day.stayRegion = base;

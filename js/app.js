@@ -1247,56 +1247,104 @@
     const box = el("div", "plan-mapbox");
     box.appendChild(el("h3", "sec", "🗺️ The whole route"));
 
-    const legend = el("div", "map-legend");
-    plan.days.forEach((d, i) => {
-      if (!d.spots.length) return;
-      legend.appendChild(el("span", "map-key",
-        `<span class="dot" style="background:${DAY_COLORS[i % DAY_COLORS.length]}"></span>Day ${d.n}`));
-    });
-    box.appendChild(legend);
+    /* One day at a time, or all of them. With every day drawn at once the pins
+       pile on top of each other and the numbers run 1…14 across the trip, which
+       tells you nothing. Pick a day and you get THAT day: stops numbered 1, 2,
+       3, the map zoomed to it, and the other days faded into the background. */
+    let sel = null;                       // null = all days
+    const chips = el("div", "typefilter dayfilter");
+    const mkChip = (label, value, col) => {
+      const b = el("button", "tfchip daychip" + (sel === value ? " on" : ""),
+        (col ? `<span class="daydot" style="background:${col}"></span>` : "") + esc(label));
+      b.type = "button";
+      b.onclick = () => { sel = (sel === value) ? null : value; draw(); };
+      return b;
+    };
+    const rebuildChips = () => {
+      chips.innerHTML = "";
+      chips.appendChild(mkChip("All days", null, null));
+      plan.days.forEach((d, i) => {
+        if (!d.spots.length) return;
+        chips.appendChild(mkChip("Day " + d.n, i, DAY_COLORS[i % DAY_COLORS.length]));
+      });
+    };
+    rebuildChips();
+    box.appendChild(chips);
 
     const wrap = el("div", "mapwrap planmap", `<div class="map-loading">Drawing your route…</div>`);
     box.appendChild(wrap);
     box.appendChild(el("p", "map-note",
       "Straight lines, not roads — use each day's Google Maps button for turn-by-turn."));
 
-    loadLeaflet().then(L => {
-      wrap.innerHTML = "";
-      const map = L.map(wrap);
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 17,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      }).addTo(map);
+    let map = null;
+
+    const draw = () => {
+      rebuildChips();
+      if (!map || !window.L) return;
+      const L = window.L;
+
+      // clear everything except the tiles
+      map.eachLayer(l => { if (!(l instanceof L.TileLayer)) map.removeLayer(l); });
 
       const bounds = [];
-      let n = 0;
       plan.days.forEach((d, i) => {
+        const isSel = sel === null || sel === i;
+        const faded = sel !== null && sel !== i;
         const col = DAY_COLORS[i % DAY_COLORS.length];
         const pts = [];
         const from = D.regions[d.base];
         if (from && from.coords) pts.push(from.coords);
+
+        let n = 0;                        // numbering restarts each day
         d.spots.forEach(s => {
           if (!s.coords) return;
           n++;
           pts.push(s.coords);
+          if (faded) return;              // other days: line only, no pins
           L.marker(s.coords, {
-            icon: L.divIcon({ className: "route-num", html: `<span style="background:${col}">${n}</span>`, iconSize: [26, 26], iconAnchor: [13, 13] })
-          }).addTo(map).bindPopup(`<strong>Day ${d.n} · stop ${n}</strong><br>${esc(s.name)}`);
+            icon: L.divIcon({
+              className: "route-num",
+              html: `<span style="background:${col}">${n}</span>`,
+              iconSize: [28, 28], iconAnchor: [14, 14]
+            }),
+            zIndexOffset: isSel ? 500 : 0
+          }).addTo(map).bindPopup(
+            `<strong>Day ${d.n} · stop ${n}</strong><br>${esc(s.name)}` +
+            (s.mapUrl ? `<br><a href="${s.mapUrl}" target="_blank" rel="noopener">Open in Google Maps →</a>` : "")
+          );
+          if (isSel) bounds.push(s.coords);
         });
+
         const to = D.regions[d.stayRegion];
         if (to && to.coords) pts.push(to.coords);
-        if (pts.length > 1) L.polyline(pts, { color: col, weight: 3, opacity: 0.8 }).addTo(map);
-        pts.forEach(pt => bounds.push(pt));
+        if (pts.length > 1) {
+          L.polyline(pts, {
+            color: col, weight: faded ? 2 : 4,
+            opacity: faded ? 0.18 : 0.85,
+            dashArray: faded ? "4 6" : null
+          }).addTo(map);
+        }
+        if (isSel) pts.forEach(pt => bounds.push(pt));
       });
 
       const home = D.regions[plan.prefs.base];
       if (home && home.coords) {
         L.marker(home.coords, {
-          icon: L.divIcon({ className: "route-num route-home", html: "<span>🏠</span>", iconSize: [26, 26], iconAnchor: [13, 13] })
+          icon: L.divIcon({ className: "route-num route-home", html: "<span>🏠</span>", iconSize: [28, 28], iconAnchor: [14, 14] })
         }).addTo(map).bindPopup("Start & finish: " + esc(home.base));
-        bounds.push(home.coords);
+        if (sel === null) bounds.push(home.coords);
       }
-      if (bounds.length) map.fitBounds(bounds, { padding: [30, 30] });
+      if (bounds.length) map.fitBounds(bounds, { padding: [40, 40], maxZoom: sel === null ? 10 : 12 });
+    };
+
+    loadLeaflet().then(L => {
+      wrap.innerHTML = "";
+      map = L.map(wrap);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 17,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+      draw();
     }).catch(() => {
       wrap.innerHTML = "";
       wrap.classList.add("mapwrap-fallback");
