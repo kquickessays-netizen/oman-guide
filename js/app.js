@@ -308,29 +308,14 @@
     // travel app, not a document. No photo (or locked) = classic layout.
     const photoCard = unlocked && !!item.img;
 
+    // CARD chips: identification only — what it is, where it is, reel or not.
+    // Everything else (difficulty, 4×4, guide, season, sub-label) lives in
+    // the detail sheet: important tags outside, the rest inside.
     const kick = el("div", "card-kicker" + (photoCard ? " on-photo" : ""));
-    kick.appendChild(el("span", "chip " + (unlocked ? "chip-free" : "chip-lock"),
-      unlocked ? (item.free ? "Free preview" : "✓ Unlocked") : "🔒 Locked"));
-    // What kind of place this is — shown on locked cards too (it says what
-    // you're buying without giving away which spot it is).
     if (item.type) kick.appendChild(el("span", "chip chip-type", esc(typeChipLabel(item.type))));
-    // WHERE it is — the area tag (Muscat, Nizwa side, East coast…). Explore
-    // mixes the whole north, so cards say their area. Hidden on the Salalah
-    // tab (everything there is Dhofar — the tag would just repeat).
     if (item.region && item.region !== "dhofar" && REGION_SHORT[item.region])
       kick.appendChild(el("span", "chip chip-region", "📍 " + REGION_SHORT[item.region]));
-    // 🎬 chip = I filmed a reel here; the button to watch it is in the detail sheet.
     if (item.insta) kick.appendChild(el("span", "chip chip-reel", "🎬 Reel"));
-    if (unlocked) {
-      if (item.sub && item.sub !== item.type) kick.appendChild(el("span", "chip", esc(item.sub)));
-      if (item.stats && /Hard/.test(item.stats.Difficulty || "")) kick.appendChild(el("span", "chip chip-hard", "Hard"));
-      if (item.guide === "required") kick.appendChild(el("span", "chip", "Guide required"));
-      if (item.needs4x4) kick.appendChild(el("span", "chip", "4×4"));
-      if (item.months && !item.months.includes(new Date().getMonth() + 1))
-        kick.appendChild(el("span", "chip chip-season", item.region === "dhofar"
-          ? `🌿 Khareef ${Planner.monthsLabel(item.months)}`
-          : `🌡️ Best ${Planner.monthsLabel(item.months)}`));
-    }
     if (photoCard) {
       media.classList.add("card-media-photo");
       const ov = el("div", "card-overlay");
@@ -387,12 +372,43 @@
          `${item.img && item.imgCredit ? `<span class="imgcredit">${esc(item.imgCredit)}</span>` : ""}</div>`;
     h += `<div class="sheet-inner">`;
     h += `<h2>${esc(item.name)}</h2><p class="tagline">${esc(item.tagline)}</p>`;
-    if (item.type) h += `<div class="card-kicker"><span class="chip chip-type">${esc(typeChipLabel(item.type))}</span></div>`;
+    // The FULL chip row lives here in the sheet (cards only carry the basics).
+    {
+      let chips = "";
+      if (item.type) chips += `<span class="chip chip-type">${esc(typeChipLabel(item.type))}</span>`;
+      if (item.sub && item.sub !== item.type) chips += `<span class="chip">${esc(item.sub)}</span>`;
+      if (item.stats && /Hard/.test(item.stats.Difficulty || "")) chips += `<span class="chip chip-hard">Hard</span>`;
+      if (item.needs4x4) chips += `<span class="chip">4×4</span>`;
+      if (item.guide === "required") chips += `<span class="chip">Guide required</span>`;
+      if (item.months && !item.months.includes(new Date().getMonth() + 1))
+        chips += `<span class="chip chip-season">${item.region === "dhofar"
+          ? "🌿 Khareef " + esc(Planner.monthsLabel(item.months))
+          : "🌡️ Best " + esc(Planner.monthsLabel(item.months))}</span>`;
+      if (chips) h += `<div class="card-kicker">${chips}</div>`;
+    }
     if (item.blurb) h += `<p class="body">${esc(item.blurb)}</p>`;
 
+    // Collapsible section helper — the long sections fold shut so the sheet
+    // opens SHORT: title, chips, facts, buttons. Tap a bar to expand.
+    const fold = (title, inner, open) =>
+      inner ? `<details class="fold"${open ? " open" : ""}><summary>${title}</summary><div class="fold-body">${inner}</div></details>` : "";
+
     if (item.stats) {
-      h += `<div class="statgrid">` + Object.entries(item.stats).map(([k, v]) =>
-        `<div class="s"><div class="lab">${esc(k)}</div><div class="val">${esc(v)}</div></div>`).join("") + `</div>`;
+      // Quick facts as a spec LIST, not a grid — a grid with 5 or 7 entries
+      // always leaves orphan boxes, and long values break the columns.
+      const factIcon = k => {
+        if (/difficult/i.test(k)) return "🧗";
+        if (/time|hours/i.test(k)) return "⏱️";
+        if (/hike/i.test(k)) return "🥾";
+        if (/swim/i.test(k)) return "💧";
+        if (/vehicle|4×4/i.test(k)) return "🚙";
+        if (/season|best time|closed|depth|altitude/i.test(k)) return "🗓️";
+        if (/entry|fee|price/i.test(k)) return "🎫";
+        if (/best for/i.test(k)) return "⭐";
+        return "▪️";
+      };
+      h += `<div class="facts">` + Object.entries(item.stats).map(([k, v]) =>
+        `<div class="fact"><span class="fl">${factIcon(k)} ${esc(k)}</span><span class="fv">${esc(v)}</span></div>`).join("") + `</div>`;
     }
 
     if (item.months && !item.months.includes(new Date().getMonth() + 1)) {
@@ -457,8 +473,8 @@
         h += `</div>`;
       }
 
-      if (gettingThere) h += `<h3 class="sec">Getting there</h3>${steps(gettingThere)}` + nextFig();
-      if (whatYoullDo)  h += `<h3 class="sec">What you'll do</h3>${bullets(whatYoullDo)}` + nextFig();
+      if (gettingThere) h += fold("🚗 Getting there", steps(gettingThere) + nextFig(), true);
+      if (whatYoullDo)  h += fold("🥾 What you'll do", bullets(whatYoullDo) + nextFig());
 
       // Spot-specific booking link — THE tour for THIS place (a Wadi Shab boat
       // + hike tour, the Daymaniyat snorkel boat…). Set per spot as
@@ -469,26 +485,30 @@
         h += `<a class="affbtn aff-primary" data-spot="${esc(item.id)}" href="${affLink(spotAff.url)}" target="_blank" rel="noopener">${esc(spotAff.label || "Book this trip →")}</a>` + discountChip();
       }
 
-      // The packing list
+      // The packing list — folded
       if (item.bring) {
-        h += `<h3 class="sec">What to bring</h3><div class="bringbox">`;
+        let bb = `<div class="bringbox">`;
         if (item.bring.essential && item.bring.essential.length) {
-          h += `<div class="bring-col"><div class="bring-h must">Don't leave without</div><ul>` +
-               item.bring.essential.map(x => `<li>${esc(x)}</li>`).join("") + `</ul></div>`;
+          bb += `<div class="bring-col"><div class="bring-h must">Don't leave without</div><ul>` +
+                item.bring.essential.map(x => `<li>${esc(x)}</li>`).join("") + `</ul></div>`;
         }
         if (item.bring.optional && item.bring.optional.length) {
-          h += `<div class="bring-col"><div class="bring-h nice">Nice to have</div><ul>` +
-               item.bring.optional.map(x => `<li>${esc(x)}</li>`).join("") + `</ul></div>`;
+          bb += `<div class="bring-col"><div class="bring-h nice">Nice to have</div><ul>` +
+                item.bring.optional.map(x => `<li>${esc(x)}</li>`).join("") + `</ul></div>`;
         }
-        h += `</div>`;
-        if (aff.gear) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.gear)}" target="_blank" rel="noopener">My exact gear list →</a>`;
+        bb += `</div>`;
+        if (aff.gear) bb += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.gear)}" target="_blank" rel="noopener">My exact gear list →</a>`;
+        h += fold("🎒 What to bring", bb);
       }
 
       if (tips && tips.length) {
-        h += `<div class="tipbox"><strong>My insider tips</strong><ul>` +
-             tips.map(t => `<li>${esc(t)}</li>`).join("") + `</ul></div>`;
+        h += fold("💡 My insider tips",
+          `<div class="tipbox no-frame"><ul>` + tips.map(t => `<li>${esc(t)}</li>`).join("") + `</ul></div>`);
       }
-      while (gal.length) h += nextFig();   // whatever's left, in a row at the end
+      if (gal.length) {                    // whatever's left → a folded gallery
+        let figs = ""; while (gal.length) figs += nextFig();
+        h += fold("📸 More photos", figs);
+      }
       if (guideNote) {
         h += `<div class="guidebox"><strong>🧭 Go with a guide</strong><p>${esc(guideNote)}</p>`;
         const guideLink = aff.guide || aff.tours;
