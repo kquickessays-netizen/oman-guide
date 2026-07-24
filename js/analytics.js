@@ -83,6 +83,26 @@ window.Analytics = (() => {
       .catch(() => ({ ok: false, error: "Couldn't reach the server. Check your connection." }));
   }
 
+  /* ------------------------------------------------------------------ review
+     One-tap "worth it?" + optional tip, per spot. Insert-only — same trust
+     model as events: anon key can write, only the dashboard can read. The
+     best tips get hand-published into the spot as travellerTips (curated —
+     nothing readers write appears in the app without Hussain approving it). */
+  function review(spot, data) {
+    if (!enabled) return Promise.resolve({ ok: false, error: "No backend configured." });
+    data = data || {};
+    const stars = Math.min(5, Math.max(0, parseInt(data.stars, 10) || 0)) || null;
+    return post("reviews", {
+      spot: spot || null,
+      stars: stars,                                              // 1–5
+      verdict: stars ? (stars >= 4 ? "up" : stars <= 2 ? "down" : null) : null,
+      name: String(data.name || "").trim().slice(0, 60) || null,
+      tip: String(data.tip || "").trim().slice(0, 500) || null,
+      device_id: deviceId(),
+      email: who().email
+    }).then(res => ({ ok: res.ok })).catch(() => ({ ok: false }));
+  }
+
   /* ---------------------------------------------------- auto-instrumentation */
   if (enabled) {
     const viewed = () => track("view", { tab: location.hash.replace("#/", "") || "wadis" });
@@ -98,11 +118,14 @@ window.Analytics = (() => {
         const buy = e.target.closest(".btn-buy");
         if (buy) return track("buy_click", { href: buy.getAttribute("href") || "", text: (buy.textContent || "").trim() });
         const aff = e.target.closest(".affbtn");
-        if (aff) track("aff_click", { href: aff.getAttribute("href") || "",
+        if (aff) return track("aff_click", { href: aff.getAttribute("href") || "",
                                       spot: (aff.dataset && aff.dataset.spot) || null });
+        const ig = e.target.closest(".instabtn");
+        if (ig) track("insta_click", { href: ig.getAttribute("href") || "",
+                                       spot: (ig.dataset && ig.dataset.spot) || null });
       } catch {}
     }, true);
   }
 
-  return { track: track, subscribe: subscribe, enabled: enabled, deviceId: deviceId };
+  return { track: track, subscribe: subscribe, review: review, enabled: enabled, deviceId: deviceId };
 })();

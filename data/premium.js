@@ -423,6 +423,177 @@ window.OMAN_PREMIUM = {
     guideNote: ""
   },
 
+  /* ── Salalah additions (Jul 2026) ─────────────────────────────────────── */
+  "taqah-beach": {
+    gettingThere: [
+      "Coast road east from Salalah, ~25 min. Turn seaward in Taqah town.",
+      "Any car — park on the hard sand behind the beach.",
+      "It sits between Taqah Castle and Khor Rori: swim in the middle of that day."
+    ],
+    whatYoullDo: [
+      "[YOUR STRETCH — which end you park at and why.]",
+      "White sand, fishing boats at the west end, and usually nobody in the water.",
+      "Swim, walk, or just eat lunch looking at it.",
+      "The rocky ends hold fish if you brought a mask."
+    ],
+    tips: [
+      "[Confirm the best access track — the GPS pin drifts.]",
+      "Not in khareef — the whole south coast is off-limits for swimming Jul–Sep.",
+      "Weekday mornings you will have it entirely to yourself."
+    ],
+    guideNote: ""
+  },
+  "ayn-garziz": {
+    gettingThere: [
+      "10–15 min north of the city centre, at the foot of the Ittin cliffs.",
+      "Paved to the parking, any car.",
+      "Follow the maps pin — small brown signs, easy to overshoot."
+    ],
+    whatYoullDo: [
+      "[YOUR TIMING — when the cliff actually drips and when it's dry.]",
+      "In khareef: the cliff face streams, the pools fill, everything is green.",
+      "Walk the short path along the stream under the rock.",
+      "Outside the monsoon: shade, birds, picnicking families."
+    ],
+    tips: [
+      "[Best light is __ — the cliff faces __.]",
+      "No swimming — spring water, local supply.",
+      "Stack it with the Ittin road: Garziz → Gravity Point → Ayoub's tomb is one climb."
+    ],
+    guideNote: ""
+  },
+  "ayn-khor": {
+    gettingThere: [
+      "Head west out of Salalah, then up into the hills — about an hour with the track.",
+      "[YOUR ROUTE — which turnoff, and where 2WD must stop.]",
+      "The last stretch is rough track: 4×4, or park and walk it.",
+      "Khareef only. Any other month there is no waterfall."
+    ],
+    whatYoullDo: [
+      "[WHAT'S ACTUALLY THERE at peak — pool size, spray, the fog.]",
+      "The fall comes off the green cliff into a shallow pool — mist, cows, silence.",
+      "This is Darbat's scenery with a tenth of the people.",
+      "Give it a slow hour once you're there."
+    ],
+    tips: [
+      "[Peak flow late Jul–Aug — confirm the week before recommending.]",
+      "Track gets slick in drizzle — drive it in daylight.",
+      "No swimming, and pack out everything you bring in."
+    ],
+    guideNote: "First-timers in khareef fog: easier with someone who knows the track."
+  },
+  "tawi-atair": {
+    gettingThere: [
+      "Taqah plateau road, ~45 min from Salalah via Taqah town.",
+      "Paved to the village; signposted parking.",
+      "10–15 min on foot to the rim viewpoints."
+    ],
+    whatYoullDo: [
+      "[YOUR VANTAGE POINT — where the scale actually reads.]",
+      "Stand on the rim of a 211m sinkhole — the far wall is a city block away.",
+      "Listen: the birds nesting in the walls give the place its name.",
+      "In khareef the whole plateau around it is green pasture."
+    ],
+    tips: [
+      "[The best viewpoint is __ — the first platform undersells it.]",
+      "Uneven rim path — proper shoes, hold the kids' hands.",
+      "Pair with Teeq Cave next door; together they're a half-day from Salalah."
+    ],
+    guideNote: ""
+  },
+  "teeq-cave": {
+    gettingThere: [
+      "Minutes from Tawi Atair on the plateau road — do them together.",
+      "Any car to the parking; short walks to the overlooks.",
+      "Unfenced edges — park and walk carefully."
+    ],
+    whatYoullDo: [
+      "[YOUR SPOT — where you stand for the full valley shot.]",
+      "Look down the length of Wadi Darbat — lake, falls, camels, all from above.",
+      "The cave mouth itself is huge; the view is the reason you came.",
+      "In khareef this is arguably the single best view in Dhofar."
+    ],
+    tips: [
+      "[Morning vs afternoon light — confirm which works for the valley.]",
+      "Fog can erase the view in khareef — if it's socked in, wait 20 minutes.",
+      "Nothing sold up here: bring water."
+    ],
+    guideNote: ""
+  },
+  "food-fish-grills-dahariz": {
+    gettingThere: [
+      "[THE PLACE — name, and the landmark you find it by.]",
+      "Near the fisheries harbour, east side of town.",
+      "Lunchtime is the play — the morning catch is on the ice."
+    ],
+    whatYoullDo: [
+      "[YOUR ORDER — the fish, the size, grilled or fried, which rice.]",
+      "Pick the fish off the ice; it's weighed and priced by the kilo.",
+      "Twenty minutes later it's on your table with rice and salad.",
+      "Kingfish and tuna are the safe bets; ask what came in today."
+    ],
+    tips: [
+      "[A fair per-kilo price is __ — know it before you point.]",
+      "Go at lunch, not dinner — freshness is the entire point.",
+      "Cash."
+    ],
+    guideNote: ""
+  },
+  "food-shawarma-salalah": {
+    gettingThere: [
+      "[THE SPOT — name and street.]",
+      "Central Salalah; evenings only, the queue tells you you're there."
+    ],
+    whatYoullDo: [
+      "[YOUR ORDER — and the sauce decision.]",
+      "Order at the window, eat on the hood of the car like everyone else.",
+      "This is the after-souq stop, not a restaurant."
+    ],
+    tips: [
+      "[Peak queue is __ pm — go before or embrace it.]",
+      "A full meal costs pocket change — bring small notes."
+    ],
+    guideNote: ""
+  },
+  "food-dhofari-halwa": {
+    gettingThere: [
+      "[THE SHOP — name and area.]",
+      "Central Salalah. Go in the afternoon when fresh batches come out."
+    ],
+    whatYoullDo: [
+      "[YOUR PICK — plain, saffron or nutty, and the tub size that makes sense.]",
+      "Taste before you buy — every shop offers, take them up on it.",
+      "Watch it being turned in the copper pot if the timing's right — halwa is a spectator sport.",
+      "Sealed tubs travel fine in checked luggage."
+    ],
+    tips: [
+      "[A fair price per small tub is __.]",
+      "Dhofari halwa is darker and smokier than the Muscat style — that's the local pride.",
+      "It keeps for weeks unrefrigerated: the correct souvenir."
+    ],
+    guideNote: ""
+  },
+  "shop-frankincense-guide": {
+    gettingThere: [
+      "The Haffa souq, by the beach — evenings are when it comes alive.",
+      "[YOUR STALLS — the two or three you actually trust.]"
+    ],
+    whatYoullDo: [
+      "Learn the grades first: Hojari (the pale green-white premium, from the eastern mountains), Najdi, then Shaabi — the everyday grade.",
+      "[WHAT TO PAY — rough per-100g price for each grade, updated seasonally.]",
+      "Check what you're sold: big, pale, translucent tears = better. Dusty brown crumble = burner fuel, price it accordingly.",
+      "Buy a clay burner (mabkhara) + charcoal discs with it — the whole kit is the gift.",
+      "Smell before you buy: good hojari is citrus-pine, not just 'smoky'."
+    ],
+    tips: [
+      "[The stall I use is __ — say hello from me.]",
+      "Prices are negotiable but not theatrical — 10–20% movement, not half.",
+      "Airport shops sell the same tubs at multiples of the souq price. Buy in Haffa.",
+      "Vacuum-sealed bags survive customs sniffer dogs' attention better — declare if asked, it's legal everywhere."
+    ],
+    guideNote: ""
+  },
+
   /* ═════════════════════════════════════════════════════════ EXPERIENCES */
   "daymaniyat": {
     gettingThere: [
@@ -628,17 +799,270 @@ window.OMAN_PREMIUM = {
 
   "shop-al-sharaa": {
     gettingThere: [
-      "[Where it is.]",
-      "[How to find it — the landmark you'd tell a friend to look for.]",
-      "[Parking.]"
+      "The Al Rusail branch is their biggest — just off the highway on the Seeb side.",
+      "There's also the Seeb branch (the one in my reel) and one in Bahla for the Nizwa run.",
+      "[Parking + the landmark you'd tell a friend to look for.]"
     ],
     whatYoullDo: [
-      "[THE WHOLE WRITE-UP IS YOURS — what Al Sharaa sells, why you send people there, what to walk out with.]",
-      "[This is exactly the only-you-know content people pay for. Four or five lines.]"
+      "Dates by the kilo, and the sesame tahini they're known for — that's the thing to walk out with.",
+      "Date molasses, Omani coffee, spices, honey, stone-ground flours — the whole food-gift run in one stop.",
+      "[YOUR PICKS — which dates, which tahini, what you actually take home.]"
     ],
     tips: [
-      "[Best time to go.]",
-      "[What to buy and roughly what it should cost.]"
+      "Taste before you buy — they'll offer.",
+      "Do this stop on your last day: local prices, not airport prices, for the same gifts.",
+      "[Roughly what a kilo of the good dates should cost.]"
+    ],
+    guideNote: ""
+  },
+
+  /* ── Jul 2026 additions — the castle circuit, new wadis, Salma ─────────── */
+  "wadi-al-abyad": {
+    gettingThere: [
+      "Route 13 toward Nakhal, ~1 hr from Muscat, then the signed turn into the wadi.",
+      "The wadi track is gravel with water crossings — 4×4 recommended; 2WD parks early and walks.",
+      "[Where YOU park and how far you walk in.]"
+    ],
+    whatYoullDo: [
+      "Walk the flat wadi bed between palms to the first milky-blue pools.",
+      "[YOUR pool — which one is deep enough to swim, where the light hits.]",
+      "The mineral tint is strongest in the still pools — goggles on, it glows."
+    ],
+    tips: [
+      "[Weekends get local crowds by mid-morning — your timing advice.]",
+      "Modest swimwear — this is a village wadi.",
+      "Pair with Nakhal Fort and the hot spring — same road."
+    ],
+    guideNote: ""
+  },
+  "wadi-al-khoudh": {
+    gettingThere: [
+      "20–30 min from most of Muscat — head for Al Khoudh dam.",
+      "2WD: park near the dam end and walk upstream. 4×4: drive the bed further in.",
+      "[Your entry point — the gorge mouth pin.]"
+    ],
+    whatYoullDo: [
+      "Boulder-hop up the narrowing gorge — smooth marble-like rock.",
+      "[Which pools hold water year-round and where the jumps are safe.]",
+      "Turn around whenever — even 40 minutes in feels far from the city."
+    ],
+    tips: [
+      "NEVER after rain in the mountains — this wadi drains half the Hajar and floods fast.",
+      "[Weekday evenings vs Friday crowds — your call.]",
+      "Phone signal dies in the gorge — tell someone your plan."
+    ],
+    guideNote: ""
+  },
+  "salma-plateau": {
+    gettingThere: [
+      "The track climbs from near Fins/Tiwi on the coast — 2+ hrs of steep 4×4 switchbacks.",
+      "[YOUR route up and the turnoffs — this is the part people get wrong.]",
+      "Never solo: one vehicle failure up here is a serious problem."
+    ],
+    whatYoullDo: [
+      "Cross the plateau — Bedouin stone villages, feral donkeys, total silence.",
+      "Stand (carefully) near the 7th Hole rim — a sheer shaft dropping out of flat ground.",
+      "Tahery Cave's entrance chamber swallows a torch beam whole.",
+      "[Where you camp and where sunset is best.]"
+    ],
+    tips: [
+      "Guide required — the shafts are unfenced and the tracks unmarked.",
+      "Cold at night year-round — bring real layers.",
+      "Descending into any cave here is a rope-access expedition, not a walk."
+    ],
+    guideNote: "This is THE trip to do with someone who knows the plateau. [Guide name] runs it properly."
+  },
+  "jabrin-castle": {
+    gettingThere: [
+      "15 min from Bahla Fort, ~2h15 from Muscat.",
+      "Any car, big parking at the site."
+    ],
+    whatYoullDo: [
+      "Head for the painted ceilings — the sun-and-moon room is the famous one.",
+      "Find the date store where the syrup channels run under the floor.",
+      "[YOUR favourite room and the passage most people miss.]"
+    ],
+    tips: [
+      "Do Bahla for scale first, Jabrin for detail second — that order.",
+      "[Confirm hours — Fridays are short.]"
+    ],
+    guideNote: ""
+  },
+  "nakhal-fort": {
+    gettingThere: [
+      "Route 13, ~50 min from Muscat. Any car.",
+      "The spring (Ain A'Thawwarah) is 5 min beyond the fort through the plantation."
+    ],
+    whatYoullDo: [
+      "Climb to the gun towers — the fort is built ON the boulder, not beside it.",
+      "Date-palm sea on one side, the Hajar wall on the other.",
+      "Finish at the spring: warm water, small fish, families picnicking.",
+      "[Your Friday-market note if it's running.]"
+    ],
+    tips: [
+      "Morning light for the fort, late afternoon for the spring.",
+      "Start of the loop: Nakhal → Rustaq → Al Hazm fits one day with lunch in Rustaq."
+    ],
+    guideNote: ""
+  },
+  "rustaq-fort": {
+    gettingThere: [
+      "Route 13 past Nakhal — ~1h30 from Muscat.",
+      "Ain Al Kasfah spring is on the edge of town, 5 min from the fort."
+    ],
+    whatYoullDo: [
+      "Four towers, a mosque and a small museum inside the walls.",
+      "[What's actually open — restoration comes and goes; your current state note.]",
+      "The spring runs genuinely hot (~45°C) — locals bathe, you can too (dressed modestly)."
+    ],
+    tips: [
+      "[Lunch in Rustaq — your spot.]",
+      "Middle stop of the castle loop — don't linger too long if Al Hazm closes early."
+    ],
+    guideNote: ""
+  },
+  "al-hazm-castle": {
+    gettingThere: [
+      "20 min north of Rustaq toward the coast road. Any car."
+    ],
+    whatYoullDo: [
+      "Follow the falaj — it runs straight through the castle, still flowing.",
+      "Cannon rooms, escape tunnels, and walls built to absorb artillery.",
+      "[The detail that stuck with you — this castle rewards slow walking.]"
+    ],
+    tips: [
+      "Best-restored interior on the loop — save energy for it.",
+      "[Confirm closing time — it decides your loop order.]"
+    ],
+    guideNote: ""
+  },
+  "bat-necropolis": {
+    gettingThere: [
+      "Off Route 21 near Ibri, ~2h45 from Muscat — or 20 min from Wadi Damm.",
+      "For the photogenic row, skip Bat itself and go to the AL AYN tombs.",
+      "Park by the village; 15–20 min walk up the ridge."
+    ],
+    whatYoullDo: [
+      "Walk the ridgeline past 5,000-year-old beehive tombs — no fences, no queue, usually no one.",
+      "Line the tombs up against Jabal Misht for THE photo at golden hour.",
+      "[Your route up the ridge — the obvious line vs the easy line.]"
+    ],
+    tips: [
+      "Sunset, absolutely — the tombs glow and the mountain broods.",
+      "Don't climb on the tombs — they've stood 5,000 years, help them continue.",
+      "Pair with Wadi Damm: swim, then sunset here."
+    ],
+    guideNote: ""
+  },
+  "al-mudhaireb": {
+    gettingThere: [
+      "Just off Route 23 before Al Mintirib and the sands — ~1h45 from Muscat.",
+      "Park by the old quarter. Any car."
+    ],
+    whatYoullDo: [
+      "Wander the restored merchant houses and watchtower hills.",
+      "Follow the falaj through the date gardens.",
+      "[The tower with the best view — your pick.]"
+    ],
+    tips: [
+      "Perfect leg-stretch before your desert camp check-in.",
+      "Late afternoon — towers, palms and long shadows."
+    ],
+    guideNote: ""
+  },
+  /* ── Camping (Jul 2026) ─────────────────────────────────────────────── */
+  "ras-al-hadd-camp": {
+    gettingThere: [
+      "Sur road, then the Ras Al Hadd spur — ~3h15 from Muscat.",
+      "Stock up in Sur or Ras Al Hadd town: water, firewood, fresh fish.",
+      "[YOUR beach — which stretch you camp on and how you reach it.]"
+    ],
+    whatYoullDo: [
+      "Camp above the tide line on the open beaches past town.",
+      "Grill the fish you bought an hour earlier.",
+      "Sunrise here is the first in the Arab world — set an alarm.",
+      "[Pair with Ras Al Jinz turtle booking — evening or dawn slot?]"
+    ],
+    tips: [
+      "Red-light torches only near the turtle beaches — white light disorients nesting turtles.",
+      "Never camp ON a turtle beach — the reserve signs mark them.",
+      "Wind shifts onshore at night; door away from the sea.",
+      "[Your tide/wind reading for this coast.]"
+    ],
+    guideNote: ""
+  },
+  "jabal-shams-camp": {
+    gettingThere: [
+      "Al Hamra → the Jabal Shams road — ~3h from Muscat, last stretch graded track.",
+      "[YOUR camp area near the rim — flat, wind-sheltered, a safe margin from the edge.]",
+      "Arrive with 2 hrs of light to pitch and cook warm."
+    ],
+    whatYoullDo: [
+      "Sunset over Wadi Ghul from your chair.",
+      "Stars like you've never seen from a city.",
+      "Dawn on the canyon rim — then the Balcony Walk before the day-trippers arrive.",
+      "[Your cold-night kit list — what people always underestimate.]"
+    ],
+    tips: [
+      "Camp WELL back from the rim — wind gusts here are real.",
+      "It can approach freezing most of the year at 2,000m. Pack like it.",
+      "Take every scrap out; the plateau has no cleanup crew."
+    ],
+    guideNote: ""
+  },
+  "jabal-akhdar-camp": {
+    gettingThere: [
+      "Birkat Al Mouz checkpoint (4×4 enforced) → the Saiq plateau, ~2h30 from Muscat.",
+      "[YOUR clearing — the juniper spots you actually use.]",
+      "Buy firewood and supplies before the climb."
+    ],
+    whatYoullDo: [
+      "Cool-air camping while the coast melts — 15–20° cooler than Muscat.",
+      "Sunrise over the terraces; April adds the rose harvest.",
+      "[Your morning circuit: villages, viewpoints, coffee.]"
+    ],
+    tips: [
+      "Respect farm walls and water channels — camp on open ground only.",
+      "Weekend nights get busy near the hotels; go one track further.",
+      "[The one clearing to avoid and why.]"
+    ],
+    guideNote: ""
+  },
+  "sugar-dunes": {
+    gettingThere: [
+      "Muscat → Sinaw → Mahout → Al Khaluf: ~4.5–5 hrs, last hour on sand.",
+      "Deflate to ~15psi before the dunes; reinflate at Mahout on the way back.",
+      "[YOUR line in — the safe approach vs the one that buries cars.]"
+    ],
+    whatYoullDo: [
+      "White gypsum dunes straight into a turquoise sea — camp where they meet.",
+      "Flamingos and wading birds in the khors (lagoons).",
+      "Swim in the emptiest sea you'll ever have to yourself.",
+      "[Where the firm sand runs and where it lies.]"
+    ],
+    tips: [
+      "Two vehicles or a guide — recovery out here is a long, expensive tow.",
+      "Double your water; there is nothing at Al Khaluf beyond the village shop.",
+      "Check tides before camping low — the flats flood far and fast.",
+      "[Best moon phase — full moon on white dunes is its own show.]"
+    ],
+    guideNote: "First time on serious sand? Go with someone who's done it. [Guide name] runs Sugar Dunes trips."
+  },
+
+  "fanja": {
+    gettingThere: [
+      "~30 min from Muscat off Route 15 toward Nizwa.",
+      "Park by the old village; the path starts through the ruins.",
+      "[The current safe line up — paths shift with rockfall.]"
+    ],
+    whatYoullDo: [
+      "Climb through the abandoned mud-brick village first.",
+      "Steep bursts to the tabletop rim — then it's flat, wide and silent.",
+      "[Where you watch sunset from and how you time the descent.]"
+    ],
+    tips: [
+      "Head torch mandatory for sunset missions — the descent in the dark is real.",
+      "Respect the village — parts are fragile and parts are private."
     ],
     guideNote: ""
   },

@@ -230,6 +230,16 @@
         <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get the full guide — ${D.meta.bundlePrice}</a>
         <p class="price-fine">One key. Works on any phone — paste it again if you switch.</p>
       </div>`;
+
+    // Social proof — meta.testimonials, curated by hand. Compact contexts
+    // (the unlock modal) get one; full price blocks get up to three.
+    const quotes = (D.meta.testimonials || []).slice(0, compact ? 1 : 3);
+    if (quotes.length) {
+      const t = el("div", "testimonials");
+      quotes.forEach(q => t.appendChild(el("blockquote", "testi",
+        `“${esc(q.text)}”${q.by ? `<cite>— ${esc(q.by)}</cite>` : ""}`)));
+      w.appendChild(t);
+    }
     return w;
   }
 
@@ -268,6 +278,14 @@
       `<span class="ll-sub">Buy once · updates free forever</span>`;
   }
 
+  // Short area names for the card tag — the full labels in D.regions are too
+  // long for a chip.
+  const REGION_SHORT = {
+    "muscat": "Muscat", "batinah": "Batinah", "coast-east": "East coast",
+    "sharqiyah": "Sharqiyah", "dakhiliyah": "Nizwa side", "rustaq": "Rustaq loop",
+    "musandam": "Musandam", "dhofar": "Salalah"
+  };
+
   /* ------------------------------------------------------------------- card */
   function card(item, lockNum) {
     const unlocked = isUnlocked(item);
@@ -279,18 +297,30 @@
       else media.textContent = "📷 " + item.name;
     } else {
       media.classList.add("card-media-locked");
-      media.textContent = "🔒";
+      media.innerHTML = `<span class="lock-pill">🔒 In the guide</span>`;
     }
     c.appendChild(media);
 
     const body = el("div", "card-body");
 
-    const kick = el("div", "card-kicker");
+    // Photo-forward card: when there's a real photo, the name, tagline and
+    // chips sit ON the image over a dark scrim — the feed reads like a
+    // travel app, not a document. No photo (or locked) = classic layout.
+    const photoCard = unlocked && !!item.img;
+
+    const kick = el("div", "card-kicker" + (photoCard ? " on-photo" : ""));
     kick.appendChild(el("span", "chip " + (unlocked ? "chip-free" : "chip-lock"),
       unlocked ? (item.free ? "Free preview" : "✓ Unlocked") : "🔒 Locked"));
     // What kind of place this is — shown on locked cards too (it says what
     // you're buying without giving away which spot it is).
     if (item.type) kick.appendChild(el("span", "chip chip-type", esc(typeChipLabel(item.type))));
+    // WHERE it is — the area tag (Muscat, Nizwa side, East coast…). Explore
+    // mixes the whole north, so cards say their area. Hidden on the Salalah
+    // tab (everything there is Dhofar — the tag would just repeat).
+    if (item.region && item.region !== "dhofar" && REGION_SHORT[item.region])
+      kick.appendChild(el("span", "chip chip-region", "📍 " + REGION_SHORT[item.region]));
+    // 🎬 chip = I filmed a reel here; the button to watch it is in the detail sheet.
+    if (item.insta) kick.appendChild(el("span", "chip chip-reel", "🎬 Reel"));
     if (unlocked) {
       if (item.sub && item.sub !== item.type) kick.appendChild(el("span", "chip", esc(item.sub)));
       if (item.stats && /Hard/.test(item.stats.Difficulty || "")) kick.appendChild(el("span", "chip chip-hard", "Hard"));
@@ -301,48 +331,44 @@
           ? `🌿 Khareef ${Planner.monthsLabel(item.months)}`
           : `🌡️ Best ${Planner.monthsLabel(item.months)}`));
     }
-    body.appendChild(kick);
-
-    if (unlocked) {
-      body.appendChild(el("h3", null, esc(item.name)));
-      body.appendChild(el("p", "tagline", esc(item.tagline)));
-      if (item.blurb) body.appendChild(el("p", "blurb", esc(item.blurb)));
-
-      if (item.stats) {
-        const mr = el("div", "metarow");
-        Object.entries(item.stats).slice(0, 3).forEach(([k, v]) =>
-          mr.appendChild(el("span", "meta", `${esc(k)}: <strong>${esc(v)}</strong>`)));
-        body.appendChild(mr);
-      }
+    if (photoCard) {
+      media.classList.add("card-media-photo");
+      const ov = el("div", "card-overlay");
+      ov.appendChild(kick);
+      ov.appendChild(el("h3", "ov-title", esc(item.name)));
+      ov.appendChild(el("p", "ov-tag", esc(item.tagline)));
+      media.appendChild(ov);
+      // Photo cards are IMAGE + overlay only — short and scannable. All the
+      // stats and text live in the detail sheet, one tap away.
     } else {
-      body.appendChild(el("h3", null, `Hidden ${singularOf(item)}${lockNum ? " #" + lockNum : ""}`));
-      body.appendChild(el("p", "tagline", "Unlock to reveal this one."));
+      body.appendChild(kick);
+      if (unlocked) {
+        body.appendChild(el("h3", null, esc(item.name)));
+        body.appendChild(el("p", "tagline", esc(item.tagline)));
+        // (blurb + stats live in the sheet — cards stay short)
+      } else {
+        // Compact locked card: one strip, one line, one button. The full
+        // sales pitch lives in the price block ONCE per tab, not on all 40+
+        // locked cards — that's what made the feed feel endless.
+        const row = el("div", "lock-row");
+        row.appendChild(el("span", "lock-row-txt",
+          `Hidden ${singularOf(item)}${lockNum ? " #" + lockNum : ""} · in the paid guide`));
+        const go = el("button", "lock-row-btn", `Unlock ${D.meta.bundlePrice}`);
+        go.onclick = e => { e.stopPropagation(); openUnlock(); };
+        row.appendChild(go);
+        body.appendChild(row);
+      }
     }
 
     if (unlocked) {
       c.style.cursor = "pointer";
       c.onclick = () => openSheet(item);
     } else {
-      const veil = el("div", "lock-veil");
-      veil.appendChild(el("p", null,
-        "🔒 The name, photo, exact location, full write-up, hike &amp; swim times, packing list and insider tips are in the paid guide. " +
-        "<span class=\"lock-forever\">One payment unlocks every locked spot — and every update, forever.</span>"));
-      const acts = el("div", "lock-actions");
-
-      const bundle = el("a", "btn-buy gold", `Unlock everything — ${D.meta.bundlePrice}`);
-      bundle.href = D.meta.buyLinks.bundle;
-      bundle.target = "_blank"; bundle.rel = "noopener";
-      bundle.onclick = e => e.stopPropagation();
-
-      const kb = el("button", "btn-key", "I have a key");
-      kb.onclick = e => { e.stopPropagation(); openUnlock(); };
-
-      acts.appendChild(bundle); acts.appendChild(kb);
-      veil.appendChild(acts);
-      body.appendChild(veil);
+      c.style.cursor = "pointer";
+      c.onclick = () => openUnlock();
     }
 
-    c.appendChild(body);
+    if (body.hasChildNodes()) c.appendChild(body);
     return c;
   }
 
@@ -377,6 +403,14 @@
 
     if (item.mapUrl) {
       h += `<a class="mapbtn" href="${item.mapUrl}" target="_blank" rel="noopener">📍 Open in Google Maps</a>`;
+    }
+
+    // My reel(s) from this spot — `insta` on the spot is a URL or array of URLs.
+    if (item.insta) {
+      const reels = Array.isArray(item.insta) ? item.insta : [item.insta];
+      h += `<div class="instarow">` + reels.map((u, i) =>
+        `<a class="instabtn" data-spot="${esc(item.id)}" href="${u}" target="_blank" rel="noopener">🎬 Watch my reel${reels.length > 1 ? " " + (i + 1) : ""} on Instagram</a>`
+      ).join("") + `</div>`;
     }
 
     if (isItin && days) {
@@ -465,14 +499,96 @@
       if (aff.esim) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.esim)}" target="_blank" rel="noopener">Get an Oman eSIM (maps off-grid) →</a>`;
     }
 
+    // Traveller tips — reader feedback that Hussain has verified and chosen
+    // to publish (spot.travellerTips = [{text, by}]). Curation IS the
+    // moderation: nothing appears here without passing through him.
+    if (item.travellerTips && item.travellerTips.length) {
+      h += `<h3 class="sec">💬 Traveller tips — verified by me</h3>`;
+      item.travellerTips.forEach(t => {
+        h += `<div class="ttip"><p>${esc(t.text)}</p>${t.by ? `<span class="ttip-by">— ${esc(t.by)}</span>` : ""}</div>`;
+      });
+    }
+
     if (item.needsFirstHand) {
       h += `<div class="verifynote warn">⚠️ Public info on this one is thin and inconsistent. Confirm access and water levels locally before you commit a day to it.</div>`;
     } else if (item.verify) {
       h += `<div class="verifynote">ℹ️ Times, fees and access details are researched from public sources and change often — confirm on the day.</div>`;
     }
+
+    // Their own posted review, rendered right on the spot — so posting
+    // FEELS like posting. (Everyone else still only sees curated tips.)
+    const myBlock = r =>
+      `<div class="myreview">
+         <div class="myreview-head">
+           <span class="myreview-stars">${"★".repeat(Math.min(5, r.stars || 0))}${"☆".repeat(5 - Math.min(5, r.stars || 0))}</span>
+           <span class="myreview-name">Your review${r.name ? " — " + esc(r.name) : ""}</span>
+         </div>
+         ${r.tip ? `<p>${esc(r.tip)}</p>` : ""}
+         <p class="myreview-note">Sent to Hussain — the best reviews get published in the guide, with credit.</p>
+       </div>`;
+
+    // Feedback — stars + an optional written review. Private by default: it
+    // lands in Supabase (or, until the backend is configured, opens an email
+    // draft to meta.email). Hussain publishes the best ones, with credit.
+    if (!isItin) {
+      let done = false;
+      try { done = !!localStorage.getItem("oman_reviewed_" + item.id); } catch {}
+      let savedName = "";
+      try { savedName = localStorage.getItem("oman_reviewer_name") || ""; } catch {}
+      let mine = null;
+      try { mine = JSON.parse(localStorage.getItem("oman_review_" + item.id) || "null"); } catch {}
+      if (mine) done = true;
+      h += done
+        ? (mine ? myBlock(mine) : `<div class="ratebox thanks">✅ Shukran — your review helps the next traveller.</div>`)
+        : `<div class="ratebox" id="ratebox">
+             <p class="rate-q">Been here? Rate it</p>
+             <div class="stars" id="stars">
+               ${[1,2,3,4,5].map(n => `<button type="button" class="star" data-n="${n}" aria-label="${n} star${n > 1 ? "s" : ""}">★</button>`).join("")}
+             </div>
+             <input class="rate-name" id="rateName" maxlength="60"
+               value="${esc(savedName)}" placeholder="Your name (shown if your review gets published)">
+             <textarea class="rate-tip" id="rateTip" maxlength="500" rows="2"
+               placeholder="Your review or a tip for the next traveller (optional)"></textarea>
+             <button type="button" class="rate-send" id="rateSend" hidden>Post review</button>
+           </div>`;
+    }
     h += `</div>`;
 
     b.innerHTML = h;
+
+    // wire the review box (if present)
+    const rb = b.querySelector("#ratebox");
+    if (rb) {
+      let stars = 0;
+      const send = rb.querySelector("#rateSend");
+      const starBtns = [...rb.querySelectorAll(".star")];
+      starBtns.forEach(btn => btn.onclick = () => {
+        stars = +btn.dataset.n;
+        starBtns.forEach(x => x.classList.toggle("on", +x.dataset.n <= stars));
+        send.hidden = false;
+      });
+      send.onclick = () => {
+        const name = rb.querySelector("#rateName").value.trim();
+        const tipText = rb.querySelector("#rateTip").value.trim();
+        try { if (name) localStorage.setItem("oman_reviewer_name", name); } catch {}
+        if (window.Analytics && Analytics.enabled) {
+          Analytics.review(item.id, { stars: stars, name: name, tip: tipText });
+        } else {
+          // No backend yet — open a prefilled email instead, so reviews
+          // work from day one and nothing is silently lost.
+          const bodyTxt = `Spot: ${item.name}\nStars: ${stars}/5\nName: ${name || "-"}\nReview: ${tipText || "-"}`;
+          location.href = "mailto:" + (D.meta.email || "") +
+            "?subject=" + encodeURIComponent("Review — " + item.name + " (" + stars + "/5)") +
+            "&body=" + encodeURIComponent(bodyTxt);
+        }
+        const rec = { stars: stars, name: name, tip: tipText };
+        try {
+          localStorage.setItem("oman_reviewed_" + item.id, "1");
+          localStorage.setItem("oman_review_" + item.id, JSON.stringify(rec));
+        } catch {}
+        rb.outerHTML = myBlock(rec);
+      };
+    }
     $("#sheet").hidden = false;
     $("#sheetBackdrop").hidden = false;
     document.body.style.overflow = "hidden";
@@ -569,6 +685,10 @@
     const row = typeFilterRow(items, () => renderCategory(cat));
     if (row) bar.appendChild(row);
     bar.appendChild(viewSwitch(() => renderCategory(cat)));
+    const sBtn = el("button", "icon-btn fb-search", "🔍");
+    sBtn.type = "button"; sBtn.setAttribute("aria-label", "Search");
+    sBtn.onclick = () => window.__toggleSearch && window.__toggleSearch();
+    bar.appendChild(sBtn);
     view.appendChild(bar);
 
     const shown = typeFilter ? items.filter(i => groupOf(i) === typeFilter) : items;
@@ -626,7 +746,9 @@
     const w = el("div", "about");
     w.innerHTML = `
       <div class="about-hero">
-        <div class="about-avatar">🇴🇲</div>
+        ${m.aboutPhoto
+          ? `<img class="about-avatar about-photo" src="${esc(m.aboutPhoto)}" alt="Hussain">`
+          : `<div class="about-avatar about-photo-empty" title="Drop your photo into assets/ and set meta.aboutPhoto in content.js">📷<small>your photo</small></div>`}
         <h1>Marhaba — I'm Hussain.</h1>
         <p class="about-sub">${esc(m.creatorLine)}</p>
       </div>
@@ -1389,7 +1511,10 @@
   $("#modalBackdrop").onclick = e => { if (e.target === $("#modalBackdrop")) closeModal(); };
   document.addEventListener("keydown", e => { if (e.key === "Escape") { closeSheet(); closeModal(); } });
 
-  $("#searchBtn").onclick = () => {
+  // The search toggle lives in the filter bar now (down with the content,
+  // not up in the top bar) — see renderCategory. This stays a function so
+  // anything can open search.
+  window.__toggleSearch = () => {
     const sb = $("#searchbar");
     sb.hidden = !sb.hidden;
     if (!sb.hidden) $("#searchInput").focus();

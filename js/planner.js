@@ -308,11 +308,15 @@ const Planner = (() => {
                    "Every good Oman trip has one of these.";
         day.stayIn = D.regions[home].base;
         day.stayRegion = home;
+        day.mode = "free";
+        day.anchorRegion = home;
         days.push(day);
         continue;
       }
 
       const reg = anchor.spot.region;
+      day.mode = anchor.mode;          // for the route-sweep reorder below
+      day.anchorRegion = reg;
       let left = budget;
 
       /* ---- drive out --------------------------------------------------------- */
@@ -499,6 +503,45 @@ const Planner = (() => {
       day.end = clock;
       days.push(day);
     }
+
+    /* ---- make the trip read like ONE route, not a zigzag ----------------------
+       Round-trip days from the same bed are interchangeable, so deal them out
+       as a geographic sweep: each day goes to the nearest remaining region
+       from wherever yesterday pointed — no more east coast → Nizwa → east
+       coast again. Relocations, dune nights, free days and the flight-home
+       day are fixed points and never move. */
+    (function sweepOrder() {
+      let i = 0;
+      let at = home;                                   // where the sweep currently points
+      while (i < days.length) {
+        if (days[i].mode !== "roundtrip") {
+          at = days[i].anchorRegion || days[i].stayRegion || at;
+          i++; continue;
+        }
+        let j = i;                                     // the run of same-bed round trips
+        while (j < days.length && days[j].mode === "roundtrip" && days[j].base === days[i].base) j++;
+        const run = days.slice(i, j);
+        if (run.length > 1) {
+          const ordered = [];
+          const rest = run.slice();
+          let cur = at;
+          while (rest.length) {
+            let bi = 0, bd = Infinity;
+            rest.forEach((d, k) => {
+              const dist = drive(cur, d.anchorRegion || d.base);
+              if (dist < bd) { bd = dist; bi = k; }
+            });
+            const next = rest.splice(bi, 1)[0];
+            ordered.push(next);
+            cur = next.anchorRegion || next.base;
+          }
+          days.splice(i, run.length, ...ordered);
+        }
+        at = days[j - 1].anchorRegion || at;
+        i = j;
+      }
+      days.forEach((d, k) => { d.n = k + 1; });        // renumber after the shuffle
+    })();
 
     /* ---- the honest upsell: what they didn't have time for -------------------- */
     const missed = pool

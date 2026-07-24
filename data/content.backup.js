@@ -10,15 +10,25 @@
    FIELD REFERENCE
      id            unique slug, no spaces            "wadi-shab"
      cat           wadis | beaches | mountains | salalah | experiences |
-                   food | shopping | itineraries          ← which TAB it lives in
-     type          what KIND of place it is — shown as a chip on the card and
-                   used to build the filter row at the top of each tab:
+                   food | shopping | itineraries
+                   ← WHICH TAB it lives in. Explore shows six of these;
+                     the Salalah tab shows cat:"salalah".
+
+     group         THE FILTER CHIP. The broad bucket: wadis | beaches |
+                   mountains | experiences | food | shopping.
+                   Defaults to `cat`, so you only set it when the two differ —
+                   which is exactly the Salalah spots: they're all cat:"salalah"
+                   (so they sit in the Salalah tab) but a beach in Dhofar is
+                   still group:"beaches".
+                   SIX chips, not twenty. Don't invent new ones.
+
+     type          THE SUB-TAG ON THE CARD. What kind of thing this particular
+                   one is — invent freely, it doesn't add a filter chip:
                    Beach · Mountain · Wadi · Waterfall · Canyon · Cave · Spring ·
                    Viewpoint · Village · Fort · Museum · Ruins · Mosque · Souq ·
                    Mall · Shop · Desert · Snorkel · Boat trip · Swim spot ·
                    Wildlife · Nature · Hike · Dam · Coffee · Omani food ·
-                   Dinner · Sweets     (reuse an existing one where you can —
-                   every new word adds another filter chip)
+                   Dinner · Sweets
      sub           optional sub-label shown as a chip ("Coffee", "Seafood"…)
      name, tagline, blurb
      free          true = visible to everyone (your shop window)
@@ -42,6 +52,13 @@
      guide         "" | "recommended" | "required"
      stats         the fact box — any label/value pairs
      mapUrl        Google Maps link
+     insta         link (or ARRAY of links) to your Instagram reel(s) filmed at
+                   this spot. Renders a "🎬 Watch my reel" button on the detail
+                   sheet and a 🎬 chip on the card. Clicks tracked (insta_click).
+     travellerTips [{text, by}] — reader tips YOU chose to publish, shown in
+                   the detail sheet as "Traveller tips — verified by me".
+                   Source: the reviews table in Supabase. Curation = moderation:
+                   nothing appears in the app unless you paste it here.
      verify        true = researched from public sources, NOT yet confirmed by
                    you. The app shows a small "confirm on the day" note.
                    Set to false once you've checked it yourself.
@@ -57,15 +74,24 @@ window.OMAN_DATA = {
     instagram: "https://instagram.com/hussain_explores",
     instagramHandle: "@hussain_explores",
 
-    bundlePrice: "$20",
-    bundlePriceNum: 20,
-    singlePrice: "$8",
-    singlePriceNum: 8,
+    // >>> YOUR PHOTO on the About tab. Drop a square-ish photo into assets/
+    //     (e.g. assets/hussain.jpg) and put the path here. "" = a placeholder
+    //     circle until you do. <<<
+    aboutPhoto: "",
+
+    // ONE product, ONE price, ONE key. It unlocks every locked spot, both extra
+    // itineraries and the Planner — forever, updates included. (There used to be
+    // nine per-tab guides; the tabs merged, so the products did too.)
+    // PRICING PLAN (see MONETIZATION.md): $9.99/OMR 3.9 is the LAUNCH INTRO
+    // ("first 100 buyers"). ~Week 5: raise to $14.99/OMR 4.9 here + on Gumroad
+    // + announce the raise (reliably the best sales day). 12-month target: $19.
+    bundlePrice: "$9.99",
+    bundlePriceNum: 9.99,
 
     // Shown in the banner at the top of every tab. Change the date each month —
     // this line is the whole reason an app beats a PDF.
     lastUpdated: "July 2026",
-    updateNote: "Living guide — new spots, prices and road conditions added every month. Buy once, updated free forever.",
+    updateNote: "I add new spots and re-check prices, opening hours and road conditions every month. Buy it once and every one of those updates is yours free, forever — no subscription, nothing to renew.",
 
     // Where shared plans point people (your bio link / deployed app URL).
     // Leave "" until deployed; the share footer falls back to Instagram.
@@ -75,6 +101,18 @@ window.OMAN_DATA = {
     // publish (newest first). This is the proof behind "updated monthly".
     changelog: [
       { date: "July 2026", items: [
+        "✨ New look: photos front and centre on every card, and on phones the tabs moved to a bottom bar — the app feels like an app now.",
+        "🗣️ New: tell me if a spot was worth it — one tap on any spot, plus an optional tip. The best tips get published in the guide with your name on them.",
+        "⛺ New: camping. Five camp spots — White Beach at Fins (free), Ras Al Hadd, the Jabal Shams rim, the Jabal Akhdar plateau and the Sugar Dunes at Al Khaluf — each with the safety rules, kit lists and leave-no-trace basics. The planner's Camping interest picks them up.",
+        "New: Wadi Al Hoqain — the sulfur-blue trenches from my wadi series, free for everyone.",
+        "Way more of my reels are wired in now — Wadi Shab, Wadi Mibam, Bimmah, the Grand Mosque, Mutrah, Daymaniyat, Marjan, Wakan, Jabal Akhdar's rose season, the bioluminescent nights at Qantab and more.",
+        "15 new spots across the north: the full castle circuit (Bahla, Jabrin, Nakhal, Rustaq, Al Hazm), the Bat & Al Ayn beehive tombs, Birkat Al Mouz, Old Muscat & the Opera House, Wadi Al Abyad, Wadi Al Khoudh, the Salma Plateau caves, the Mutrah ridge treks, Fanja and Al Mudhaireb.",
+        "🎬 My reels are in: spots I've filmed now carry a Reel chip and a Watch-my-reel button — Wadi Bani Khalid, Wadi Hawer, the Daymaniyat whale-shark trip, Wahiba, Ras Al Jinz, Jabal Akhdar, Al Sharaa Dates, the hidden coves and more.",
+        "New: Marjan Beach — snorkel with green turtles inside the city, no boat needed. From my reel.",
+        "Salalah grew by 16 spots — every filter chip in the south now has at least five places: Tawi Atair sinkhole, the Darbat overlook at Teeq Cave, Ayn Khor, Ayn Garziz, the Ateen plateau and Gravity Point, Marneef Cave and the blowholes, Taqah and Al Haffa beaches, the coconut stands, the fruit market, and a frankincense buying guide.",
+        "Simpler app: five tabs instead of twelve. Everything in the north lives in Explore, and you filter it with the type chips — 💧 wadis, 🏖️ beaches, ⛰️ mountains, ☕ coffee, 🛍️ souqs.",
+        "One price: $9.99 unlocks the whole guide — every locked spot, every itinerary and the Planner. No more separate guides to buy.",
+        "Bigger free tier: 31 spots are now free, including Wadi Tiwi, Nizwa, Misfat, Jabal Akhdar, Al Hoota Cave, Khor Rori and Ayn Razat.",
         "Every spot now carries a type tag — beach, mountain, mall, souq, waterfall, fort — and each tab has a filter row, so Salalah reads at a glance.",
         "Bimmah Sinkhole moved out of Beaches: it's an experience, not a beach.",
         "New: Mountains tab — Jabal Shams, Jabal Akhdar, Wakan, Bilad Sayt, Sharaf Al Alamayn and more.",
@@ -91,17 +129,11 @@ window.OMAN_DATA = {
       ]}
     ],
 
-    // >>> PASTE YOUR REAL GUMROAD LINKS HERE <<<
+    // >>> PASTE YOUR REAL GUMROAD LINK HERE — one product, that's it. <<<
+    //     js/unlock.js reads the permalink out of this URL, so there is
+    //     nothing else to edit anywhere. See delivery/GUMROAD-SETUP.md.
     buyLinks: {
-      bundle: "https://gumroad.com/l/YOUR-BUNDLE",
-      wadis: "https://gumroad.com/l/YOUR-WADIS",
-      beaches: "https://gumroad.com/l/YOUR-BEACHES",
-      mountains: "https://gumroad.com/l/YOUR-MOUNTAINS",
-      salalah: "https://gumroad.com/l/YOUR-SALALAH",
-      experiences: "https://gumroad.com/l/YOUR-EXPERIENCES",
-      food: "https://gumroad.com/l/YOUR-FOOD",
-      shopping: "https://gumroad.com/l/YOUR-SHOPPING",
-      itineraries: "https://gumroad.com/l/YOUR-ITINERARIES"
+      bundle: "https://gumroad.com/l/YOUR-BUNDLE"
     },
 
     // >>> AFFILIATE SLOTS — one link each, dropped in everywhere relevant.
@@ -128,6 +160,12 @@ window.OMAN_DATA = {
       discountLabel: ""     // e.g. "10% off with code"
     },
 
+    // >>> TESTIMONIALS — hand-picked quotes from real buyers (Gumroad
+    //     receipts, DMs, the reviews table). Shown on the price block and in
+    //     the unlock modal. Start empty; add as they arrive. Keep them short.
+    //     Format: { text: "Planned our whole trip with this.", by: "Sara, UK" } <<<
+    testimonials: [],
+
     // >>> BACKEND (optional) — paste your Supabase project URL + anon key to
     //     turn on interaction analytics + the email list. Empty = fully off.
     //     Setup steps: delivery/BACKEND-SETUP.md <<<
@@ -140,28 +178,42 @@ window.OMAN_DATA = {
   // The tabs. Reorder / rename / add freely — the app builds nav from this.
   // Info sits first in the bar; the app still LANDS on Wadis (see route() —
   // the empty-hash default), which is exactly the intended combination.
-  // `intro` is the explainer paragraph at the top of the tab.
+  // `intro` = the explainer at the top of the tab. Give it an ARRAY and it
+  // renders as a bullet list (preferred — nobody reads paragraphs on a phone).
+  // A plain string still works and renders as one line.
+  /* FIVE tabs. `cats` = which spot categories a tab shows — the old per-subject
+     tabs (wadis, beaches, mountains…) are now TYPE CHIPS inside Explore, built
+     automatically from each spot's `type`. A spot's `cat` still exists: it's how
+     the data is organised, not how it's navigated. */
   categories: [
-    { id: "info",         label: "Info",        icon: "ℹ️", blurb: "Rules, money, SIMs, transport — read before you land.", special: "info" },
-    { id: "wadis",        label: "Wadis",       icon: "💧", blurb: "Canyons, emerald pools and waterfalls.",
-      intro: "A wadi is a desert river valley — dry gravel most of the year, then suddenly a chain of emerald pools, waterfalls and palms folded between canyon walls. They're the single best reason to visit Oman, and no two are alike: some are a flat stroll, some are a swim through a cave, some are a full day of bouldering. Every one below has honest difficulty notes, real timings and a map pin — start with the free ones and you'll see how this guide works." },
-    { id: "beaches",      label: "Beaches",     icon: "🏖️", blurb: "3,000 km of coast, and most of it empty.",
-      intro: "Oman has more coastline than the rest of the Gulf combined, and almost nobody on it. White-sand bays under mountains, snorkel reefs, turtle nesting beaches, and wild camping that's completely legal — the coast here is what beaches looked like before resorts. These are the stretches I actually drive to." },
-    { id: "mountains",    label: "Mountains",   icon: "⛰️", blurb: "The Hajar range — cliff villages, canyons and cold air.",
-      intro: "The Hajar mountains wall off Oman's interior and rise to 3,000m — high enough for roses, pomegranates and genuinely cold nights an hour from the beach. This is where you'll find Arabia's grand canyon, mud-brick villages stacked into cliffsides, and the country's best hikes. Most of it needs a 4×4; all of it needs a jacket, whatever the month." },
-    { id: "salalah",      label: "Salalah",     icon: "🌴", blurb: "Dhofar — the monsoon-green south.",
-      intro: "Salalah is a separate trip, not a day out of Muscat — it's 1,000km south, so you fly (or drive a very long day). What you get is unlike anywhere else in Arabia: from late June to early September the khareef monsoon turns the whole coast green and misty, waterfalls run, and camels graze in fog. Outside khareef it's a warm, quiet winter escape with empty beaches and the frankincense coast. Both versions are in this tab." },
-    { id: "experiences",  label: "Experiences", icon: "⭐", blurb: "The things worth building a whole day around.",
-      intro: "Not wadis, not beaches — the rest of the best of Oman. The mosque that changes how people see the country, a night in the dunes, the souq at dusk, the reef islands offshore. If a first-timer gave me one week, most of it would come from this tab." },
-    { id: "food",         label: "Food",        icon: "🍽️", blurb: "Coffee, shuwa and seafood — where I actually eat.",
-      intro: "Omani food is the Gulf's best-kept secret: shuwa buried and slow-cooked for a day, grilled kingfish, dates with cardamom coffee, halwa stirred in copper pots. These are the places I take visitors — from specialty coffee before a wadi run to the dinner that ends the trip." },
-    { id: "shopping",     label: "Shopping",    icon: "🛍️", blurb: "Souqs, speciality shops and the malls.",
-      intro: "Three kinds of shopping worth your time here: the old souqs (frankincense, silver, dates — haggling expected), the speciality shops that beat any airport souvenir, and the malls, which in an Omani summer are less about shopping and more about surviving midday. What to buy and what it should cost, below." },
-    { id: "itineraries",  label: "Itineraries", icon: "🗺️", blurb: "Done-for-you routes. Just follow along.",
-      intro: "Fixed routes, written out day by day — where to go, in what order, where to sleep. If you'd rather answer five questions and get a route built around you, use the Planner tab instead; these are the hand-built classics." },
-    { id: "planner",      label: "Planner",     icon: "🧭", blurb: "Build your own trip in 60 seconds.", special: "planner" },
-    { id: "map",          label: "Map",         icon: "📍", blurb: "Every spot in the guide, on one map.", special: "map" },
-    { id: "about",        label: "About",       icon: "👋", blurb: "Who's behind this.", special: "about" }
+    { id: "info",     label: "Info",    icon: "ℹ️", blurb: "Rules, money, SIMs, transport — read before you land.", special: "info" },
+
+    { id: "explore",  label: "Explore", icon: "🧭", blurb: "Everything in the north — wadis, beaches, mountains, food, souqs.",
+      cats: ["wadis", "beaches", "mountains", "experiences", "food", "shopping"],
+      intro: [
+        "Every spot outside Dhofar, in one place.",
+        "Filter with the chips: 💧 Wadis · 🏖️ Beaches · ⛰️ Mountains · ⭐ Experiences · 🍽️ Food · 🛍️ Shopping.",
+        "Each card carries a small tag saying exactly what it is — canyon, cave, souq, mall, fort.",
+        "Every one has a map pin, real timings, honest difficulty notes and what to bring.",
+        "🔒 cards are in the paid guide — one payment, everything, forever."
+      ] },
+
+    { id: "salalah",  label: "Salalah", icon: "🌴", blurb: "Dhofar — the monsoon-green south.",
+      cats: ["salalah"],
+      intro: [
+        "A separate trip, not a day out of Muscat — 1,000km south, so you fly.",
+        "Late June to early September: the khareef monsoon turns the coast green, waterfalls run, camels graze in fog.",
+        "Any other month: a warm, quiet escape — empty beaches and the frankincense coast.",
+        "Same chips as Explore — 🏖️ Beaches · 💧 Wadis · ⛰️ Mountains · ⭐ Experiences · 🛍️ Shopping — and each card says what it actually is: waterfall, spring, fort, souq, mall."
+      ] },
+
+    { id: "plan",     label: "Plan",    icon: "🗺️", blurb: "Build your own trip — or follow one of mine.", special: "planner",
+      intro: [
+        "Answer five questions and the planner routes a trip around you — days, pace, interests, fitness, vehicle, heat.",
+        "Or scroll down for the hand-built routes: 3 days, 5 days, 7 days."
+      ] },
+
+    { id: "about",    label: "About",   icon: "👋", blurb: "Who's behind this.", special: "about" }
   ],
 
   /* Region model — the planner clusters days by region and costs the drive
@@ -210,7 +262,11 @@ window.OMAN_DATA = {
       tagline: "The famous one — and for once the hype is real.",
       blurb: "A flat walk past a string of turquoise pools ends at the bit nobody forgets: a narrow gap you swim through into a hidden cave with a waterfall thundering inside it. Bucket-list stuff, and surprisingly doable.",
       img: "assets/wadis/wadi-shab.jpg",
-      imgCredit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons", region: "coast-east", coords: [22.839, 59.236],
+      imgCredit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-shab-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-shab-3.jpg", credit: "Photo: Uhooep · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "coast-east", coords: [22.839, 59.236],
       hours: 5, fitness: 3, needs4x4: false, swim: true, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["swimming","hiking","photography","canyoning"],
@@ -231,9 +287,21 @@ window.OMAN_DATA = {
         "Entry fee": "~OMR 1 pp (incl. boat)"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Shab+Oman",
+      insta: ["https://www.instagram.com/hussain_explores/reel/DQ3aw2njNsQ/",
+              "https://www.instagram.com/hussain_explores/reel/DUbTJINDJ6B/"],
       verify: true,
-      gettingThere: "From Muscat ~1h40–2h south on Route 17 toward Sur/Tiwi. Parking is free but the lot is small — arrive early on weekends. A ~2-minute boat crossing (~OMR 1 return, pay as you board, last boat around 5pm) gets you to the trailhead, then it's roughly a 45–60 min walk in to the pools.",
-      whatYoullDo: "A mostly flat walk past a string of turquoise pools, crossing the wadi bed a few times, ends at a narrow gap you swim through into a hidden cave with a waterfall inside. Keep a phone in a dry bag — the last stretch is swim-only, no dry route around it.",
+      gettingThere: [
+        "Drive Route 17 south from Muscat toward Sur/Tiwi — 1h40 to 2h.",
+        "Park at the free lot under the bridge. It's small: on a weekend, be there before 9am.",
+        "Take the boat across — 2 minutes, about 1 OMR return, pay as you board. Last boat ~5pm.",
+        "Walk in from the far bank: 45–60 min, mostly flat, along the wadi bed."
+      ],
+      whatYoullDo: [
+        "Follow the path past a chain of turquoise pools, crossing the wadi bed a few times.",
+        "Swim the last stretch — there is no dry route around it. Phone in a dry bag.",
+        "Squeeze through the narrow gap in the rock at the end.",
+        "Inside: a hidden cave with a waterfall in it. That's the reason you came."
+      ],
       tips: [
         "Go early — it fills up by mid-morning.",
         "A dry bag is essential to get a phone to the cave.",
@@ -246,7 +314,11 @@ window.OMAN_DATA = {
       tagline: "The easy one — and still stunning.",
       blurb: "The most accessible wadi on this list, and somehow still one of the prettiest. Big emerald pools you can reach without a real hike — perfect if you're bringing people who aren't up for scrambling.",
       img: "assets/wadis/wadi-bani-khalid.jpg",
-      imgCredit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons", region: "sharqiyah", coords: [22.639, 59.012],
+      imgCredit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-bani-khalid-2.jpg", credit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-bani-khalid-3.jpg", credit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "sharqiyah", coords: [22.639, 59.012],
       hours: 3, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["swimming","photography"],
@@ -268,9 +340,18 @@ window.OMAN_DATA = {
         "Entry fee": "Free"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Bani+Khalid+Oman",
+      insta: "https://www.instagram.com/hussain_explores/reel/DaNo9_NM7Wv/",
       verify: true,
-      gettingThere: "From Muscat ~2.5 hrs via Route 23 (the faster inland road; the coastal Route 17 is prettier but closer to 4 hrs). Tarmac almost the whole way, with a long, easy 2WD-friendly car park right by the pools.",
-      whatYoullDo: "The main pools by the car park get busy fast, but a 15–20 min walk upstream thins the crowds out considerably. There's also a cave further in for those who want to explore beyond the swimming area.",
+      gettingThere: [
+        "Take Route 23 inland from Muscat — 2.5 hrs, and tarmac almost the whole way.",
+        "(Route 17 along the coast is prettier but closer to 4 hrs. Your call.)",
+        "Park in the big lot right by the pools. Any car does it — no 4×4 needed."
+      ],
+      whatYoullDo: [
+        "Skip the first pools by the car park — that's where everyone stops.",
+        "Walk 15–20 min upstream. The crowds thin out and the water gets better.",
+        "Keep going and there's a cave further in, if you want more than a swim."
+      ],
       tips: [
         "Walk 15 min past the busy pools and you'll have it to yourself.",
         "Dress modestly — it's right next to a village."
@@ -282,7 +363,11 @@ window.OMAN_DATA = {
       tagline: "The one that made me fall for this country all over again.",
       blurb: "Emerald pools tucked between towering canyon walls, water so clear it looks fake on camera, and — if you time it right — barely another soul around.",
       img: "assets/wadis/wadi-mibam.jpg",
-      imgCredit: "Photo: Dr. Thomas Liptak · CC BY-SA 4.0 · Wikimedia Commons", region: "coast-east", coords: [22.816, 59.204],
+      imgCredit: "Photo: Dr. Thomas Liptak · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-mibam-2.jpg", credit: "Photo: albinfo · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-mibam-3.jpg", credit: "Photo: albinfo · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "coast-east", coords: [22.816, 59.204],
       hours: 5, fitness: 3, needs4x4: true, swim: true, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["swimming","canyoning","photography","hiking"],
@@ -303,6 +388,9 @@ window.OMAN_DATA = {
         "Entry fee": "Free"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Mibam+Village+Oman",
+      insta: ["https://www.instagram.com/hussain_explores/reel/DUsh1oYDMQC/",
+              "https://www.instagram.com/hussain_explores/reel/DXUH9xHDC1y/",
+              "https://www.instagram.com/hussain_explores/reel/DWWDhr9jHa0/"],   // 14K-like "my favorite wadi" · comeback reel · tips  [CONFIRM the 14K one is Mibam]
       verify: true
     },
     {
@@ -310,7 +398,12 @@ window.OMAN_DATA = {
       name: "Wadi Al Arbeieen",
       tagline: "Boulder-hop your way to pools nobody else is in.",
       blurb: "Less famous than Shab and it shows — you'll have whole pools to yourself. The catch is the approach: a graded gravel track through a mountain pass, then real bouldering over giant white rocks. It's a workout, and it's brilliant.",
-      img: "", region: "muscat", coords: [23.109, 58.802],
+      img: "assets/wadis/wadi-al-arbeieen.jpg",
+      imgCredit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-al-arbeieen-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-al-arbeieen-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.109, 58.802],
       hours: 6, fitness: 4, needs4x4: true, swim: true, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["swimming","hiking","canyoning","photography","adrenaline"],
@@ -338,7 +431,12 @@ window.OMAN_DATA = {
       name: "Wadi Damm",
       tagline: "Azure pools and ferns in a sheer-walled canyon — with water all year.",
       blurb: "One of the few wadis that holds water year-round. Most people crowd the first pool, which isn't even the best one — walk a little further into the canyon and the good ones are yours.",
-      img: "", region: "dakhiliyah", coords: [23.190, 57.037],
+      img: "assets/wadis/wadi-damm.jpg",
+      imgCredit: "Photo: A1000 · CC0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-damm-2.jpg", credit: "Photo: A1000 · CC0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-damm-3.jpg", credit: "Photo: A1000 · CC0 · Wikimedia Commons" }
+      ], region: "dakhiliyah", coords: [23.190, 57.037],
       hours: 4, fitness: 3, needs4x4: true, swim: true, kidOk: false,
       months: [1,2,3,4,10,11,12],
       tags: ["swimming","hiking","photography"],
@@ -362,12 +460,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "wadi-tiwi", cat: "wadis", free: false, type: "Wadi",
+      id: "wadi-tiwi", cat: "wadis", free: true, type: "Wadi",
       name: "Wadi Tiwi",
       tagline: "Wadi Shab's quieter, prettier neighbour.",
       blurb: "Right next to Wadi Shab but with a fraction of the crowds. Terraced date plantations, blue pools, and tiny villages clinging to the cliffs as you drive deeper in.",
       img: "assets/wadis/wadi-tiwi.jpg",
-      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons", region: "coast-east", coords: [22.815, 59.254],
+      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-tiwi-2.jpg", credit: "Photo: albinfo · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-tiwi-3.jpg", credit: "Photo: albinfo · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "coast-east", coords: [22.815, 59.254],
       hours: 4, fitness: 2, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["swimming","photography","culture"],
@@ -387,6 +489,21 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry fee": "Free"
       },
+      gettingThere: [
+        "2–2.5 hrs from Muscat, right next to Wadi Shab off Route 17.",
+        "Drive the paved road ~10km into the wadi, through plantations and villages.",
+        "It's steep and narrow — go slowly, this is someone's street.",
+        "Continuing to Mibam? 4×4, mandatory."
+      ],
+      whatYoullDo: [
+        "The drive is the highlight: terraced plantations, cliffside villages.",
+        "Park up and walk to the blue pools.",
+        "Far fewer people than Wadi Shab, minutes away."
+      ],
+      tips: [
+        "Pair it with Wadi Shab in one day — they're minutes apart.",
+        "The road is tight. Mind the villagers: this is their street, not a track."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Tiwi+Oman",
       verify: true
     },
@@ -396,7 +513,11 @@ window.OMAN_DATA = {
       tagline: "The easy family day — kayaks, not scrambling.",
       blurb: "Oman's biggest dam, and now an adventure park around it: kayaks, paddleboards, pedal boats, a café at the viewpoint. Not a wild wadi — but it's the one you take people who don't want a wild wadi.",
       img: "assets/wadis/wadi-dayqah.jpg",
-      imgCredit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons", region: "muscat", coords: [23.070, 58.850],
+      imgCredit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-dayqah-2.jpg", credit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-dayqah-3.jpg", credit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.070, 58.850],
       hours: 3, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["photography","wildlife"],
@@ -420,12 +541,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "wadi-tanuf", cat: "wadis", free: false, type: "Wadi",
+      id: "wadi-tanuf", cat: "wadis", free: true, type: "Wadi",
       name: "Wadi Tanuf",
       tagline: "A ruined village, a gorge, and almost nobody there.",
       blurb: "Palm groves, turquoise pools under small waterfalls, and the bombed-out ruins of old Tanuf village at the mouth of the gorge. Half an hour from Nizwa and a fraction of the traffic.",
       img: "assets/wadis/wadi-tanuf.jpg",
-      imgCredit: "Photo: Harri J from Lausanne, Switzerland · CC BY 2.0 · Wikimedia Commons", region: "dakhiliyah", coords: [23.058, 57.475],
+      imgCredit: "Photo: Harri J from Lausanne, Switzerland · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-tanuf-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-tanuf-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dakhiliyah", coords: [23.058, 57.475],
       hours: 3, fitness: 2, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["swimming","hiking","culture","photography"],
@@ -445,6 +570,22 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry fee": "Free"
       },
+      gettingThere: [
+        "30 min from Nizwa on Route 21, signposted to Tanuf.",
+        "2WD reaches the ruins and the wadi mouth.",
+        "The dirt track deeper in is rough — that part wants a 4×4."
+      ],
+      whatYoullDo: [
+        "Start at the ruins of old Tanuf — bombed out in the 1950s and left standing.",
+        "Walk up into the gorge: palm groves, falaj channels, turquoise pools under small waterfalls.",
+        "Water's up? Swim. Water's down? Still one of the better short gorge walks in the country.",
+        "Either way it's usually empty."
+      ],
+      tips: [
+        "Walk the ruins first, in the morning light, before the gorge.",
+        "Water levels swing hard with the season — check before you commit to a swim day.",
+        "Pairs perfectly with Al Hoota Cave and Misfat in one Nizwa day."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Tanuf+Oman",
       verify: true
     },
@@ -454,7 +595,11 @@ window.OMAN_DATA = {
       tagline: "The floor of Oman's Grand Canyon.",
       blurb: "Everyone photographs this canyon from the rim at Jabal Shams. Far fewer people drive into the bottom of it — up the Ghul–Nakhar track with 1,000m walls closing in on either side. It reframes the whole mountain.",
       img: "assets/wadis/wadi-ghul.jpg",
-      imgCredit: "Photo: Albinfo · CC BY 4.0 · Wikimedia Commons", region: "dakhiliyah", coords: [23.192, 57.157],
+      imgCredit: "Photo: Albinfo · CC BY 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-ghul-2.jpg", credit: "Photo: Fabio Achilli from Milano, Italy · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-ghul-3.jpg", credit: "Photo: Fabio Achilli from Milano, Italy · CC BY 2.0 · Wikimedia Commons" }
+      ], region: "dakhiliyah", coords: [23.192, 57.157],
       hours: 4, fitness: 2, needs4x4: true, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["photography","hiking","culture"],
@@ -482,7 +627,12 @@ window.OMAN_DATA = {
       name: "Wadi Hawer",
       tagline: "For people who want an adventure, not a viewpoint.",
       blurb: "Long, remote and genuinely demanding — the kind of day that earns the views. Canyon scenery most visitors never reach. Get a guide for this one.",
-      img: "", region: "sharqiyah", coords: [22.650, 58.950],
+      img: "assets/wadis/wadi-hawer.jpg",
+      imgCredit: "Photo: Fabio Achilli from Milano, Italy · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-hawer-2.jpg", credit: "Photo: Erfan.arafat · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-hawer-3.jpg", credit: "Photo: Luca Nebuloni · CC BY 2.0 · Wikimedia Commons" }
+      ], region: "sharqiyah", coords: [22.650, 58.950],
       hours: 8, fitness: 5, needs4x4: true, swim: true, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["canyoning","adrenaline","hiking","swimming"],
@@ -503,6 +653,8 @@ window.OMAN_DATA = {
         "Guide": "Strongly recommended — remote, technical"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Hawer+Oman",
+      insta: ["https://www.instagram.com/hussain_explores/reel/DZwrB3xs4Hg/",
+              "https://www.instagram.com/hussain_explores/reel/DZc2iUeMYZj/"],
       verify: true
     },
     {
@@ -511,7 +663,11 @@ window.OMAN_DATA = {
       tagline: "The most adrenaline you'll find in an Omani wadi.",
       blurb: "Cliff jumps, swims through narrow gorges and proper scrambling. Spectacular — but it bites if you don't know it. Go with a guide, no exceptions.",
       img: "assets/wadis/snake-gorge.jpg",
-      imgCredit: "Photo: albinfo · CC BY-SA 4.0 · Wikimedia Commons", region: "rustaq", coords: [23.237, 57.444],
+      imgCredit: "Photo: albinfo · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/snake-gorge-2.jpg", credit: "Photo: albinfo · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/wadis/snake-gorge-3.jpg", credit: "Photo: albinfo · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "rustaq", coords: [23.237, 57.444],
       hours: 8, fitness: 5, needs4x4: true, swim: true, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["canyoning","adrenaline","swimming","hiking"],
@@ -570,7 +726,11 @@ window.OMAN_DATA = {
       tagline: "Serious mountain country — go prepared or don't go.",
       blurb: "A big, rugged wadi in the northern Hajar. Long approach, real exposure, and a route you should not be finding by yourself. The reward is scale you won't get anywhere near Muscat.",
       img: "assets/wadis/wadi-naqab.jpg",
-      imgCredit: "Photo: IbrahimKumar · CC0 · Wikimedia Commons", region: "musandam", coords: [25.878, 56.130],
+      imgCredit: "Photo: IbrahimKumar · CC0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-naqab-2.jpg", credit: "Photo: IbrahimKumar · CC0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-naqab-3.jpg", credit: "Photo: IbrahimKumar · CC0 · Wikimedia Commons" }
+      ], region: "musandam", coords: [25.878, 56.130],
       hours: 8, fitness: 5, needs4x4: true, swim: false, kidOk: false,
       months: [11,12,1,2,3],
       tags: ["hiking","adrenaline","photography"],
@@ -594,6 +754,107 @@ window.OMAN_DATA = {
       verify: true,
       needsFirstHand: true
     },
+    {
+      id: "wadi-al-hoqain", cat: "wadis", free: true, type: "Wadi",
+      name: "Wadi Al Hoqain — the trenches",
+      tagline: "Sulfur-blue water in carved rock channels — and it's easy.",
+      blurb: "Long, straight rock trenches filled with pale-blue, sulfur-rich water, south of Rustaq. No serious hike, no scramble — you walk in, float down the channels, and wonder why nobody told you about it sooner. From my wadi series: one of the easiest wins in the north.",
+      img: "",
+      region: "rustaq", coords: [23.24, 57.40],
+      hours: 3, fitness: 1, needs4x4: false, swim: true, kidOk: true,
+      months: [10,11,12,1,2,3,4],
+      tags: ["swimming","photography"],
+      guide: "",
+      hikeTime: "Minutes — the trenches are near the track",
+      swimTime: "1–2 hrs floating the channels",
+      bring: {
+        essential: ["Water shoes", "Water", "Modest swimwear — village area"],
+        optional: ["Goggles — the blue reads even better underwater", "Picnic"]
+      },
+      stats: {
+        "Difficulty": "Easy",
+        "Time needed": "Half day from Muscat",
+        "Swim": "Yes — calm channels",
+        "Vehicle": "2WD gets close; the last stretch is rough",
+        "Best season": "Oct–Apr",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Al+Hoqain+Oman",
+      insta: ["https://www.instagram.com/hussain_explores/reel/DUB4un3jP6F/",
+              "https://www.instagram.com/hussain_explores/reel/DT4zb32DFOc/"],
+      verify: true,
+      gettingThere: [
+        "Head for Al Hoqain, south of Rustaq — around 2 hrs from Muscat.",
+        "2WD gets you close; the final approach is rough track — park and walk if unsure.",
+        "The trenches are minutes from where you leave the car."
+      ],
+      whatYoullDo: [
+        "Walk the carved channels — long, straight, waist-to-chest deep.",
+        "Float down them. That's the activity, and it's enough.",
+        "The sulfur gives the water its milky blue — and a faint mineral smell you stop noticing fast."
+      ],
+      tips: [
+        "Easy and family-friendly — one of the best starter wadis in the guide.",
+        "Weekday mornings for empty channels.",
+        "Combine with the Rustaq loop — fort, hot spring and castle are all nearby."
+      ]
+    },
+    {
+      id: "wadi-al-abyad", cat: "wadis", free: false, type: "Wadi",
+      name: "Wadi Al Abyad",
+      tagline: "The white wadi — milky-blue pools an hour from Muscat.",
+      blurb: "Mineral springs feed a chain of pools with a pale, milky-blue tint you won't see in any other wadi — that's the 'abyad' (white). Short flat walk-in, palms, and far fewer people than the famous names. One of the best low-effort wadi days near the capital.",
+      img: "",
+      region: "rustaq", coords: [23.389, 57.662],
+      hours: 3, fitness: 1, needs4x4: true, swim: true, kidOk: true,
+      months: [10,11,12,1,2,3,4],
+      tags: ["swimming","photography"],
+      guide: "",
+      hikeTime: "10–20 min of flat wadi-bed walking",
+      swimTime: "1–2 hrs across the pools",
+      bring: {
+        essential: ["Water shoes", "Water", "Modest swimwear — village wadi"],
+        optional: ["Goggles — the milky water is the show", "Picnic"]
+      },
+      stats: {
+        "Difficulty": "Easy",
+        "Time needed": "Half day from Muscat",
+        "Swim": "Yes",
+        "Vehicle": "4×4 recommended for the wadi track",
+        "Best season": "Oct–Apr",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Al+Abyad+Oman",
+      verify: true
+    },
+    {
+      id: "wadi-al-khoudh", cat: "wadis", free: false, type: "Wadi",
+      name: "Wadi Al Khoudh",
+      tagline: "Muscat's own wadi — pools in the gorge behind the city.",
+      blurb: "The wadi everyone in Muscat drives over and almost nobody drives into. Past the dam the gorge narrows and holds year-round pools between smooth rock walls — a real wadi swim twenty minutes from the suburbs. After rain, the whole city comes to watch it flow.",
+      img: "",
+      region: "muscat", coords: [23.559, 58.110],
+      hours: 3, fitness: 2, needs4x4: true, swim: true, kidOk: true,
+      months: [10,11,12,1,2,3,4],
+      tags: ["swimming","hiking","photography"],
+      guide: "",
+      hikeTime: "20–40 min up the gorge, some boulder-hopping",
+      swimTime: "1 hr in the upper pools",
+      bring: {
+        essential: ["Water shoes", "Water", "Dry bag"],
+        optional: ["Goggles", "Rope for pack-hauling if you go deep"]
+      },
+      stats: {
+        "Difficulty": "Easy–moderate",
+        "Time needed": "Half day",
+        "Swim": "Yes — upper pools",
+        "Vehicle": "4×4 for the wadi bed; 2WD parks at the edge",
+        "Best season": "Oct–Apr, never after rain upstream",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Al+Khoudh+Oman",
+      verify: true
+    },
 
     /* ═════════════════════════════════════════════════════════════ BEACHES */
     {
@@ -602,7 +863,11 @@ window.OMAN_DATA = {
       tagline: "White sand, turquoise water, mountains behind. Postcard Oman.",
       blurb: "One of the most beautiful beaches in the country, and a favourite camping spot for a reason: soft white sand, impossibly blue water, and the Hajar mountains rising right behind you. Sunset here is unreal.",
       img: "assets/beaches/fins-beach.jpg",
-      imgCredit: "Photo: Daredeep33 · CC BY-SA 4.0 · Wikimedia Commons", region: "coast-east", coords: [23.098, 59.024],
+      imgCredit: "Photo: Daredeep33 · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/beaches/fins-beach-2.jpg", credit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/beaches/fins-beach-3.jpg", credit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "coast-east", coords: [23.098, 59.024],
       hours: 3, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["beach","camping","sunset","photography"],
@@ -622,8 +887,17 @@ window.OMAN_DATA = {
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Fins+Beach+Oman",
       verify: true,
-      gettingThere: "From Muscat ~1.5–2 hrs on the coast road, between Quriyat and Sur, right off the highway near Fins village — dirt tracks lead down to the sand, no 4×4 required.",
-      whatYoullDo: "Swim, camp, watch the sun go down behind the Hajar. There are no facilities at all, so bring water, shade, and a bag for your rubbish. Best Oct–Apr when the sea is calmer.",
+      gettingThere: [
+        "Coast road from Muscat toward Sur — 1.5 to 2 hrs, near Fins village.",
+        "Turn off the highway onto one of the short dirt tracks down to the sand.",
+        "No 4×4 needed. Drive slowly on the sand and don't park where it's soft."
+      ],
+      whatYoullDo: [
+        "Swim, then find a spot for the evening — camping on the sand is normal and legal here.",
+        "Watch the sun drop behind the Hajar. That's the show.",
+        "Bring everything: water, shade, food. There are no facilities at all.",
+        "Take your rubbish home with you. Every bit of it."
+      ],
       tips: [
         "Camp on a weekday and you'll have it to yourself.",
         "No facilities — bring water, shade, and take your rubbish out."
@@ -635,7 +909,11 @@ window.OMAN_DATA = {
       tagline: "The snorkel and kayak playground near Muscat.",
       blurb: "A maze of coves, mangroves and little islands just south of Muscat — and some of the best snorkelling near the city. Calm, clear water and reefs you can reach by boat or kayak.",
       img: "assets/beaches/bandar-khayran.jpg",
-      imgCredit: "Photo: Erfan.arafat · CC BY-SA 4.0 · Wikimedia Commons", region: "muscat", coords: [23.523, 58.717],
+      imgCredit: "Photo: Erfan.arafat · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/beaches/bandar-khayran-2.jpg", credit: "Photo: Erfan.arafat · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/beaches/bandar-khayran-3.jpg", credit: "Photo: Erfan.arafat · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.523, 58.717],
       hours: 5, fitness: 2, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["snorkel","beach","wildlife","photography"],
@@ -662,7 +940,11 @@ window.OMAN_DATA = {
       tagline: "Watch sea turtles nest under the stars.",
       blurb: "Oman's famous turtle nesting beach at the easternmost tip of Arabia. On a guided night or dawn visit you watch green turtles haul ashore to lay eggs — and hatchlings scramble for the sea.",
       img: "assets/beaches/ras-al-jinz.jpg",
-      imgCredit: "Photo: F igy · CC BY 3.0 · Wikimedia Commons", region: "coast-east", coords: [22.420, 59.836],
+      imgCredit: "Photo: F igy · CC BY 3.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/beaches/ras-al-jinz-2.jpg", credit: "Photo: Kim Kash · CC BY-SA 2.0 · Wikimedia Commons" },
+        { src: "assets/beaches/ras-al-jinz-3.jpg", credit: "Photo: Kim Kash · CC BY-SA 2.0 · Wikimedia Commons" }
+      ], region: "coast-east", coords: [22.420, 59.836],
       hours: 3, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["wildlife","photography"],
@@ -681,15 +963,20 @@ window.OMAN_DATA = {
         "Entry": "~OMR 3 pp + ~OMR 7 pp guided tour"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Ras+Al+Jinz+Turtle+Reserve+Oman",
+      insta: "https://www.instagram.com/hussain_explores/reel/DX49zklMr35/",
       verify: true
     },
     {
-      id: "yiti-qantab", cat: "beaches", free: false, type: "Beach",
+      id: "yiti-qantab", cat: "beaches", free: true, type: "Beach",
       name: "Yiti & Qantab",
       tagline: "Quiet coves 30 minutes from the city.",
       blurb: "When I want the coast without the drive, I come here. Calm coves and dramatic cliffs just outside Muscat — great for a quick swim, a sunset, or kayaking around the headlands.",
       img: "assets/beaches/yiti-qantab.jpg",
-      imgCredit: "Photo: Allan Henderson · CC BY 2.0 · Wikimedia Commons", region: "muscat", coords: [23.568, 58.538],
+      imgCredit: "Photo: Allan Henderson · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/beaches/yiti-qantab-2.jpg", credit: "Photo: Joe Castleman · CC BY-SA 3.0 · Wikimedia Commons" },
+        { src: "assets/beaches/yiti-qantab-3.jpg", credit: "Photo: Joe Castleman · CC BY-SA 3.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.568, 58.538],
       hours: 3, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["beach","sunset","swimming"],
@@ -707,8 +994,64 @@ window.OMAN_DATA = {
         "Best time": "Late afternoon",
         "Entry": "Free"
       },
+      gettingThere: [
+        "Qantab: 20–25 min from central Muscat on the coastal road.",
+        "Yiti: 30–45 min.",
+        "Any car. This is the 'I've got three hours' option."
+      ],
+      whatYoullDo: [
+        "Swim.",
+        "Walk the headland.",
+        "Kayak, if you've brought one.",
+        "Don't plan a day around it — plan an evening."
+      ],
+      tips: [
+        "Late afternoon — the cliffs go gold.",
+        "Midweek it's basically empty."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Qantab+Beach+Oman",
+      insta: ["https://www.instagram.com/hussain_explores/reel/DZI_D_dsrcK/",
+              "https://www.instagram.com/hussain_explores/reel/DaEEFqvMzvf/",
+              "https://www.instagram.com/hussain_explores/reel/DSo_iEkjPfT/"],   // 3rd = the bioluminescent plankton night at Qantab
       verify: true
+    },
+    {
+      id: "marjan-beach", cat: "beaches", free: true, type: "Snorkel",
+      name: "Marjan Beach (Ras Al Hamra)",
+      tagline: "Turtles grazing metres from the sand — inside the city, for free.",
+      blurb: "The PDO beach at Ras Al Hamra — 'Al Marjan' on the maps. Swim out over the seagrass and you're snorkelling with green turtles, no boat and no tour required; the brave take the jump rock at the far end. Public access until 7pm.",
+      img: "",
+      region: "muscat", coords: [23.636, 58.505],
+      hours: 2, fitness: 1, needs4x4: false, swim: true, kidOk: true,
+      months: [10,11,12,1,2,3,4,5],
+      tags: ["swimming","snorkel","wildlife","beach"],
+      guide: "",
+      swimTime: "As long as you like — this is a mask-and-fins morning",
+      bring: {
+        essential: ["Mask and snorkel — the turtles are the point", "Water shoes for the rocky entries"],
+        optional: ["Fins", "GoPro / waterproof phone case", "Shade — trees are limited"]
+      },
+      stats: {
+        "Best for": "Turtles without a boat trip",
+        "Time needed": "2–3 hrs",
+        "Swim": "Yes — calm most days",
+        "Vehicle": "Any car",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Marjan+Beach+Ras+Al+Hamra+Muscat",
+      insta: ["https://www.instagram.com/hussain_explores/reel/DSDcB2mDHYT/",
+              "https://www.instagram.com/hussain_explores/reel/DTU37gojIR0/",
+              "https://www.instagram.com/hussain_explores/reel/DaXqBS5Mcy8/"],   // the guide reel · turtles-for-free · the tail-slap turtle
+      verify: true,
+      whatYoullDo: [
+        "Swim out over the seagrass beds — that's where the turtles feed.",
+        "Move slowly and keep your distance; they'll carry on grazing right next to you.",
+        "Early morning = calmest water and the best visibility."
+      ],
+      tips: [
+        "Look, don't touch — and never block a turtle's path to the surface.",
+        "Visibility drops after windy days — pick a calm morning."
+      ]
     },
     {
       id: "as-sifah", cat: "beaches", free: false, type: "Beach",
@@ -716,7 +1059,11 @@ window.OMAN_DATA = {
       tagline: "A long, wild, empty stretch an hour from the city.",
       blurb: "Sandy, quiet and backed by mountains — the beach you go to when you want space. Popular for camping, and one of the easiest wild nights out you can have from Muscat.",
       img: "assets/beaches/as-sifah.jpg",
-      imgCredit: "Photo: MariamMajdolineLahham · CC BY-SA 4.0 · Wikimedia Commons", region: "muscat", coords: [23.427, 58.833],
+      imgCredit: "Photo: MariamMajdolineLahham · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/beaches/as-sifah-2.jpg", credit: "Photo: MarjuneShiela · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/beaches/as-sifah-3.jpg", credit: "Photo: MarjuneShiela · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.427, 58.833],
       hours: 3, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["beach","camping","sunset","swimming","photography"],
@@ -743,7 +1090,11 @@ window.OMAN_DATA = {
       tagline: "Islands offshore, reef in between, palms behind.",
       blurb: "An hour and a half up the Batinah coast: clean sand, calm water, and a cluster of protected islands just offshore you can boat out to. The reef between the mainland and the islands is the reason to bother.",
       img: "assets/beaches/al-sawadi.jpg",
-      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons", region: "batinah", coords: [23.775, 57.790],
+      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/beaches/al-sawadi-2.jpg", credit: "Photo: Ondřej Žváček · CC BY 2.5 · Wikimedia Commons" },
+        { src: "assets/beaches/al-sawadi-3.jpg", credit: "Photo: Estelle from Paris, France · CC BY 2.0 · Wikimedia Commons" }
+      ], region: "batinah", coords: [23.775, 57.790],
       hours: 4, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["beach","snorkel","wildlife","sunset"],
@@ -764,13 +1115,90 @@ window.OMAN_DATA = {
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Sawadi+Beach+Oman",
       verify: true
     },
+
+    /* ── Camping (added Jul 2026) — wild camping is legal, free and one of
+       Oman's superpowers. Every camp spot carries the safety rules. ──────── */
     {
-      id: "mughsail", cat: "salalah", free: true, type: "Beach",
+      id: "white-beach-fins", cat: "beaches", free: true, type: "Camping",
+      name: "White Beach (Fins)",
+      tagline: "The classic first camp — white pebbles, clear water, fire on the beach.",
+      blurb: "The little white cove past Fins is where half of Muscat learned to beach-camp: sheltered, swimmable, and close enough to bail out if the kids mutiny. Pitch above the tide line, cook on the sand, wake up and swim before breakfast. Wild camping in Oman is legal and free — this is the place to start.",
+      img: "",
+      region: "coast-east", coords: [22.926, 59.108],
+      hours: 3, fitness: 1, needs4x4: false, swim: true, kidOk: true,
+      months: [10,11,12,1,2,3,4],
+      tags: ["beach","camping","swimming","sunset","photography"],
+      guide: "",
+      swimTime: "Morning swim is the whole point",
+      bring: {
+        essential: ["Tent + pegs that hold in sand", "Water (3L pp/day) — nothing sold nearby", "Firewood bought in town + lighter", "Rubbish bags — you carry out everything", "Torch / head lamps"],
+        optional: ["Camp chairs", "Shade tarp for the morning", "Snorkel gear", "Cool box"]
+      },
+      stats: {
+        "Best for": "Your first Oman beach camp",
+        "Time needed": "Overnight (or a day trip)",
+        "Swim": "Yes — calm cove",
+        "Vehicle": "Careful 2WD to the top; 4×4 drives down",
+        "Best season": "Oct–Apr",
+        "Entry": "Free — wild camping is legal"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=White+Beach+Fins+Oman",
+      verify: true,
+      gettingThere: [
+        "Coast road toward Fins, ~1h30 from Muscat.",
+        "The cove is just past Fins beach — short rough track down to the sand.",
+        "Arrive 2–3 hrs before sunset to claim a spot on winter weekends."
+      ],
+      whatYoullDo: [
+        "Pitch above the high-tide line — check the wet sand mark.",
+        "Swim, snorkel the rocky ends, cook as the sun drops.",
+        "Fall asleep to waves; be in the water by seven."
+      ],
+      tips: [
+        "Take EVERYTHING out with you — this cove's future depends on it.",
+        "Weekends fill up; midweek you may have it alone.",
+        "Wind picks up at night — peg the tent properly and face the door away from the sea.",
+        "No facilities: dig-and-bury, or use the toilets at Fins car park before you settle."
+      ]
+    },
+    {
+      id: "ras-al-hadd-camp", cat: "beaches", free: false, type: "Camping",
+      name: "Ras Al Hadd beach camp",
+      tagline: "Camp at the easternmost tip of Arabia — first sunrise in the Arab world.",
+      blurb: "Where the Gulf of Oman meets the Arabian Sea: wide empty beaches, a fishing town for supplies, turtle beaches next door and the first sunrise in the Arab world from your sleeping bag. The natural overnight on any Sur / Ras Al Jinz run.",
+      img: "",
+      region: "coast-east", coords: [22.530, 59.790],
+      hours: 3, fitness: 1, needs4x4: false, swim: true, kidOk: true,
+      months: [10,11,12,1,2,3,4],
+      overnight: true,
+      tags: ["beach","camping","sunset","wildlife","photography"],
+      guide: "",
+      bring: {
+        essential: ["Tent, water, firewood, rubbish bags", "Torch with red mode — turtle beaches are nearby, white light disturbs them"],
+        optional: ["Fresh fish from the Ras Al Hadd market for the fire", "Binoculars"]
+      },
+      stats: {
+        "Best for": "The turtle-coast overnight",
+        "Time needed": "Overnight",
+        "Swim": "Yes",
+        "Vehicle": "Any car to town; 4×4 opens the wilder beaches",
+        "Best season": "Oct–Apr",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Ras+Al+Hadd+Oman",
+      verify: true
+    },
+    {
+      id: "mughsail", cat: "salalah", free: true, group: "beaches", type: "Beach",
       name: "Mughsail Beach",
       tagline: "Blowholes, cliffs and a beach that doesn't look like the rest of Oman.",
       blurb: "Golden sand, dramatic cliffs, and natural blowholes that fire seawater into the air. Green in the khareef — a sentence you can't write about anywhere else in the Gulf.",
       img: "assets/beaches/mughsail.jpg",
-      imgCredit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons", region: "dhofar", coords: [16.873, 53.774],
+      imgCredit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/mughsail-2.jpg", credit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons" },
+        { src: "assets/salalah/mughsail-3.jpg", credit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [16.873, 53.774],
       hours: 3, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [1,2,3,4,7,8,9,10,11,12],
       tags: ["beach","photography","sunset"],
@@ -790,8 +1218,16 @@ window.OMAN_DATA = {
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Mughsail+Beach+Salalah+Oman",
       verify: true,
-      gettingThere: "~40 min west of Salalah on a good paved road — any car. The blowholes are at the Marneef Cave end of the beach, with walkways and shaded shelters.",
-      whatYoullDo: "Walk the long crescent of sand, then head to the blowholes at the western end — when the swell is right they fire seawater metres into the air through the limestone shelf. In khareef (Jul–Sep) the cliffs behind turn green and the whole scene goes misty; in winter it's sunny and calm enough to swim.",
+      gettingThere: [
+        "Drive west from Salalah — 40 min on good tarmac, any car.",
+        "Park at the Marneef Cave end: that's where the walkways and shaded shelters are."
+      ],
+      whatYoullDo: [
+        "Walk the long crescent of sand.",
+        "Go to the blowholes at the western end — with the right swell they fire seawater metres into the air.",
+        "Khareef (Jul–Sep): the cliffs behind turn green and the whole place goes misty.",
+        "Winter: sunny, calm, and warm enough to swim."
+      ],
       tips: [
         "The blowholes need a swell — flat sea means nothing happens. Khareef is the show.",
         "Khareef and winter are two completely different beaches. Both are worth it.",
@@ -806,7 +1242,11 @@ window.OMAN_DATA = {
       tagline: "The one thing every visitor should do in Muscat.",
       blurb: "The mosque that changes how people see the whole country — the scale, the light, the second-largest hand-woven carpet on earth. Free to enter, and an hour well spent.",
       img: "assets/experiences/grand-mosque.jpg",
-      imgCredit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons", region: "muscat", coords: [23.584, 58.389],
+      imgCredit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/experiences/grand-mosque-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/experiences/grand-mosque-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.584, 58.389],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -829,9 +1269,19 @@ window.OMAN_DATA = {
       visitWindow: [8, 11],
       closedFridays: true,
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Sultan+Qaboos+Grand+Mosque+Muscat",
+      insta: "https://www.instagram.com/hussain_explores/reel/DTnzHSpjPTj/",
       verify: false,
-      gettingThere: "In Muscat proper — a short taxi/drive from most hotels, with visitor parking on site. Visitor hours are 8–11am every day except Friday and public holidays, so get there by 10am at the latest to have any real time inside.",
-      whatYoullDo: "The courtyard, the main prayer hall, the chandelier, and the carpet. Give it an hour and don't rush the prayer hall — it's the whole point.",
+      gettingThere: [
+        "Short taxi or drive from anywhere in Muscat. Visitor parking on site.",
+        "Non-Muslim visiting hours: 8–11am, every day except Friday and public holidays.",
+        "Be there by 10am at the latest, or you're walking straight back out.",
+        "Dress code is enforced: long sleeves, long trousers/skirt, and a headscarf for women."
+      ],
+      whatYoullDo: [
+        "Start in the courtyard.",
+        "Then the main prayer hall — the chandelier and the carpet are the reason people talk about this place.",
+        "Give it an hour. Don't rush the prayer hall; it's the whole point."
+      ],
       tips: [
         "Open to visitors 8–11am, every day except Friday and public holidays. That's a narrow window — plan the morning around it, not the other way round.",
         "Go right at 8am — noticeably quieter and cooler for photos.",
@@ -844,7 +1294,11 @@ window.OMAN_DATA = {
       tagline: "Old Muscat, best at dusk.",
       blurb: "The corniche at golden hour, then straight into the souq — frankincense, silver, textiles, and the smell of oud in every alley. It's touristy and it's still good; you just have to haggle.",
       img: "assets/experiences/mutrah.jpg",
-      imgCredit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons", region: "muscat", coords: [23.617, 58.594],
+      imgCredit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/experiences/mutrah-2.jpg", credit: "Photo: see source · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/experiences/mutrah-3.jpg", credit: "Photo: Hafsa rk · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.617, 58.594],
       hours: 2.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","food","photography","sunset"],
@@ -853,6 +1307,8 @@ window.OMAN_DATA = {
         essential: ["Cash — many stalls don't take card", "Modest clothing"],
         optional: ["A firm 'no thanks' — the first price is never the price", "Room in your bag for frankincense", "Camera for the corniche at sunset"]
       },
+      insta: ["https://www.instagram.com/hussain_explores/reel/DQ9mbXyDDlu/",
+              "https://www.instagram.com/hussain_explores/reel/DSW1Z5MjKQL/"],
       stats: {
         "Best for": "Souq / sunset / your first evening",
         "Time needed": "2–3 hrs",
@@ -862,8 +1318,17 @@ window.OMAN_DATA = {
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Mutrah+Souq+Muscat",
       verify: true,
-      gettingThere: "On the Muscat waterfront, ~15 min from most hotels. Park along the corniche and walk.",
-      whatYoullDo: "Walk the corniche as the light goes, then into the souq. Buy frankincense and a burner, ignore the 'antique' khanjars, and eat on the water afterwards.",
+      gettingThere: [
+        "Muscat waterfront — 15 min from most hotels.",
+        "Park along the corniche and walk. Go at dusk, not midday."
+      ],
+      whatYoullDo: [
+        "Walk the corniche as the light goes — that's the photo.",
+        "Then into the souq. Buy frankincense and a burner.",
+        "Ignore the 'antique' khanjars. They aren't.",
+        "Haggle: start at about half, meet in the middle.",
+        "Eat on the water afterwards."
+      ],
       tips: [
         "Go at dusk — the light on the corniche is the photo.",
         "Haggle. Start at about half and meet in the middle."
@@ -875,7 +1340,11 @@ window.OMAN_DATA = {
       tagline: "A natural blue swimming hole right off the coast road.",
       blurb: "A surreal limestone sinkhole filled with blue-green water, sitting in a tidy park just off the coastal highway. Steps lead right down to the water. Not a beach — a one-hour experience you stop for on the way to Wadi Shab.",
       img: "assets/beaches/bimmah-sinkhole.jpg",
-      imgCredit: "Photo: Uhooep · CC BY-SA 4.0 · Wikimedia Commons", region: "coast-east", coords: [23.040, 59.074],
+      imgCredit: "Photo: Uhooep · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/experiences/bimmah-sinkhole-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/experiences/bimmah-sinkhole-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "coast-east", coords: [23.040, 59.074],
       hours: 1.5, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["swimming","photography"],
@@ -894,9 +1363,19 @@ window.OMAN_DATA = {
         "Entry": "Free"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Bimmah+Sinkhole+Oman",
+      insta: "https://www.instagram.com/hussain_explores/reel/DUUCjQOjMWn/",
       verify: true,
-      gettingThere: "Right on the Muscat–Sur coast road (Route 17), ~1.5 hrs from Muscat, in Hawiyat Najm Park near Bimmah village. Free parking, steps lead straight down to the water.",
-      whatYoullDo: "Swim, jump in, photograph the impossible colour of the water, and move on — it's an hour, not a day. Pairs perfectly with Wadi Shab on the same coastal run (they're minutes apart).",
+      gettingThere: [
+        "Route 17, the Muscat–Sur coast road — 1.5 hrs from Muscat.",
+        "It's inside Hawiyat Najm Park, near Bimmah village. Free parking.",
+        "Steps lead straight down to the water. Open 8am–8pm."
+      ],
+      whatYoullDo: [
+        "Swim. Jump in. Photograph the colour — midday sun makes it glow.",
+        "Let the little fish nibble your feet. They will.",
+        "Then leave — it's an hour, not a day.",
+        "Do it on the same run as Wadi Shab. They're minutes apart."
+      ],
       tips: [
         "Combine Bimmah + Wadi Shab in one coastal day.",
         "Midday sun makes the water glow for photos."
@@ -908,7 +1387,11 @@ window.OMAN_DATA = {
       tagline: "Oman's best reef, a boat ride from the city.",
       blurb: "A protected marine reserve 18km off Seeb — turtles, rays, reef, and a real chance of something bigger. Half a day, and the best snorkelling in the country.",
       img: "assets/experiences/daymaniyat.jpg",
-      imgCredit: "Photo: Wusel007 · CC BY-SA 4.0 · Wikimedia Commons", region: "muscat", coords: [23.861, 58.100],
+      imgCredit: "Photo: Wusel007 · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/experiences/daymaniyat-2.jpg", credit: "Photo: Wusel007 · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/experiences/daymaniyat-3.jpg", credit: "Photo: Wusel007 · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.861, 58.100],
       hours: 5, fitness: 2, needs4x4: false, swim: true, kidOk: true,
       months: [11,12,1,2,3],
       tags: ["snorkel","wildlife","beach","photography"],
@@ -927,6 +1410,8 @@ window.OMAN_DATA = {
         "Booking": "2–3 days ahead in peak season"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Daymaniyat+Islands+Oman",
+      insta: ["https://www.instagram.com/hussain_explores/reel/DapZDrDsnUD/",
+              "https://www.instagram.com/hussain_explores/reel/DR-aW8iDB0-/"],
       verify: true
     },
     {
@@ -935,7 +1420,11 @@ window.OMAN_DATA = {
       tagline: "A night in the dunes you won't get back home.",
       blurb: "Tarmac to the sand's edge, then a 4×4 into the dunes. Dune bashing, camels, a sunset session on a ridge, and a night sky that ruins other night skies.",
       img: "assets/experiences/wahiba-sands.jpg",
-      imgCredit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons", region: "sharqiyah", coords: [22.439, 58.832],
+      imgCredit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/experiences/wahiba-sands-2.jpg", credit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/experiences/wahiba-sands-3.jpg", credit: "Photo: albinfo · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "sharqiyah", coords: [22.439, 58.832],
       hours: 20, fitness: 1, needs4x4: true, swim: false, kidOk: true,
       months: [10,11,12,1,2,3],
       tags: ["desert","camping","adrenaline","sunset","photography"],
@@ -954,6 +1443,7 @@ window.OMAN_DATA = {
         "Booking": "Book the camp ahead"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wahiba+Sands+Oman",
+      insta: "https://www.instagram.com/hussain_explores/reel/Daw-U92sNGP/",
       verify: true
     },
     {
@@ -962,13 +1452,27 @@ window.OMAN_DATA = {
       tagline: "Oman's Grand Canyon, and the hike along its rim.",
       blurb: "8.7km out-and-back along the rim of the canyon to an abandoned village. Exposed edges, huge views, and cold air at 2,000m — bring a jacket, even here.",
       img: "assets/experiences/jabal-shams.jpg",
-      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons", region: "dakhiliyah", coords: [23.232, 57.203],
+      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/mountains/jabal-shams-2.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/mountains/jabal-shams-3.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dakhiliyah", coords: [23.232, 57.203],
       hours: 6, fitness: 4, needs4x4: true, swim: false, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["hiking","photography","adrenaline","mountains"],
       guide: "recommended",
-      gettingThere: "~3.5–4 hrs from Muscat, or ~1.5 hrs on from Nizwa. Paved most of the way; a 4×4 is recommended for the final graded stretch to the trailhead at Al Khitaym village.",
-      whatYoullDo: "The W6 Balcony Walk: 8.7km out-and-back along a ledge cut into the canyon wall, waymarked red-white-yellow, ending at the abandoned village of As Sab tucked under the rim. The path is wide enough, but the drop is real — anyone nervous with heights should know that going in. At 2,000m it's cold and windy even when Muscat is baking.",
+      gettingThere: [
+        "3.5–4 hrs from Muscat, or 1.5 hrs on from Nizwa.",
+        "Paved most of the way; take a 4×4 for the last graded stretch.",
+        "Start at Al Khitaym village, on the rim."
+      ],
+      whatYoullDo: [
+        "Walk the W6 'Balcony Walk': 8.7km out-and-back, waymarked red-white-yellow.",
+        "The path is a ledge cut into the canyon wall — wide enough, but the drop is real. Know that before you start.",
+        "It ends at As Sab, an abandoned village tucked under the rim.",
+        "Turn around and walk back the same way. Allow 4–5 hrs in total.",
+        "Bring a jacket: at 2,000m it's cold and windy even when Muscat is baking."
+      ],
       tips: [
         "Start early — the shade goes by late morning and it's a long walk back.",
         "3L of water. There is none on the trail.",
@@ -994,12 +1498,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "nizwa", cat: "experiences", free: false, type: "Fort",
+      id: "nizwa", cat: "experiences", free: true, type: "Fort",
       name: "Nizwa Fort & Souq",
       tagline: "Old Oman, still very much alive.",
       blurb: "The fort tower, the souq stalls — silver, dates, pottery, spices — and, if you time it for a Friday morning, the livestock souq, which is a genuine spectacle.",
       img: "assets/experiences/nizwa.jpg",
-      imgCredit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons", region: "dakhiliyah", coords: [22.933, 57.533],
+      imgCredit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/experiences/nizwa-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/experiences/nizwa-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dakhiliyah", coords: [22.933, 57.533],
       hours: 4, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","food","photography"],
@@ -1016,16 +1524,35 @@ window.OMAN_DATA = {
         "Best time": "Friday morning (livestock souq)",
         "Entry": "Fort OMR 5 / kids OMR 3. Souq free"
       },
+      gettingThere: [
+        "1.5–2 hrs from Muscat via Route 15. Easy paved drive, any car.",
+        "Fort and souq are a few minutes' walk apart in the centre.",
+        "Pair it with Jabal Akhdar, Al Hoota or Misfat — all on the same road inland."
+      ],
+      whatYoullDo: [
+        "Climb the fort tower for the view over the date palms.",
+        "Then walk the souq: silver, dates, pottery, spices.",
+        "Friday at 7am: the livestock souq. Get there early — it's over by 9."
+      ],
+      tips: [
+        "Friday, ~7am, for the livestock souq. It's the real spectacle and it's over by 9.",
+        "The fort tower bakes at midday. Early or late.",
+        "Buy dates here, not at the airport."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Nizwa+Fort+Oman",
       verify: true
     },
     {
-      id: "misfat-al-abriyeen", cat: "mountains", free: false, type: "Village",
+      id: "misfat-al-abriyeen", cat: "mountains", free: true, type: "Village",
       name: "Misfat Al Abriyeen",
       tagline: "A mud-brick village in the mountains that time forgot to ruin.",
       blurb: "Terraced gardens, falaj channels running through the alleys, and old stone houses stacked into the hillside. Walk it slowly — and stay the night in a village guesthouse if you can.",
       img: "assets/experiences/misfat-al-abriyeen.jpg",
-      imgCredit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons", region: "dakhiliyah", coords: [23.130, 57.281],
+      imgCredit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/mountains/misfat-al-abriyeen-2.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" },
+        { src: "assets/mountains/misfat-al-abriyeen-3.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" }
+      ], region: "dakhiliyah", coords: [23.130, 57.281],
       hours: 3, fitness: 2, needs4x4: false, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["culture","photography","hiking","mountains"],
@@ -1043,16 +1570,37 @@ window.OMAN_DATA = {
         "Best time": "Late afternoon",
         "Entry": "Free (park outside the village)"
       },
+      gettingThere: [
+        "2 hrs from Muscat, 30 min from Nizwa. Any car.",
+        "Park outside the village.",
+        "Walk in — cars aren't allowed through the old alleys."
+      ],
+      whatYoullDo: [
+        "Walk down through the mud-brick alleys with the falaj running beside your feet.",
+        "Come out into the terraced gardens below: date palms, bananas, mangoes.",
+        "It takes an hour. You'll want two.",
+        "Village guesthouses will put you up for the night — that's the way to do it."
+      ],
+      tips: [
+        "Late afternoon light on the terraces is the whole reason to come.",
+        "People live here. Don't photograph doorways and windows without asking.",
+        "Stay the night — the village empties after 5pm and it's a different place."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Misfat+Al+Abriyeen+Oman",
+      insta: "https://www.instagram.com/hussain_explores/reel/DDC_F40yIa2/",
       verify: true
     },
     {
-      id: "al-hoota-cave", cat: "mountains", free: false, type: "Cave",
+      id: "al-hoota-cave", cat: "mountains", free: true, type: "Cave",
       name: "Al Hoota Cave",
       tagline: "Two million years old, and the only show cave in Arabia.",
       blurb: "4.5km of cave under the foot of Jabal Shams, with 500m of it opened up and lit. A little train takes you in. It's the easy win on a mountain day — and blissfully cool.",
       img: "assets/experiences/al-hoota-cave.jpg",
-      imgCredit: "Photo: A1000 · CC0 · Wikimedia Commons", region: "dakhiliyah", coords: [23.081, 57.363],
+      imgCredit: "Photo: A1000 · CC0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/mountains/al-hoota-cave-2.jpg", credit: "Photo: Paul IJpelaar · CC BY 3.0 · Wikimedia Commons" },
+        { src: "assets/mountains/al-hoota-cave-3.jpg", credit: "Photo: Ambreen Waseem · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dakhiliyah", coords: [23.081, 57.363],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","wildlife","photography","mountains"],
@@ -1069,16 +1617,36 @@ window.OMAN_DATA = {
         "Entry": "~OMR 7 adults / OMR 3.5 children (foreign visitors)",
         "Booking": "Recommended — timed slots"
       },
+      gettingThere: [
+        "At the foot of Jabal Shams near Al Hamra — 2 hrs from Muscat. Any car, proper parking.",
+        "Entry is roughly OMR 7 for adult foreign visitors, OMR 3.5 for children.",
+        "Slots are timed and they sell out. Book, or turn up early."
+      ],
+      whatYoullDo: [
+        "A little electric train takes you into the mountain.",
+        "You walk the lit 500m section: stalactites, a subterranean lake.",
+        "Look for the blind cave fish — they live nowhere else on earth.",
+        "Two million years old, and the only show cave on the Arabian Peninsula."
+      ],
+      tips: [
+        "Slots are timed and they do sell out. Book, or turn up early.",
+        "The perfect midday stop on a hot Nizwa day — you're underground while the sun is at its worst.",
+        "It closes some days. Check before you drive out there."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Hoota+Cave+Oman",
       verify: true
     },
     {
-      id: "jabal-akhdar", cat: "mountains", free: false, type: "Mountain",
+      id: "jabal-akhdar", cat: "mountains", free: true, type: "Mountain",
       name: "Jabal Akhdar",
       tagline: "Rose terraces, cold air, and villages hanging off a cliff.",
       blurb: "The Green Mountain — cool enough to grow roses and pomegranates, high enough that you'll want a jacket in the evening. The terraced village walk is one of the best easy hikes in Oman.",
       img: "assets/experiences/jabal-akhdar.jpg",
-      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons", region: "dakhiliyah", coords: [23.070, 57.665],
+      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/mountains/jabal-akhdar-2.jpg", credit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons" },
+        { src: "assets/mountains/jabal-akhdar-3.jpg", credit: "Photo: Philipp Weigell · CC BY 3.0 · Wikimedia Commons" }
+      ], region: "dakhiliyah", coords: [23.070, 57.665],
       hours: 5, fitness: 2, needs4x4: true, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["hiking","culture","photography","mountains"],
@@ -1096,7 +1664,26 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr (roses Mar–Apr)",
         "Entry": "Free"
       },
+      gettingThere: [
+        "2 hrs from Muscat.",
+        "There's a police checkpoint at the bottom of the mountain road.",
+        "They WILL turn you back in a 2WD. This isn't a suggestion, it's enforced.",
+        "4×4 only. No exceptions."
+      ],
+      whatYoullDo: [
+        "Walk the terraced-village loop: Al Ayn → Ash Shirayjah → Al Aqr.",
+        "The paths run down through rose terraces and pomegranate orchards, with the canyon opening below.",
+        "Two to three hours. One of the best easy hikes in the country."
+      ],
+      tips: [
+        "4×4 or you don't get up the mountain. The checkpoint is real.",
+        "Mar–Apr for the rose harvest and the rosewater distilleries.",
+        "It's cold up there in the evening. Bring a layer."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Jabal+Akhdar+Oman",
+      insta: ["https://www.instagram.com/hussain_explores/reel/DXhGMJrkR5t/",
+              "https://www.instagram.com/hussain_explores/reel/DXLpov7DHOm/",
+              "https://www.instagram.com/hussain_explores/reel/DXKEqAajCc-/"],   // terraces path · Al Ain village · rose season
       verify: true
     },
     {
@@ -1105,7 +1692,11 @@ window.OMAN_DATA = {
       tagline: "Norway's fjords, dropped into Arabia.",
       blurb: "Limestone walls falling hundreds of metres straight into dark blue water, dolphins riding the bow, and swimming stops you can't reach any other way.",
       img: "assets/experiences/musandam-dhow.jpg",
-      imgCredit: "Photo: Toppazz · CC BY 3.0 · Wikimedia Commons", region: "musandam", coords: [26.180, 56.245],
+      imgCredit: "Photo: Toppazz · CC BY 3.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/experiences/musandam-dhow-2.jpg", credit: "Photo: Robert Haandrikman · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/experiences/musandam-dhow-3.jpg", credit: "Photo: Robert Haandrikman · CC BY 2.0 · Wikimedia Commons" }
+      ], region: "musandam", coords: [26.180, 56.245],
       hours: 6, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["wildlife","snorkel","photography","beach"],
@@ -1127,6 +1718,340 @@ window.OMAN_DATA = {
       verify: true
     },
 
+    /* ── Forts & heritage (added Jul 2026 — the castle circuit) ──────────── */
+    {
+      id: "bahla-fort", cat: "experiences", free: true, type: "Fort",
+      name: "Bahla Fort",
+      tagline: "The UNESCO one — Oman's greatest mud-brick fortress.",
+      blurb: "The only fort in Oman on the UNESCO World Heritage list, and it earns it: a vast mud-brick citadel rising over a 12km ring of ancient walls, restored over decades. Twenty minutes from Nizwa — do them in one day with Jabrin.",
+      img: "",
+      region: "dakhiliyah", coords: [22.9645, 57.2986],
+      hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["culture","photography"],
+      guide: "",
+      bring: {
+        essential: ["A few rial for entry", "Water — it's a big site with little shade"],
+        optional: ["Hat", "Wide lens"]
+      },
+      stats: {
+        "Best for": "The one fort to see if you see only one",
+        "Time needed": "1.5–2 hrs",
+        "Vehicle": "Any car",
+        "Entry": "Small fee",
+        "Status": "UNESCO World Heritage",
+        "Closed": "Check Friday hours"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Bahla+Fort+Oman",
+      verify: true,
+      gettingThere: [
+        "Route 21 past Nizwa — about 2 hrs from Muscat, 25 min beyond Nizwa.",
+        "Park at the fort entrance. Any car.",
+        "Stack the day: Nizwa souq early → Bahla Fort → Jabrin Castle → Al Hoota Cave or Misfat."
+      ],
+      whatYoullDo: [
+        "Climb through the towers and wall-walks — the scale only lands from the ramparts.",
+        "Look out over the oasis and the old walled town below.",
+        "Swing past the potters — Bahla is also Oman's pottery town."
+      ],
+      tips: [
+        "Morning light for photos; afternoons bake.",
+        "Jabrin Castle is 15 min away and the two are a natural pair — fort for scale, castle for interiors."
+      ]
+    },
+    {
+      id: "jabrin-castle", cat: "experiences", free: false, type: "Fort",
+      name: "Jabrin Castle",
+      tagline: "The most beautiful rooms in any Omani fort — painted ceilings and secret passages.",
+      blurb: "Bahla is the fortress; Jabrin is the palace. Built as a scholars' retreat, it has the finest interiors of any castle in the country — painted ceilings, carved balconies, date stores, courts and hidden stairways. If castles usually bore you, this is the one that won't.",
+      img: "",
+      region: "dakhiliyah", coords: [22.9155, 57.2490],
+      hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["culture","photography"],
+      guide: "",
+      bring: {
+        essential: ["A few rial for entry"],
+        optional: ["Combine with Bahla Fort — 15 min apart"]
+      },
+      stats: {
+        "Best for": "Interiors — the painted ceilings",
+        "Time needed": "1–1.5 hrs",
+        "Vehicle": "Any car",
+        "Entry": "Small fee",
+        "Closed": "Check Friday hours"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Jabrin+Castle+Oman",
+      verify: true
+    },
+    {
+      id: "nakhal-fort", cat: "experiences", free: false, type: "Fort",
+      name: "Nakhal Fort & the hot springs",
+      tagline: "A fort wrapped around a rock, with a hot spring in the palms below.",
+      blurb: "Under an hour from Muscat: a fort built straight onto a boulder outcrop with the Hajar wall behind it, and Ain A'Thawwarah hot spring flowing through the date plantation below. The classic half-day escape from the capital — and the gateway to the whole Rustaq loop.",
+      img: "",
+      region: "rustaq", coords: [23.3950, 57.8291],
+      hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["culture","photography"],
+      guide: "",
+      bring: {
+        essential: ["A few rial for entry"],
+        optional: ["Sandals for the spring — warm water, small fish"]
+      },
+      stats: {
+        "Best for": "Fort + spring in one easy stop",
+        "Time needed": "1.5–2 hrs",
+        "Vehicle": "Any car",
+        "Entry": "Small fee",
+        "Loop": "Start of the Rustaq loop (Nakhal → Rustaq → Al Hazm)"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Nakhal+Fort+Oman",
+      verify: true
+    },
+    {
+      id: "rustaq-fort", cat: "experiences", free: false, type: "Fort",
+      name: "Rustaq Fort & Ain Al Kasfah",
+      tagline: "The old capital's fortress — and Oman's hottest spring.",
+      blurb: "Rustaq was once the capital, and its four-towered fort shows it. Down the road, Ain Al Kasfah runs at about 45°C year-round — locals swear by the water. The middle stop of the Nakhal → Rustaq → Al Hazm castle loop.",
+      img: "",
+      region: "rustaq", coords: [23.3906, 57.4249],
+      hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["culture","photography"],
+      guide: "",
+      bring: {
+        essential: ["A few rial for entry"],
+        optional: ["Modest dress for the spring — it's a local bathing spot"]
+      },
+      stats: {
+        "Best for": "History + the hot spring",
+        "Time needed": "1.5–2 hrs",
+        "Vehicle": "Any car",
+        "Entry": "Small fee",
+        "Loop": "Middle of the Rustaq loop"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Rustaq+Fort+Oman",
+      insta: "https://www.instagram.com/hussain_explores/reel/DT-QlnADBpL/",
+      verify: true
+    },
+    {
+      id: "al-hazm-castle", cat: "experiences", free: false, type: "Fort",
+      name: "Al Hazm Castle",
+      tagline: "The engineering marvel — a falaj runs straight through the castle.",
+      blurb: "The most sophisticated of the Batinah castles: cannon-proof walls, a falaj channelling spring water right through the building, escape tunnels and one of the best restorations in the country. Finishes the Nakhal → Rustaq → Al Hazm loop.",
+      img: "",
+      region: "rustaq", coords: [23.5507, 57.4728],
+      hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["culture","photography"],
+      guide: "",
+      bring: {
+        essential: ["A few rial for entry"],
+        optional: ["Audio guide if offered — the details are the point here"]
+      },
+      stats: {
+        "Best for": "The cleverest castle in Oman",
+        "Time needed": "1–1.5 hrs",
+        "Vehicle": "Any car",
+        "Entry": "Small fee",
+        "Loop": "End of the Rustaq loop"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Hazm+Castle+Oman",
+      verify: true
+    },
+    {
+      id: "birkat-al-mouz", cat: "experiences", free: true, type: "Village",
+      name: "Birkat Al Mouz",
+      tagline: "Ruins, banana groves and a UNESCO falaj — the gateway to Jabal Akhdar.",
+      blurb: "At the foot of the Jabal Akhdar road: the abandoned mud-brick quarter of Harat Al Sibani stacked above banana plantations, with Falaj Al Khatmeen — one of Oman's five UNESCO-listed aflaj — running through it. Twenty minutes, or two hours if the light is good.",
+      img: "",
+      region: "dakhiliyah", coords: [22.9253, 57.6734],
+      hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["culture","photography"],
+      guide: "",
+      bring: {
+        essential: ["Shoes with grip — the ruin paths are crumbly"],
+        optional: ["Respectful distance from homes — people still live around the old quarter"]
+      },
+      stats: {
+        "Best for": "Ruins + falaj on the way up Jabal Akhdar",
+        "Time needed": "1–2 hrs",
+        "Vehicle": "Any car",
+        "Entry": "Free",
+        "Status": "Falaj Al Khatmeen is UNESCO-listed"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Birkat+Al+Mouz+Oman",
+      verify: true,
+      gettingThere: [
+        "On Route 21 just before the Jabal Akhdar checkpoint turn-off — 1h45 from Muscat.",
+        "Park by the falaj or the mosque. Any car.",
+        "Walk up into the old quarter from the plantation side."
+      ],
+      whatYoullDo: [
+        "Follow the falaj as it splits through the plantations — this is living UNESCO engineering, not a museum.",
+        "Climb through the abandoned houses of Harat Al Sibani for the view over the banana groves.",
+        "Then start the climb to Jabal Akhdar — this is its front door."
+      ],
+      tips: [
+        "Late afternoon light turns the mud brick gold.",
+        "Don't enter rooms with cracked lintels — these ruins are genuinely fragile.",
+        "Stack it: Birkat Al Mouz → Jabal Akhdar sunset is the classic run."
+      ]
+    },
+    {
+      id: "old-muscat", cat: "experiences", free: true, type: "Heritage",
+      name: "Old Muscat & Al Alam Palace",
+      tagline: "The Sultan's palace, two Portuguese forts and the oldest quarter in the capital.",
+      blurb: "The original walled Muscat: the blue-and-gold Al Alam Palace flanked by the 16th-century Portuguese forts of Mirani and Jalali, with the National Museum across the square. An easy, beautiful city walk — and it connects to Mutrah along the corniche.",
+      img: "",
+      region: "muscat", coords: [23.6159, 58.5925],
+      hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["culture","photography"],
+      guide: "",
+      bring: {
+        essential: [],
+        optional: ["National Museum entry fee if you go in — worth it", "Walking shoes for the corniche loop"]
+      },
+      stats: {
+        "Best for": "The ceremonial heart of Muscat",
+        "Time needed": "1.5–2 hrs (more with the museum)",
+        "Vehicle": "Any car — or walk from Mutrah",
+        "Entry": "Palace viewed from outside; museum has a fee"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Alam+Palace+Muscat",
+      verify: true,
+      gettingThere: [
+        "10 min beyond Mutrah along the corniche road.",
+        "Park by the National Museum square.",
+        "Everything is within a few hundred metres on foot."
+      ],
+      whatYoullDo: [
+        "Walk the palace approach — the mushroom-column facade is Muscat's most photographed frame after the mosque.",
+        "Spot Mirani and Jalali forts guarding the old harbour on both sides.",
+        "Do the National Museum if you want the country's story in ninety minutes."
+      ],
+      tips: [
+        "Combine with Mutrah: souq at dusk, corniche walk, Old Muscat in the golden hour.",
+        "The palace is photographed from the plaza — you don't go inside."
+      ]
+    },
+    {
+      id: "royal-opera-house", cat: "experiences", free: true, type: "Landmark",
+      name: "Royal Opera House Muscat",
+      tagline: "Arabia's opera house — worth seeing even with no ticket.",
+      blurb: "Omani marble, teak and craftsmanship at a scale nothing else in the Gulf matches. Catch a performance if the season is on; otherwise the daytime tour and the arcades around it still justify the stop on any Muscat day.",
+      img: "",
+      region: "muscat", coords: [23.6138, 58.4658],
+      hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["culture","photography"],
+      guide: "",
+      bring: {
+        essential: ["Smart-casual dress — shorts won't get you into a performance"],
+        optional: ["Check the season programme before your trip — tickets sell out"]
+      },
+      stats: {
+        "Best for": "Architecture + a night out in Muscat",
+        "Time needed": "1 hr tour · evening for a show",
+        "Vehicle": "Any car",
+        "Entry": "Tour fee; performance tickets vary",
+        "Season": "Sep–May typically"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Royal+Opera+House+Muscat",
+      insta: "https://www.instagram.com/hussain_explores/reel/DVNxLLWDP61/",
+      verify: true,
+      whatYoullDo: [
+        "Take the morning tour — the auditorium's woodwork is the best of Omani craft in one room.",
+        "Or book a show: opera, Arabic music, ballet — the mix is wide.",
+        "The Opera Galleria next door does a good pre-show dinner."
+      ],
+      tips: [
+        "Book performances weeks ahead in season.",
+        "Dress code is enforced for shows — no shorts or sandals."
+      ]
+    },
+    {
+      id: "bat-necropolis", cat: "experiences", free: false, type: "Ruins",
+      name: "Bat & Al Ayn beehive tombs",
+      tagline: "5,000-year-old tombs on a ridgeline — older than the pyramids.",
+      blurb: "A UNESCO site almost nobody visits: Bronze Age beehive tombs strung along ridgetops near Ibri, at their best at Al Ayn where a row of them lines up against Jabal Misht at sunset. Pairs naturally with Wadi Damm, twenty minutes away.",
+      img: "",
+      region: "dakhiliyah", coords: [23.2747, 56.7477],
+      hours: 2, fitness: 2, needs4x4: false, swim: false, kidOk: true,
+      months: [10,11,12,1,2,3,4],
+      tags: ["culture","photography","hiking"],
+      guide: "",
+      hikeTime: "15–20 min up to the Al Ayn ridge",
+      bring: {
+        essential: ["Water", "Shoes for loose slopes"],
+        optional: ["Long lens for the Jabal Misht backdrop"]
+      },
+      stats: {
+        "Best for": "Sunset over 5,000 years of history, alone",
+        "Time needed": "1.5–2 hrs",
+        "Vehicle": "Any car to the base",
+        "Entry": "Free",
+        "Status": "UNESCO World Heritage",
+        "Pair with": "Wadi Damm — 20 min away"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Ayn+beehive+tombs+Oman",
+      verify: true
+    },
+    {
+      id: "al-mudhaireb", cat: "experiences", free: false, type: "Village",
+      name: "Al Mudhaireb",
+      tagline: "The Sharqiyah oasis town everyone drives past on the way to the sands.",
+      blurb: "Watchtowers on every hilltop, restored merchant houses, falaj channels and date gardens — ten minutes off the Wahiba road and a century away from it. The perfect leg-stretch between Muscat and the desert camps.",
+      img: "",
+      region: "sharqiyah", coords: [22.6139, 58.6755],
+      hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [10,11,12,1,2,3,4],
+      tags: ["culture","photography"],
+      guide: "",
+      bring: {
+        essential: ["Water"],
+        optional: ["Ask before photographing people — small town, big manners"]
+      },
+      stats: {
+        "Best for": "A heritage stop en route to Wahiba",
+        "Time needed": "1–1.5 hrs",
+        "Vehicle": "Any car",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Mudhaireb+Oman",
+      verify: true
+    },
+    {
+      id: "sugar-dunes", cat: "experiences", free: false, type: "Camping",
+      name: "The Sugar Dunes (Al Khaluf)",
+      tagline: "Dunes so white they look like snow, falling straight into a turquoise sea.",
+      blurb: "Four hours south of the tourist trail: blinding-white gypsum dunes meeting an empty turquoise coast, flamingos in the lagoons, and nobody for kilometres. The most otherworldly camp in this guide — and the one that needs the most planning.",
+      img: "",
+      region: "sharqiyah", coords: [20.68, 58.05],
+      hours: 4, fitness: 2, needs4x4: true, swim: true, kidOk: true,
+      months: [10,11,12,1,2,3],
+      overnight: true,
+      tags: ["desert","camping","beach","photography","adrenaline"],
+      guide: "recommended",
+      bring: {
+        essential: ["Proper 4×4 + sand-driving experience (deflate to ~15psi)", "Double water: 5L pp/day", "All fuel — last station is far behind you", "Recovery gear: boards, shovel, tow rope", "Tent, food, firewood, rubbish bags"],
+        optional: ["Second vehicle (strongly advised)", "Drone permit if you fly — this is THE aerial shot"]
+      },
+      stats: {
+        "Best for": "The bucket-list camp",
+        "Time needed": "2 days minimum from Muscat",
+        "Swim": "Yes — empty sea",
+        "Vehicle": "4×4 essential, ideally two",
+        "Best season": "Oct–Mar",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Sugar+Dunes+Al+Khaluf+Oman",
+      verify: true
+    },
+
     /* ═══════════════════════════════════════════════════════════ MOUNTAINS
        (Jabal Shams, Jabal Akhdar, Misfat and Al Hoota moved here from
        Experiences when this tab was created — their ids are unchanged.)      */
@@ -1135,7 +2060,12 @@ window.OMAN_DATA = {
       name: "Wakan Village",
       tagline: "700 steps up through the orchards, and the blossoms in spring.",
       blurb: "A tiny terraced village hanging 2,000m up the wall of Wadi Mistal — stone steps climbing through apricot and pomegranate gardens to a viewpoint over the whole valley. In late February the orchards blossom white and pink, and half of Oman drives up to see it.",
-      img: "", region: "rustaq", coords: [23.132, 57.752],
+      img: "assets/mountains/wakan-village.jpg",
+      imgCredit: "Photo: Raijelani · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/mountains/wakan-village-2.jpg", credit: "Photo: Raijelani · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/mountains/wakan-village-3.jpg", credit: "Photo: Raijelani · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "rustaq", coords: [23.132, 57.752],
       hours: 3, fitness: 2, needs4x4: true, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["mountains","hiking","culture","photography"],
@@ -1154,9 +2084,21 @@ window.OMAN_DATA = {
         "Entry": "Free"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wakan+Village+Oman",
+      insta: "https://www.instagram.com/hussain_explores/reel/DU0cYhZDCvB/",
       verify: true,
-      gettingThere: "~1.5–2 hrs from Muscat: highway toward Nakhal, then into Wadi Mistal through the gap in the mountains and up the switchbacks to the village car park. The last climb is steep and narrow — take the 4×4. The village itself is walking-only.",
-      whatYoullDo: "Climb the stepped path through the terraced gardens — falaj channels, apricot, pomegranate and grape — to the viewpoint platform at the top, then come down slowly and let the village do its thing. In blossom season (late Feb–Mar) go on a weekday, early; it's Oman's worst-kept secret.",
+      gettingThere: [
+        "Highway from Muscat toward Nakhal — 1.5 to 2 hrs in total.",
+        "Turn into Wadi Mistal through the gap in the mountains.",
+        "Up the switchbacks to the village car park. Steep and narrow — take the 4×4.",
+        "Park there. The village itself is walking-only."
+      ],
+      whatYoullDo: [
+        "Climb the stepped path — roughly 700 steps — through the terraced gardens.",
+        "Look for the falaj channels, apricot, pomegranate and grape on the way up.",
+        "Stop at the viewpoint platform at the top. The whole valley is under you.",
+        "Come down slowly and let the village do its thing.",
+        "Blossom season (late Feb–Mar): go early, on a weekday. It's Oman's worst-kept secret."
+      ],
       tips: [
         "Late February to mid-March for the blossoms — confirm timing on Instagram before you drive, the window is short.",
         "Go early: the light is better, the steps are cooler and the car park is small.",
@@ -1168,7 +2110,12 @@ window.OMAN_DATA = {
       name: "Balad Sayt (Bilad Sayt)",
       tagline: "The postcard mountain village — earned the hard way.",
       blurb: "An amphitheatre of green terraces and mud-brick houses sealed off from the world by the Hajar — arguably the most photographed village in Oman, and still barely visited, because getting there means a proper 4×4 mountain road.",
-      img: "", region: "rustaq", coords: [23.187, 57.387],
+      img: "assets/mountains/balad-sayt.jpg",
+      imgCredit: "Photo: Fabio Achilli from Milano, Italy · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/mountains/balad-sayt-2.jpg", credit: "Photo: Fabio Achilli from Milano, Italy · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/mountains/balad-sayt-3.jpg", credit: "Photo: Fabio Achilli from Milano, Italy · CC BY 2.0 · Wikimedia Commons" }
+      ], region: "rustaq", coords: [23.187, 57.387],
       hours: 2.5, fitness: 2, needs4x4: true, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["mountains","culture","photography"],
@@ -1194,7 +2141,11 @@ window.OMAN_DATA = {
       name: "Sharaf Al Alamayn",
       tagline: "The rim of the Hajar — the best view you can drive to.",
       blurb: "The high pass on the mountain road between Al Hamra and Wadi Bani Awf, at around 2,000m. Park, walk to the edge, and the entire western Hajar falls away beneath you. Sunset up here is the show.",
-      img: "", region: "rustaq", coords: [23.205, 57.400],
+      img: "assets/mountains/sharaf-al-alamayn.jpg",
+      imgCredit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/mountains/sharaf-al-alamayn-2.jpg", credit: "Photo: Bruno Befreetv · CC BY-SA 3.0 · Wikimedia Commons" }
+      ], region: "rustaq", coords: [23.205, 57.400],
       hours: 1, fitness: 1, needs4x4: true, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["mountains","photography","sunset"],
@@ -1214,16 +2165,172 @@ window.OMAN_DATA = {
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Sharfat+Al+Alamayn+Oman",
       verify: true
     },
+    {
+      id: "salma-plateau", cat: "mountains", free: false, type: "Cave",
+      name: "Salma Plateau — 7th Hole & Tahery Cave",
+      tagline: "A hole in the plateau you could drop a tower block into.",
+      blurb: "High above the Tiwi coast, the Salma Plateau hides some of the deepest cave shafts on earth — the 7th Hole drops sheer from flat ground, and Tahery Cave opens into a chamber the size of a stadium. The drive up is half the adventure: a serious 4×4 track with the Gulf of Oman falling away behind you.",
+      img: "",
+      region: "coast-east", coords: [22.859, 59.116],
+      hours: 6, fitness: 3, needs4x4: true, swim: false, kidOk: false,
+      months: [10,11,12,1,2,3],
+      tags: ["adrenaline","hiking","photography","camping"],
+      guide: "required",
+      hikeTime: "Short walks from the track; the shafts are unfenced",
+      bring: {
+        essential: ["Proper 4×4 with a second vehicle ideally", "3L water pp", "Head torch", "Warm layer — the plateau is high and cold at night"],
+        optional: ["Camping kit — sunset up here is worth the night", "Rope access is experts-with-guides only"]
+      },
+      stats: {
+        "Best for": "The wildest day trip from the east coast",
+        "Time needed": "Full day (or camp)",
+        "Vehicle": "4×4 essential, experienced drivers only",
+        "Guide": "Required — unfenced shafts, unmarked tracks",
+        "Best season": "Oct–Mar",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=7th+Hole+Salma+Plateau+Oman",
+      verify: true
+    },
+    {
+      id: "muscat-ridge-treks", cat: "mountains", free: true, type: "Hike",
+      name: "The Mutrah ridge treks",
+      tagline: "Real mountain trails that start where the city parking ends.",
+      blurb: "Muscat is one of the few capitals where marked treks leave from the corniche: the C38 climbs from Riyam to the ridgeline above Mutrah harbour, and its sister paths (Sidab coastal, the Geotrek) thread the same bare hills. Two hours, city shoes optional, views you'd fly for.",
+      img: "",
+      region: "muscat", coords: [23.632, 58.549],
+      hours: 3, fitness: 3, needs4x4: false, swim: false, kidOk: false,
+      months: [10,11,12,1,2,3],
+      tags: ["hiking","photography","sunset"],
+      guide: "",
+      hikeTime: "2–3 hrs for the classic Riyam → Mutrah line",
+      bring: {
+        essential: ["Real shoes — polished rock and loose stone", "1.5L water pp", "Sun cover"],
+        optional: ["Head torch if you're chasing sunset", "Trekking poles"]
+      },
+      stats: {
+        "Best for": "A mountain fix without leaving the city",
+        "Time needed": "Half a morning",
+        "Vehicle": "None needed — start at Riyam Park",
+        "Difficulty": "Moderate — steep, exposed to sun",
+        "Best season": "Oct–Mar, early",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=C38+trek+Riyam+Muscat",
+      insta: ["https://www.instagram.com/hussain_explores/reel/DMLRTf1s0L0/",
+              "https://www.instagram.com/hussain_explores/reel/DJ6K6kzsFvT/"],   // Mutrah hike · Sidab trail 8/10
+      verify: true,
+      gettingThere: [
+        "Park at Riyam Park on the Mutrah corniche.",
+        "The C38 trailhead is signposted behind the park — yellow-red-yellow waymarks.",
+        "Finish in Mutrah and walk the corniche back to the car."
+      ],
+      whatYoullDo: [
+        "Climb out of the palms into bare rock ridges in about twenty minutes.",
+        "Top out with the whole harbour, the forts and the ocean below you.",
+        "Descend into the old town and reward yourself in the souq."
+      ],
+      tips: [
+        "Start at first light — the rock throws heat by 9am even in winter.",
+        "Waymarks fade in places: if you've lost paint for 5 minutes, backtrack.",
+        "Never in summer afternoons. This trail has caught people out."
+      ]
+    },
+    {
+      id: "fanja", cat: "mountains", free: false, type: "Hike",
+      name: "Fanja — the tabletop & old village",
+      tagline: "The flat-topped mountain 30 minutes from Muscat that nobody climbs.",
+      blurb: "Fanja's abandoned mud-brick village guards a mesa you can walk up — a short, sharp trek to a flat summit with date gardens and the wadi glittering below. Close enough for a post-work sunset mission from the capital.",
+      img: "",
+      region: "muscat", coords: [23.440, 58.174],
+      hours: 3, fitness: 3, needs4x4: false, swim: false, kidOk: false,
+      months: [10,11,12,1,2,3],
+      tags: ["hiking","photography","sunset"],
+      guide: "",
+      hikeTime: "45–60 min up, steep in bursts",
+      bring: {
+        essential: ["Real shoes", "1.5L water pp", "Head torch for sunset descents"],
+        optional: ["Ask locals for the current path through the old village"]
+      },
+      stats: {
+        "Best for": "Sunset tabletop close to Muscat",
+        "Time needed": "Half a day",
+        "Vehicle": "Any car to the village",
+        "Difficulty": "Moderate — steep, unmarked in parts",
+        "Best season": "Oct–Mar",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Fanja+Oman",
+      verify: true
+    },
+    {
+      id: "jabal-shams-camp", cat: "mountains", free: false, type: "Camping",
+      name: "Jabal Shams rim camp",
+      tagline: "Sleep on the edge of Arabia's Grand Canyon.",
+      blurb: "Pitch near the rim of Wadi Ghul, cook at 2,000m, and watch the canyon walls go from gold to black to silver under a sky with no light pollution worth mentioning. Cold, quiet, unforgettable — the best free hotel in the country.",
+      img: "",
+      region: "dakhiliyah", coords: [23.20, 57.22],
+      hours: 3, fitness: 2, needs4x4: true, swim: false, kidOk: true,
+      months: [3,4,5,6,7,8,9,10],
+      overnight: true,
+      tags: ["camping","hiking","photography","sunset"],
+      guide: "",
+      bring: {
+        essential: ["Real sleeping bags — it can approach freezing up here even when Muscat is 35°", "Windproof tent + serious pegs", "Water and all food", "Warm layers, hat"],
+        optional: ["Firewood from Al Hamra (nothing to gather at altitude)", "Tripod — this is star-photo country"]
+      },
+      stats: {
+        "Best for": "Stars + the canyon at dawn",
+        "Time needed": "Overnight",
+        "Vehicle": "4×4 for the upper tracks",
+        "Best season": "Mar–Oct (winter nights bite)",
+        "Altitude": "~2,000m",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Jabal+Shams+viewpoint+Oman",
+      verify: true
+    },
+    {
+      id: "jabal-akhdar-camp", cat: "mountains", free: false, type: "Camping",
+      name: "Jabal Akhdar plateau camp",
+      tagline: "Juniper woods, cool air, and sunrise over the terraces.",
+      blurb: "The Saiq plateau has quiet juniper clearings where you can camp in genuinely cool air all summer — Muscat bakes at 45° while you're in a sleeping bag at 20°. Wake to sunrise over the terraced villages with a flask of karak.",
+      img: "",
+      region: "dakhiliyah", coords: [23.07, 57.66],
+      hours: 3, fitness: 1, needs4x4: true, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      overnight: true,
+      tags: ["camping","photography","sunset","hiking"],
+      guide: "",
+      bring: {
+        essential: ["4×4 — the checkpoint at the bottom requires it by law", "Sleeping bags rated cool", "Water, food, rubbish bags"],
+        optional: ["Firewood from Birkat Al Mouz", "A morning plan: rose terraces (Apr) or the village walk"]
+      },
+      stats: {
+        "Best for": "Summer escape camping",
+        "Time needed": "Overnight",
+        "Vehicle": "4×4 required (police checkpoint enforces it)",
+        "Best season": "Year-round — THE summer camp",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Jabal+Akhdar+Saiq+Oman",
+      verify: true
+    },
 
     /* ═════════════════════════════════════════════════════════════ SALALAH
        Dhofar is a flight, not a day trip — the planner knows (region "dhofar"
        is fly:true) and only routes these on a Salalah-based plan.            */
     {
-      id: "wadi-darbat", cat: "salalah", free: true, type: "Waterfall",
+      id: "wadi-darbat", cat: "salalah", free: true, group: "wadis", type: "Waterfall",
       name: "Wadi Darbat",
       tagline: "Waterfalls, green meadows and camels in the mist.",
       blurb: "In khareef season this valley turns into something that shouldn't exist in Arabia: waterfalls pouring off a travertine cliff, lakes, mist, and camels grazing on actual grass. The rest of the year it's a calm green valley with a lake and boat rides — still the first place I'd send anyone in Dhofar.",
-      img: "", region: "dhofar", coords: [17.103, 54.449],
+      img: "assets/salalah/wadi-darbat.jpg",
+      imgCredit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/wadi-darbat-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/salalah/wadi-darbat-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.103, 54.449],
       hours: 3, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [6,7,8,9,10],
       tags: ["photography","wildlife","hiking"],
@@ -1242,8 +2349,18 @@ window.OMAN_DATA = {
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Darbat+Salalah+Oman",
       verify: true,
-      gettingThere: "~40 min east of Salalah, signposted off the Taqah road — paved to the valley floor, any car. In khareef the road in gets genuinely busy; go before 9am.",
-      whatYoullDo: "Walk the lakeside under the trees, take a pedal boat out, and photograph the travertine curtain — in full khareef flow the waterfall drops the whole cliff face. Drive up to the plateau viewpoint on the way out. Karak and corn stalls appear everywhere in season.",
+      gettingThere: [
+        "40 min east of Salalah, signposted off the Taqah road.",
+        "Paved all the way to the valley floor — any car.",
+        "In khareef the road in jams up. Be there before 9am."
+      ],
+      whatYoullDo: [
+        "Walk the lakeside under the trees.",
+        "Take a pedal boat out on the water.",
+        "Photograph the travertine curtain — in full khareef flow the waterfall covers the whole cliff face.",
+        "Drive up to the plateau viewpoint on the way out.",
+        "Stop at the karak and corn stalls. They're everywhere in season, and they're the point."
+      ],
       tips: [
         "Peak waterfall flow is late July–August. Just after khareef (Sep–Oct) everything is still green and the crowds are gone.",
         "Weekday mornings in khareef, always — Gulf tourism arrives in the afternoon.",
@@ -1251,11 +2368,16 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "al-baleed", cat: "salalah", free: false, type: "Museum",
+      id: "al-baleed", cat: "salalah", free: false, group: "experiences", type: "Museum",
       name: "Al Baleed & the Frankincense Museum",
       tagline: "The port that shipped frankincense to Rome — lit up at night.",
       blurb: "A UNESCO archaeological park on the Salalah waterfront: the ruins of the medieval trading port of Zafar, a lagoon full of birdlife, and the Museum of the Frankincense Land, which is the best hour of history in the south.",
-      img: "", region: "dhofar", coords: [17.002, 54.114],
+      img: "assets/salalah/al-baleed.jpg",
+      imgCredit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/al-baleed-2.jpg", credit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons" },
+        { src: "assets/salalah/al-baleed-3.jpg", credit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.002, 54.114],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -1276,11 +2398,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "khor-rori", cat: "salalah", free: false, type: "Ruins",
+      id: "khor-rori", cat: "salalah", free: true, group: "experiences", type: "Ruins",
       name: "Khor Rori & Sumhuram",
       tagline: "2,000-year-old ruins above a lagoon full of flamingos.",
       blurb: "The ancient port of Sumhuram — once the edge of the frankincense trade, now a hilltop ruin looking down on a blue lagoon where the wadi meets the sea. Flamingos in the water, camels on the beach, and almost nobody there on a weekday.",
-      img: "", region: "dhofar", coords: [17.040, 54.434],
+      img: "assets/salalah/khor-rori.jpg",
+      imgCredit: "Photo: Scott Edmunds · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/khor-rori-2.jpg", credit: "Photo: Richard N Horne · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/salalah/khor-rori-3.jpg", credit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.040, 54.434],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","wildlife","photography"],
@@ -1297,15 +2424,36 @@ window.OMAN_DATA = {
         "Entry": "A few OMR per car",
         "UNESCO": "Land of Frankincense site"
       },
+      gettingThere: [
+        "35–40 min east of Salalah, signposted off the Taqah–Mirbat road, just past the Wadi Darbat turnoff.",
+        "Paved to the gate, then a short dusty track up to the hilltop car park.",
+        "A few rials per car."
+      ],
+      whatYoullDo: [
+        "Walk the 2,000-year-old walls of Sumhuram, above the lagoon — the frankincense port that traded with Rome and India.",
+        "Then drive down to the lagoon mouth.",
+        "Flamingos and herons on the water; camels on the sand bar where the khor meets the sea.",
+        "Come late afternoon — the light turns the whole thing gold."
+      ],
+      tips: [
+        "Combine Darbat + Khor Rori in one day — same road.",
+        "The beach at the sand bar is one of the quietly great picnic spots in Dhofar.",
+        "Weekdays: you'll have the ruins nearly alone."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Sumhuram+Khor+Rori+Oman",
       verify: true
     },
     {
-      id: "jabal-samhan", cat: "salalah", free: false, type: "Mountain",
+      id: "jabal-samhan", cat: "salalah", free: false, group: "mountains", type: "Mountain",
       name: "Jabal Samhan viewpoint",
       tagline: "A kilometre of cliff, straight down to the coastal plain.",
       blurb: "The Dhofar mountains end in a sheer escarpment, and the Jabal Samhan viewpoint sits right on the lip of it — the coastal plain and the sea a vertical kilometre below. This is also Arabian leopard country; you won't see one, but it changes how the mountain feels.",
-      img: "", region: "dhofar", coords: [17.135, 54.663],
+      img: "assets/salalah/jabal-samhan.jpg",
+      imgCredit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/jabal-samhan-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/salalah/jabal-samhan-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.135, 54.663],
       hours: 2.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [9,10,11,12,1,2,3],
       tags: ["mountains","photography","wildlife","sunset"],
@@ -1326,11 +2474,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "fazayah-beach", cat: "salalah", free: false, type: "Beach",
+      id: "fazayah-beach", cat: "salalah", free: false, group: "beaches", type: "Beach",
       name: "Fazayah Beach",
       tagline: "The empty white coves past the end of the road.",
       blurb: "Keep going west past Mughsail, over the mountain switchbacks, and drop down a steep track to a string of white-sand coves with cliffs behind and usually nobody on them but camels. The best beach in the south, and it makes you work for it.",
-      img: "", region: "dhofar", coords: [16.848, 53.556],
+      img: "assets/salalah/fazayah-beach.jpg",
+      imgCredit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/fazayah-beach-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/salalah/fazayah-beach-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [16.848, 53.556],
       hours: 3, fitness: 1, needs4x4: true, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["beach","photography","swimming","sunset"],
@@ -1352,11 +2505,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "wadi-dawkah", cat: "salalah", free: false, type: "Nature",
+      id: "wadi-dawkah", cat: "salalah", free: false, group: "experiences", type: "Nature",
       name: "Wadi Dawkah frankincense park",
       tagline: "The trees that made Oman rich for 2,000 years.",
       blurb: "A protected valley of wild frankincense trees on the desert side of the mountains — the actual source of the trade that built the ports at Al Baleed and Sumhuram. Twenty minutes among the trees ties the whole frankincense story together.",
-      img: "", region: "dhofar", coords: [17.283, 54.050],
+      img: "assets/salalah/wadi-dawkah.jpg",
+      imgCredit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/wadi-dawkah-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/salalah/wadi-dawkah-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.283, 54.050],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [10,11,12,1,2,3],
       tags: ["culture","photography"],
@@ -1377,11 +2535,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "ayn-razat", cat: "salalah", free: false, type: "Spring",
+      id: "ayn-razat", cat: "salalah", free: true, group: "wadis", type: "Spring",
       name: "Ayn Razat",
       tagline: "Spring water, gardens and a cave — Salalah's easiest hour.",
       blurb: "A natural spring at the foot of the mountains feeding a strip of ornamental gardens — running water year-round, lush and loud with birds in khareef, and a small cave in the cliff above. The local picnic spot, and a gentle first stop after landing.",
-      img: "", region: "dhofar", coords: [17.128, 54.235],
+      img: "assets/salalah/ayn-razat.jpg",
+      imgCredit: "Photo: Moayed Bahajjaj · CC BY-SA 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/ayn-razat-2.jpg", credit: "Photo: jack_246 from Salalah, Sultanate of Oman · CC BY-SA 2.0 · Wikimedia Commons" },
+        { src: "assets/salalah/ayn-razat-3.jpg", credit: "Photo: Balou46 · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.128, 54.235],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["photography","wildlife"],
@@ -1398,15 +2561,35 @@ window.OMAN_DATA = {
         "Best time": "Morning",
         "Entry": "Free"
       },
+      gettingThere: [
+        "25 min northeast of Salalah. Paved, signposted, any car.",
+        "Free parking by the gardens."
+      ],
+      whatYoullDo: [
+        "The spring rises at the cliff base and feeds a falaj through ornamental gardens.",
+        "This is where Salalah families picnic — go with it.",
+        "Climb the steps to the small cave in the cliff for the view over the greenery.",
+        "In khareef the hillside above runs green and the birdlife goes berserk."
+      ],
+      tips: [
+        "Mornings are quiet; Friday afternoons are the full family scene — pick your vibe.",
+        "Combine with Ayn Athum and the other springs along the mountain base in khareef.",
+        "No swimming in the spring — it feeds the irrigation channels."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Ayn+Razat+Salalah+Oman",
       verify: true
     },
     {
-      id: "haffa-souq", cat: "salalah", free: true, type: "Souq",
+      id: "haffa-souq", cat: "salalah", free: true, group: "shopping", type: "Souq",
       name: "Al Haffa Souq",
       tagline: "Frankincense by the scoop, a street back from the sea.",
       blurb: "The old frankincense souq near the corniche — sacks of resin graded by colour, bakhoor, Dhofari incense burners, and the smell that tells you you're in Salalah and nowhere else. Come at dusk when the town wakes up.",
-      img: "", region: "dhofar", coords: [17.002, 54.093],
+      img: "assets/salalah/haffa-souq.jpg",
+      imgCredit: "Photo: see source · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/haffa-souq-2.jpg", credit: "Photo: Dr. Thomas Liptak · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/salalah/haffa-souq-3.jpg", credit: "Photo: Dr. Thomas Liptak · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.002, 54.093],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","culture","sunset"],
@@ -1426,11 +2609,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "salalah-gardens-mall", cat: "salalah", free: true, type: "Mall",
+      id: "salalah-gardens-mall", cat: "salalah", free: true, group: "shopping", type: "Mall",
       name: "Salalah Gardens Mall",
       tagline: "The AC hours — where Salalah goes at midday.",
       blurb: "The city's main mall: supermarket, food court, cafés and cinema. Not a sight — a tool. It's where you restock, cool down between the morning and the late afternoon, and where the kids forgive you for the long drive.",
-      img: "", region: "dhofar", coords: [17.048, 54.068],
+      img: "assets/salalah/salalah-gardens-mall.jpg",
+      imgCredit: "Photo: Dr. Thomas Liptak · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/salalah-gardens-mall-2.jpg", credit: "Photo: MichalPL · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/salalah/salalah-gardens-mall-3.jpg", credit: "Photo: Jpbowen · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.048, 54.068],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping"],
@@ -1449,11 +2637,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "dahariz-beach", cat: "salalah", free: true, type: "Beach",
+      id: "dahariz-beach", cat: "salalah", free: true, group: "beaches", type: "Beach",
       name: "Dahariz Beach",
       tagline: "Salalah's own beach — coconut palms to the sand.",
       blurb: "The long city beach on the east side of town, backed by coconut plantations. Outside khareef it's calm, warm and swimmable ten minutes from your hotel; in khareef the sea turns wild and you walk it instead.",
-      img: "", region: "dhofar", coords: [17.001, 54.152],
+      img: "assets/salalah/dahariz-beach.jpg",
+      imgCredit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/dahariz-beach-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/salalah/dahariz-beach-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.001, 54.152],
       hours: 2, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4,5],
       tags: ["beach","swimming","sunset"],
@@ -1474,11 +2667,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "taqah-castle", cat: "salalah", free: false, type: "Fort",
+      id: "taqah-castle", cat: "salalah", free: false, group: "experiences", type: "Fort",
       name: "Taqah Castle",
       tagline: "A wali's house with the best small museum in the south.",
       blurb: "A restored 19th-century fortified residence in Taqah town — rooms set out as they were lived in, rifle slits over the bay, and a rooftop view along the coast. Twenty minutes from Khor Rori; do them together.",
-      img: "", region: "dhofar", coords: [17.039, 54.401],
+      img: "assets/salalah/taqah-castle.jpg",
+      imgCredit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/taqah-castle-2.jpg", credit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons" },
+        { src: "assets/salalah/taqah-castle-3.jpg", credit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.039, 54.401],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -1498,11 +2696,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "ayn-athum", cat: "salalah", free: false, type: "Waterfall",
+      id: "ayn-athum", cat: "salalah", free: false, group: "wadis", type: "Waterfall",
       name: "Ayn Athum",
       tagline: "The khareef waterfall the tour buses haven't found yet.",
       blurb: "A spring at the foot of the mountains that turns into a proper waterfall in the monsoon — mist, green cliffs, and far fewer people than Wadi Darbat. Outside khareef it's a quiet pool under the trees.",
-      img: "", region: "dhofar", coords: [17.107, 54.205],
+      img: "assets/salalah/ayn-athum.jpg",
+      imgCredit: "Photo: Syed99975 · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/salalah/ayn-athum-2.jpg", credit: "Photo: Syed99975 · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/salalah/ayn-athum-3.jpg", credit: "Photo: Syed99975 · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.107, 54.205],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [6,7,8,9],
       tags: ["photography","wildlife"],
@@ -1523,6 +2726,458 @@ window.OMAN_DATA = {
       verify: true
     },
 
+    /* ── Salalah additions (Jul 2026): every chip now has ≥5 spots ────────── */
+    {
+      id: "al-haffa-beach", cat: "salalah", free: true, group: "beaches", type: "Beach",
+      name: "Al Haffa Beach",
+      tagline: "The city beach — coconuts on one side, the Arabian Sea on the other.",
+      blurb: "Salalah's own beach: a long palm-backed strip right next to the Haffa souq, with coconut stands on the road behind it. Not a hidden cove — it's where the city comes to walk at sunset, and that's the point.",
+      img: "",
+      region: "dhofar", coords: [17.001, 54.113],
+      hours: 1.5, fitness: 1, needs4x4: false, swim: true, kidOk: true,
+      months: [10,11,12,1,2,3,4,5],
+      tags: ["beach","sunset","food"],
+      guide: "",
+      swimTime: "Fine outside khareef — stay out of the monsoon sea (Jul–Sep)",
+      bring: {
+        essential: ["Small cash for the coconut stands"],
+        optional: ["Towel — a swim here is casual, not a mission"]
+      },
+      stats: {
+        "Best for": "Sunset walk + a fresh coconut",
+        "Time needed": "1–2 hrs",
+        "Swim": "Yes (not in khareef)",
+        "Vehicle": "Any car",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Haffa+Beach+Salalah+Oman",
+      verify: true,
+      gettingThere: [
+        "It's in the middle of town — off Sultan Qaboos Street, beside the Haffa souq.",
+        "Park along the beach road. Any car, no planning needed."
+      ],
+      whatYoullDo: [
+        "Walk the sand — it runs for kilometres and never feels crowded.",
+        "Buy a cold coconut from the stands on the road behind the beach.",
+        "Stay for sunset, then wander into the Haffa souq — the frankincense smoke starts in the evening."
+      ],
+      tips: [
+        "During khareef the sea is dangerous — walk, don't swim.",
+        "Combine with the souq and the coconut stands: this corner of town is one easy evening."
+      ]
+    },
+    {
+      id: "taqah-beach", cat: "salalah", free: false, group: "beaches", type: "Beach",
+      name: "Taqah Beach",
+      tagline: "The quiet white-sand stretch the castle crowd drives straight past.",
+      blurb: "Below Taqah town, twenty minutes east of Salalah: white sand, fishing boats, and hardly anyone on it even in season. You'll visit Taqah Castle and Khor Rori anyway — this is the swim in between.",
+      img: "",
+      region: "dhofar", coords: [17.033, 54.393],
+      hours: 2, fitness: 1, needs4x4: false, swim: true, kidOk: true,
+      months: [10,11,12,1,2,3,4,5],
+      tags: ["beach","swimming","photography"],
+      guide: "",
+      swimTime: "Calm outside khareef",
+      bring: {
+        essential: ["Water", "Sun cover — no shade on the sand"],
+        optional: ["Snorkel gear for the rocky ends"]
+      },
+      stats: {
+        "Best for": "An empty swim on the castle-and-ruins day",
+        "Time needed": "1–2 hrs",
+        "Swim": "Yes (not in khareef)",
+        "Vehicle": "Any car",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Taqah+Beach+Oman",
+      verify: true
+    },
+    {
+      id: "ayn-garziz", cat: "salalah", free: false, group: "wadis", type: "Spring",
+      name: "Ayn Garziz",
+      tagline: "The spring under the cliff, ten minutes from town.",
+      blurb: "A spring at the foot of the Ittin cliffs, close enough to the city for an evening visit. In khareef the whole cliff face drips green and the stream runs; the rest of the year it's a quiet picnic spot under the rock.",
+      img: "",
+      region: "dhofar", coords: [17.075, 54.058],
+      hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [6,7,8,9,10],
+      tags: ["photography","wildlife"],
+      guide: "",
+      bring: {
+        essential: ["Shoes with grip — wet rock in season"],
+        optional: ["Picnic — locals do", "Mosquito repellent in khareef"]
+      },
+      stats: {
+        "Best for": "A khareef stop without leaving town",
+        "Time needed": "1–1.5 hrs",
+        "Swim": "No",
+        "Vehicle": "Any car",
+        "Best season": "Khareef (late Jun–early Sep)",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Ayn+Garziz+Salalah+Oman",
+      verify: true
+    },
+    {
+      id: "ayn-khor", cat: "salalah", free: false, group: "wadis", type: "Waterfall",
+      name: "Ayn Khor",
+      tagline: "The khareef waterfall at the end of the rough road — which is why it's empty.",
+      blurb: "West of Salalah in the monsoon hills: a seasonal waterfall off a green cliff, mist through the trees, and a fraction of Darbat's traffic because the last stretch takes commitment. Khareef only — outside the monsoon it's dry.",
+      img: "",
+      region: "dhofar", coords: [17.141, 53.868],
+      hours: 2.5, fitness: 2, needs4x4: true, swim: false, kidOk: true,
+      months: [6,7,8,9],
+      tags: ["photography","wildlife","hiking"],
+      guide: "",
+      bring: {
+        essential: ["4×4 for the last stretch", "Shoes with grip"],
+        optional: ["Rain layer — khareef drizzle is constant", "Snacks — nothing sold out here"]
+      },
+      stats: {
+        "Best for": "Khareef scenery without the buses",
+        "Time needed": "Half a morning with the drive",
+        "Swim": "No",
+        "Vehicle": "4×4 recommended",
+        "Best season": "Khareef only",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Ayn+Khor+waterfall+Salalah+Oman",
+      verify: true
+    },
+    {
+      id: "jabal-ittin", cat: "salalah", free: true, group: "mountains", type: "Viewpoint",
+      name: "Ateen Plateau & Prophet Ayoub's Tomb",
+      tagline: "The city from above — and one of the oldest pilgrimage sites in the south.",
+      blurb: "The plateau straight up behind Salalah. In khareef you drive into the fog line and the hills turn green around you; year-round, the tomb of Nabi Ayoub (Job) sits quietly at the top, and the viewpoints on the way down look over the whole city to the sea.",
+      img: "",
+      region: "dhofar", coords: [17.115, 54.056],
+      hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["culture","photography","sunset"],
+      guide: "",
+      bring: {
+        essential: ["Modest dress for the tomb — shoulders and knees covered, shoes off inside"],
+        optional: ["A layer — the plateau is cooler than the city"]
+      },
+      stats: {
+        "Best for": "Views + a genuinely old holy site",
+        "Time needed": "1.5–2 hrs",
+        "Vehicle": "Any car — paved all the way",
+        "Entry": "Free",
+        "Note": "Active religious site — quiet and respect"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Prophet+Ayoub+Tomb+Salalah+Oman",
+      verify: true,
+      gettingThere: [
+        "Take the Ittin road out of the city — the climb starts almost immediately.",
+        "20–30 min of switchbacks to the plateau. Paved, any car.",
+        "The tomb is signposted near the top; viewpoints line the road down."
+      ],
+      whatYoullDo: [
+        "Stop at the viewpoints — the whole city, the plantations and the sea in one frame.",
+        "Visit the small tomb complex — pilgrims have come here for centuries.",
+        "In khareef: watch the fog roll over the road. It's the cheapest special effect in Oman."
+      ],
+      tips: [
+        "Late afternoon light over the city is the shot.",
+        "In khareef fog, drive slowly — visibility drops to metres up here.",
+        "Gravity Point is on this same road — do both in one run."
+      ]
+    },
+    {
+      id: "gravity-point", cat: "salalah", free: true, group: "mountains", type: "Viewpoint",
+      name: "Gravity Point (Anti-Gravity Road)",
+      tagline: "Put the car in neutral. It rolls uphill. Argue about why on the drive back.",
+      blurb: "A stretch of the Ittin road where a stopped car in neutral appears to roll up the slope. It's an optical illusion — the horizon lies to you — but nobody believes that until they've tried it. Twenty minutes of pure fun on the way to the plateau.",
+      img: "",
+      region: "dhofar", coords: [17.089, 54.048],
+      hours: 0.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["photography","adrenaline"],
+      guide: "",
+      bring: {
+        essential: [],
+        optional: ["A phone mounted to film the dashboard — the video sells itself"]
+      },
+      stats: {
+        "Best for": "A 20-minute detour everyone remembers",
+        "Time needed": "20–30 min",
+        "Vehicle": "Any car",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Anti+Gravity+Point+Salalah+Oman",
+      verify: true,
+      gettingThere: [
+        "On the Ittin road out of Salalah — same road as the Ayoub tomb.",
+        "Follow the maps pin; the spot is a straight, quiet stretch of road."
+      ],
+      whatYoullDo: [
+        "Stop the car on the marked stretch, shift to neutral, foot off the brake.",
+        "Watch it roll the 'wrong' way.",
+        "Film it. Try to work out the illusion. Fail. Drive on to the plateau."
+      ],
+      tips: [
+        "Check mirrors first and keep it brief — it's a public road, not a playground.",
+        "Weekday mornings are quietest; khareef weekends bring queues of cars doing the same thing."
+      ]
+    },
+    {
+      id: "tawi-atair", cat: "salalah", free: false, group: "mountains", type: "Sinkhole",
+      name: "Tawi Atair — the Well of Birds",
+      tagline: "A hole in the plateau deep enough to swallow a skyscraper.",
+      blurb: "One of the deepest sinkholes in the world, sunk into the green Taqah plateau — over 200m straight down, named for the birdsong that echoes off its walls. A short walk from the parking gets you to the rim viewpoints.",
+      img: "",
+      region: "dhofar", coords: [17.113, 54.552],
+      hours: 1.5, fitness: 2, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["photography","wildlife","hiking"],
+      guide: "",
+      hikeTime: "10–15 min from the parking to the rim",
+      bring: {
+        essential: ["Proper shoes — the rim path is uneven", "Water"],
+        optional: ["Binoculars for the birds the place is named after"]
+      },
+      stats: {
+        "Best for": "Scale you can't photograph properly",
+        "Time needed": "1–1.5 hrs",
+        "Depth": "~211m",
+        "Vehicle": "Any car",
+        "Best season": "Khareef for the green; clear views the rest of the year",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Tawi+Atair+sinkhole+Oman",
+      verify: true
+    },
+    {
+      id: "teeq-cave", cat: "salalah", free: false, group: "mountains", type: "Viewpoint",
+      name: "Teeq Cave & the Darbat overlook",
+      tagline: "The view down the valley the tour buses drive along the bottom of.",
+      blurb: "Minutes from Tawi Atair: a cave mouth and a cliff-edge overlook down the length of Wadi Darbat — the waterfalls, the lake and the grazing camels, all from above. In khareef it's the best single view in Dhofar.",
+      img: "",
+      region: "dhofar", coords: [17.104, 54.530],
+      hours: 1.5, fitness: 2, needs4x4: false, swim: false, kidOk: true,
+      months: [6,7,8,9,10,11],
+      tags: ["photography","hiking"],
+      guide: "",
+      hikeTime: "Short walks from the parking; unfenced edges",
+      bring: {
+        essential: ["Shoes with grip", "Water"],
+        optional: ["A wide lens — the valley is the shot"]
+      },
+      stats: {
+        "Best for": "Wadi Darbat from above",
+        "Time needed": "1–1.5 hrs",
+        "Vehicle": "Any car",
+        "Best season": "Khareef and just after",
+        "Entry": "Free",
+        "Caution": "Unfenced drops — watch children"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Teeq+Cave+Salalah+Oman",
+      verify: true
+    },
+    {
+      id: "marneef-cave", cat: "salalah", free: true, group: "experiences", type: "Nature",
+      name: "Marneef Cave & the Mughsail blowholes",
+      tagline: "The sea fires through the rock at your feet.",
+      blurb: "At the west end of Mughsail beach: a big rock shelter over a paved walkway, and blowholes in the cliff shelf that jet seawater metres into the air when the swell is up. In khareef they go off like geysers.",
+      img: "",
+      region: "dhofar", coords: [16.876, 53.760],
+      hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["photography","wildlife"],
+      guide: "",
+      bring: {
+        essential: [],
+        optional: ["Something waterproof for your phone — spray, not swimming"]
+      },
+      stats: {
+        "Best for": "Blowholes + the cliffs west of Mughsail",
+        "Time needed": "45 min–1 hr",
+        "Vehicle": "Any car",
+        "Best season": "Biggest jets in khareef swell",
+        "Entry": "Free"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Marneef+Cave+Mughsail+Oman",
+      verify: true,
+      gettingThere: [
+        "Drive to Mughsail beach, ~40 min west of Salalah.",
+        "Follow the road to the west end — the cave and walkway are signposted.",
+        "Park by the shelters. Flat paved path, fine for everyone."
+      ],
+      whatYoullDo: [
+        "Walk the path under the Marneef rock shelter.",
+        "Stand by the grated blowholes and wait for the swell — you'll hear it coming before it fires.",
+        "Look west: the cliff road to Fizayah climbs straight out of the far end of the bay."
+      ],
+      tips: [
+        "Khareef = the biggest jets, but you and your phone will get wet.",
+        "Combine with Mughsail beach and (with a 4×4) Fizayah — one natural half-day west."
+      ]
+    },
+    {
+      id: "haffa-coconut-stands", cat: "salalah", sub: "Street food", free: true, group: "food", type: "Street food",
+      name: "The Haffa coconut stands",
+      tagline: "A machete, a straw, and the freshest thing you'll drink in Oman.",
+      blurb: "The row of fruit stands along the plantation road behind Haffa beach: coconuts opened while you wait, tiny sweet Dhofari bananas, papaya and sugarcane straight from the plantations you're standing in. This is Salalah's whole southern-tropics act in one stop.",
+      img: "",
+      region: "dhofar", coords: [17.002, 54.110],
+      hours: 0.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["food"],
+      guide: "",
+      stats: {
+        "Type": "Fruit stands",
+        "Area": "Al Haffa / plantation road",
+        "Price": "$ — coconuts well under a rial",
+        "Best for": "A stop between the beach and the souq",
+        "Book?": "Just pull over"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=coconut+stalls+Al+Haffa+Salalah",
+      verify: true,
+      whatYoullDo: [
+        "Pick a stand — busy ones turn their stock over fastest.",
+        "Coconut first: drink it, then hand it back and they'll split it so you can eat the flesh.",
+        "Take a bunch of the small local bananas for the car. They're better than they have any right to be."
+      ],
+      tips: [
+        "Cash, small notes.",
+        "The stands run for a couple of kilometres — the quieter ones further from the beach are often cheaper."
+      ]
+    },
+    {
+      id: "food-fish-grills-dahariz", cat: "salalah", sub: "Seafood", free: false, group: "food", type: "Seafood",
+      name: "Fresh fish, straight off the boats",
+      tagline: "Pick your fish at the harbour. Eat it grilled twenty minutes later.",
+      blurb: "The fishermen land the catch, the grill houses near the harbour cook it — kingfish, tuna and whatever came in that morning, priced by the kilo and served with rice. The locked page names the place I actually use and what to order.",
+      img: "",
+      region: "dhofar", coords: [17.000, 54.135],
+      hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["food"],
+      guide: "",
+      stats: {
+        "Type": "Seafood — grilled by the kilo",
+        "Area": "Near the fisheries harbour",
+        "Price": "$$",
+        "Best for": "Lunch after a beach morning",
+        "Book?": "Walk-in"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=fish+restaurant+Salalah",
+      verify: true
+    },
+    {
+      id: "food-shawarma-salalah", cat: "salalah", sub: "Late night", free: false, group: "food", type: "Dinner",
+      name: "The late-night shawarma run",
+      tagline: "Where Salalah actually eats after ten.",
+      blurb: "Every Omani city has one street the shawarma queues point to, and Salalah is no exception. The locked page has my spot, what to order, and why you want it after an evening in the souq.",
+      img: "",
+      region: "dhofar", coords: [17.019, 54.090],
+      hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["food"],
+      guide: "",
+      stats: {
+        "Type": "Shawarma / grills",
+        "Area": "Central Salalah",
+        "Price": "$",
+        "Best for": "Late dinner, zero ceremony",
+        "Book?": "Never"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=shawarma+Salalah",
+      verify: true
+    },
+    {
+      id: "food-dhofari-halwa", cat: "salalah", sub: "Sweets", free: false, group: "food", type: "Sweets",
+      name: "Halwa from the south",
+      tagline: "Dhofar's version of Oman's national sweet — and where to buy it warm.",
+      blurb: "Omani halwa is the thing you take home; Dhofaris will tell you theirs is the best in the country. The locked page has the shop I buy from, what a fair price looks like, and how to get it through your flight home intact.",
+      img: "",
+      region: "dhofar", coords: [17.010, 54.098],
+      hours: 0.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["food"],
+      guide: "",
+      stats: {
+        "Type": "Traditional sweets",
+        "Area": "Central Salalah",
+        "Price": "$",
+        "Best for": "Gifts that survive the suitcase",
+        "Book?": "Walk-in"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Omani+halwa+Salalah",
+      verify: true
+    },
+    {
+      id: "salalah-grand-mall", cat: "salalah", sub: "Mall", free: true, group: "shopping", type: "Mall",
+      name: "Salalah Grand Mall",
+      tagline: "The rainy-day option — khareef drizzle included free.",
+      blurb: "The other big mall in town: hypermarket, food court, cinema, the usual brands. Nobody flies to Dhofar for a mall, but in a khareef downpour or a June afternoon you'll be glad it exists.",
+      img: "",
+      region: "dhofar", coords: [17.024, 54.083],
+      hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["food"],
+      guide: "",
+      stats: {
+        "Type": "Mall",
+        "Best for": "Khareef rain, supplies, a cool hour",
+        "Price": "$–$$",
+        "Vehicle": "Any car — big parking",
+        "Book?": "No"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Salalah+Grand+Mall",
+      verify: true
+    },
+    {
+      id: "shop-frankincense-guide", cat: "salalah", sub: "Speciality", free: false, group: "shopping", type: "Shop",
+      name: "Buying frankincense — without getting tourist-priced",
+      tagline: "Hojari, Najdi, Shaabi — know the difference before you open your wallet.",
+      blurb: "Frankincense is THE thing to bring home from Dhofar, and the quality range is enormous — so is the price range for the same resin. The locked page covers the grades, what each should cost, how to check what you're being sold, and the stalls I actually buy from in the Haffa souq.",
+      img: "",
+      region: "dhofar", coords: [17.002, 54.109],
+      hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["culture","food"],
+      guide: "",
+      stats: {
+        "Type": "Buying guide — Haffa souq",
+        "Price": "Grades from a few rials to serious money",
+        "Best for": "The one souvenir worth doing properly",
+        "Book?": "No"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Haffa+Souq+Salalah",
+      verify: true
+    },
+    {
+      id: "salalah-central-market", cat: "salalah", sub: "Market", free: true, group: "shopping", type: "Market",
+      name: "The fruit & vegetable market",
+      tagline: "Dhofari bananas, coconuts and papaya — where the plantations sell wholesale.",
+      blurb: "Salalah's central produce market: stalls piled with the plantation crops the south is famous for. Louder, cheaper and more local than the roadside stands — come in the morning when everything is fresh off the trucks.",
+      img: "",
+      region: "dhofar", coords: [17.016, 54.093],
+      hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["food","culture"],
+      guide: "",
+      stats: {
+        "Type": "Produce market",
+        "Best for": "Morning browse + fruit for the whole trip",
+        "Price": "$",
+        "Book?": "No"
+      },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Salalah+central+fruits+vegetables+market",
+      verify: true,
+      whatYoullDo: [
+        "Walk the fruit rows first — bananas, coconuts, papaya, and in season the famous local mangoes.",
+        "Buy for the car: fruit here costs a fraction of hotel prices.",
+        "Watch the haggling even if you don't join in — it's half the show."
+      ],
+      tips: [
+        "Mornings only for the good stuff.",
+        "Small notes, and bring your own bag if you have one."
+      ]
+    },
+
     /* ════════════════════════════════════════════════════════════════ FOOD
        Researched, well-known spots — SWAP THESE FOR THE ONES YOU ACTUALLY EAT
        AT. Your real picks are worth more than any list off the internet.      */
@@ -1532,14 +3187,22 @@ window.OMAN_DATA = {
       tagline: "The pre-wadi flat white.",
       blurb: "Al Ghubrah. Properly sourced beans, properly pulled shots, and a room that doesn't feel like a hotel lobby. This is where I start a driving day.",
       img: "assets/food/cafe-la-miel.jpg",
-      imgCredit: "Photo: Irvan Ary Maulana · CC BY-SA 4.0 · Wikimedia Commons", region: "muscat", coords: [23.588, 58.408],
+      imgCredit: "Photo: Irvan Ary Maulana · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/food/cafe-la-miel-2.jpg", credit: "Photo: Kgbo · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/food/cafe-la-miel-3.jpg", credit: "Photo: Kim Sanso · CC0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.588, 58.408],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"], guide: "",
       stats: { "Type": "Specialty coffee", "Area": "Al Ghubrah", "Price": "$", "Best for": "Morning / before a drive", "Book?": "Walk-in" },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=La+Miel+Specialty+Coffee+Muscat",
       verify: true,
-      whatYoullDo: "Coffee, a pastry, and get on the road before the traffic. Twenty minutes, not an hour.",
+      whatYoullDo: [
+        "Coffee and a pastry.",
+        "Get on the road before the traffic builds.",
+        "Twenty minutes, not an hour."
+      ],
       tips: ["Be out the door by 9am on a wadi day — you want to be past Quriyat by 10."]
     },
     {
@@ -1548,27 +3211,46 @@ window.OMAN_DATA = {
       tagline: "Shuwa, with a view of the harbour.",
       blurb: "In a restored khan across from the Mutrah fish market. Traditional Omani done properly — shuwa (meat buried and slow-cooked for a day), mashuai, harees — and portions two people can share.",
       img: "assets/food/food-bait-al-luban.jpg",
-      imgCredit: "Photo: Erkan Pinar · CC BY 2.0 · Wikimedia Commons", region: "muscat", coords: [23.617, 58.564],
+      imgCredit: "Photo: Erkan Pinar · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/food/food-bait-al-luban-2.jpg", credit: "Photo: Vyacheslav Argenberg · CC BY 4.0 · Wikimedia Commons" },
+        { src: "assets/food/food-bait-al-luban-3.jpg", credit: "Photo: Andy Mitchell from Glasgow, UK · CC BY-SA 2.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.617, 58.564],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
       stats: { "Type": "Traditional Omani", "Must-order": "Shuwa", "Area": "Mutrah", "Price": "$$", "Best for": "Dinner with a view", "Book?": "Worth booking at sunset" },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Bait+Al+Luban+Muscat",
       verify: true,
-      whatYoullDo: "Order the shuwa. Sit upstairs by the window if you can — the harbour at dusk does half the work.",
+      whatYoullDo: [
+        "Order the shuwa.",
+        "Ask for a table upstairs by the window.",
+        "Go at dusk — the harbour does half the work."
+      ],
       tips: ["Portions are big. Two mains between three people is usually enough."]
     },
     {
-      id: "cafe-qaha", cat: "food", sub: "Coffee", free: false, type: "Coffee",
+      id: "cafe-qaha", cat: "food", sub: "Coffee", free: true, type: "Coffee",
       name: "Qaha Specialty Coffee",
       tagline: "Omani coffee culture, modernised.",
       blurb: "White-and-blue, calm, and serious about the coffee. The slow morning where you're not going anywhere in a hurry.",
       img: "assets/food/cafe-qaha.jpg",
-      imgCredit: "Photo: Justwiki · CC0 · Wikimedia Commons", region: "muscat", coords: [23.588, 58.408],
+      imgCredit: "Photo: Justwiki · CC0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/food/cafe-qaha-2.jpg", credit: "Photo: Justwiki · CC0 · Wikimedia Commons" },
+        { src: "assets/food/cafe-qaha-3.jpg", credit: "Photo: Justwiki · CC0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.588, 58.408],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"], guide: "",
       stats: { "Type": "Specialty coffee", "Area": "Al Maha St", "Price": "$", "Best for": "A slow morning", "Book?": "Walk-in" },
+      whatYoullDo: [
+        "Omani coffee culture with a modern room around it.",
+        "White, blue, calm, unhurried. Nobody is rushing you out."
+      ],
+      tips: [
+        "The quiet one of the specialty cafés — good before an early drive."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Qaha+Specialty+Coffee+Muscat",
       verify: true
     },
@@ -1578,7 +3260,11 @@ window.OMAN_DATA = {
       tagline: "The roastery. For people who care about the bean.",
       blurb: "Specialty café and roastery, and the one the coffee people in Muscat send you to. Take beans home.",
       img: "assets/food/cafe-azura.jpg",
-      imgCredit: "Photo: Ioacc1234red · CC BY-SA 4.0 · Wikimedia Commons", region: "muscat", coords: [23.588, 58.408],
+      imgCredit: "Photo: Ioacc1234red · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/food/cafe-azura-2.jpg", credit: "Photo: Ioacc1234red · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/food/cafe-azura-3.jpg", credit: "Photo: Ioacc1234red · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.588, 58.408],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"], guide: "",
@@ -1592,7 +3278,11 @@ window.OMAN_DATA = {
       tagline: "Coffee on the sand at Azaiba.",
       blurb: "Right on Azaiba Beach. Come for the view as much as the cup — this is the sunset coffee, not the 7am one.",
       img: "assets/food/cafe-farah.jpg",
-      imgCredit: "Photo: Andy Li · CC0 · Wikimedia Commons", region: "muscat", coords: [23.610, 58.380],
+      imgCredit: "Photo: Andy Li · CC0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/food/cafe-farah-2.jpg", credit: "Photo: Andy Li · CC0 · Wikimedia Commons" },
+        { src: "assets/food/cafe-farah-3.jpg", credit: "Photo: Goldberry23 · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.610, 58.380],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","sunset"], guide: "",
@@ -1606,7 +3296,11 @@ window.OMAN_DATA = {
       tagline: "Lantern-lit courtyards and grilled kingfish.",
       blurb: "The one everyone ends up at, and deservedly. Eat outside under the lanterns; order the mashuai (grilled kingfish with rice) and the Omani bread with dips.",
       img: "assets/food/food-kargeen.jpg",
-      imgCredit: "Photo: Dingli35 · CC BY-SA 3.0 · Wikimedia Commons", region: "muscat", coords: [23.588, 58.408],
+      imgCredit: "Photo: Dingli35 · CC BY-SA 3.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/food/food-kargeen-2.jpg", credit: "Photo: Majalam · CC BY 4.0 · Wikimedia Commons" },
+        { src: "assets/food/food-kargeen-3.jpg", credit: "Photo: Majalam · CC BY 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.588, 58.408],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
@@ -1615,11 +3309,16 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "food-bin-ateeq-salalah", cat: "food", sub: "Traditional", free: true, type: "Omani food",
+      id: "food-bin-ateeq-salalah", cat: "salalah", sub: "Traditional", free: true, group: "food", type: "Omani food",
       name: "Bin Ateeq (Salalah)",
       tagline: "The Salalah branch of the floor-cushion classic.",
       blurb: "Same formula as the Muscat original: private majlis rooms, cushions on the floor, big plates of Omani rice and meat. The reliable lunch between a morning in the mountains and an afternoon on the coast.",
-      img: "", region: "dhofar", coords: [17.019, 54.081],
+      img: "assets/food/food-bin-ateeq-salalah.jpg",
+      imgCredit: "Photo: Vengolis · CC BY-SA 3.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/food/food-bin-ateeq-salalah-2.jpg", credit: "Photo: Dr. Bernd Gross · CC BY-SA 3.0 · Wikimedia Commons" },
+        { src: "assets/food/food-bin-ateeq-salalah-3.jpg", credit: "Photo: Dr. Bernd Gross · CC BY-SA 3.0 · Wikimedia Commons" }
+      ], region: "dhofar", coords: [17.019, 54.081],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
@@ -1633,7 +3332,11 @@ window.OMAN_DATA = {
       tagline: "Eat on the floor, like you're meant to.",
       blurb: "Family-run, private curtained rooms, cushions on the floor. Unfussy, unbranded, and about as close as a restaurant gets to eating in an Omani home.",
       img: "assets/food/food-bin-ateeq.jpg",
-      imgCredit: "Photo: Sammy Six · CC BY 2.0 · Wikimedia Commons", region: "muscat", coords: [23.588, 58.408],
+      imgCredit: "Photo: Sammy Six · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/food/food-bin-ateeq-2.jpg", credit: "Photo: Vengolis · CC BY-SA 3.0 · Wikimedia Commons" },
+        { src: "assets/food/food-bin-ateeq-3.jpg", credit: "Photo: منال شحادة · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.588, 58.408],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
@@ -1647,7 +3350,10 @@ window.OMAN_DATA = {
       tagline: "Watch them stir it in the copper pot.",
       blurb: "Rosewater, saffron, cardamom, nuts, and an arm-aching amount of stirring. Buy it where they make it, not where they box it.",
       img: "assets/food/food-halwa.jpg",
-      imgCredit: "Photo: Silpa11 · CC BY-SA 4.0 · Wikimedia Commons", region: "muscat", coords: [23.617, 58.594],
+      imgCredit: "Photo: Silpa11 · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/food/food-halwa-2.jpg", credit: "Photo: Slywire · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.617, 58.594],
       hours: 0.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
@@ -1663,7 +3369,11 @@ window.OMAN_DATA = {
       tagline: "The oldest souq in Oman — go at dusk.",
       blurb: "Frankincense, silver khanjars, pashminas and a maze of covered alleys that's been trading for two centuries. Touristy at the front, real the deeper you go.",
       img: "assets/shopping/shop-mutrah-souq.jpg",
-      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons", region: "muscat", coords: [23.617, 58.592],
+      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/shopping/shop-mutrah-souq-2.jpg", credit: "Photo: Dr. Thomas Liptak · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/shopping/shop-mutrah-souq-3.jpg", credit: "Photo: Martin Dougiamas · CC BY 2.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.617, 58.592],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","culture","photography"], guide: "",
@@ -1672,15 +3382,35 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "shop-seeb-souq", cat: "shopping", sub: "Traditional souq", free: false, type: "Souq",
+      id: "shop-seeb-souq", cat: "shopping", sub: "Traditional souq", free: true, type: "Souq",
       name: "Seeb Souq",
       tagline: "Where Muscat actually shops — fish, dates and zero tourists.",
       blurb: "A working local souq on the Seeb waterfront: the morning fish auction, dates by the kilo, abayas and kummas. Nothing here is staged for visitors — that's the point.",
-      img: "", region: "muscat", coords: [23.670, 58.189],
+      img: "assets/shopping/shop-seeb-souq.jpg",
+      imgCredit: "Photo: 'dronepicr' · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/shopping/shop-seeb-souq-2.jpg", credit: "Photo: JK Werner from London, England · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/shopping/shop-seeb-souq-3.jpg", credit: "Photo: JK Werner from London, England · CC BY 2.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.670, 58.189],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","culture","food","photography"], guide: "",
       stats: { "Type": "Local souq", "Best time": "Early morning (fish) or after 5pm", "Haggling": "Gentle", "Cards": "Cash mostly", "Best buys": "Dates, fish, kummas" },
+      gettingThere: [
+        "On the Seeb corniche — 25 min from central Muscat.",
+        "Park along the waterfront.",
+        "The souq runs back from the fish market."
+      ],
+      whatYoullDo: [
+        "Start at the fish market early — the auction is loud, fast and completely real.",
+        "Then the covered lanes: dates by the kilo at half the tourist-shop price.",
+        "Kummas, abayas, household stalls.",
+        "This is shopping the way Muscat actually does it."
+      ],
+      tips: [
+        "Early morning, or you miss the fish auction entirely.",
+        "Buy dates here rather than in the tourist souqs — same dates, half the price."
+      ],
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Seeb+Souq",
       verify: true
     },
@@ -1690,7 +3420,11 @@ window.OMAN_DATA = {
       tagline: "Pottery, silver and the Friday goat market.",
       blurb: "The interior's great souq under the fort: dates, pottery, copper and the famous Friday-morning livestock auction — get there by 7am or you've missed the show.",
       img: "assets/shopping/shop-nizwa-souq.jpg",
-      imgCredit: "Photo: Taha Al-Hayali · CC BY-SA 4.0 · Wikimedia Commons", region: "dakhiliyah", coords: [22.932, 57.531],
+      imgCredit: "Photo: Taha Al-Hayali · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/shopping/shop-nizwa-souq-2.jpg", credit: "Photo: Taha Al-Hayali · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/shopping/shop-nizwa-souq-3.jpg", credit: "Photo: Taha Al-Hayali · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "dakhiliyah", coords: [22.932, 57.531],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","culture","photography"], guide: "",
@@ -1702,13 +3436,14 @@ window.OMAN_DATA = {
       id: "shop-al-sharaa", cat: "shopping", sub: "Speciality", free: false, type: "Shop",
       name: "Al Sharaa Mills & Dates",
       tagline: "The shop I send everyone to before they fly home.",
-      blurb: "A family mills-and-dates company going since 1972: dates by the kilo, date molasses, Omani coffee, spices, honey and stone-ground flours — farm-to-shop, at local prices instead of airport prices. The Al Rusail (Seeb) branch is the convenient one before a flight; there's a branch in Bahla for the Nizwa run, plus their own web shop and Talabat delivery.",
+      blurb: "A family mills-and-dates company going since 1972: dates by the kilo, sesame tahini, date molasses, Omani coffee, spices, honey and stone-ground flours — farm-to-shop, at local prices instead of airport prices. The Al Rusail (Seeb) branch is the convenient one before a flight; there's a branch in Bahla for the Nizwa run, plus their own web shop and Talabat delivery.",
       img: "", region: "muscat", coords: [23.545, 58.135],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","food"], guide: "",
       stats: { "Type": "Dates, mills & pantry goods", "Since": "1972", "Branches": "Al Rusail (Seeb) · Bahla · online", "Best buys": "Dates by the kilo, date molasses, Omani coffee & spices" },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Sharaa+Mills+and+Dates+Rusail",
+      insta: "https://www.instagram.com/hussain_explores/reel/Daedw8lMakd/",
       verify: true
     },
     {
@@ -1717,7 +3452,11 @@ window.OMAN_DATA = {
       tagline: "Oman's world-famous perfume house — at the source.",
       blurb: "One of the most valuable perfume brands on earth is Omani, and the factory visitor centre sells the full range with tester bars and a tour of the production floor. A bottle here is the souvenir that outclasses everything else.",
       img: "assets/shopping/shop-amouage.jpg",
-      imgCredit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons", region: "muscat", coords: [23.541, 58.183],
+      imgCredit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/shopping/shop-amouage-2.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" },
+        { src: "assets/shopping/shop-amouage-3.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.541, 58.183],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","culture"], guide: "",
@@ -1731,7 +3470,11 @@ window.OMAN_DATA = {
       tagline: "The big one — with an indoor snow park.",
       blurb: "The country's largest mall: every brand you'd expect, a huge food court, cinema and Snow Oman for when the kids (or you) need a break from 45°C. This is where midday hides in summer.",
       img: "assets/shopping/shop-mall-of-oman.jpg",
-      imgCredit: "Photo: Mariacaminod · CC BY-SA 4.0 · Wikimedia Commons", region: "muscat", coords: [23.565, 58.238],
+      imgCredit: "Photo: Mariacaminod · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/shopping/shop-mall-of-oman-2.jpg", credit: "Photo: 'dronepicr' · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/shopping/shop-mall-of-oman-3.jpg", credit: "Photo: 'dronepicr' · CC BY 2.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.565, 58.238],
       hours: 2.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping"], guide: "",
@@ -1745,7 +3488,11 @@ window.OMAN_DATA = {
       tagline: "Central, calm and easy.",
       blurb: "Big, central and rarely overwhelming — Carrefour for road-trip supplies, plus the usual brands and cafés. The practical stop, not the destination.",
       img: "assets/shopping/shop-avenues-mall.jpg",
-      imgCredit: "Photo: Taha Al-Hayali · CC BY-SA 4.0 · Wikimedia Commons", region: "muscat", coords: [23.590, 58.427],
+      imgCredit: "Photo: Taha Al-Hayali · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/shopping/shop-avenues-mall-2.jpg", credit: "Photo: Andrey Filippov 安德烈 from Moscow, Russia · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/shopping/shop-avenues-mall-3.jpg", credit: "Photo: Andrey Filippov 安德烈 from Moscow, Russia · CC BY 2.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.590, 58.427],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping"], guide: "",
@@ -1759,7 +3506,11 @@ window.OMAN_DATA = {
       tagline: "Closest big mall to the airport.",
       blurb: "The reliable all-rounder near Seeb and the airport — good for a last-day sweep: dates, chocolates, and anything you forgot to buy properly.",
       img: "assets/shopping/shop-city-centre.jpg",
-      imgCredit: "Photo: Mostafameraji · CC BY-SA 4.0 · Wikimedia Commons", region: "muscat", coords: [23.607, 58.256],
+      imgCredit: "Photo: Mostafameraji · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/shopping/shop-city-centre-2.jpg", credit: "Photo: Mostafameraji · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/shopping/shop-city-centre-3.jpg", credit: "Photo: Mostafameraji · CC BY-SA 4.0 · Wikimedia Commons" }
+      ], region: "muscat", coords: [23.607, 58.256],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping"], guide: "",
@@ -1778,6 +3529,10 @@ window.OMAN_DATA = {
       blurb: "Muscat, the coast road, and the two best wadis within reach. First-timer proof, mostly 2WD.",
       img: "assets/itineraries/escape-3day.jpg",
       imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/itineraries/escape-3day-2.jpg", credit: "Photo: Fabio Achilli from Milano, Italy · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/itineraries/escape-3day-3.jpg", credit: "Photo: Fabio Achilli from Milano, Italy · CC BY 2.0 · Wikimedia Commons" }
+      ],
       stats: { "Best for": "First-timers", "Base": "Muscat + 1 night east", "Car": "2WD ok mostly", "Days": "3" },
       days: [
         { title: "Day 1 — Muscat & the coast", body: "Morning: the Grand Mosque (be there by 10am — the non-Muslim window shuts at 11). Afternoon: a swim at Qantab or Yiti. Evening: Mutrah Corniche at dusk, then the souq, then dinner at Bait Al Luban. Stay in Muscat.", spots: ["grand-mosque","yiti-qantab","mutrah","food-bait-al-luban"] },
@@ -1792,6 +3547,10 @@ window.OMAN_DATA = {
       blurb: "The route I'd drive if I had a week: the coast, the turtles, a night in the dunes, Nizwa, the mountains, and a canyon on the way home.",
       img: "assets/itineraries/loop-7day.jpg",
       imgCredit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/itineraries/loop-7day-2.jpg", credit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/itineraries/loop-7day-3.jpg", credit: "Photo: Erfan.arafat · CC BY-SA 4.0 · Wikimedia Commons" }
+      ],
       stats: { "Best for": "The full picture", "Base": "Moving loop", "Car": "4×4 recommended", "Days": "7" }
     },
     {
@@ -1801,6 +3560,10 @@ window.OMAN_DATA = {
       blurb: "No forts, no souqs. Canyoning, bouldering, cliff jumps and the wadis that hurt. 4×4 and real fitness required — this is the one I'd do myself.",
       img: "assets/itineraries/adventure-5day.jpg",
       imgCredit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/itineraries/adventure-5day-2.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/itineraries/adventure-5day-3.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" }
+      ],
       stats: { "Best for": "Fit, adventurous, been here before", "Base": "Moving", "Car": "4×4 required", "Days": "5" }
     }
   ],

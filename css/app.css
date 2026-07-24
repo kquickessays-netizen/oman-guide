@@ -127,6 +127,8 @@ img{max-width:100%;display:block}
   display:flex;gap:2px;flex:0 0 auto;margin-left:auto;
   background:var(--sand-2);border-radius:999px;padding:3px;
 }
+.fb-search{flex:0 0 auto}
+.chip-region{background:#eef4fb;color:#2b5d8f}
 .vs{
   display:inline-flex;align-items:center;gap:5px;
   font:inherit;font-size:12.5px;font-weight:700;line-height:1;
@@ -248,12 +250,15 @@ img{max-width:100%;display:block}
 .promo .btn-buy{background:#fff;color:var(--water-dark)}
 
 /* -------------------------------------------------------------------- sheet */
+/* z-index: Leaflet's map panes/controls go up to 1000, so the sheet, modal
+   and toast must sit ABOVE that — or a spot opened from the map renders
+   underneath it. */
 .sheet-backdrop,.modal-backdrop{
-  position:fixed;inset:0;z-index:80;background:rgba(20,26,24,.5);
+  position:fixed;inset:0;z-index:1100;background:rgba(20,26,24,.5);
   backdrop-filter:blur(2px);
 }
 .sheet{
-  position:fixed;z-index:90;left:0;right:0;bottom:0;
+  position:fixed;z-index:1200;left:0;right:0;bottom:0;
   max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
   background:var(--sand);border-radius:22px 22px 0 0;
   box-shadow:var(--shadow-lg);
@@ -297,6 +302,13 @@ img{max-width:100%;display:block}
   display:block;text-align:center;padding:12px;border-radius:12px;
   background:var(--water);color:#fff;font-weight:700;font-size:14.5px;margin:4px 0 6px;
 }
+.instabtn{
+  display:block;text-align:center;padding:12px;border-radius:12px;
+  background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+  color:#fff;font-weight:700;font-size:14.5px;margin:4px 0 6px;
+}
+.instarow .instabtn + .instabtn{margin-top:6px}
+.chip-reel{background:#fdecf3;color:#bc1888}
 .affbtn{
   display:block;text-align:center;padding:11px;border-radius:12px;
   background:#eaf6ec;color:#1e6b39;font-weight:700;font-size:14px;margin:8px 0 0;
@@ -407,7 +419,7 @@ img{max-width:100%;display:block}
 /* ------------------------------------------------------------------- toast */
 .toast{
   position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
-  z-index:200;background:var(--ink);color:#fff;
+  z-index:1300;background:var(--ink);color:#fff;
   padding:12px 20px;border-radius:999px;font-size:14px;font-weight:600;
   box-shadow:var(--shadow-lg);animation:pop .2s ease;
 }
@@ -565,6 +577,12 @@ img{max-width:100%;display:block}
   background:linear-gradient(135deg,var(--water),#0a7a83);
   display:grid;place-items:center;font-size:34px;box-shadow:var(--shadow);
 }
+.about-photo{object-fit:cover;display:block;padding:0}
+.about-photo-empty{
+  background:var(--sand-2);border:2px dashed var(--line);box-shadow:none;
+  font-size:22px;grid-template-rows:auto auto;gap:1px;color:#9a938a;
+}
+.about-photo-empty small{font-size:8.5px;font-weight:700;letter-spacing:.2px}
 .about-hero h1{font-size:27px;letter-spacing:-.5px}
 .about-sub{color:var(--muted);font-size:14.5px;margin:7px 0 0}
 
@@ -732,3 +750,201 @@ img{max-width:100%;display:block}
 .subrow input{flex:1;min-width:0;padding:10px 14px;border:1px solid var(--line);
   border-radius:12px;font-size:14px;background:var(--sand-2)}
 .subrow input:focus{outline:2px solid var(--water);border-color:transparent}
+
+/* ====================================================== UI AMP (Jul 2026)
+   Photo-forward cards · bottom nav on phones · sheet handle · feedback UI  */
+
+/* --- photo cards: name + chips ON the image over a scrim ---------------- */
+.card-media-photo{height:215px;place-items:stretch;display:block}
+.card-overlay{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:34px 14px 12px;
+  background:linear-gradient(180deg,rgba(10,25,22,0) 0%,rgba(10,25,22,.55) 40%,rgba(10,25,22,.82) 100%);
+}
+.card-overlay .ov-title{margin:4px 0 2px;color:#fff;font-size:18.5px;letter-spacing:-.2px}
+.card-overlay .ov-tag{margin:0;color:#d9ece4;font-size:12.5px;line-height:1.35}
+.card-kicker.on-photo{margin-bottom:0}
+.card-kicker.on-photo .chip{background:rgba(255,255,255,.93)}
+.card-kicker.on-photo .chip-reel{background:#fdecf3}
+.card-body-slim{padding:8px 15px}
+.lock-pill{
+  font-size:12.5px;font-weight:700;letter-spacing:.3px;
+  background:#fff8ea;color:#8a6b1f;border:1px solid #e6c88c;
+  padding:7px 14px;border-radius:999px;
+}
+.card.locked .card-media{filter:saturate(.5)}
+
+/* --- bottom navigation on phones ----------------------------------------
+   The tab bar docks to the bottom edge (thumb zone) and the chips become
+   icon-over-label — the installed PWA reads as a native app. Desktop and
+   tablets keep the top tab row. */
+@media(max-width:640px){
+  .tabs{
+    position:fixed;left:0;right:0;bottom:0;z-index:950;
+    max-width:none;margin:0;display:flex;flex-wrap:nowrap;gap:0;
+    justify-content:space-around;
+    background:#fff;border-top:1px solid var(--line);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));
+    box-shadow:0 -4px 16px rgba(20,26,24,.06);
+  }
+  .tab{
+    flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:2px;
+    background:transparent;border:none;border-radius:12px;
+    font-size:10.5px;font-weight:700;padding:4px 2px;color:var(--muted);
+  }
+  .tab .t-icon{margin:0;font-size:21px;line-height:1}
+  .tab[aria-selected="true"]{background:var(--water-soft);color:var(--water-dark);border:none}
+  .view{padding-bottom:92px}   /* content never hides behind the bar */
+}
+
+/* --- sheet: grab handle --------------------------------------------------- */
+.sheet::before{
+  content:"";display:block;width:44px;height:5px;border-radius:999px;
+  background:#d8d2c6;margin:10px auto 0;
+}
+
+/* --- traveller tips (curated reader feedback) ----------------------------- */
+.ttip{
+  background:#fff;border:1px solid var(--line);border-left:4px solid var(--water);
+  border-radius:0 12px 12px 0;padding:10px 14px;margin:8px 0;
+}
+.ttip p{margin:0;font-size:14px;color:var(--ink)}
+.ttip-by{display:block;margin-top:4px;font-size:12px;color:var(--muted)}
+
+/* --- the feedback box ------------------------------------------------------ */
+.ratebox{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:14px 16px;margin:16px 0 4px;box-shadow:var(--shadow);
+}
+.ratebox.thanks{background:#eef7f0;border-color:#cfe7d6;color:#1e6b39;font-size:14px;font-weight:600}
+.rate-q{margin:0 0 8px;font-size:14.5px;font-weight:700}
+.stars{display:flex;gap:4px;margin-bottom:10px}
+.star{
+  font-size:30px;line-height:1;background:none;border:none;cursor:pointer;
+  color:#ddd5c8;padding:2px 4px;transition:transform .1s ease,color .1s ease;
+}
+.star:active{transform:scale(1.2)}
+.star.on{color:var(--gold)}
+.rate-name{
+  width:100%;box-sizing:border-box;padding:10px 12px;margin-bottom:8px;
+  border:1px solid var(--line);border-radius:12px;font:inherit;font-size:13.5px;
+  background:var(--sand-2);
+}
+.rate-name:focus{outline:2px solid var(--water);border-color:transparent}
+.rate-tip{
+  width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--line);
+  border-radius:12px;font:inherit;font-size:13.5px;background:var(--sand-2);resize:vertical;
+}
+.rate-tip:focus{outline:2px solid var(--water);border-color:transparent}
+.rate-send{
+  margin-top:8px;width:100%;padding:10px 0;border-radius:999px;border:none;cursor:pointer;
+  background:var(--water);color:#fff;font-size:14px;font-weight:700;
+}
+
+/* --- testimonials on the price block --------------------------------------- */
+.testimonials{margin-top:10px}
+.testi{
+  margin:8px 0 0;padding:10px 14px;background:#fffdf8;border:1px dashed #e6c88c;
+  border-radius:12px;font-size:13.5px;color:#5a4a22;font-style:italic;
+}
+.testi cite{display:block;margin-top:4px;font-size:12px;color:#8a6b1f;font-style:normal}
+
+/* ================================================= BRAND PASS (Jul 2026)
+   "Professional + explorey": deep-teal header band, one display typeface
+   (Outfit) for names and headings, a single quiet chip system, filter chips
+   as a real segmented control, clay as the one accent, pill CTAs.          */
+
+:root{
+  --clay:#b4552d;          /* Omani clay — THE accent. Use sparingly. */
+  --clay-soft:#f7e7dd;
+}
+
+/* display face for identity moments; body text stays system */
+h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1{
+  font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+/* --- header: the deep-teal expedition band -------------------------------- */
+.topbar{background:var(--water-dark);border-bottom:none}
+.brand{color:#fff}
+.brand-text strong{color:#fff;letter-spacing:.1px}
+.brand-text small{color:#a9cdca}
+.brand-mark{
+  width:36px;height:36px;border-radius:12px;font-size:19px;
+  background:rgba(255,255,255,.14);display:grid;place-items:center;
+}
+.pill-ghost{background:rgba(255,255,255,.16);color:#fff}
+.pill-unlocked{background:#d9f2e2;color:#14532d}
+.livingline{color:#a9cdca;padding-bottom:10px}
+.livingline .ll-main{color:#fff}
+.livingline .ll-sub{color:#a9cdca;border-left-color:rgba(255,255,255,.25)}
+.searchbar{border-top:1px solid var(--line)}
+
+/* tabs live on the teal band on wide screens — translucent pills, white when
+   active. (On phones the tabs are the white bottom bar — untouched here.) */
+@media(min-width:641px){
+  .tab{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);color:#cfe4e2}
+  .tab[aria-selected="true"]{background:#fff;color:var(--water-dark);border-color:#fff}
+}
+
+/* --- ONE chip system -------------------------------------------------------
+   Sentence case, one size, pill shape. Colour only where it means something:
+   teal = status, outline = classification, gold = commerce, pink = reel.   */
+.chip{
+  text-transform:none;letter-spacing:.2px;font-size:11px;font-weight:700;
+  padding:4px 10px;border-radius:999px;
+  background:var(--water-soft);color:var(--water-dark);
+}
+.chip-type{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.chip-region{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.chip-season{background:var(--gold-soft);color:#7a4a08}
+.chip-hard{background:#fdeceb;color:var(--danger)}
+.chip-lock{background:var(--gold-soft);color:#8a6b1f}
+.chip-free{background:#e7f4ea;color:#1e6b39}
+.chip-reel{background:#fdecf3;color:#bc1888}
+.card-kicker.on-photo .chip{border:none}
+
+/* --- filter chips: a real segmented control ------------------------------- */
+.tfchip{
+  border-radius:999px;font-weight:700;
+  background:transparent;border:1px solid var(--line);color:var(--ink);
+}
+.tfchip .tfn{
+  background:rgba(13,92,99,.08);border-radius:999px;padding:1px 7px;
+  font-size:10.5px;color:var(--water-dark);
+}
+.tfchip.on{background:var(--water-dark);border-color:var(--water-dark);color:#fff}
+.tfchip.on .tfn{background:rgba(255,255,255,.22);color:#fff}
+
+/* --- CTAs become pills, consistently --------------------------------------- */
+.mapbtn,.instabtn,.affbtn,.btn-full,.rate-send{border-radius:999px}
+.card{border-radius:18px}
+
+/* --- short cards ----------------------------------------------------------- */
+.card-media-photo{height:176px}
+.card.locked .card-media{height:54px;filter:none;background:linear-gradient(135deg,var(--sand-2),var(--gold-soft))}
+.lock-pill{padding:5px 12px;font-size:11.5px}
+.lock-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
+.lock-row-txt{font-size:13px;color:var(--muted);font-weight:600}
+.lock-row-btn{
+  flex:0 0 auto;padding:7px 14px;border-radius:999px;
+  background:var(--gold);color:#fff;font-size:12.5px;font-weight:700;
+}
+.card.locked .card-body{padding:10px 15px 12px}
+
+/* --- your own posted review ------------------------------------------------ */
+.myreview{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:13px 16px;margin:16px 0 4px;box-shadow:var(--shadow);
+}
+.myreview-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.myreview-stars{color:var(--gold);font-size:17px;letter-spacing:2px}
+.myreview-name{font-size:13px;font-weight:700}
+.myreview p{margin:8px 0 0;font-size:14px}
+.myreview .myreview-note{font-size:11.5px;color:var(--muted);margin-top:8px}
+
+/* --- editorial section markers in the detail sheet ------------------------- */
+.sheet .sec{display:flex;align-items:center;gap:9px}
+.sheet .sec::before{
+  content:"";flex:0 0 auto;width:16px;height:4px;border-radius:2px;background:var(--clay);
+}
