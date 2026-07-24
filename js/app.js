@@ -198,6 +198,36 @@
   /* One product now: a key unlocks everything. */
   const isUnlocked = item => item.free || Unlock.hasBundle();
 
+  /* ------------------------------------------------------- saved & been-there
+     Two id-lists in localStorage. No login: the phone remembers. Saved feeds
+     the ♥ filter; Been-there is the explorer's checklist ("23 of 87"). */
+  const Store = (() => {
+    const read = k => { try { return JSON.parse(localStorage.getItem(k) || "[]"); } catch { return []; } };
+    const write = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+    const toggle = (k, id) => {
+      const v = read(k); const i = v.indexOf(id);
+      i >= 0 ? v.splice(i, 1) : v.push(id);
+      write(k, v); return i < 0;
+    };
+    return {
+      saved:    () => read("oman_saved"),
+      been:     () => read("oman_been"),
+      isSaved:  id => read("oman_saved").includes(id),
+      isBeen:   id => read("oman_been").includes(id),
+      toggleSaved: id => { const on = toggle("oman_saved", id); if (window.Analytics) Analytics.track("save", { id: id, on: on }); return on; },
+      toggleBeen:  id => { const on = toggle("oman_been", id);  if (window.Analytics) Analytics.track("been", { id: id, on: on }); return on; }
+    };
+  })();
+
+  // Smart filters (session state): season / no-4×4 / kids / saved.
+  const smart = { season: false, no4x4: false, kids: false, saved: false };
+  const inSeason = i => !i.months || i.months.includes(new Date().getMonth() + 1);
+  const smartPass = i =>
+    (!smart.season || inSeason(i)) &&
+    (!smart.no4x4 || !i.needs4x4) &&
+    (!smart.kids || i.kidOk !== false) &&
+    (!smart.saved || Store.isSaved(i.id));
+
   /* Locked items render as anonymous "hidden spot" cards — no name, photo,
      location or stats until purchase. The names still exist in the shipped
      data files (accepted trade-off of the static paywall), but nothing in
@@ -243,6 +273,82 @@
     return w;
   }
 
+  /* ----------------------------------------------------------- free launch
+     While meta.freeLaunch is true the guide is fully open. Instead of buy
+     buttons, the ask is an EMAIL: join the founding-explorer list before the
+     paywall lands in October. One box, reused everywhere. */
+  function launchBox() {
+    const w = el("div", "launchbox");
+    w.innerHTML = `
+      <div class="launch-badge">🎁 Launch season — the whole guide is free</div>
+      <p>Every spot, every itinerary and the trip Planner — open for everyone while I launch,
+         all through the khareef. <strong>In October it becomes a paid guide</strong> for the winter season.</p>
+      <p class="launch-ask">Leave your email and you're a <strong>founding explorer</strong> — you'll get the
+         updates and the best deal when the paid version lands.</p>
+      <div class="subrow">
+        <input type="email" id="lbEmail" placeholder="you@email.com" autocomplete="email">
+        <button class="pill" id="lbBtn">Count me in</button>
+      </div>
+      <div id="lbMsg"></div>`;
+    w.querySelector("#lbBtn").onclick = async () => {
+      const em = w.querySelector("#lbEmail").value.trim();
+      const msg = w.querySelector("#lbMsg");
+      if (!/^\S+@\S+\.\S+$/.test(em)) { msg.innerHTML = `<div class="msg err">That doesn't look like an email.</div>`; return; }
+      const r = await Analytics.subscribe(em);
+      msg.innerHTML = r.ok ? `<div class="msg ok">You're in — founding explorer. 🇴🇲</div>`
+                           : `<div class="msg err">Couldn't sign you up — try again in a bit.</div>`;
+    };
+    return w;
+  }
+
+  /* ------------------------------------------------------- plan-my-trip form
+     "Book me": travellers leave their details and what they're planning;
+     Hussain gets the lead (Supabase `bookings`, or an email until the
+     backend is on) and contacts them to plan the trip personally. */
+  function bookBox() {
+    const w = el("div", "bookbox");
+    w.innerHTML = `
+      <h3>🤝 Want me to plan it for you?</h3>
+      <p>I'm a licensed Omani guide. Tell me who you are and what you're dreaming of —
+         I'll contact you and we'll plan your trip together: route, bookings advice,
+         the spots that fit YOU, and honest answers before you spend a rial.</p>
+      <div class="bookgrid">
+        <input id="bkName" maxlength="80" placeholder="Your name">
+        <input id="bkContact" maxlength="120" placeholder="Email or WhatsApp number">
+        <input id="bkDates" maxlength="80" placeholder="When? (e.g. 12–19 Dec, or 'flexible')">
+        <input id="bkGroup" maxlength="40" placeholder="Who's coming? (e.g. couple, family of 5)">
+      </div>
+      <textarea id="bkNote" maxlength="1000" rows="3" placeholder="What do you want from the trip? Wadis, desert, culture, kids along, fitness level, budget…"></textarea>
+      <button type="button" class="rate-send" id="bkSend">Request my trip plan</button>
+      <p class="book-fine">I reply personally — usually within 48 hours.</p>
+      <div id="bkMsg"></div>`;
+    w.querySelector("#bkSend").onclick = async () => {
+      const val = id => w.querySelector(id).value.trim();
+      const data = { name: val("#bkName"), contact: val("#bkContact"),
+                     dates: val("#bkDates"), group: val("#bkGroup"), note: val("#bkNote") };
+      const msg = w.querySelector("#bkMsg");
+      if (!data.name || !data.contact) {
+        msg.innerHTML = `<div class="msg err">I need at least your name and a way to reach you.</div>`;
+        return;
+      }
+      if (window.Analytics) Analytics.track("book_click", {});
+      if (window.Analytics && Analytics.enabled) {
+        const r = await Analytics.book(data);
+        msg.innerHTML = r.ok
+          ? `<div class="msg ok">Got it, ${esc(data.name)} — I'll be in touch soon. 🇴🇲</div>`
+          : `<div class="msg err">Couldn't send — check your connection and try again.</div>`;
+        if (r.ok) w.querySelector("#bkSend").disabled = true;
+      } else {
+        const bodyTxt = `Name: ${data.name}\nContact: ${data.contact}\nDates: ${data.dates || "-"}\nGroup: ${data.group || "-"}\nNotes: ${data.note || "-"}`;
+        location.href = "mailto:" + (D.meta.email || "") +
+          "?subject=" + encodeURIComponent("Plan my trip — " + data.name) +
+          "&body=" + encodeURIComponent(bodyTxt);
+        msg.innerHTML = `<div class="msg ok">Opening your email app — hit send and it's with me.</div>`;
+      }
+    };
+    return w;
+  }
+
   /* ------------------------------------------------------------------- tabs */
   function renderTabs(active) {
     const tabs = $("#tabs");
@@ -260,6 +366,7 @@
 
   function renderUnlockBtn() {
     const b = $("#unlockBtn");
+    if (D.meta.freeLaunch) { b.textContent = "🎁 Free launch"; b.className = "pill pill-unlocked"; return; }
     if (Unlock.hasBundle()) { b.textContent = "✓ Full access"; b.className = "pill pill-unlocked"; }
     else if (Unlock.isAnythingOwned()) { b.textContent = "✓ " + Unlock.grants().length + " unlocked"; b.className = "pill pill-unlocked"; }
     else { b.textContent = "Unlock"; b.className = "pill pill-ghost"; }
@@ -348,6 +455,15 @@
     if (unlocked) {
       c.style.cursor = "pointer";
       c.onclick = () => openSheet(item);
+      // ♥ save — top-right of the card, works without opening the sheet.
+      const heart = el("button", "save-heart" + (Store.isSaved(item.id) ? " on" : ""), "♥");
+      heart.setAttribute("aria-label", "Save " + item.name);
+      heart.onclick = e => {
+        e.stopPropagation();
+        heart.classList.toggle("on", Store.toggleSaved(item.id));
+      };
+      media.appendChild(heart);
+      if (Store.isBeen(item.id)) media.appendChild(el("span", "been-badge", "✓ Been"));
     } else {
       c.style.cursor = "pointer";
       c.onclick = () => openUnlock();
@@ -417,8 +533,27 @@
         : `<div class="heatnote">🌡️ <strong>Best ${esc(Planner.monthsLabel(item.months))}.</strong> Doable now too — go at first light or after 4pm, skip the midday hours, and carry more water than feels reasonable.</div>`;
     }
 
+    // ⚠️ Flash floods kill people in wadis every year. Every wadi-ish spot
+    // carries the rule, always visible, not foldable. This is the app's
+    // free "safety layer" — the thing AllTrails charges for.
+    if (!isItin && (item.cat === "wadis" || item.group === "wadis" ||
+        /Wadi|Canyon|Waterfall|Sinkhole|Spring/i.test(item.type || ""))) {
+      h += `<div class="floodnote">⚠️ <strong>Flash-flood rule:</strong> never enter after rain — even if rain fell far upstream in the mountains. Grey sky over the Hajar = stay out. Water rises in minutes, exits take longer than entries.</div>`;
+    }
+
     if (item.mapUrl) {
       h += `<a class="mapbtn" href="${item.mapUrl}" target="_blank" rel="noopener">📍 Open in Google Maps</a>`;
+    }
+
+    // Save · Been there · WhatsApp — the action row.
+    if (!isItin) {
+      const wa = "https://wa.me/?text=" + encodeURIComponent(
+        `${item.name} — ${item.tagline}\n📍 ${item.mapUrl || ""}\nFrom the Exploring Oman guide by @hussain_explores:\n${D.meta.storeUrl || D.meta.instagram}`);
+      h += `<div class="actrow">
+              <button type="button" class="act-btn" id="actSave">${Store.isSaved(item.id) ? "♥ Saved" : "♡ Save"}</button>
+              <button type="button" class="act-btn" id="actBeen">${Store.isBeen(item.id) ? "✓ Been here" : "Been here?"}</button>
+              <a class="act-btn act-wa" href="${wa}" target="_blank" rel="noopener">📲 Share</a>
+            </div>`;
     }
 
     // My reel(s) from this spot — `insta` on the spot is a URL or array of URLs.
@@ -576,6 +711,23 @@
 
     b.innerHTML = h;
 
+    // wire save / been-there
+    const sv = b.querySelector("#actSave");
+    if (sv) sv.onclick = () => {
+      const on = Store.toggleSaved(item.id);
+      sv.textContent = on ? "♥ Saved" : "♡ Save";
+      sv.classList.toggle("on", on);
+    };
+    const bn = b.querySelector("#actBeen");
+    if (bn) bn.onclick = () => {
+      const on = Store.toggleBeen(item.id);
+      bn.textContent = on ? "✓ Been here" : "Been here?";
+      bn.classList.toggle("on", on);
+      // been-there is the natural moment to review — nudge the box into view
+      const rbx = b.querySelector("#ratebox");
+      if (on && rbx) rbx.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+
     // wire the review box (if present)
     const rb = b.querySelector("#ratebox");
     if (rb) {
@@ -625,6 +777,18 @@
   /* ----------------------------------------------------------------- unlock */
   function openUnlock() {
     const b = $("#modalBody");
+    if (D.meta.freeLaunch) {
+      b.innerHTML = `
+        <h2>🎁 It's all free right now</h2>
+        <p>Launch season: every spot, every itinerary and the Planner are open for everyone.
+           In October the guide becomes paid — founding explorers get the best deal.</p>
+        <div id="lbHere"></div>
+        <button class="btn-full" id="doneBtn" style="margin-top:12px">Keep exploring →</button>`;
+      b.querySelector("#lbHere").appendChild(launchBox());
+      b.querySelector("#doneBtn").onclick = closeModal;
+      $("#modalBackdrop").hidden = false;
+      return;
+    }
     if (Unlock.isAnythingOwned()) {
       b.innerHTML = `
         <h2>You're unlocked ✓</h2>
@@ -711,7 +875,43 @@
     bar.appendChild(sBtn);
     view.appendChild(bar);
 
-    const shown = typeFilter ? items.filter(i => groupOf(i) === typeFilter) : items;
+    // Smart filters — one tap answers the real planning questions: what's
+    // good NOW, what my rental car can reach, what works with kids, and
+    // what I've saved. (In-season is meaningless if everything qualifies.)
+    {
+      const srow = el("div", "smartrow");
+      const defs = [
+        ["season", "🌡️ In season", items.some(i => !inSeason(i))],
+        ["no4x4",  "🚗 No 4×4",    items.some(i => i.needs4x4)],
+        ["kids",   "👨‍👩‍👧 Kids OK",  items.some(i => i.kidOk === false)],
+        ["saved",  "♥ Saved",      Store.saved().length > 0]
+      ];
+      defs.forEach(([key, label, useful]) => {
+        if (!useful) return;
+        const b = el("button", "smartchip" + (smart[key] ? " on" : ""), label);
+        b.type = "button";
+        b.onclick = () => { smart[key] = !smart[key]; renderCategory(cat); };
+        srow.appendChild(b);
+      });
+      if (srow.children.length) view.appendChild(srow);
+
+      // The explorer's scoreboard — your list and your progress, always
+      // visible once you've started collecting. Tapping it filters to saved.
+      const nsav = Store.saved().length, nbeen = Store.been().length;
+      if (nsav || nbeen) {
+        const total = D.spots.length;
+        const prog = el("button", "progressline");
+        prog.type = "button";
+        prog.innerHTML =
+          `<span>♥ ${nsav} saved</span><span class="pl-dot">·</span>` +
+          `<span>✓ ${nbeen} of ${total} explored</span>` +
+          `<span class="pl-bar"><span class="pl-fill" style="width:${Math.min(100, Math.round(nbeen / total * 100))}%"></span></span>`;
+        prog.onclick = () => { smart.saved = !smart.saved; renderCategory(cat); };
+        view.appendChild(prog);
+      }
+    }
+
+    const shown = (typeFilter ? items.filter(i => groupOf(i) === typeFilter) : items).filter(smartPass);
 
     if (!shown.length) {
       view.appendChild(el("div", "empty",
@@ -750,7 +950,9 @@
     }
 
     const lockedShown = shown.filter(i => !isUnlocked(i)).length;
-    if (lockedShown && !Unlock.hasBundle()) {
+    if (D.meta.freeLaunch) {
+      view.appendChild(launchBox());
+    } else if (lockedShown && !Unlock.hasBundle()) {
       const h = el("div", "section-head");
       h.innerHTML = `<h2>${lockedShown} locked here 🔒</h2>` +
         `<p>One payment unlocks all ${lockedCount()} locked spots in the guide, the itineraries and the Planner — and every update after that.</p>`;
@@ -850,6 +1052,10 @@
       };
       w.appendChild(sub);
     }
+
+    // Personal trip-planning requests, on About too — some people will only
+    // look for "how do I reach Hussain" here.
+    w.appendChild(bookBox());
 
     // "What's new" — the receipts behind the buy-once-updated-forever promise.
     if (m.changelog && m.changelog.length) {
@@ -1066,6 +1272,8 @@
     form.appendChild(go);
     view.appendChild(form);
     renderItinerarySection();
+    // "Or let me plan it for you" — the personal service, under everything.
+    view.appendChild(bookBox());
   }
 
   /* The hand-built routes, shown under the planner on the Plan tab. */
@@ -1162,6 +1370,24 @@
     back.style.marginBottom = "16px";
     back.onclick = renderPlanner;
     view.appendChild(back);
+
+    // WhatsApp is how the Gulf shares plans. Two sends, two purposes:
+    // the plan to a travel buddy, and the safety copy to family — where
+    // you're going and when you'll be back. Both carry the store link.
+    {
+      const shareRow = el("div", "plan-sharerow");
+      const planTxt = () => planText(plan).slice(0, 3500);
+      const wa1 = el("a", "pill", "📲 WhatsApp the plan");
+      wa1.href = "https://wa.me/?text=" + encodeURIComponent(planTxt());
+      wa1.target = "_blank"; wa1.rel = "noopener";
+      const wa2 = el("a", "pill pill-ghost", "🛟 Send to family (safety copy)");
+      wa2.href = "https://wa.me/?text=" + encodeURIComponent(
+        "My Oman trip plan — so you know where I am:\n\n" + planTxt() +
+        "\nIf I'm not reachable by the evening of the last day, this was my route.");
+      wa2.target = "_blank"; wa2.rel = "noopener";
+      shareRow.appendChild(wa1); shareRow.appendChild(wa2);
+      view.appendChild(shareRow);
+    }
 
     const sum = el("div", "plan-summary");
     sum.innerHTML = `

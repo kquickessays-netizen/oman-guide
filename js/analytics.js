@@ -103,6 +103,23 @@ window.Analytics = (() => {
     }).then(res => ({ ok: res.ok })).catch(() => ({ ok: false }));
   }
 
+  /* -------------------------------------------------------------------- book
+     "Plan my trip with Hussain" requests — a lead, not an event. Same
+     insert-only trust model. Table: bookings (delivery/backend-schema.sql). */
+  function book(data) {
+    if (!enabled) return Promise.resolve({ ok: false, error: "No backend configured." });
+    data = data || {};
+    return post("bookings", {
+      name: String(data.name || "").trim().slice(0, 80) || null,
+      contact: String(data.contact || "").trim().slice(0, 120) || null,
+      dates: String(data.dates || "").trim().slice(0, 80) || null,
+      group_size: String(data.group || "").trim().slice(0, 40) || null,
+      note: String(data.note || "").trim().slice(0, 1000) || null,
+      device_id: deviceId(),
+      email: who().email
+    }).then(res => ({ ok: res.ok })).catch(() => ({ ok: false }));
+  }
+
   /* ---------------------------------------------------- auto-instrumentation */
   if (enabled) {
     const viewed = () => track("view", { tab: location.hash.replace("#/", "") || "wadis" });
@@ -127,5 +144,5 @@ window.Analytics = (() => {
     }, true);
   }
 
-  return { track: track, subscribe: subscribe, review: review, enabled: enabled, deviceId: deviceId };
+  return { track: track, subscribe: subscribe, review: review, book: book, enabled: enabled, deviceId: deviceId };
 })();

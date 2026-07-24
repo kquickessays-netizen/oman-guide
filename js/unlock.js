@@ -77,7 +77,13 @@ const Unlock = (() => {
   }
 
   /* ---------------------------------------------------------------- queries */
-  function hasBundle()      { return state.grants.includes("*"); }
+  // FREE LAUNCH MODE — while meta.freeLaunch is true in content.js, EVERY
+  // device counts as unlocked: all spots, all itineraries, the full Planner.
+  // Flip the flag to false (one line) to turn the paywall on for the season.
+  const FREE_LAUNCH = () =>
+    !!(window.OMAN_DATA && window.OMAN_DATA.meta && window.OMAN_DATA.meta.freeLaunch);
+
+  function hasBundle()      { return FREE_LAUNCH() || state.grants.includes("*"); }
   function has(category)    { return hasBundle() || state.grants.includes(category); }
   function isAnythingOwned(){ return state.grants.length > 0; }
   function grants()         { return state.grants.slice(); }
@@ -179,7 +185,7 @@ const Unlock = (() => {
 
   /* ------------------------------- restore premium on load if already owned */
   function init() {
-    if (isAnythingOwned()) return loadPremium().catch(() => {});
+    if (FREE_LAUNCH() || isAnythingOwned()) return loadPremium().catch(() => {});
     return Promise.resolve();
   }
 

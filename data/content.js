@@ -79,6 +79,18 @@ window.OMAN_DATA = {
     //     circle until you do. <<<
     aboutPhoto: "",
 
+    // >>> FREE LAUNCH MODE <<<
+    // true  = the ENTIRE guide is free for everyone: all spots, itineraries
+    //         and the Planner. Buy buttons disappear; the ask everywhere
+    //         becomes "leave your email" (founding-explorer list) + reviews.
+    //         Use this phase to build users, emails and reviews through the
+    //         khareef, with Supabase tracking every step.
+    // false = the paywall is ON (normal paid mode).
+    // THE PLAN: flip to false in early October, before the Oct–Apr peak.
+    // Announce the flip as content ("the guide becomes paid on Friday"), and
+    // give the founding-explorer email list a discount code on day one.
+    freeLaunch: true,
+
     // ONE product, ONE price, ONE key. It unlocks every locked spot, both extra
     // itineraries and the Planner — forever, updates included. (There used to be
     // nine per-tab guides; the tabs merged, so the products did too.)
@@ -101,6 +113,12 @@ window.OMAN_DATA = {
     // publish (newest first). This is the proof behind "updated monthly".
     changelog: [
       { date: "July 2026", items: [
+        "♥ Save spots to your list and tick off where you've been — your phone remembers, no account needed.",
+        "🌡️ Smart filters: In season now · No 4×4 · Kids OK · Saved — one tap each, in the filter bar.",
+        "⚠️ Safety built in: every wadi now carries the flash-flood rule, and your trip plan has a one-tap 'send to family' safety copy on WhatsApp.",
+        "📲 Share any spot or your whole plan straight to WhatsApp.",
+        "🎁 LAUNCH SEASON: the whole guide is free — every spot, every itinerary and the Planner. Through the khareef. In October it becomes the paid winter-season guide; founding explorers on the email list get the best deal.",
+        "🤝 New: 'Plan my trip with Hussain' — leave your details on the Plan or About tab and I'll personally plan your Oman trip with you.",
         "✨ New look: photos front and centre on every card, and on phones the tabs moved to a bottom bar — the app feels like an app now.",
         "🗣️ New: tell me if a spot was worth it — one tap on any spot, plus an optional tip. The best tips get published in the guide with your name on them.",
         "⛺ New: camping. Five camp spots — White Beach at Fins (free), Ras Al Hadd, the Jabal Shams rim, the Jabal Akhdar plateau and the Sugar Dunes at Al Khaluf — each with the safety rules, kit lists and leave-no-trace basics. The planner's Camping interest picks them up.",
