@@ -1047,6 +1047,7 @@
       const rbx = b.querySelector("#ratebox");
       if (on && rbx) rbx.scrollIntoView({ behavior: "smooth", block: "center" });
       applyRankTheme();                      // the whole app's accent, live
+      renderHud();                           // the banner HUD, live
       refreshBehind();                       // the rank ring and the ✓ badges
       if (on) celebrate(Store.been().length); else toast("Unmarked");
     };
@@ -1310,6 +1311,30 @@
     return w;
   }
 
+  /* The HUD in the banner. The rank used to sit beside the Explore title,
+     which meant it vanished on every other tab. Up here it's always on, it
+     makes the banner carry something that CHANGES as you travel, and the
+     progress bar under it fills toward the next rank rather than toward 101
+     (see rankBadge for why that matters). */
+  function renderHud() {
+    const h = $("#topHud");
+    if (!h) return;
+    const been = Store.been().length;
+    const total = D.spots.length;
+    const ix = rankIx(been);
+    const floor = RANKS[ix][0];
+    const next = nextRank(been);
+    const pct = next ? Math.round((been - floor) / (next[0] - floor) * 100) : 100;
+    h.innerHTML =
+      `<span class="hud-ring" style="--pct:${Math.max(0, Math.min(100, pct))}"><b>${been}</b></span>` +
+      `<span class="hud-txt">` +
+        `<strong>${esc(rankFor(been))}</strong>` +
+        `<small>${next ? `${next[0] - been} more to ${esc(next[1])}` : `all ${total} explored`}</small>` +
+      `</span>` +
+      `<span class="hud-bar"><i style="width:${Math.max(3, Math.min(100, pct))}%"></i></span>`;
+    h.dataset.tier = ix <= 1 ? "3" : ix <= 3 ? "2" : "1";
+  }
+
   function renderCategory(cat) {
     const meta = D.categories.find(c => c.id === cat);
     const items = itemsFor(cat);
@@ -1321,7 +1346,8 @@
     const head = el("div", "cat-head");
     const titlerow = el("div", "cat-titlerow");
     titlerow.appendChild(el("h1", null, esc(meta.label)));
-    titlerow.appendChild(rankBadge());
+    // The rank moved into the banner HUD (renderHud), where it shows on every
+    // tab instead of only this one.
     head.appendChild(titlerow);
     // Intro text only where it earns its place, Salalah's "this is a separate
     // trip, you fly" is real planning information. Explore's was a description
@@ -2242,7 +2268,32 @@
           a.href = it.link; a.target = "_blank"; a.rel = "noopener";
           xp.appendChild(a);
         }
+        // MOVE the panel to sit directly under whatever was tapped. It used to
+        // live at the bottom of the section, so tapping the first of six
+        // road-signs opened the text far below, sometimes off-screen entirely.
+        //
+        // In a grid the panel can't go straight after the tile or it would
+        // break the row: it goes after the LAST tile of that tile's row and
+        // spans the full width, so the grid stays intact and the panel still
+        // appears immediately beneath the thing you tapped.
+        const el2 = s.querySelector(`[data-xi="${i}"]`);
+        const grid = el2 && el2.closest(".sign-grid, .stat-grid");
+        if (grid) {
+          const kids = [...grid.children].filter(k => k !== xp);
+          const perRow = Math.max(1, Math.round(grid.clientWidth / (kids[0].offsetWidth || 1)));
+          const rowEnd = Math.min(kids.length - 1, Math.floor(kids.indexOf(el2) / perRow) * perRow + perRow - 1);
+          kids[rowEnd].after(xp);
+        } else if (el2) {
+          el2.after(xp);                    // list rows: straight underneath
+        }
         xp.hidden = false; sync();
+        // If it opened above the fold or off the bottom, bring it into view.
+        requestAnimationFrame(() => {
+          const r = xp.getBoundingClientRect();
+          if (r.bottom > innerHeight - 8 || r.top < 60) {
+            xp.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }
+        });
       };
       const wire = root => root.querySelectorAll("[data-xi]").forEach(n =>
         n.onclick = () => openItem(+n.dataset.xi));
@@ -2477,6 +2528,7 @@
     const known = D.categories.find(c => c.id === cat) ? cat : "explore";
     if (known !== lastCat) { typeFilter = null; viewMode = "list"; lastCat = known; }  // fresh tab
     applyRankTheme();       // keep the skin in step with the rank, on every page
+    renderHud();
     renderTabs(known);
     renderUnlockBtn();
     const meta = D.categories.find(c => c.id === known);
