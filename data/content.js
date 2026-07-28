@@ -3805,19 +3805,6 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "loop-7day", cat: "itineraries", free: false,
-      name: "The 7-Day Ultimate Oman Loop",
-      tagline: "Mountains, wadis, desert and coast, the full circle.",
-      blurb: "The route I'd drive if I had a week: the coast, the turtles, a night in the dunes, Nizwa, the mountains, and a canyon on the way home.",
-      img: "assets/itineraries/loop-7day.jpg",
-      imgCredit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons",
-      gallery: [
-        { src: "assets/itineraries/loop-7day-2.jpg", credit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons" },
-        { src: "assets/itineraries/loop-7day-3.jpg", credit: "Photo: Erfan.arafat · CC BY-SA 4.0 · Wikimedia Commons" }
-      ],
-      stats: { "Best for": "The full picture", "Base": "Moving loop", "Car": "4×4 recommended", "Days": "7" }
-    },
-    {
       id: "adventure-5day", cat: "itineraries", free: false,
       name: "The 5-Day Adventure Route",
       tagline: "For people who came here to get wet and tired.",
@@ -3829,6 +3816,19 @@ window.OMAN_DATA = {
         { src: "assets/itineraries/adventure-5day-3.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
       stats: { "Best for": "Fit, adventurous, been here before", "Base": "Moving", "Car": "4×4 required", "Days": "5" }
+    },
+    {
+      id: "loop-7day", cat: "itineraries", free: false,
+      name: "The 7-Day Ultimate Oman Loop",
+      tagline: "Mountains, wadis, desert and coast, the full circle.",
+      blurb: "The route I'd drive if I had a week: the coast, the turtles, a night in the dunes, Nizwa, the mountains, and a canyon on the way home.",
+      img: "assets/itineraries/loop-7day.jpg",
+      imgCredit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/itineraries/loop-7day-2.jpg", credit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/itineraries/loop-7day-3.jpg", credit: "Photo: Erfan.arafat · CC BY-SA 4.0 · Wikimedia Commons" }
+      ],
+      stats: { "Best for": "The full picture", "Base": "Moving loop", "Car": "4×4 recommended", "Days": "7" }
     }
   ],
 
