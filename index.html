@@ -20,6 +20,11 @@
 <meta name="twitter:description" content="90+ spots with real logistics, maps and a trip planner. Free during launch season.">
 <meta name="twitter:image" content="https://kquickessays-netizen.github.io/oman-guide/assets/wadis/wadi-shab.jpg">
 
+<!-- The banner photo is the first thing anyone sees: fetch it FIRST, before
+     the browser discovers it late inside the stylesheet. Dedicated 91KB
+     asset, not the 267KB card photo it's cropped from. -->
+<link rel="preload" as="image" href="assets/banner.jpg" fetchpriority="high">
+
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">

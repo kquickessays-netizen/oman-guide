@@ -55,13 +55,24 @@ img{max-width:100%;display:block}
   position:sticky;top:0;z-index:50;
   background:rgba(250,246,240,.92);
   border-bottom:1px solid var(--line);
-  padding-top:env(safe-area-inset-top);
+  /* run the photo up under the notch / status bar in the installed app
+     (viewport-fit=cover + black-translucent make the page own that space) */
+  padding-top:max(env(safe-area-inset-top), 4px);
 }
 @media(max-width:640px){ .topbar{position:relative} }   /* relative, not static: the photo layer needs a positioning context, and relative still scrolls away */
 .topbar-inner{
   max-width:var(--maxw);margin:0 auto;
   display:flex;align-items:center;justify-content:space-between;
-  gap:12px;padding:9px 16px;
+  gap:10px;padding:9px 16px;
+}
+/* the pill never leaves the screen: it refuses to shrink, and the brand text
+   column is the one that gives way (ellipsis) when width runs out */
+.topbar-actions{flex:0 0 auto}
+.topbar-actions .pill{font-size:12px;padding:7px 11px}
+.brand{min-width:0;flex:1 1 auto}
+.brand-text{min-width:0}
+.brand-text strong,.brand-text small{
+  display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .brand{display:flex;align-items:center;gap:9px;color:var(--ink)}
 .brand-mark{font-size:22px}
@@ -357,7 +368,12 @@ img{max-width:100%;display:block}
 .card-media{
   height:170px;background:var(--sand-2);position:relative;
   display:grid;place-items:center;color:var(--muted);font-size:13px;
-  background-size:cover;background-position:center;
+  overflow:hidden;
+}
+/* the photo is a lazy <img> now, not a background (backgrounds can't lazy-load) */
+.card-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block;
 }
 .card-body{padding:14px 15px 16px}
 .card-kicker{
@@ -436,11 +452,32 @@ img{max-width:100%;display:block}
   @keyframes slideUp{from{transform:translate(-50%,100%)}to{transform:translate(-50%,0)}}
 }
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+/* STICKY inside the scrolling sheet, so it rides at the top-right of the
+   visible area however deep you've scrolled: closing never means scrolling
+   back up. Sticky, not fixed, deliberately: the sheet carries transforms
+   (the slide-up animation; a permanent translateX centring on desktop) and a
+   transform turns position:fixed into position:absolute-in-the-sheet. Sticky
+   doesn't care. The negative bottom margin removes its layout footprint so
+   the hero still starts at the very top.
+   Accidental-exit guards: a deliberate 40px target, inset from the edge
+   where scroll thumbs live, visually ringed; backdrop and Escape unchanged. */
 .sheet-close{
+  position:sticky;top:max(10px, env(safe-area-inset-top));z-index:20;
+  margin:10px 12px -50px auto;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(20,30,28,.55);color:#fff;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  border:1.5px solid rgba(255,255,255,.55);
+  box-shadow:0 2px 10px rgba(0,0,0,.3);
+  display:grid;place-items:center;font-size:15px;
+}
+.sheet-close:active{transform:scale(.92)}
+/* the unlock modal shares the class but keeps its X inside the dialog box */
+.modal .sheet-close{
   position:absolute;top:14px;right:14px;z-index:2;
-  width:34px;height:34px;border-radius:50%;
-  background:rgba(255,255,255,.9);box-shadow:var(--shadow);
-  display:grid;place-items:center;font-size:14px;
+  width:34px;height:34px;background:rgba(255,255,255,.92);color:var(--ink);
+  border:none;-webkit-backdrop-filter:none;backdrop-filter:none;
+  box-shadow:var(--shadow);font-size:14px;
 }
 .sheet-body{padding:0 0 44px}
 .sheet-hero{
@@ -1270,7 +1307,7 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
 }
 .topbar::before{
   content:"";position:absolute;inset:0;z-index:0;
-  background:url("../assets/wadis/wadi-bani-khalid.jpg") center 62%/cover no-repeat;
+  background:url("../assets/banner.jpg") center 55%/cover no-repeat;
   animation:kenburns 34s ease-in-out infinite alternate;
   transform-origin:52% 60%;
 }
@@ -2245,3 +2282,33 @@ body.tier-flash{animation:ruFlash .7s ease-out}
 /* brand sub-line: handle · updated <month> */
 .brand-text small{white-space:nowrap;font-size:10.5px;letter-spacing:.01em}
 .brand-text .bs-dot{font-style:normal;opacity:.5;margin:0 5px}
+
+/* ========================================================= RANK, EVERYWHERE
+   Reaching a new rank used to change an accent colour and not much else.
+   Now the rank re-grades the whole surface:
+
+   1. THE BANNER PHOTO takes a colour grade in the rank's hue (the glow layer
+      below reads --water live), so the same wadi photo reads teal for a
+      beginner, green at Explorer, gold at Regular, crimson at Old hand,
+      purple when it's all done.
+   2. THE PAGE ITSELF stops being flat sand: a wash of the rank colour pours
+      from under the banner, and a faint dotted texture in the rank colour
+      sits behind the content, so even the "white" page belongs to your rank.
+   3. Buttons, chips, rings, the dock and the filter were already on
+      --water and follow along. */
+.topbar::after{
+  background:
+    linear-gradient(180deg,rgba(4,32,35,.80) 0%,rgba(5,42,46,.52) 42%,rgba(6,52,56,.84) 100%),
+    radial-gradient(130% 100% at 80% 0%,var(--rank-glow,rgba(13,92,99,.46)),transparent 62%),
+    radial-gradient(120% 120% at 8% 100%,var(--rank-glow-2,rgba(13,92,99,.30)),transparent 55%);
+}
+body{
+  background-image:
+    radial-gradient(var(--rank-dot,rgba(13,92,99,.10)) 1px,transparent 1.5px),
+    linear-gradient(180deg,var(--wash,var(--water-soft)) 0%,var(--sand) 340px);
+  background-size:22px 22px,auto;
+  background-attachment:fixed,scroll;
+}
+/* the HUD ring and bar pick up the rank colour at the top tiers */
+.hud[data-tier="2"] .hud-bar i{background:linear-gradient(90deg,var(--gold),#ffd9a0)}
+.hud[data-tier="3"] .hud-ring b{color:var(--gold)}

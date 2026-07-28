@@ -522,8 +522,17 @@
 
     const media = el("div", "card-media");
     if (unlocked) {
-      if (item.img) media.style.backgroundImage = `url("${item.img}")`;
-      else media.textContent = "📷 " + item.name;
+      // A real <img loading="lazy">, NOT a CSS background-image. Backgrounds
+      // cannot lazy-load, so opening Explore used to fetch all 71 card photos
+      // at once and everything else (the banner included) starved behind
+      // them. With lazy imgs the browser only fetches what's near the screen.
+      if (item.img) {
+        const im = new Image();
+        im.src = item.img; im.alt = item.name;
+        im.loading = "lazy"; im.decoding = "async";
+        im.className = "card-img";
+        media.appendChild(im);
+      } else media.textContent = "📷 " + item.name;
     } else {
       media.classList.add("card-media-locked");
       media.innerHTML = `<span class="lock-pill">🔒 In the guide</span>`;
@@ -1044,8 +1053,9 @@
       bn.setAttribute("aria-label", on ? "Been here, tap to undo" : "Mark as been here");
       // Ticking one off is the moment the rank moves, and the moment a review
       // is worth asking for. Open the fold rather than just scrolling to it.
-      const rbx = b.querySelector("#ratebox");
-      if (on && rbx) rbx.scrollIntoView({ behavior: "smooth", block: "center" });
+      // No scrollIntoView here. It used to drag the sheet down to the review
+      // box on every tick, which read as the app running away from you. The
+      // stars are where they are; whoever wants to rate will find them.
       applyRankTheme();                      // the whole app's accent, live
       renderHud();                           // the banner HUD, live
       refreshBehind();                       // the rank ring and the ✓ badges
@@ -1217,9 +1227,24 @@
     r.style.setProperty("--water", c);
     r.style.setProperty("--water-dark", dark);
     r.style.setProperty("--water-soft", soft);
+    // The rank's reach beyond buttons: --wash tints the top of every page,
+    // and the banner's colour-grade layer reads --water directly, so the
+    // SAME photo is teal-graded for a beginner and gold/crimson/purple as
+    // you climb. data-rank drives the per-rank page texture in CSS.
+    r.style.setProperty("--wash", soft);
+    // Pre-computed rgba glows for the banner grade: color-mix() inside a
+    // pseudo-element gradient resolved to transparent in testing, so the
+    // mixing happens here where it can't fail.
+    const rgb = [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)];
+    r.style.setProperty("--rank-glow", `rgba(${rgb[0]},${rgb[1]},${rgb[2]},.46)`);
+    r.style.setProperty("--rank-glow-2", `rgba(${rgb[0]},${rgb[1]},${rgb[2]},.30)`);
+    r.style.setProperty("--rank-dot", `rgba(${rgb[0]},${rgb[1]},${rgb[2]},.10)`);
     r.dataset.rank = String(RANKS.length - 1 - ix);   // 0 = just landed, 7 = done
+    // The status bar above the banner photo stays photo-dark regardless of
+    // rank: the rank shows in the UI accents and the page wash, not by
+    // painting the clock a different colour.
     const themeTag = document.querySelector('meta[name="theme-color"]');
-    if (themeTag) themeTag.setAttribute("content", dark);
+    if (themeTag) themeTag.setAttribute("content", "#062a2e");
   }
 
   /* Crossing a rank is the only moment in this app worth interrupting someone
