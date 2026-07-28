@@ -481,13 +481,13 @@
      One small line in the header, above the tabs, on every screen. It used to
      be a fat banner repeated inside each tab, this says the same thing in a
      tenth of the space. */
+  /* The living-guide strip used to be its own full-width row under the brand.
+     It cost 28px of every screen on every tab to repeat one fact, so the fact
+     moved into the brand sub-line instead and the row is gone (.livingline is
+     display:none). Kept as a function so anything still calling it is safe. */
   function renderLivingLine() {
     const l = $("#livingLine");
-    if (!l) return;
-    l.innerHTML =
-      `<span class="pulse"></span>` +
-      `<span class="ll-main"><strong>Living guide</strong> · updated ${esc(D.meta.lastUpdated)}</span>` +
-      `<span class="ll-sub">Buy once · updates free forever</span>`;
+    if (l) l.innerHTML = "";
   }
 
   // Short area names for the card tag, the full labels in D.regions are too
@@ -1369,26 +1369,14 @@
       return;
     }
 
-    const fw = filterControls(items, () => renderCategory(cat));
-    view.appendChild(fw);
-
-    /* Hide the filter bar while you scroll DOWN, bring it back the moment you
-       scroll UP. Sticking it to the top permanently ate a chunk of every
-       screen of a list you're trying to read. Scroll-up returns it so you
-       never have to scroll to the top to reach a filter.
-       Never hides while the panel is open, and never near the top of the
-       page. One listener, removed on the next render. */
-    if (window.__fwScroll) window.removeEventListener("scroll", window.__fwScroll);
-    let lastY = window.scrollY;
-    window.__fwScroll = () => {
-      const y = window.scrollY;
-      const d = y - lastY;
-      if (Math.abs(d) < 6) return;                 // ignore jitter
-      lastY = y;
-      if (filterOpen || y < 120) { fw.classList.remove("fw-hide"); return; }
-      fw.classList.toggle("fw-hide", d > 0);
-    };
-    window.addEventListener("scroll", window.__fwScroll, { passive: true });
+    // The filter bar sits in the page and scrolls away with it. No sticky, no
+    // scroll listener: a control that follows you down the page is a control
+    // in the way. Any listener from an older build is torn down here.
+    if (window.__fwScroll) {
+      window.removeEventListener("scroll", window.__fwScroll);
+      window.__fwScroll = null;
+    }
+    view.appendChild(filterControls(items, () => renderCategory(cat)));
 
     const shown = (typeFilter ? items.filter(i => groupOf(i) === typeFilter) : items).filter(smartPass);
 
@@ -2219,21 +2207,11 @@
     const aff = D.meta.affiliates;
     clearView();
 
-    const head = el("div", "cat-head");
-    head.appendChild(el("h1", null, "Before you land"));
-    if (info.intro) head.appendChild(el("p", null, esc(info.intro)));
-    // Said once at the top, then every element carries its own visual cue
-    // (the + badges and ringed chevrons) so nobody has to have read this.
-    head.appendChild(el("p", "tap-hint", "Tap anything below for the full detail."));
-    view.appendChild(head);
-
-    // The four numbers worth knowing before the plane door opens.
-    if (info.keyFacts && info.keyFacts.length) {
-      const kf = el("div", "kf");
-      kf.innerHTML = info.keyFacts.map(f =>
-        `<div class="kf-cell"><strong>${esc(f.big)}</strong><span>${esc(f.label)}</span></div>`).join("");
-      view.appendChild(kf);
-    }
+    // No page title, no intro, no tap hint, no key-facts strip. All four were
+    // preamble about the page rather than the page itself, and they pushed the
+    // first real thing (visas) below the fold. It opens on "Before you fly"
+    // now. The tap cues live on the elements themselves; 9999 is still one tap
+    // away in "If something goes wrong", where you'd look for it.
 
     (info.sections || []).forEach(sec => {
       const s = el("section", "isec isec-" + (sec.layout || "plain"));
@@ -2557,7 +2535,10 @@
   };
 
   window.addEventListener("hashchange", route);
-  $("#brandSub").textContent = D.meta.creator;
+  // Handle + the update date on one line: the "living guide" proof without a
+  // 28px strip of its own.
+  $("#brandSub").innerHTML =
+    `${esc(D.meta.creator)}<i class="bs-dot">·</i>Updated ${esc(D.meta.lastUpdated)}`;
   renderLivingLine();
   applyRankTheme();      // paint the app in the returning traveller's rank colour
 

@@ -45,17 +45,23 @@ img{max-width:100%;display:block}
    nothing to see through) but DID make .topbar the containing block for its
    position:fixed descendants. On phones that broke the bottom tab bar: its
    `bottom:0` resolved to the bottom of the 82px header instead of the
-   screen, so the tabs rendered on top of the "Exploring Oman" brand. */
+   screen, so the tabs rendered on top of the "Exploring Oman" brand.
+
+   STICKY ONLY ON DESKTOP. On a phone the tab bar is already fixed to the
+   bottom of the screen, so the header has no navigation to keep on offer and
+   nothing to earn a permanent slice of a small screen: it scrolls away with
+   the page. Above 640px the tabs live INSIDE this bar, so it has to stay. */
 .topbar{
   position:sticky;top:0;z-index:50;
   background:rgba(250,246,240,.92);
   border-bottom:1px solid var(--line);
   padding-top:env(safe-area-inset-top);
 }
+@media(max-width:640px){ .topbar{position:static} }
 .topbar-inner{
   max-width:var(--maxw);margin:0 auto;
   display:flex;align-items:center;justify-content:space-between;
-  gap:12px;padding:10px 16px 8px;
+  gap:12px;padding:9px 16px;
 }
 .brand{display:flex;align-items:center;gap:9px;color:var(--ink)}
 .brand-mark{font-size:22px}
@@ -197,20 +203,12 @@ img{max-width:100%;display:block}
    lives behind the button, there is no second place to look. */
 /* Bleeds to the page edges so that when it sticks, the cards scroll UNDER a
    solid band rather than behind two floating pills. */
-.filterwrap{
-  position:sticky;top:0;z-index:40;margin:0 -16px 18px;padding:6px 16px 8px;
-  background:var(--sand);
-  transition:transform .22s ease,opacity .18s ease;
-}
-/* Scrolling DOWN means you're reading the list, so the bar gets out of the
-   way; scrolling back up means you're looking for a control, so it returns.
-   Toggled by the scroll listener in renderCategory. */
-.filterwrap.fw-hide{
-  transform:translateY(-135%);opacity:0;pointer-events:none;
-}
-@media(prefers-reduced-motion:reduce){
-  .filterwrap{transition:none}
-}
+/* NOT sticky. It sits in the page and scrolls away with everything else.
+   It was sticky, then sticky-with-hide-on-scroll, and both meant it moved
+   while you were trying to read the list. A control that follows you is a
+   control that's in the way. The tab bar is fixed at the bottom of the
+   screen, so navigation is always reachable regardless. */
+.filterwrap{margin:0 -16px 18px;padding:6px 16px 8px;background:var(--sand)}
 .filterbar{display:flex;align-items:center;gap:10px}
 .filterbtn{
   display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;
@@ -611,11 +609,11 @@ img{max-width:100%;display:block}
 /* ------------------------------------------------- living line (in header)
    One small line above the tabs. Replaced the fat banner that used to sit
    inside every tab. */
-.livingline{
-  max-width:var(--maxw);margin:0 auto;
-  display:flex;align-items:center;gap:7px;flex-wrap:wrap;
-  padding:0 14px 8px;font-size:11.5px;color:var(--muted);
-}
+/* The full-width "Living guide · updated July 2026 · Buy once · updates free
+   forever" strip is gone: 28px of every screen, on every tab, saying the same
+   thing forever. The update date moved into the brand sub-line, which was
+   already there and already read. */
+.livingline{display:none}
 .livingline .ll-main{color:var(--water-dark);font-weight:700}
 .livingline .ll-sub{
   color:var(--muted);font-weight:600;
@@ -1241,7 +1239,12 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
 }
 
 /* --- header: the deep-teal expedition band -------------------------------- */
-.topbar{background:var(--water-dark);border-bottom:none}
+/* Depth instead of a flat slab, plus a gold hairline so the bar ends on a
+   deliberate edge rather than just stopping. */
+.topbar{
+  background:linear-gradient(150deg,var(--water) 0%,var(--water-dark) 62%,#06373c 100%);
+  border-bottom:none;box-shadow:0 1px 0 rgba(200,137,47,.42), 0 6px 18px rgba(6,40,44,.16);
+}
 .brand{color:#fff}
 .brand-text strong{color:#fff;letter-spacing:.1px}
 .brand-text small{color:#a9cdca}
@@ -2148,3 +2151,7 @@ body.tier-flash{animation:ruFlash .7s ease-out}
 .gal-prev{left:9px;padding-right:2px}
 .gal-next{right:9px;padding-left:2px}
 @media(prefers-reduced-motion:reduce){.gal-arw{transition:none}}
+
+/* brand sub-line: handle · updated <month> */
+.brand-text small{white-space:nowrap;font-size:10.5px;letter-spacing:.01em}
+.brand-text .bs-dot{font-style:normal;opacity:.5;margin:0 5px}
