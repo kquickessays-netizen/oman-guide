@@ -661,7 +661,9 @@
         </div>` : ""}
       ${slides.length > 1 ? `<div class="gal-dots">${slides.map((_, i) =>
           `<i${i ? "" : ` class="on"`}></i>`).join("")}</div>
-        <span class="gal-n"><b>1</b>/${slides.length}</span>` : ""}
+        <span class="gal-n"><b>1</b>/${slides.length}</span>
+        <button type="button" class="gal-arw gal-prev" aria-label="Previous photo">‹</button>
+        <button type="button" class="gal-arw gal-next" aria-label="Next photo">›</button>` : ""}
       ${slides.length && slides[0].credit ? `<span class="imgcredit gal-credit">${esc(slides[0].credit)}</span>` : ""}
       <div class="poster-txt">
         ${chips ? `<div class="card-kicker on-photo">${chips}</div>` : ""}
@@ -994,6 +996,20 @@
           const i = shown();
           if (i !== ix && i >= 0 && i < slides.length) paint(i);
         }, { passive: true });
+        // The arrows are the visible affordance: swiping is invisible until
+        // you already know it's there. They're <button>s, so the tap-anywhere
+        // handler below ignores them (it skips a,button) and they can't
+        // double-fire.
+        const go = step => {
+          const next = (ix + step + slides.length) % slides.length;
+          paint(next);
+          track.scrollTo({ left: next * track.clientWidth, behavior: "smooth" });
+        };
+        const prev = hero.querySelector(".gal-prev");
+        const nxt = hero.querySelector(".gal-next");
+        if (prev) prev.onclick = () => go(-1);
+        if (nxt) nxt.onclick = () => go(1);
+
         let downX = 0;
         hero.addEventListener("pointerdown", e => { downX = e.clientX; });
         hero.addEventListener("click", e => {
