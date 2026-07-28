@@ -3877,7 +3877,7 @@ window.OMAN_DATA = {
          text stays deliberately unspecific about which passports need what,
          because those rules change; the official portal is the answer. */
       { title: "Before you fly", layout: "apps", items: [
-        { name: "Do I need a visa?", icon: "visa", short: "Check the official Omani eVisa site, it takes two minutes.", text: "Many nationalities get a visa on arrival or an exemption for short stays, and the rules change. Check what your passport needs on the Royal Oman Police eVisa portal, the official source, and apply there rather than through third-party visa sites.", link: "https://evisa.rop.gov.om", linkLabel: "Official Oman eVisa portal" }
+        { name: "Do I need a visa?", icon: "visa", short: "Check your passport on the official eligibility page, two minutes.", text: "Many nationalities get a visa on arrival or an exemption for short stays, and the rules change. Check what your passport needs on the Royal Oman Police eVisa portal, the official source, and apply there rather than through third-party visa sites.", link: "https://evisa.rop.gov.om/visa-eligibility", linkLabel: "Check if you need a visa" }
       ]},
 
       { title: "The rules", layout: "signs", items: [

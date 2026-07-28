@@ -1369,7 +1369,26 @@
       return;
     }
 
-    view.appendChild(filterControls(items, () => renderCategory(cat)));
+    const fw = filterControls(items, () => renderCategory(cat));
+    view.appendChild(fw);
+
+    /* Hide the filter bar while you scroll DOWN, bring it back the moment you
+       scroll UP. Sticking it to the top permanently ate a chunk of every
+       screen of a list you're trying to read. Scroll-up returns it so you
+       never have to scroll to the top to reach a filter.
+       Never hides while the panel is open, and never near the top of the
+       page. One listener, removed on the next render. */
+    if (window.__fwScroll) window.removeEventListener("scroll", window.__fwScroll);
+    let lastY = window.scrollY;
+    window.__fwScroll = () => {
+      const y = window.scrollY;
+      const d = y - lastY;
+      if (Math.abs(d) < 6) return;                 // ignore jitter
+      lastY = y;
+      if (filterOpen || y < 120) { fw.classList.remove("fw-hide"); return; }
+      fw.classList.toggle("fw-hide", d > 0);
+    };
+    window.addEventListener("scroll", window.__fwScroll, { passive: true });
 
     const shown = (typeFilter ? items.filter(i => groupOf(i) === typeFilter) : items).filter(smartPass);
 

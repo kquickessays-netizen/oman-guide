@@ -40,9 +40,15 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 img{max-width:100%;display:block}
 
 /* ------------------------------------------------------------------ topbar */
+/* NO backdrop-filter here. It used to carry blur(12px), which did nothing
+   visible (the rule below paints the bar solid --water-dark, so there is
+   nothing to see through) but DID make .topbar the containing block for its
+   position:fixed descendants. On phones that broke the bottom tab bar: its
+   `bottom:0` resolved to the bottom of the 82px header instead of the
+   screen, so the tabs rendered on top of the "Exploring Oman" brand. */
 .topbar{
   position:sticky;top:0;z-index:50;
-  background:rgba(250,246,240,.92);backdrop-filter:blur(12px);
+  background:rgba(250,246,240,.92);
   border-bottom:1px solid var(--line);
   padding-top:env(safe-area-inset-top);
 }
@@ -194,6 +200,16 @@ img{max-width:100%;display:block}
 .filterwrap{
   position:sticky;top:0;z-index:40;margin:0 -16px 18px;padding:6px 16px 8px;
   background:var(--sand);
+  transition:transform .22s ease,opacity .18s ease;
+}
+/* Scrolling DOWN means you're reading the list, so the bar gets out of the
+   way; scrolling back up means you're looking for a control, so it returns.
+   Toggled by the scroll listener in renderCategory. */
+.filterwrap.fw-hide{
+  transform:translateY(-135%);opacity:0;pointer-events:none;
+}
+@media(prefers-reduced-motion:reduce){
+  .filterwrap{transition:none}
 }
 .filterbar{display:flex;align-items:center;gap:10px}
 .filterbtn{
@@ -2057,8 +2073,8 @@ body.tier-flash{animation:ruFlash .7s ease-out}
   display:flex;align-items:center;gap:16px;text-align:left;padding:8px 0 20px;
 }
 .about-hero.has-photo .about-poster{
-  flex:0 0 116px;width:116px;aspect-ratio:1;margin:0;
-  border-radius:18px;overflow:hidden;
+  flex:0 0 140px;width:140px;aspect-ratio:1;margin:0;
+  border-radius:20px;overflow:hidden;
   box-shadow:var(--shadow-lg);background:var(--sand-2);
 }
 .about-poster img{
@@ -2073,8 +2089,9 @@ body.tier-flash{animation:ruFlash .7s ease-out}
   font-size:13px;line-height:1.5;margin:7px 0 0;max-width:none;
 }
 .about-hero.has-photo .about-byline{margin:7px 0 0;font-size:11.5px}
-@media(max-width:350px){
-  .about-hero.has-photo .about-poster{flex-basis:96px;width:96px}
+@media(max-width:360px){
+  .about-hero.has-photo{gap:13px}
+  .about-hero.has-photo .about-poster{flex-basis:118px;width:118px}
   .about-hero.has-photo h1.about-hook{font-size:18px}
 }
 
