@@ -613,7 +613,15 @@
     const days = item.days || prem.days;
 
     let h = "";
-    const galCount = (item.gallery || []).length + ((prem.gallery || []).length) + (item.img ? 1 : 0);
+    // Every photo the spot has, in one list: the hero first, then the gallery.
+    // They all live in the hero SLIDER now, not dealt out into the folds where
+    // nobody found them.
+    const slides = [];
+    if (item.img) slides.push({ src: item.img, credit: item.imgCredit || "" });
+    [...(item.gallery || []), ...(prem.gallery || [])].forEach(g => {
+      const o = typeof g === "string" ? { src: g } : g;
+      if (o.src) slides.push({ src: o.src, credit: o.credit || "" });
+    });
 
     const factIcon = k => {
       if (/difficult/i.test(k)) return "🧗";
@@ -643,12 +651,18 @@
         ? "🌿 Khareef " + esc(Planner.monthsLabel(item.months))
         : "🌡️ Best " + esc(Planner.monthsLabel(item.months))}</span>`;
 
-    h += `<div class="sheet-hero poster${item.img ? "" : " no-photo"}"${
-           item.img ? ` style="background-image:url('${item.img}')"` : ""}>
-      ${item.img ? `<div class="poster-meta">
-          ${galCount > 1 ? `<span class="photocount">📷 ${galCount}</span>` : ""}
-          ${item.imgCredit ? `<span class="imgcredit">${esc(item.imgCredit)}</span>` : ""}
+    /* The hero is a SLIDER: swipe, or tap the photo, and it advances through
+       every photo the spot has. Taller than the old single poster, with dots
+       and a counter so it's obvious there's more than one. The name and chips
+       stay pinned over the slides; the credit swaps with each photo. */
+    h += `<div class="sheet-hero poster${slides.length ? " gal" : " no-photo"}">
+      ${slides.length ? `<div class="gal-track">${slides.map((g, i) =>
+          `<div class="gal-slide"><img src="${g.src}"${i ? ` loading="lazy"` : ""} alt="${esc(item.name)}, photo ${i + 1}"></div>`).join("")}
         </div>` : ""}
+      ${slides.length > 1 ? `<div class="gal-dots">${slides.map((_, i) =>
+          `<i${i ? "" : ` class="on"`}></i>`).join("")}</div>
+        <span class="gal-n"><b>1</b>/${slides.length}</span>` : ""}
+      ${slides.length && slides[0].credit ? `<span class="imgcredit gal-credit">${esc(slides[0].credit)}</span>` : ""}
       <div class="poster-txt">
         ${chips ? `<div class="card-kicker on-photo">${chips}</div>` : ""}
         <h2>${esc(item.name)}</h2>
@@ -806,19 +820,9 @@
       const tips         = item.tips         || prem.tips;
       const guideNote    = prem.guideNote;
 
-      // Extra photos, dealt out between the sections below, one after
-      // "Getting there", one after "What you'll do", the rest after the tips.
-      // gallery entries: "path.jpg" or { src, credit, caption }.
-      const gal = [...(item.gallery || []), ...(prem.gallery || [])]
-        .map(g => (typeof g === "string" ? { src: g } : g))
-        .filter(g => g.src);
-      const nextFig = () => {
-        const g = gal.shift();
-        if (!g) return "";
-        return `<figure class="sheet-fig"><img src="${g.src}" loading="lazy" alt="${esc(g.caption || item.name)}">` +
-               `${g.caption ? `<figcaption>${esc(g.caption)}${g.credit ? ` <span class="imgcredit">${esc(g.credit)}</span>` : ""}</figcaption>`
-                            : g.credit ? `<figcaption><span class="imgcredit">${esc(g.credit)}</span></figcaption>` : ""}</figure>`;
-      };
+      // Every photo lives in the hero slider now. The old scheme dealt them
+      // one-by-one into the folds and a "More photos" fold at the bottom,
+      // where nobody found them.
 
       // Hike and swim times are DIALS now (see above), they used to be
       // printed a second time here in a 155px box of their own.
@@ -866,20 +870,15 @@
              ${hint ? `<span class="ds-n">${hint}</span>` : ""}
            </summary><div class="fold-body">${inner}</div></details>` : "";
 
-      let drawer =
+      const drawer =
         dsec("🚗", "Getting there", count(gettingThere, "step", "steps"),
-             gettingThere ? steps(gettingThere) + nextFig() : "") +
+             gettingThere ? steps(gettingThere) : "") +
         dsec("🥾", "What you'll do", count(whatYoullDo, "thing", "things"),
-             whatYoullDo ? bullets(whatYoullDo) + nextFig() : "") +
+             whatYoullDo ? bullets(whatYoullDo) : "") +
         dsec("🎒", "What to bring", bringN ? bringN + " items" : "", bb) +
         dsec("💡", "My insider tips", count(tips, "tip", "tips"),
              tips && tips.length ? `<div class="tipbox no-frame"><ul>` +
                tips.map(t => `<li>${esc(t)}</li>`).join("") + `</ul></div>` : "");
-      if (gal.length) {                    // whatever's left → a folded gallery
-        const n = gal.length;
-        let figs = ""; while (gal.length) figs += nextFig();
-        drawer += dsec("📸", "More photos", n + " photos", figs);
-      }
       if (drawer) h += `<div class="drawer">${drawer}</div>`;
 
       if (guideNote) {
@@ -970,6 +969,45 @@
     h += `</div>`;
 
     b.innerHTML = h;
+
+    /* ---- the photo slider -------------------------------------------------
+       Swipe moves it natively (scroll-snap). A TAP on the photo advances to
+       the next one, wrapping at the end, with a guard so the tap that ends a
+       swipe doesn't also advance it. Dots, the counter and the credit follow
+       whichever slide is in view. */
+    {
+      const hero = b.querySelector(".sheet-hero.gal");
+      const track = b.querySelector(".gal-track");
+      if (hero && track && slides.length > 1) {
+        const dots = [...hero.querySelectorAll(".gal-dots i")];
+        const num = hero.querySelector(".gal-n b");
+        const cred = hero.querySelector(".gal-credit");
+        let ix = 0;
+        const shown = () => Math.round(track.scrollLeft / track.clientWidth);
+        const paint = i => {
+          ix = i;
+          dots.forEach((d, j) => d.classList.toggle("on", j === i));
+          if (num) num.textContent = i + 1;
+          if (cred) cred.textContent = slides[i].credit || "";
+        };
+        track.addEventListener("scroll", () => {
+          const i = shown();
+          if (i !== ix && i >= 0 && i < slides.length) paint(i);
+        }, { passive: true });
+        let downX = 0;
+        hero.addEventListener("pointerdown", e => { downX = e.clientX; });
+        hero.addEventListener("click", e => {
+          if (e.target.closest("a,button")) return;      // never hijack a link
+          if (Math.abs(e.clientX - downX) > 10) return;  // that was a swipe
+          // Advance from the PAINTED index, not scrollLeft: mid-animation the
+          // scroll position lags, so two quick taps would both compute the
+          // same "next" and the slider would stall on fast tapping.
+          const next = (ix + 1) % slides.length;
+          paint(next);
+          track.scrollTo({ left: next * track.clientWidth, behavior: "smooth" });
+        });
+      }
+    }
 
     // wire save / been-there
     // The dock buttons are glyphs, so their STATE lives in the .on class and

@@ -1555,11 +1555,12 @@ html{scroll-behavior:smooth}
 
 /* --- 1 · THE POSTER: photo, name, tagline and chips in one 200px block --- */
 .sheet-hero.poster{
-  display:block;height:200px;position:relative;overflow:hidden;
-  background-color:var(--sand-2);background-size:cover;background-position:center;
+  /* taller than the old single poster: the photos are the content now */
+  display:block;height:min(78vw,340px);position:relative;overflow:hidden;
+  background-color:var(--sand-2);
 }
 .sheet-hero.poster::after{
-  content:"";position:absolute;inset:0;height:auto;
+  content:"";position:absolute;inset:0;height:auto;z-index:1;pointer-events:none;
   background:linear-gradient(180deg,
     rgba(10,25,22,0) 30%,rgba(10,25,22,.30) 56%,rgba(8,20,18,.84) 100%);
   pointer-events:none;
@@ -2076,3 +2077,39 @@ body.tier-flash{animation:ruFlash .7s ease-out}
   .about-hero.has-photo .about-poster{flex-basis:96px;width:96px}
   .about-hero.has-photo h1.about-hook{font-size:18px}
 }
+
+/* ============================================================ HERO SLIDER
+   All of a spot's photos in the hero: swipe, or tap the photo to advance
+   (wrapping). Scroll-snap does the sliding, so it works with plain touch
+   and no library. The scrim, name and chips stay pinned above the slides;
+   the credit and counter follow the photo in view. */
+.gal-track{
+  position:absolute;inset:0;display:flex;
+  overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.gal-track::-webkit-scrollbar{display:none}
+.gal-slide{flex:0 0 100%;height:100%;scroll-snap-align:center}
+.gal-slide img{width:100%;height:100%;object-fit:cover;display:block}
+/* overlays ride above the slides but never eat a swipe */
+.sheet-hero.poster .poster-txt{z-index:2;pointer-events:none}
+.gal-dots{
+  position:absolute;top:13px;left:50%;transform:translateX(-50%);
+  display:flex;gap:5px;z-index:2;pointer-events:none;
+}
+.gal-dots i{
+  width:6px;height:6px;border-radius:999px;background:rgba(255,255,255,.5);
+  box-shadow:0 1px 3px rgba(0,0,0,.3);transition:width .2s ease,background .2s ease;
+}
+.gal-dots i.on{width:17px;background:#fff}
+.gal-n{
+  position:absolute;top:10px;left:12px;z-index:2;pointer-events:none;
+  font-size:11px;font-weight:700;color:#fff;letter-spacing:.4px;
+  background:rgba(0,0,0,.42);border-radius:999px;padding:4px 10px;
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+}
+.gal-n b{font-weight:800}
+.gal-credit{
+  position:absolute;right:8px;top:10px;bottom:auto;z-index:2;pointer-events:none;
+}
+@media(prefers-reduced-motion:reduce){.gal-dots i{transition:none}}
