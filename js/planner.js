@@ -1,5 +1,5 @@
 /* =============================================================================
-   THE OMAN TRIP PLANNER — rule-based itinerary engine
+   THE OMAN TRIP PLANNER, rule-based itinerary engine
    -----------------------------------------------------------------------------
    Takes: days, interests, fitness, vehicle, month, pace, swim, kids, base.
    Returns: a day-by-day plan with drive legs, timings, warnings and misses.
@@ -8,21 +8,21 @@
    add there becomes plannable automatically.
 
    HOW IT THINKS
-   1. FILTER   — throw out anything the traveller physically can't do
+   1. FILTER:  throw out anything the traveller physically can't do
                  (no 4×4 → no 4×4 spots; can't swim → no swim-only spots).
-   2. SCORE    — rank what's left by interest match, season, and fitness fit.
-   3. CLUSTER  — group by region so you don't drive Muscat→Sur→Nizwa→Sur.
-   4. ROUTE    — walk the trip day by day with a real clock and a real drive
+   2. SCORE:   rank what's left by interest match, season, and fitness fit.
+   3. CLUSTER: group by region so you don't drive Muscat→Sur→Nizwa→Sur.
+   4. ROUTE:   walk the trip day by day with a real clock and a real drive
                  budget, relocating base overnight when the drive justifies it.
-   5. RETURN   — always get them back to their departure city in time.
+   5. RETURN:  always get them back to their departure city in time.
    ========================================================================== */
 
 const Planner = (() => {
 
   const PACE = {
-    chill:    { hours: 6.5,  label: "Chill",    note: "One thing a day, long lunches." },
-    balanced: { hours: 9,    label: "Balanced", note: "A main event plus a couple of stops." },
-    packed:   { hours: 11,   label: "Packed",   note: "Up early, in bed late." }
+    chill:    { hours: 6.5, label: "Chill", note: "One thing a day, long lunches." },
+    balanced: { hours: 9, label: "Balanced", note: "A main event plus a couple of stops." },
+    packed:   { hours: 11, label: "Packed", note: "Up early, in bed late." }
   };
 
   /* ------------------------------------------------------------ drive times
@@ -33,13 +33,13 @@ const Planner = (() => {
        road km  = straight line × a detour factor: 1.15 on a long highway run,
                   1.3 locally, 1.45 on a mountain track (they switchback)
        speed    = 90 km/h highway · 80 main road · 70 secondary · 45 in town,
-                  and 42 km/h if either end needs a 4×4 — a graded track is slow
+                  and 42 km/h if either end needs a 4×4, a graded track is slow
                   whatever the map says
        + 9 min  = parking, finding the trailhead, getting everyone out of the car
 
      Sanity-checked against the real drives: Wadi Shab → Ras Al Jinz ≈ 1h20,
      Nizwa → Jabal Shams ≈ 1h40, Fins → Bimmah ≈ 20 min. Cross-region legs still
-     prefer `driveMatrix` in content.js — those are your own numbers, and a real
+     prefer `driveMatrix` in content.js, those are your own numbers, and a real
      number beats a modelled one. The model only fills the gaps.               */
   function haversine(a, b) {
     if (!a || !b) return 0;
@@ -74,7 +74,7 @@ const Planner = (() => {
     return reg && reg.coords;
   };
 
-  const HOP = 0.5;            // fallback only — used when a spot has no coords
+  const HOP = 0.5;            // fallback only, used when a spot has no coords
   const DAY_START = 8;        // 08:00
   const MAX_DRIVE_IN_DAY = 4; // hours of driving before a day stops being a holiday
 
@@ -113,7 +113,7 @@ const Planner = (() => {
   function score(spot, p) {
     let s = 0;
 
-    // interest overlap — the biggest driver
+    // interest overlap, the biggest driver
     const hits = spot.tags.filter(t => p.interests.includes(t)).length;
     if (p.interests.length) {
       s += (hits / Math.min(spot.tags.length, p.interests.length)) * 5;
@@ -121,10 +121,10 @@ const Planner = (() => {
     }
 
     // season: prefer spots in their best months, but only mildly punish the
-    // rest — a summer trip should still get Wadi Shab, just at first light
+    // rest, a summer trip should still get Wadi Shab, just at first light
     s += !spot.months || spot.months.includes(p.month) ? 2 : -1;
 
-    // fitness fit — punish too hard, mildly punish way-too-easy for athletes
+    // fitness fit, punish too hard, mildly punish way-too-easy for athletes
     const gap = spot.fitness - p.fitness;
     if (gap > 0) s -= gap * 2.2;
     else if (gap < -2) s -= 0.5;
@@ -140,7 +140,7 @@ const Planner = (() => {
 
   /* Can this spot be reached from the trip's base without a flight?
      Fly-in regions (Salalah, Musandam) are only reachable when they ARE the
-     base — and from a fly-in base, everywhere else is a flight away too. */
+     base, and from a fly-in base, everywhere else is a flight away too. */
   function inReach(spot, p) {
     const R = window.OMAN_DATA.regions;
     if ((R[p.base] || {}).fly) return spot.region === p.base;
@@ -158,7 +158,7 @@ const Planner = (() => {
     if (spot.swim && !p.canSwim) return false;
     if (p.kids && !spot.kidOk) return false;
     if (spot.fitness > p.fitness + 1) return false;     // hard gate: 1 level of stretch max
-    // `months` is the spot's BEST season, not availability — locals do these
+    // `months` is the spot's BEST season, not availability, locals do these
     // year-round by starting at dawn. Off-best spots stay routable; they get a
     // 🌡️ go-early note and the day starts earlier instead (see isHot/build).
     return true;
@@ -207,12 +207,12 @@ const Planner = (() => {
     const used = new Set();
     const days = [];
 
-    // How much more is left to see in a region? Used to justify relocating —
+    // How much more is left to see in a region? Used to justify relocating, 
     // you don't move hotels for one spot, you move for a cluster.
     const depth = (region) =>
       pool.filter(c => !used.has(c.spot.id) && c.spot.region === region).length;
 
-    // In the hot months the day shifts around the heat — which way depends on
+    // In the hot months the day shifts around the heat, which way depends on
     // the traveller. "early" is how locals do it: the wadi at first light,
     // shade and coffee at midday. "late" keeps the mornings slow and pushes
     // the hot stuff toward late afternoon instead. Salalah is the exception:
@@ -229,9 +229,9 @@ const Planner = (() => {
 
       /* ---- build the candidate list, distance-aware -------------------------
          Three ways to spend a day:
-           roundtrip — drive out, do it, sleep in the same bed
-           relocate  — drive out, do it, sleep the other side (bag comes too)
-           last      — on the final day you MUST finish at the departure city,
+           roundtrip, drive out, do it, sleep in the same bed
+           relocate , drive out, do it, sleep the other side (bag comes too)
+           last     , on the final day you MUST finish at the departure city,
                        so the only valid stops are ones you can route *through*
                        on the way home. This is what stops the planner sending
                        you Sur → Bidiyah → Sur → Muscat like an idiot.
@@ -288,7 +288,7 @@ const Planner = (() => {
 
       if (!anchor) {
         // Nothing left worth driving to. If we're camped out in the regions,
-        // drift back toward the departure city — never strand someone out east
+        // drift back toward the departure city, never strand someone out east
         // with a flight to catch.
         day.free = true;
         if (base !== home) {
@@ -296,7 +296,7 @@ const Planner = (() => {
           day.legs.push({
             type: "drive", t: clock, dur: back,
             title: `Drive back to ${D.regions[home].base}`,
-            note: "Nothing new out this way — head back and take it easy."
+            note: "Nothing new out this way, head back and take it easy."
           });
           clock += back;
           day.driveHours += back;
@@ -304,7 +304,7 @@ const Planner = (() => {
           day.end = clock;
         }
         day.note = "Free day around " + D.regions[home].base +
-                   " — go back to the one you loved, find a beach, drink karak, do nothing. " +
+                   ", go back to the one you loved, find a beach, drink karak, do nothing. " +
                    "Every good Oman trip has one of these.";
         day.stayIn = D.regions[home].base;
         day.stayRegion = home;
@@ -324,9 +324,9 @@ const Planner = (() => {
         day.legs.push({
           type: "drive", t: clock, dur: anchor.out,
           title: `Drive ${D.regions[base].base} → ${D.regions[reg].base}`,
-          note: anchor.mode === "roundtrip" ? "There and back today — no bag needed."
+          note: anchor.mode === "roundtrip" ? "There and back today, no bag needed."
               : anchor.mode === "last"      ? "Heading home the scenic way."
-              : "You'll sleep this side tonight — bring the bag."
+              : "You'll sleep this side tonight, bring the bag."
         });
         clock += anchor.out;
         day.driveHours += anchor.out;
@@ -335,7 +335,7 @@ const Planner = (() => {
 
       /* ---- pick the day's spots, THEN lay them out ------------------------------
          Selection: the anchor plus every same-region spot that fits the budget
-         (reserving whatever driving still has to happen — home, or back to bed).
+         (reserving whatever driving still has to happen, home, or back to bed).
          Layout: heat-flagged spots take the earliest, coolest slots.            */
       const reserve = anchor.mode === "roundtrip" ? anchor.out
                     : anchor.mode === "last"      ? anchor.homeward
@@ -361,7 +361,7 @@ const Planner = (() => {
       }
 
       // Layout order: fixed visiting windows first (they're immovable), then
-      // heat-flagged spots take the coolest slots — first thing for the dawn
+      // heat-flagged spots take the coolest slots, first thing for the dawn
       // crowd, last thing for the late risers. The sort is stable, so score
       // order survives within each group.
       const heatSlot = s => (isHot(s, p) ? 1 : 0) * (lateBird ? -1 : 1);
@@ -383,13 +383,13 @@ const Planner = (() => {
           const start = Math.max(clock, win[0]);
           if (start + s.hours > win[1]) { used.delete(s.id); return; }
           if (start - clock >= 0.5) {
-            day.legs.push({ type: "note", icon: "☕", t: clock, title: "Slow breakfast", note: `Visitor doors open at ${fmt(win[0])} — no rush this morning.` });
+            day.legs.push({ type: "note", icon: "☕", t: clock, title: "Slow breakfast", note: `Visitor doors open at ${fmt(win[0])}, no rush this morning.` });
           }
           clock = start;
         }
 
         if (placed > 0) {
-          // Real distance, real road, real time — no more flat "short hop".
+          // Real distance, real road, real time, no more flat "short hop".
           const h = hop(atCoords, s, atRough);
           if (h > 0.05) {
             const rough = atRough || s.needs4x4;
@@ -398,7 +398,7 @@ const Planner = (() => {
               type: "drive", t: clock, dur: h,
               title: `Drive → ${s.name}`,
               note: km
-                ? `~${km} km${rough ? " — mountain track / 4×4, so it's slow going" : ""}`
+                ? `~${km} km${rough ? ", mountain track / 4×4, so it's slow going" : ""}`
                 : ""
             });
             clock += h;
@@ -406,7 +406,7 @@ const Planner = (() => {
           }
         }
 
-        // A real lunch once the clock crosses midday — a food spot from the
+        // A real lunch once the clock crosses midday, a food spot from the
         // guide when today's region has one, honest street-food advice when
         // it doesn't. (Skipped on the flight-home day; that one runs tight.)
         if (!lunchDone && placed > 0 && clock >= 12 && !isLast) {
@@ -419,19 +419,19 @@ const Planner = (() => {
               clock += lh;
               day.driveHours += lh;
             }
-            day.legs.push({ type: "spot", t: clock, dur: 1, spot: f, title: "Lunch — " + f.name, note: f.tagline });
+            day.legs.push({ type: "spot", t: clock, dur: 1, spot: f, title: "Lunch, " + f.name, note: f.tagline });
             day.spots.push(f);
             used.add(f.id);
             clock += 1;
             atCoords = f.coords || atCoords;
             atRough = false;
           } else {
-            day.legs.push({ type: "note", icon: "🍽️", t: clock, title: "Lunch break", note: `Shawarma, grilled chicken or karak in ${D.regions[reg].base} — cheap, everywhere, exactly right.` });
+            day.legs.push({ type: "note", icon: "🍽️", t: clock, title: "Lunch break", note: `Shawarma, grilled chicken or karak in ${D.regions[reg].base}, cheap, everywhere, exactly right.` });
             clock += 0.75;
           }
         }
 
-        addSpot(day, s, clock, isHot(s, p), win ? `🕌 Visitor window ${fmt(win[0])}–${fmt(win[1])} — this slot is fixed. Closed Fridays.` : null);
+        addSpot(day, s, clock, isHot(s, p), win ? `🕌 Visitor window ${fmt(win[0])}–${fmt(win[1])}, this slot is fixed. Closed Fridays.` : null);
         clock += s.hours;
         placed++;
         atCoords = s.coords || atCoords;    // the car is here now
@@ -452,7 +452,7 @@ const Planner = (() => {
         day.legs.push({ type: "sleep", t: clock, title: "Stay in " + D.regions[reg].base, note: "Closer to tomorrow this way." });
 
       } else if (anchor.mode === "last") {
-        // From where the car actually is — the last spot — not from the town.
+        // From where the car actually is, the last spot, not from the town.
         const backHome = Math.max(anchor.homeward,
                                   legHours(atCoords, regionCoords(home), atRough));
         if (backHome > 0) {
@@ -483,7 +483,7 @@ const Planner = (() => {
       }
 
       /* ---- the evening -------------------------------------------------------
-         Souq at dusk, a sunset café, a proper dinner — whatever's good where
+         Souq at dusk, a sunset café, a proper dinner, whatever's good where
          tonight's bed is. This is what makes a day read like a holiday, not a
          spreadsheet row. Skipped in the dunes (the dunes ARE the evening) and
          on the flight-home day. */
@@ -492,7 +492,7 @@ const Planner = (() => {
         if (evT <= 20) {
           const ev = eveningSpot(p, day.stayRegion, used);
           if (ev) {
-            day.legs.push({ type: "spot", t: evT, dur: ev.hours, spot: ev, title: "Evening — " + ev.name, note: ev.tagline });
+            day.legs.push({ type: "spot", t: evT, dur: ev.hours, spot: ev, title: "Evening, " + ev.name, note: ev.tagline });
             day.spots.push(ev);
             used.add(ev.id);
             clock = evT + ev.hours;
@@ -507,7 +507,7 @@ const Planner = (() => {
     /* ---- make the trip read like ONE route, not a zigzag ----------------------
        Round-trip days from the same bed are interchangeable, so deal them out
        as a geographic sweep: each day goes to the nearest remaining region
-       from wherever yesterday pointed — no more east coast → Nizwa → east
+       from wherever yesterday pointed, no more east coast → Nizwa → east
        coast again. Relocations, dune nights, free days and the flight-home
        day are fixed points and never move. */
     (function sweepOrder() {
@@ -559,28 +559,28 @@ const Planner = (() => {
         : `${MONTHS[p.month]} is brutally hot inland, so this plan runs on the summer clock: days start at 06:30, the hottest spots get the earliest slots, and midday is for shade, food and AC. Drink more than you think you need.`);
     }
     if (p.base === "dhofar" && [6,7,8,9].includes(p.month)) {
-      warnings.push(`🌿 Khareef: expect drizzle, fog and green hillsides — pack a light rain layer and patience for the traffic near the waterfalls. The mountain viewpoints (Jabal Samhan) sit inside the fog in July–August; save them for a clear morning.`);
+      warnings.push(`🌿 Khareef: expect drizzle, fog and green hillsides, pack a light rain layer and patience for the traffic near the waterfalls. The mountain viewpoints (Jabal Samhan) sit inside the fog in July–August; save them for a clear morning.`);
     }
     const heatTimed = [];
     days.forEach(d => d.spots.forEach(s => { if (isHot(s, p) && s.region !== "dhofar") heatTimed.push(s.name); }));
     if (heatTimed.length) {
-      warnings.push(`🌡️ ${MONTHS[p.month]} isn't the best month for ${heatTimed.slice(0,3).join(", ")}${heatTimed.length>3 ? ` and ${heatTimed.length-3} more` : ""} — still absolutely doable, just go at first light or after 4pm. Each one is marked in the plan.`);
+      warnings.push(`🌡️ ${MONTHS[p.month]} isn't the best month for ${heatTimed.slice(0,3).join(", ")}${heatTimed.length>3 ? ` and ${heatTimed.length-3} more` : ""}, still absolutely doable, just go at first light or after 4pm. Each one is marked in the plan.`);
     }
     if (!p.has4x4 && dropped.vehicle.length) {
       warnings.push(`Without a 4×4 you lose ${dropped.vehicle.length} spot${dropped.vehicle.length>1?"s":""} (${dropped.vehicle.slice(0,3).join(", ")}). Worth the upgrade if the budget stretches.`);
     }
     if (!p.canSwim && dropped.swim.length) {
-      warnings.push(`Most Omani wadis are swim-in. Skipping the water rules out ${dropped.swim.length} of them — the coast and the culture days still work beautifully.`);
+      warnings.push(`Most Omani wadis are swim-in. Skipping the water rules out ${dropped.swim.length} of them, the coast and the culture days still work beautifully.`);
     }
 
     const freeDays = days.filter(d => d.free).length;
     if (freeDays >= 2) {
-      warnings.push(`You've got ${freeDays} more days than there are spots that fit your filters. Loosen a filter (a 4×4 opens the most), or use the time properly — Salalah, Musandam, or a second run at your favourite.`);
+      warnings.push(`You've got ${freeDays} more days than there are spots that fit your filters. Loosen a filter (a 4×4 opens the most), or use the time properly, Salalah, Musandam, or a second run at your favourite.`);
     }
 
     days.forEach(d => {
       if (d.driveHours > MAX_DRIVE_IN_DAY) {
-        warnings.push(`Day ${d.n} is ${dur(d.driveHours)} behind the wheel. That's a driving day with a swim in it — go in knowing that.`);
+        warnings.push(`Day ${d.n} is ${dur(d.driveHours)} behind the wheel. That's a driving day with a swim in it, go in knowing that.`);
       }
     });
 
@@ -589,19 +589,19 @@ const Planner = (() => {
       const names = flyOut.map(s => s.name);
       const listed = names.slice(0, 4).join(", ") + (names.length > 4 ? ` and ${names.length - 4} more` : "");
       warnings.push(p.base === "dhofar"
-        ? `Not routed: ${listed} — they're up north. This plan stays around Salalah; the north is its own trip.`
-        : `Not routed: ${listed}. Salalah and Musandam need their own flight — they're in the guide, but they're a separate trip, not a day out of Muscat.`);
+        ? `Not routed: ${listed}, they're up north. This plan stays around Salalah; the north is its own trip.`
+        : `Not routed: ${listed}. Salalah and Musandam need their own flight, they're in the guide, but they're a separate trip, not a day out of Muscat.`);
     }
 
 
-    // Anything with a hard, narrow opening window needs flagging by name —
+    // Anything with a hard, narrow opening window needs flagging by name, 
     // the plan gives a time, and the traveller will believe it.
     const tight = [];
     days.forEach(d => d.spots.forEach(s => {
       if (s.closedFridays) tight.push(`${s.name} (day ${d.n})`);
     }));
     if (tight.length) {
-      warnings.push(`🕌 ${tight.join(", ")}: visitor hours are 8–11am only, and it's closed on Fridays and public holidays. If your day lands on a Friday, swap it — that's a three-hour window with no second chance.`);
+      warnings.push(`🕌 ${tight.join(", ")}: visitor hours are 8–11am only, and it's closed on Fridays and public holidays. If your day lands on a Friday, swap it, that's a three-hour window with no second chance.`);
     }
 
     if (days.some(d => d.spots.some(s => s.cat === "wadis"))) {
@@ -625,7 +625,7 @@ const Planner = (() => {
   }
 
   /* Something good for the evening where tonight's bed is: a dinner spot from
-     the guide, the souq at dusk, a sunset café. Low effort by design — nobody
+     the guide, the souq at dusk, a sunset café. Low effort by design, nobody
      wants a fitness-4 activity at 6pm. */
   function eveningSpot(p, region, used) {
     const D = window.OMAN_DATA;
@@ -650,10 +650,10 @@ const Planner = (() => {
       spot, title: spot.name, note: spot.tagline,
       fixNote: fixNote || null,
       // Dhofar runs on the opposite calendar: off-months mean "not green",
-      // not "dangerously hot" — different advice entirely.
+      // not "dangerously hot", different advice entirely.
       heatNote: hot ? (spot.region === "dhofar"
-        ? `🌿 Greenest ${monthsLabel(spot.months)} (khareef) — beautiful outside it too, just not green.`
-        : `🌡️ Best ${monthsLabel(spot.months)} — this month go at first light or after 4pm, and skip the midday hours.`) : null
+        ? `🌿 Greenest ${monthsLabel(spot.months)} (khareef), beautiful outside it too, just not green.`
+        : `🌡️ Best ${monthsLabel(spot.months)}, this month go at first light or after 4pm, and skip the midday hours.`) : null
     });
     day.spots.push(spot);
   }

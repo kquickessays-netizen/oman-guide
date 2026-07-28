@@ -1,5 +1,5 @@
 /* =============================================================================
-   Exploring Oman — app styles
+   Exploring Oman, app styles
    Mobile-first. Change the colours here and the whole app follows.
    ========================================================================== */
 :root{
@@ -73,7 +73,7 @@ img{max-width:100%;display:block}
 .pill-unlocked{background:#e7f4ea;color:#1e6b39}
 
 /* -------------------------------------------------------------------- tabs */
-/* The tabs WRAP instead of scrolling sideways — on a phone you can see every
+/* The tabs WRAP instead of scrolling sideways, on a phone you can see every
    tab at once (3 rows of 3-4) instead of discovering them by swiping. */
 .tabs{
   max-width:var(--maxw);margin:0 auto;
@@ -110,24 +110,173 @@ img{max-width:100%;display:block}
 /* -------------------------------------------------------------------- view */
 .view{max-width:var(--maxw);margin:0 auto;padding:20px 16px 60px}
 
-.cat-head{margin-bottom:18px}
+.cat-head{margin-bottom:12px}
 .cat-head h1{font-size:26px;letter-spacing:-.5px}
 .cat-head p{margin:6px 0 0;color:var(--muted);font-size:14.5px}
+/* Title and rank share a line, the scoreboard costs zero vertical space. */
+.cat-titlerow{display:flex;align-items:center;gap:12px}
+.cat-titlerow h1{flex:1 1 auto;min-width:0}
+
+/* ------------------------------------------------------------- RANK BADGE
+   Was a full-width bar with a fill line under the filters, which read as
+   something loading. Now a ring you fill by going places: the number sits in
+   the middle, the rank is the reward, and the whole thing rides beside the
+   page title. Conic-gradient, no SVG, no JS animation loop. */
+.rankbadge{
+  display:flex;align-items:center;gap:8px;flex:0 0 auto;
+  background:#fff;border:1px solid var(--line);border-radius:999px;
+  padding:5px 12px 5px 5px;box-shadow:var(--shadow);
+}
+.rankbadge .rb-ring{
+  --sz:32px;--metal:var(--water);
+  position:relative;width:var(--sz);height:var(--sz);border-radius:50%;
+  flex:0 0 auto;display:grid;place-items:center;
+  background:conic-gradient(var(--metal) calc(var(--pct)*1%), var(--sand-2) 0);
+  transition:background .5s ease;
+}
+/* The metal changes as you climb, so crossing a rank looks like something. */
+.rankbadge[data-tier="2"] .rb-ring{--metal:var(--gold)}
+.rankbadge[data-tier="1"] .rb-ring{
+  background:conic-gradient(var(--gold) calc(var(--pct)*1%), var(--sand-2) 0);
+  box-shadow:0 0 0 2px var(--gold-soft);
+}
+.rankbadge[data-tier="2"] .rb-core,
+.rankbadge[data-tier="1"] .rb-core{color:var(--gold)}
+.rankbadge .rb-core{
+  position:absolute;inset:3px;border-radius:50%;background:#fff;
+  display:grid;place-items:center;
+  font-size:12px;font-weight:800;color:var(--water-dark);
+  font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.rankbadge .rb-txt{display:flex;flex-direction:column;line-height:1.15}
+.rankbadge .rb-txt strong{
+  font-size:12.5px;font-weight:800;color:var(--ink);letter-spacing:-.1px;
+  font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.rankbadge .rb-txt small{font-size:10.5px;color:var(--muted);white-space:nowrap}
+.rankbadge.rb-zero .rb-core{color:var(--muted)}
+/* Under ~400px the words go and the ring carries it alone. */
+@media(max-width:400px){
+  .rankbadge{padding:4px;gap:0}
+  .rankbadge .rb-txt{display:none}
+  .rankbadge .rb-ring{--sz:34px}
+}
+
+/* ------------------------------------------------------------- SEARCH CUE
+   Search used to be a magnifier icon crammed next to the map toggle. It's a
+   full-width cue where the intro paragraph used to be, shaped like the field
+   it opens, nothing to decode. */
+.searchcue{
+  display:flex;align-items:center;gap:9px;width:100%;
+  background:#fff;border:1px solid var(--line);border-radius:13px;
+  padding:4px 8px 4px 14px;margin:0 0 10px;box-shadow:var(--shadow);
+}
+.searchcue .sc-i{font-size:15px;flex:0 0 auto;opacity:.75}
+.searchcue .sc-input{
+  flex:1;min-width:0;font:inherit;font-size:15px;color:var(--ink);
+  background:none;border:0;outline:none;padding:11px 0;
+}
+.searchcue .sc-input::placeholder{color:var(--muted)}
+/* the browser's own X, we draw our own so it exists on every phone */
+.searchcue .sc-input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+.searchcue .sc-clear{
+  flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:0;cursor:pointer;
+  background:var(--sand-2);color:var(--muted);font-size:13px;line-height:1;
+}
+.searchcue:focus-within{border-color:var(--water);box-shadow:0 0 0 3px var(--water-soft)}
+.searchcue.on{border-color:var(--water)}
 
 /* --------------------------------------------------- the control bar (tabs)
-   Filter chips on the left, a List/Map switch on the right, sitting on one
-   card so it reads as a designed control instead of loose buttons. */
-.filterbar{
-  display:flex;align-items:center;gap:10px;
-  background:#fff;border:1px solid var(--line);border-radius:14px;
-  box-shadow:var(--shadow);padding:8px 8px 8px 10px;margin:0 0 18px;
-  position:sticky;top:0;z-index:40;
+   ONE filter button and the List/Map switch. Everything that filters this tab
+   lives behind the button, there is no second place to look. */
+/* Bleeds to the page edges so that when it sticks, the cards scroll UNDER a
+   solid band rather than behind two floating pills. */
+.filterwrap{
+  position:sticky;top:0;z-index:40;margin:0 -16px 18px;padding:6px 16px 8px;
+  background:var(--sand);
 }
+.filterbar{display:flex;align-items:center;gap:10px}
+.filterbtn{
+  display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;
+  font:inherit;font-size:13.5px;font-weight:700;line-height:1;cursor:pointer;
+  background:#fff;color:var(--ink);border:1px solid var(--line);
+  border-radius:12px;padding:10px 13px;box-shadow:var(--shadow);
+  transition:background .14s ease,color .14s ease,border-color .14s ease;
+}
+.filterbtn:disabled{opacity:.45;pointer-events:none}
+/* Three bars that shorten downward, a filter mark, drawn not typed, so it
+   doesn't render as a different emoji on every phone. */
+.filterbtn .fb-ico{display:flex;flex-direction:column;gap:3px;width:14px}
+.filterbtn .fb-ico i{height:2px;border-radius:2px;background:currentColor;display:block}
+.filterbtn .fb-ico i:nth-child(1){width:100%}
+.filterbtn .fb-ico i:nth-child(2){width:70%}
+.filterbtn .fb-ico i:nth-child(3){width:40%}
+.filterbtn .fb-count{
+  background:var(--water);color:#fff;border-radius:999px;
+  font-size:11px;font-weight:800;padding:2px 7px;min-width:18px;text-align:center;
+}
+.filterbtn .fb-caret{font-size:13px;color:var(--muted);transition:transform .18s ease}
+.filterbtn.open .fb-caret{transform:rotate(180deg)}
+.filterbtn.on{border-color:var(--water);background:var(--water-soft);color:var(--water-dark)}
+.filterbtn.on .fb-caret{color:var(--water-dark)}
+
+.filterpanel{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  box-shadow:var(--shadow);padding:14px 14px 12px;margin-top:8px;
+  animation:fpDrop .16s ease-out;
+}
+.filterpanel[hidden]{display:none}
+@keyframes fpDrop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.fp-sec + .fp-sec{margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+.fp-h{
+  font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:9px;
+}
+.fp-row{display:flex;flex-wrap:wrap;gap:7px}
+.fchip{
+  display:inline-flex;align-items:center;gap:6px;
+  font:inherit;font-size:13px;font-weight:600;line-height:1;cursor:pointer;
+  padding:9px 12px;border-radius:999px;
+  background:var(--sand-2);color:var(--ink);border:1px solid transparent;
+  transition:background .12s ease,color .12s ease;
+}
+.fchip .fchip-n{
+  font-size:10.5px;font-weight:800;color:var(--muted);
+  background:#fff;border-radius:999px;padding:2px 6px;min-width:17px;text-align:center;
+}
+.fchip.on{background:var(--water-dark,#14564a);color:#fff}
+.fchip.on .fchip-n{background:rgba(255,255,255,.22);color:#fff}
+/* Refinements are switches, not chips, a tick box makes on/off unambiguous
+   in a way a filled pill doesn't. */
+.ftog{
+  display:inline-flex;align-items:center;gap:8px;
+  font:inherit;font-size:13px;font-weight:600;line-height:1;cursor:pointer;
+  padding:9px 12px 9px 10px;border-radius:11px;
+  background:var(--sand-2);color:var(--ink);border:1px solid transparent;
+}
+.ftog .ftog-i{font-size:14px}
+.ftog .ftog-box{
+  width:16px;height:16px;border-radius:5px;flex:0 0 auto;
+  border:1.5px solid var(--line);background:#fff;position:relative;
+}
+.ftog.on{background:var(--water-soft);border-color:var(--water);color:var(--water-dark)}
+.ftog.on .ftog-box{background:var(--water);border-color:var(--water)}
+.ftog.on .ftog-box::after{
+  content:"";position:absolute;left:5px;top:1.5px;width:4px;height:8px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);
+}
+.fp-clear{
+  display:block;width:100%;margin-top:13px;
+  font:inherit;font-size:13px;font-weight:700;cursor:pointer;
+  background:transparent;border:1px dashed var(--line);border-radius:11px;
+  padding:10px;color:var(--muted);
+}
+.fp-clear:active{background:var(--sand-2)}
+
 .viewswitch{
   display:flex;gap:2px;flex:0 0 auto;margin-left:auto;
   background:var(--sand-2);border-radius:999px;padding:3px;
 }
-.fb-search{flex:0 0 auto}
 .chip-region{background:#eef4fb;color:#2b5d8f}
 .vs{
   display:inline-flex;align-items:center;gap:5px;
@@ -138,7 +287,7 @@ img{max-width:100%;display:block}
 .vs.on{background:#fff;color:var(--water-dark);box-shadow:var(--shadow)}
 @media(max-width:520px){ .vs span{display:none} .vs{padding:7px 9px} }
 
-/* "All · 🏖️ Beach 3 · 🌊 Waterfall 2 · 🏬 Mall 1" — a scrollable row of
+/* "All · 🏖️ Beach 3 · 🌊 Waterfall 2 · 🏬 Mall 1", a scrollable row of
    filter chips built from the types actually present in the tab. */
 .typefilter{
   display:flex;gap:7px;overflow-x:auto;padding:2px;flex:1 1 auto;min-width:0;
@@ -160,7 +309,7 @@ img{max-width:100%;display:block}
 .tfchip.on{background:var(--water-dark,#14564a);color:#fff;border-color:var(--water-dark,#14564a)}
 .tfchip.on .tfn{background:rgba(255,255,255,.22);color:#fff}
 
-/* Type sections inside a long, unfiltered tab — "💧 Wadi (9)" and so on.
+/* Type sections inside a long, unfiltered tab, "💧 Wadi (9)" and so on.
    Tapping a header filters to that type. */
 .group-head{
   display:flex;align-items:center;gap:9px;cursor:pointer;
@@ -217,7 +366,7 @@ img{max-width:100%;display:block}
   background:var(--sand-2);color:#4c5a54;
 }
 
-/* locked cards — anonymous by design: no photo, no name, just the lock */
+/* locked cards, anonymous by design: no photo, no name, just the lock */
 .card.locked .card-media{filter:saturate(.35)}
 .card-media-locked{
   font-size:36px;
@@ -251,7 +400,7 @@ img{max-width:100%;display:block}
 
 /* -------------------------------------------------------------------- sheet */
 /* z-index: Leaflet's map panes/controls go up to 1000, so the sheet, modal
-   and toast must sit ABOVE that — or a spot opened from the map renders
+   and toast must sit ABOVE that, or a spot opened from the map renders
    underneath it. */
 .sheet-backdrop,.modal-backdrop{
   position:fixed;inset:0;z-index:1100;background:rgba(20,26,24,.5);
@@ -522,7 +671,7 @@ img{max-width:100%;display:block}
 .pricebox.compact .price-opt{padding:14px}
 .pricebox.compact .price-tag{font-size:19px}
 
-/* ONE product now — a single card, full width, no "or" column. */
+/* ONE product now, a single card, full width, no "or" column. */
 .pricebox.one{grid-template-columns:1fr !important}
 .pricebox.one .price-opt{padding:20px 18px}
 .pricebox.one .bulletlist{margin:4px 0 14px}
@@ -584,23 +733,49 @@ img{max-width:100%;display:block}
 }
 .about-photo-empty small{font-size:8.5px;font-weight:700;letter-spacing:.2px}
 .about-hero h1{font-size:27px;letter-spacing:-.5px}
-.about-sub{color:var(--muted);font-size:14.5px;margin:7px 0 0}
 
-.about-badges{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:24px}
-.about-badges .badge{
-  font-size:12px;font-weight:700;padding:6px 11px;border-radius:999px;
-  background:var(--water-soft);color:var(--water-dark);
+/* The hook is a QUOTE, a real question people send him, so it has to read as
+   somebody speaking, not as a section heading. The oversized opening mark and
+   the tightened tracking do that work without italics (italic question marks at
+   this size look like a pull-quote in a magazine, and this is a phone). */
+/* Scoped to h1.about-hook so it outranks the plain `.about-hero h1` above.
+   The quote marks are a matched PAIR set in the text (see renderAbout) rather
+   than a floating decorative ::before, a single hanging opening mark with no
+   closing one just read as a stray character. */
+.about-hero h1.about-hook{
+  font-size:30px;line-height:1.16;letter-spacing:-.7px;
+  max-width:16ch;margin:0 auto;text-wrap:balance;
 }
+.about-hero h1.about-hook q{quotes:"“" "”"}
+.about-hero h1.about-hook q::before,
+.about-hero h1.about-hook q::after{color:var(--water);opacity:.45}
+.about-sub{color:#37423d;font-size:15.5px;line-height:1.5;margin:14px auto 0;max-width:32ch}
+.about-byline{color:var(--muted);font-size:12.5px;margin:12px 0 0;letter-spacing:.01em}
+@media (max-width:380px){
+  .about-hero h1.about-hook{font-size:26px}
+  .about-sub{font-size:14.5px;max-width:30ch}
+}
+
+/* Four proof chips. As a centred wrap they stacked into three ragged rows and
+   ate 146px; a two-column grid puts them in two tidy rows for half that. */
+.about-badges{
+  display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:20px;
+}
+.about-badges .badge{
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:11.5px;font-weight:700;padding:8px 9px;border-radius:11px;
+  background:var(--water-soft);color:var(--water-dark);line-height:1.3;
+}
+@media(min-width:560px){.about-badges{grid-template-columns:repeat(4,1fr)}}
 .about-body{
   background:#fff;border:1px solid var(--line);border-radius:var(--radius);
   padding:20px;box-shadow:var(--shadow);
 }
 .about-body p{font-size:15px;margin:0 0 14px;color:#37423d}
-.about-body h3{font-size:17px;margin:22px 0 8px}
-.about-body .pull{
-  font-family:Georgia,serif;font-size:19px;font-style:italic;color:var(--water-dark);
-  border-left:3px solid var(--water);padding:4px 0 4px 15px;margin:18px 0;
-}
+.about-body p:last-child{margin-bottom:0}
+/* .about-body h3 and .about-body .pull were dropped with the sub-headings and
+   the pull-quote, the quote is the page's h1 now, and the body is two
+   paragraphs with nothing left to sub-divide. */
 .about-contact{margin-top:22px}
 .about-contact h3{font-size:17px;margin-bottom:10px}
 .contact-row{
@@ -651,13 +826,30 @@ img{max-width:100%;display:block}
 .map-pop p{margin:0 0 8px;color:var(--muted);font-size:13px}
 .map-pop .pin{display:inline-block;background:var(--water-soft);color:var(--water);padding:5px 10px;border-radius:8px;font-size:13px;font-weight:600}
 
-/* ====================================================== ABOUT CHANGELOG (new) */
-.about-changelog{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow)}
-.about-changelog h3{margin-bottom:10px}
-.log-entry{margin-bottom:12px}
+/* ====================================================== ABOUT CHANGELOG (new)
+   The changelog is FOLDED now. It's proof, not reading material: whoever wants
+   the receipts taps once, and everybody else scrolls past a single bar. The
+   wrapper carries no card of its own, the .fold inside is the card. */
+.about-changelog{margin-top:20px}
+.about-changelog > .fold{margin:0}
+.log-entry{margin-bottom:14px}
 .log-entry:last-child{margin-bottom:0}
-.log-date{font-weight:700;font-size:13px;color:var(--gold);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
-.log-entry ul{margin:0;padding-left:20px}
+.log-date{font-weight:700;font-size:12px;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.log-entry ul{margin:0}
+
+/* A fold inside a fold: flatter, so the nesting reads as depth not as clutter. */
+.fold-sub{
+  margin:14px 0 0;border-radius:11px;box-shadow:none;
+  background:var(--sand-2);border-color:var(--line);
+}
+.fold-sub > summary{padding:10px 13px;font-size:13.5px;color:var(--muted)}
+.fold-sub[open] > summary{border-bottom-color:var(--line)}
+.fold-sub .fold-body{padding:12px 13px 13px}
+
+/* The quietest thing on the page, a legal obligation, met without shouting. */
+.fold-quiet{background:transparent;border-style:dashed;box-shadow:none}
+.fold-quiet > summary{font-size:13px;font-weight:600;color:var(--muted);padding:11px 14px}
+.fold-quiet[open] > summary{border-bottom-color:var(--line)}
 .log-entry li{margin:3px 0;font-size:14px}
 
 /* ================================================== PRINT SHARE FOOTER (new) */
@@ -683,7 +875,7 @@ img{max-width:100%;display:block}
   box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .route-home span{background:#1b2320;font-size:14px}
 
-/* Day picker above the route map — "All days · Day 1 · Day 2 …" */
+/* Day picker above the route map, "All days · Day 1 · Day 2 …" */
 .dayfilter{margin:0 0 10px;padding:2px}
 .daychip{display:inline-flex;align-items:center;gap:6px}
 .daychip .daydot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
@@ -691,16 +883,184 @@ img{max-width:100%;display:block}
 @media print{ .plan-mapbox{display:none} }
 
 /* ================================================================ INFO TAB */
-.info-sec{background:#fff;border:1px solid var(--line);border-radius:var(--radius);
-  padding:16px 18px;margin:0 0 14px;box-shadow:var(--shadow)}
-.info-sec h2{font-size:16px;margin-bottom:10px}
-.info-item{display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
-.info-item:first-of-type{border-top:0}
-.info-item strong{display:block;margin-bottom:2px}
-.info-item p{margin:0;color:var(--muted);font-size:14px}
-.info-item .affbtn{margin-top:8px}
-.rank{flex:0 0 26px;height:26px;border-radius:50%;background:var(--water);color:#fff;
-  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin-top:2px}
+/* ================================================================== INFO TAB
+   Six sections, six drawings. The old version was one white tile repeated 23
+   times with recycled icons, a template. Now the FORM of each section comes
+   from its information: rules are road-signs, networks are a coverage chart,
+   transport is a best-to-worst ladder, money is two big numerals, emergency
+   is a phone panel. Every item's full text opens in the section's shared
+   detail panel (.xp), one tap, no chevron farms. */
+.isec{margin:0 0 22px}
+.isec-h{
+  font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 10px;
+}
+
+/* --- the key-facts strip: the four numbers, before anything else --------- */
+.kf{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  background:var(--water-dark);border-radius:var(--radius);
+  padding:14px 6px;margin:0 0 22px;box-shadow:var(--shadow);
+}
+.kf-cell{text-align:center;padding:0 4px;min-width:0}
+.kf-cell+.kf-cell{border-left:1px solid rgba(255,255,255,.14)}
+.kf-cell strong{
+  display:block;font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:-.3px;color:#fff;white-space:nowrap;
+}
+.kf-cell span{display:block;font-size:9.5px;color:rgba(255,255,255,.75);margin-top:2px;line-height:1.25}
+@media(max-width:380px){.kf-cell strong{font-size:14px}}
+
+/* --- signs: the rules as pictograms -------------------------------------- */
+.sign-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 8px}
+.sign{
+  font:inherit;background:none;border:0;cursor:pointer;padding:4px 2px;
+  display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;
+}
+.sign-ic{
+  position:relative;width:62px;height:62px;border-radius:50%;flex:0 0 auto;
+  border:3px solid var(--water);background:#fff;box-shadow:var(--shadow);
+  display:grid;place-items:center;color:var(--ink);
+  transition:transform .14s ease,border-color .14s ease;
+}
+.sign-ic svg{width:32px;height:32px;display:block}
+/* prohibition chrome: red ring + the diagonal bar, like a road sign */
+.sign-ic.sign-forbid{border-color:var(--danger)}
+.sign-ic.sign-forbid::after{
+  content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:3.5px;
+  margin-left:-1.75px;border-radius:2px;background:var(--danger);
+  transform:rotate(45deg);
+}
+.sign strong{
+  font-size:11px;font-weight:700;line-height:1.25;text-align:center;
+  color:var(--ink);letter-spacing:-.1px;
+}
+.sign.on .sign-ic{transform:scale(1.06);border-width:4px}
+.sign:active .sign-ic{transform:scale(.94)}
+
+/* --- the connectivity card & every row-based section --------------------- */
+.concard{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.irow{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  font:inherit;background:none;border:0;cursor:pointer;padding:12px 14px;
+}
+.irow+.irow,.bars+.irow,.irow+.bars{border-top:1px solid #f0ebe1}
+.irow-ic{flex:0 0 auto;width:30px;height:30px;color:var(--water)}
+.irow-ic svg{width:100%;height:100%;display:block}
+.irow-t{flex:1;min-width:0}
+.irow-t strong{
+  display:block;font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14.5px;font-weight:700;letter-spacing:-.15px;
+}
+.irow-t small{display:block;font-size:12px;line-height:1.4;color:var(--muted);margin-top:1px}
+.irow-c{flex:0 0 auto;font-size:16px;color:#c9c1b4;transition:transform .15s ease}
+.irow.on{background:var(--sand-2)}
+.irow.on .irow-c{transform:rotate(90deg)}
+/* the app squircle, so OTaxi/Talabat read as things you install */
+.app-ic{
+  width:40px;height:40px;border-radius:12px;background:var(--water-soft);
+  display:grid;place-items:center;color:var(--water-dark);
+}
+.app-ic svg{width:26px;height:26px}
+
+/* --- the coverage chart --------------------------------------------------- */
+.bars{
+  display:block;width:100%;font:inherit;background:none;border:0;cursor:pointer;
+  padding:14px 14px 12px;text-align:left;
+}
+.bars.on{background:var(--sand-2)}
+.bar-row{display:grid;grid-template-columns:64px 1fr;gap:2px 10px;align-items:center;margin-bottom:9px}
+.bar-row:last-child{margin-bottom:0}
+.bar-l{font-size:12px;font-weight:700}
+.bar-t{height:10px;border-radius:999px;background:var(--sand-2);overflow:hidden}
+.bar-t i{
+  display:block;height:100%;width:var(--w);border-radius:999px;
+  background:linear-gradient(90deg,var(--water),var(--water-dark));
+  animation:barGrow .7s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes barGrow{from{width:0}}
+.bar-n{grid-column:2;font-size:10.5px;color:var(--muted);line-height:1.3}
+
+/* --- the transport ladder ------------------------------------------------- */
+.lad{
+  display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+  font:inherit;background:none;border:0;cursor:pointer;padding:11px 14px;
+}
+.lad+.lad{border-top:1px solid #f0ebe1}
+.lad.on{background:var(--sand-2)}
+.lad-n{
+  flex:0 0 auto;width:24px;
+  font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:19px;font-weight:800;color:var(--water);text-align:center;
+}
+.lad:nth-child(n+4) .lad-n{color:var(--muted)}
+.lad .irow-ic{width:26px;height:26px;color:var(--ink);opacity:.75}
+.lad-bar{display:block;height:5px;border-radius:999px;background:var(--sand-2);overflow:hidden;margin-top:6px}
+.lad-bar i{
+  display:block;height:100%;width:var(--w);border-radius:999px;
+  background:var(--water);opacity:var(--o);
+}
+
+/* --- money as numerals ---------------------------------------------------- */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.stat{
+  font:inherit;text-align:left;cursor:pointer;
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:16px 15px 14px;min-width:0;
+}
+.stat.on{background:var(--sand-2)}
+.stat em{
+  display:block;font-style:normal;
+  font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px;
+}
+.stat strong{
+  display:block;font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:31px;font-weight:800;letter-spacing:-1px;color:var(--water-dark);line-height:1;
+}
+.stat span{display:block;font-size:11.5px;line-height:1.4;color:var(--muted);margin-top:6px}
+
+/* --- the emergency panel -------------------------------------------------- */
+.soscard{
+  background:#fdeceb;border:1px solid #f2c4bf;border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.sos-call{
+  display:flex;align-items:center;gap:12px;padding:14px;color:inherit;
+}
+.sos-call .irow-ic{color:var(--danger);width:34px;height:34px}
+.sos-call strong{
+  display:block;font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:30px;font-weight:800;letter-spacing:2px;color:var(--danger);line-height:1;
+}
+.sos-call small{display:block;font-size:11.5px;color:#7d2418;margin-top:3px}
+.sos-row{border-top:1px solid #f2c4bf}
+.sos-row .irow-ic{color:var(--danger)}
+.sos-row .irow-t strong{color:#7d2418}
+.sos-row .irow-t small{color:#9a4a3e}
+.sos-row.on{background:#fbdedb}
+
+/* --- the shared detail panel ---------------------------------------------- */
+.xp{
+  margin-top:9px;background:#fff;border:1px solid var(--water);
+  border-radius:13px;padding:13px 15px;box-shadow:var(--shadow);
+  animation:fpDrop .16s ease-out;
+}
+.xp[hidden]{display:none}
+.xp strong{
+  display:block;font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:13.5px;font-weight:700;margin-bottom:4px;
+}
+.xp p{margin:0;font-size:13.5px;line-height:1.55;color:#37423d}
+.xp .affbtn{margin-top:10px}
+
+@media(prefers-reduced-motion:reduce){
+  .bar-t i{animation:none}
+  .sign.on .sign-ic,.sign:active .sign-ic{transform:none}
+}
 
 /* ============================================================ PHOTO CREDITS */
 .sheet-hero{position:relative}
@@ -713,15 +1073,15 @@ img{max-width:100%;display:block}
   border:1px dashed var(--line);border-radius:8px;padding:3px 8px}
 .discount-chip strong{color:var(--ink);letter-spacing:.4px}
 
-/* in-sheet gallery figures — photos dealt out between the text sections */
+/* in-sheet gallery figures, photos dealt out between the text sections */
 .sheet-fig{margin:14px 0}
 .sheet-fig img{width:100%;border-radius:12px;display:block;max-height:340px;object-fit:cover}
 .sheet-fig figcaption{font-size:12px;color:var(--muted);margin-top:5px;position:relative}
 .sheet-fig figcaption .imgcredit{position:static;background:none;color:var(--muted);padding:0;white-space:normal}
-.about-credits{margin-top:14px;background:#fff;border:1px solid var(--line);
-  border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow)}
-.about-credits h3{margin-bottom:6px}
-.credits-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+/* Credits live inside a shut .fold-quiet now, so the wrapper carries no card. */
+.about-credits{margin-top:18px}
+.about-credits > .fold{margin:0}
+.credits-note{color:var(--muted);font-size:12px;margin:0 0 8px}
 .about-credits ul{margin:0;padding-left:18px;columns:2;column-gap:26px}
 @media (max-width:640px){.about-credits ul{columns:1}}
 .about-credits li{font-size:12px;color:var(--muted);margin:3px 0;break-inside:avoid}
@@ -776,7 +1136,7 @@ img{max-width:100%;display:block}
 
 /* --- bottom navigation on phones ----------------------------------------
    The tab bar docks to the bottom edge (thumb zone) and the chips become
-   icon-over-label — the installed PWA reads as a native app. Desktop and
+   icon-over-label, the installed PWA reads as a native app. Desktop and
    tablets keep the top tab row. */
 @media(max-width:640px){
   .tabs{
@@ -855,7 +1215,7 @@ img{max-width:100%;display:block}
    as a real segmented control, clay as the one accent, pill CTAs.          */
 
 :root{
-  --clay:#b4552d;          /* Omani clay — THE accent. Use sparingly. */
+  --clay:#b4552d;          /* Omani clay, THE accent. Use sparingly. */
   --clay-soft:#f7e7dd;
 }
 
@@ -880,8 +1240,8 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
 .livingline .ll-sub{color:#a9cdca;border-left-color:rgba(255,255,255,.25)}
 .searchbar{border-top:1px solid var(--line)}
 
-/* tabs live on the teal band on wide screens — translucent pills, white when
-   active. (On phones the tabs are the white bottom bar — untouched here.) */
+/* tabs live on the teal band on wide screens, translucent pills, white when
+   active. (On phones the tabs are the white bottom bar, untouched here.) */
 @media(min-width:641px){
   .tab{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);color:#cfe4e2}
   .tab[aria-selected="true"]{background:#fff;color:var(--water-dark);border-color:#fff}
@@ -964,12 +1324,8 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
   background:#e7f4ea;color:#1e6b39;font-size:11px;font-weight:700;
   padding:4px 10px;border-radius:999px;
 }
-.smartrow{display:flex;gap:7px;flex-wrap:wrap;margin:-8px 0 16px}
-.smartchip{
-  font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:999px;
-  background:transparent;border:1px dashed var(--line);color:var(--muted);
-}
-.smartchip.on{background:var(--clay);border:1px solid var(--clay);color:#fff}
+/* .smartrow / .smartchip removed, the smart filters live inside the one
+   filter panel now (.ftog), not as a second loose row under the bar. */
 .actrow{display:flex;gap:8px;margin:4px 0 8px}
 .act-btn{
   flex:1;text-align:center;padding:10px 0;border-radius:999px;
@@ -983,17 +1339,112 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
   border-radius:12px;padding:11px 14px;margin:12px 0;font-size:13.5px;line-height:1.5;
 }
 .plan-sharerow{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
-.progressline{
-  display:flex;align-items:center;gap:8px;width:100%;
-  background:#fff;border:1px solid var(--line);border-radius:999px;
-  padding:9px 16px;margin:-6px 0 16px;font-size:12.5px;font-weight:700;
-  color:var(--water-dark);cursor:pointer;
+/* .progressline / .pl-* removed, the explored counter is .rankbadge now,
+   a ring beside the page title instead of a full-width bar under the filters. */
+
+/* ================================================ DESIGN PASS v2 (Jul 2026)
+   The finishing layer, from studying Rexby + AllTrails front-ends:
+   airier spacing, ONE button hierarchy, gentle motion, a proper search
+   pill, hero legibility, focus states. Feel > features.                  */
+
+/* breathing room, premium feeds are airy, not dense */
+html{scroll-behavior:smooth}
+.grid{gap:18px}
+.view{max-width:var(--maxw);animation:fadeUp .24s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .view,.toast,.sheet{animation:none !important}
+  .card,.card:hover{transition:none;transform:none}
 }
-.progressline .pl-dot{color:var(--line)}
-.progressline .pl-bar{
-  flex:1;height:6px;border-radius:999px;background:var(--sand-2);overflow:hidden;margin-left:6px;
+
+/* photo cards go borderless, the image IS the card (Rexby pattern) */
+.card{border-radius:20px}
+.card:has(.card-media-photo){border:none;box-shadow:0 3px 14px rgba(16,28,25,.09)}
+
+/* hero: soft bottom gradient so credits and pills always read */
+.sheet-hero{position:relative;height:240px}
+.sheet-hero::after{
+  content:"";position:absolute;inset:auto 0 0 0;height:70px;
+  background:linear-gradient(180deg,transparent,rgba(10,25,22,.45));pointer-events:none;
 }
-.progressline .pl-fill{display:block;height:100%;border-radius:999px;background:var(--water)}
+.sheet-hero .imgcredit,.sheet-hero .photocount{z-index:1}
+.sheet-inner h2{font-size:24px}
+.sheet-inner .tagline{font-size:14.5px;margin-bottom:12px}
+
+/* ONE button hierarchy in the sheet:
+   primary (solid teal) = maps · special (gradient) = your reel ·
+   quiet (outline) = affiliate links. Three voices max. */
+.affbtn{
+  background:transparent;border:1.5px solid #bfe0c9;color:#1e6b39;
+  border-radius:999px;font-size:13.5px;padding:10px 14px;
+}
+.affbtn.aff-primary{background:#eaf6ec;border-color:#9fd4af}
+
+/* the search bar becomes a proper pill (Rexby's signature element) */
+.searchbar{padding:10px 14px}
+.searchbar input{
+  border-radius:999px;padding:11px 18px;font-size:15px;
+  background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);
+}
+
+/* section headers in the feed match the sheet's clay-dash language */
+.section-head h2{
+  display:flex;align-items:center;gap:9px;
+  font-size:17px;letter-spacing:-.2px;
+}
+.section-head h2::before{
+  content:"";width:14px;height:4px;border-radius:2px;background:var(--clay);flex:0 0 auto;
+}
+
+/* tab bar (mobile): active tab gets a soft raised pill, not just colour */
+@media(max-width:640px){
+  .tab[aria-selected="true"]{background:var(--water-soft);box-shadow:inset 0 0 0 1px #cfe3e2}
+}
+
+/* keyboard / switch-control users get a visible ring, invisible to touch */
+:focus-visible{outline:3px solid rgba(13,92,99,.4);outline-offset:2px;border-radius:6px}
+
+/* tipbox inside folds already stripped; standalone tipbox softened */
+.tipbox{border-radius:12px;border-left-width:4px}
+
+/* toast above the bottom nav on phones */
+@media(max-width:640px){.toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
+
+/* --- AllTrails-pattern polish (Jul 2026) ------------------------------------ */
+.statline{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  margin:6px 0 0;font-size:12px;font-weight:600;color:var(--muted);
+}
+.statline.on-photo{color:#cfe4de;margin-top:5px}
+.sl-dot{width:9px;height:9px;border-radius:3px;display:inline-block;flex:0 0 auto}
+.sl-easy{background:#2fa36b}
+.sl-mod{background:#eb9c1c}
+.sl-hard{background:#d6493a}
+.sl-sep{color:currentColor;opacity:.45;margin:0 1px}
+.season-badge{
+  position:absolute;top:12px;left:10px;z-index:2;
+  background:rgba(255,255,255,.93);color:#a05a0a;font-size:11px;font-weight:700;
+  padding:4px 10px;border-radius:999px;
+}
+.photocount{
+  position:absolute;left:12px;bottom:12px;
+  background:rgba(20,26,24,.65);color:#fff;font-size:11.5px;font-weight:700;
+  padding:5px 11px;border-radius:999px;
+}
+@media(hover:hover){
+  .card{transition:transform .18s ease,box-shadow .18s ease}
+  .card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(16,28,25,.13)}
+}
+.card-media{font-weight:600;color:#8b8474;letter-spacing:.2px}
+
+/* --- ONE-LINE controls: group chips swipe sideways, never stack ------------- */
+.typefilter{
+  flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;padding-bottom:2px;
+}
+.typefilter::-webkit-scrollbar{display:none}
+.tfchip{white-space:nowrap;flex:0 0 auto;font-size:12px;padding:6px 11px}
+.cat-head h1{margin-bottom:2px}
 
 /* --- free-launch box -------------------------------------------------------- */
 .launchbox{
@@ -1045,7 +1496,7 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
 
 /* --- collapsible sheet sections --------------------------------------------
    The sheet opens SHORT: essentials visible, long sections folded into
-   tappable bars. Native <details> — works offline, no JS. */
+   tappable bars. Native <details>, works offline, no JS. */
 .fold{
   background:#fff;border:1px solid var(--line);border-radius:14px;
   margin:10px 0;box-shadow:var(--shadow);overflow:hidden;
@@ -1069,3 +1520,559 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
 .fold-body .bring-col{border:none;padding:4px 0;background:transparent}
 .tipbox.no-frame{background:transparent;border:none;padding:0;margin:0}
 .tipbox.no-frame ul{margin:0}
+
+
+/* =============================================================================
+   SHEET v3, POSTER & DRAWER
+   -----------------------------------------------------------------------------
+   The spot sheet was 2,367px on a phone, 2.9 screens, with the same content.
+   The photo carried nothing but a credit, the facts printed once as a list and
+   again as a "timebox", "Getting there" opened 391px tall by default, and a
+   227-field review form greeted people who had not been yet.
+
+   Now: the photo IS the header, the four go/no-go numbers are dials, every long
+   section is a shut row that says what's inside it, and Maps/Save live in a dock
+   stuck to the bottom of the sheet.
+
+   THE ONE RULE: .gg-rain carries the thing the app cannot know for you, 
+   whether it rained upstream. It is never inside a <details>. People drown in
+   these wadis. It does not fold, shorten or move off the first line.
+   ========================================================================== */
+/* =============================================================================
+   SHEET v3, POSTER & DRAWER
+   Paste at the end of app.css. Overrides only what it needs to.
+   ========================================================================== */
+
+/* --- shell -------------------------------------------------------------- */
+.sheet-body{padding:0}
+.sheet-inner{padding:14px 20px 0}
+
+/* the grab handle floats on the photo instead of eating a 15px sand strip */
+.sheet::before{
+  position:absolute;top:9px;left:50%;transform:translateX(-50%);z-index:4;
+  margin:0;background:rgba(255,255,255,.72);box-shadow:0 1px 4px rgba(0,0,0,.18);
+}
+
+/* --- 1 · THE POSTER: photo, name, tagline and chips in one 200px block --- */
+.sheet-hero.poster{
+  display:block;height:200px;position:relative;overflow:hidden;
+  background-color:var(--sand-2);background-size:cover;background-position:center;
+}
+.sheet-hero.poster::after{
+  content:"";position:absolute;inset:0;height:auto;
+  background:linear-gradient(180deg,
+    rgba(10,25,22,0) 30%,rgba(10,25,22,.30) 56%,rgba(8,20,18,.84) 100%);
+  pointer-events:none;
+}
+.poster-meta{
+  position:absolute;top:12px;left:12px;right:56px;z-index:2;   /* clears .sheet-close */
+  display:flex;gap:6px;align-items:center;min-width:0;
+}
+.poster-meta .photocount,
+.poster-meta .imgcredit{position:static;flex:0 1 auto;min-width:0}
+.poster-meta .photocount{padding:4px 10px;font-size:11px}
+.poster-meta .imgcredit{font-size:9.5px;padding:3px 8px;background:rgba(0,0,0,.42)}
+.poster-txt{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:0 20px 14px}
+.poster-txt .card-kicker{margin:0 0 7px;gap:5px;flex-wrap:wrap}
+.poster-txt .chip{
+  background:rgba(255,255,255,.93);color:#20302c;border:none;
+  font-size:10.5px;padding:3px 9px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+}
+.poster-txt .chip-season{background:rgba(253,243,226,.95);color:#7a4a08}
+.poster-txt .chip-hard{background:rgba(253,236,235,.95);color:var(--danger)}
+.poster-txt h2{
+  color:#fff;font-size:27px;line-height:1.05;letter-spacing:-.6px;
+  margin:0 0 3px;text-shadow:0 1px 14px rgba(0,0,0,.5);
+}
+/* .poster-txt .tagline removed, the sub-line under the name was fluff. */
+/* no photo → a sand plate with ink type, so the name never vanishes */
+.sheet-hero.poster.no-photo{height:auto;background:var(--sand-2)}
+.sheet-hero.poster.no-photo::after{display:none}
+.sheet-hero.poster.no-photo .poster-txt{position:static;padding:22px 20px 16px}
+.sheet-hero.poster.no-photo h2{color:var(--ink);text-shadow:none}
+.sheet-hero.poster.no-photo .tagline{color:var(--muted);text-shadow:none}
+.sheet-hero.poster.no-photo .chip{background:#fff;border:1px solid var(--line)}
+
+/* --- 2 · CAN I GO TODAY -------------------------------------------------
+   Replaces the red flash-flood paragraph. A verdict gets read; a wall of
+   warning gets skimmed. The colour is the answer, the lines under it are the
+   reasons, and .gg-rain is the one thing the app cannot know for you. */
+.gonogo{
+  margin:0 0 16px;border-radius:14px;overflow:hidden;
+  background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);
+}
+.gonogo .gg-head{display:flex;gap:11px;align-items:flex-start;padding:14px 16px}
+.gonogo .gg-dot{
+  flex:0 0 auto;width:11px;height:11px;border-radius:50%;margin-top:5px;
+  box-shadow:0 0 0 4px rgba(0,0,0,.05);
+}
+.gonogo .gg-head strong{
+  display:block;font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16.5px;font-weight:800;letter-spacing:-.2px;margin-bottom:3px;
+}
+.gonogo .gg-head span{display:block;font-size:13.5px;line-height:1.5;color:var(--muted)}
+.g-go   .gg-dot{background:#2fa36b}
+.g-go   .gg-head strong{color:#1d7a4e}
+.g-care .gg-dot{background:#eb9c1c}
+.g-care .gg-head strong{color:#9a6207}
+.g-stop .gg-dot{background:var(--danger)}
+.g-stop .gg-head strong{color:var(--danger)}
+/* SAFETY ON TOP. The band is the first thing in the card, above the verdict:
+   read the risk, then the opinion. It is never inside a <details>, never
+   shortened, never moved below the verdict. People drown in these wadis. */
+.gonogo .gg-safety{
+  display:flex;gap:10px;align-items:flex-start;
+  background:#fdeceb;border-bottom:1px solid #f2c4bf;
+  padding:12px 16px;color:#7d2418;font-size:13.5px;line-height:1.5;
+}
+.gonogo .gg-safety p{margin:0}
+.gonogo .gg-safety strong{color:var(--danger);font-weight:800}
+.gonogo .gg-safety .gs-i{flex:0 0 auto;font-size:15px;line-height:1.35}
+
+/* --- 3 · THE SPECS: every fact on screen, nothing behind a tap ---------- */
+.specs{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  margin:0 0 16px;border-radius:14px;overflow:hidden;
+  background:var(--line);border:1px solid var(--line);box-shadow:var(--shadow);
+}
+.spec{background:#fff;padding:12px 14px;min-width:0}
+.spec-wide{grid-column:1 / -1}
+.spec .sk{
+  display:block;margin-bottom:4px;
+  font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;
+  color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.spec .sv{
+  display:flex;align-items:baseline;gap:7px;
+  font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14.5px;font-weight:700;line-height:1.35;letter-spacing:-.2px;
+  color:var(--ink);overflow-wrap:anywhere;
+}
+.spec .sv .sl-dot{flex:0 0 auto;align-self:center}
+/* A hard requirement, a guide, a 4x4, reads as one wherever it lands. */
+.spec .sv-must{color:var(--danger)}
+@media(max-width:340px){.specs{grid-template-columns:1fr}.spec-wide{grid-column:auto}}
+
+/* --- the blurb, with room to breathe ----------------------------------- */
+/* The description, above the verdict. Plain paragraph, the old 3-line clamp
+   put a "more" link on blurbs already under three lines, so it collapsed
+   nothing and read as a broken control. */
+.lede{font-size:15.5px;line-height:1.6;color:#37423d;margin:0 0 16px}
+
+/* --- 6 · reels side by side --------------------------------------------- */
+.instarow{margin:0 0 16px}   /* one reel per place */
+.instarow .instabtn{margin:0;padding:10px 8px;font-size:13px;border-radius:999px}
+.instarow .instabtn+.instabtn{margin-top:0}
+
+/* --- 7 · THE DRAWER: every long section as one dense index card ---------- */
+.drawer{
+  margin:0 0 12px;overflow:hidden;border-radius:14px;
+  background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);
+}
+.drawer .dsec{border-top:1px solid #f0ebe1}
+.drawer .dsec:first-child{border-top:none}
+.drawer .dsec>summary{
+  display:flex;align-items:center;gap:11px;list-style:none;cursor:pointer;
+  padding:10px 14px;
+}
+.drawer .dsec>summary::-webkit-details-marker{display:none}
+.drawer .ds-i{
+  flex:0 0 auto;width:24px;height:24px;border-radius:8px;
+  display:grid;place-items:center;font-size:12.5px;
+  background:var(--sand-2);transition:background .18s ease;
+}
+.drawer .ds-t{
+  flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14.5px;font-weight:700;letter-spacing:-.1px;
+}
+.drawer .ds-n{flex:0 0 auto;font-size:11px;font-weight:700;color:var(--muted)}
+.drawer .dsec>summary::after{
+  content:"›";flex:0 0 auto;font-size:17px;line-height:1;color:#bdb5a6;
+  transform:rotate(90deg);transition:transform .2s cubic-bezier(.2,.8,.2,1);
+}
+.drawer .dsec[open]>summary::after{transform:rotate(-90deg)}
+.drawer .dsec[open]>summary{background:var(--sand-2)}
+.drawer .dsec[open] .ds-i{background:var(--water-soft)}
+.drawer .fold-body{padding:12px 14px 15px}
+.drawer .fold-body>:first-child{margin-top:0}
+.drawer .fold-body .sheet-fig{margin:12px 0 0}
+.drawer .fold-body .bringbox{margin:0}
+.drawer .fold-body .bring-col{border:none;padding:2px 0;background:transparent}
+
+/* --- 8 · the disclaimer, quietly ---------------------------------------- */
+.verifynote.thin{
+  background:none;padding:0 2px;margin:0 0 10px;
+  font-size:11px;line-height:1.4;color:#98938a;
+}
+
+/* --- 9 · the review: the stars ARE the control -------------------------- */
+.ratebox{
+  margin:0 0 16px;border-radius:14px;padding:16px;
+  background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);
+}
+.ratebox .rate-q{
+  margin:0 0 10px;font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px;font-weight:700;
+}
+.ratebox .stars{display:flex;gap:6px;margin:0}
+.ratebox .star{
+  background:none;border:0;cursor:pointer;padding:2px 4px;line-height:1;
+  font-size:32px;color:#ddd5c8;transition:transform .12s ease,color .12s ease;
+}
+.ratebox .star:active{transform:scale(1.18)}
+.ratebox .star.on{color:var(--gold)}
+.rate-more{animation:foldIn .2s ease;margin-top:13px}
+.rate-more .rate-send{margin-top:2px}
+
+/* --- 10 · THE DOCK: Maps and Save always one thumb away ------------------ */
+.dockbar{
+  position:sticky;bottom:0;z-index:3;
+  display:flex;align-items:center;gap:8px;
+  margin:14px -20px 0;
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));
+  background:rgba(250,246,240,.94);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);
+}
+.dock-ico{
+  flex:0 0 auto;width:44px;height:44px;border-radius:50%;
+  display:grid;place-items:center;font-size:17px;line-height:1;
+  background:#fff;border:1px solid var(--line);color:var(--ink);
+  transition:transform .12s ease,background .15s ease,color .15s ease;
+}
+.dock-ico:active{transform:scale(.92)}
+.dock-ico.on{background:var(--water-soft);border-color:var(--water);color:var(--water-dark)}
+#actSave.on{background:#fdeef4;border-color:#f0bed3;color:#c4436f}
+.dock-wa{background:#e7f8ee;border-color:#bfe8cf;color:#0f6b3a}
+.dock-go{
+  flex:1;min-width:0;height:44px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  background:var(--water);color:#fff;font-weight:700;font-size:14px;white-space:nowrap;
+  box-shadow:0 4px 14px rgba(13,92,99,.28);
+  transition:transform .12s ease;
+}
+.dock-go:active{transform:scale(.985)}
+
+/* --- the one bit of motion: folds fade their contents in ----------------- */
+@keyframes foldIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.drawer .fold-body,.rate-more{animation:foldIn .18s ease}
+@media(prefers-reduced-motion:reduce){
+  .drawer .fold-body,.rate-more{animation:none}
+  .rankup .ru-card,.rankup .ru-burst i{animation:none !important}
+  .dock-ico:active,.dock-go:active{transform:none}
+  .drawer .dsec>summary::after{transition:none}
+}
+
+/* --- very narrow phones (320px) ----------------------------------------- */
+@media(max-width:340px){
+  .sheet-inner{padding:12px 16px 0}
+  .dockbar{margin:12px -16px 0;padding-left:12px;padding-right:12px;gap:6px}
+  .dock-ico{width:40px;height:40px}
+  .dock-go{height:40px;font-size:13px}
+  .poster-txt{padding:0 16px 12px}
+  .poster-txt h2{font-size:24px}
+}
+
+
+/* ============================================================== RANK-UP
+   Crossing a rank is the one moment in this app worth interrupting someone
+   for, so it goes big: confetti falls, three shockwave rings blow out of a
+   medal that slams in, eighteen rays fire, and the old title crosses out into
+   the new one. The app itself has already re-skinned to the new rank's colour
+   underneath (applyRankTheme in app.js), so when the card clears, everything
+   is a different colour than it was a second ago.
+
+   It only fires on an actual rank change, celebrate() checks. If it fired on
+   all 101 ticks it would be noise, and the whole point is that it isn't. */
+.rankup{
+  position:fixed;inset:0;z-index:200;display:grid;place-items:center;
+  background:radial-gradient(120% 80% at 50% 40%,
+    color-mix(in srgb,var(--ru) 42%,transparent), rgba(10,20,18,.82));
+  -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  animation:ruIn .2s ease-out;padding:24px;overflow:hidden;
+}
+.rankup.out{animation:ruOut .32s ease-in forwards}
+@keyframes ruIn{from{opacity:0}to{opacity:1}}
+@keyframes ruOut{to{opacity:0;transform:scale(1.04)}}
+
+/* --- confetti ----------------------------------------------------------- */
+.rankup .ru-sky{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.rankup .ru-sky i{
+  position:absolute;top:-6vh;left:var(--x);
+  width:9px;height:14px;border-radius:2px;background:var(--c);
+  transform:scale(var(--s)) rotate(var(--r));opacity:0;
+  animation:ruFall 2.6s cubic-bezier(.25,.6,.4,1) var(--d) forwards;
+}
+@keyframes ruFall{
+  0%{opacity:0;transform:translateY(0) scale(var(--s)) rotate(var(--r))}
+  8%{opacity:1}
+  100%{opacity:0;transform:translateY(108vh) scale(var(--s)) rotate(calc(var(--r) + 900deg))}
+}
+
+/* --- the card ----------------------------------------------------------- */
+.rankup .ru-card{
+  position:relative;text-align:center;
+  background:#fff;border-radius:26px;padding:34px 30px 24px;
+  box-shadow:0 24px 70px rgba(0,0,0,.4);max-width:310px;width:100%;
+  animation:ruSlam .5s cubic-bezier(.16,1.3,.3,1);
+}
+@keyframes ruSlam{
+  0%{transform:scale(.5) rotate(-7deg);opacity:0}
+  55%{transform:scale(1.06) rotate(1.5deg);opacity:1}
+  75%{transform:scale(.98) rotate(-.5deg)}
+  100%{transform:scale(1) rotate(0)}
+}
+/* three shockwaves off the medal */
+.rankup .ru-rings{position:absolute;left:50%;top:70px;width:0;height:0;pointer-events:none}
+.rankup .ru-rings i{
+  position:absolute;left:50%;top:50%;width:78px;height:78px;margin:-39px 0 0 -39px;
+  border:2px solid var(--ru);border-radius:50%;opacity:0;
+  animation:ruWave 1.5s ease-out forwards;
+}
+.rankup .ru-rings i:nth-child(2){animation-delay:.18s}
+.rankup .ru-rings i:nth-child(3){animation-delay:.36s}
+@keyframes ruWave{
+  0%{opacity:.75;transform:scale(.5)}
+  100%{opacity:0;transform:scale(3.1)}
+}
+/* eighteen rays */
+.rankup .ru-burst{position:absolute;left:50%;top:70px;width:0;height:0;pointer-events:none}
+.rankup .ru-burst i{
+  position:absolute;left:0;top:0;width:3px;height:17px;border-radius:2px;
+  background:var(--gold);opacity:0;transform-origin:50% 0;
+  transform:rotate(var(--a)) translateY(34px);
+  animation:ruRay .8s ease-out var(--d) ;
+}
+@keyframes ruRay{
+  0%{opacity:0;transform:rotate(var(--a)) translateY(18px) scaleY(.3)}
+  30%{opacity:1}
+  100%{opacity:0;transform:rotate(var(--a)) translateY(76px) scaleY(1.1)}
+}
+/* the medal */
+.rankup .ru-medal{
+  width:82px;height:82px;border-radius:50%;margin:0 auto 16px;position:relative;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,var(--ru),var(--ru-dark));
+  box-shadow:0 10px 28px color-mix(in srgb,var(--ru) 45%,transparent),
+             inset 0 2px 0 rgba(255,255,255,.35);
+  animation:ruMedal .9s ease-out .1s both;
+}
+@keyframes ruMedal{
+  0%{transform:scale(0) rotate(-140deg)}
+  60%{transform:scale(1.14) rotate(8deg)}
+  100%{transform:scale(1) rotate(0)}
+}
+.rankup .ru-medal span{
+  font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:30px;font-weight:800;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.28);
+}
+.rankup .ru-kicker{
+  font-size:10.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ru);margin-bottom:6px;animation:ruUp .5s ease-out .22s both;
+}
+.rankup .ru-name{
+  font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:34px;font-weight:800;letter-spacing:-.9px;line-height:1.05;
+  color:var(--ink);margin-bottom:10px;animation:ruUp .5s ease-out .3s both;
+}
+.rankup .ru-from{
+  font-size:13px;color:var(--muted);margin-bottom:6px;
+  animation:ruUp .5s ease-out .38s both;
+}
+.rankup .ru-from s{opacity:.6}
+.rankup .ru-from b{color:var(--ru);font-weight:800}
+.rankup .ru-sub{
+  font-size:12.5px;line-height:1.5;color:var(--muted);
+  animation:ruUp .5s ease-out .44s both;
+}
+@keyframes ruUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.rankup .ru-go{
+  margin-top:18px;width:100%;padding:13px;border:0;border-radius:999px;cursor:pointer;
+  font:inherit;font-size:14.5px;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,var(--ru),var(--ru-dark));
+  box-shadow:0 6px 18px color-mix(in srgb,var(--ru) 38%,transparent);
+  animation:ruUp .5s ease-out .5s both;
+}
+.rankup .ru-go:active{transform:scale(.97)}
+/* the page itself flashes as the new skin lands */
+body.tier-flash{animation:ruFlash .7s ease-out}
+@keyframes ruFlash{
+  0%{background-color:var(--water-soft)}
+  100%{background-color:var(--sand)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .rankup,.rankup .ru-card,.rankup .ru-medal,.rankup .ru-kicker,.rankup .ru-name,
+  .rankup .ru-from,.rankup .ru-sub,.rankup .ru-go{animation:none}
+  .rankup .ru-sky,.rankup .ru-burst,.rankup .ru-rings{display:none}
+  body.tier-flash{animation:none}
+}
+
+/* ------------------------------------------------------- PLANNER FINE TUNING
+   Four of the eight questions only tune a trip rather than shape it, so they
+   fold. The Plan tab was ~7 phone screens of stacked full-width cards before
+   anyone reached the button. */
+.planner-fine{margin:4px 0 14px}
+.planner-fine>summary{font-size:14px}
+.planner-fine .fold-body{padding:4px 12px 12px;background:var(--sand-2)}
+.planner-fine .q{margin:10px 0 0;box-shadow:none;border:1px solid var(--line)}
+.planner-fine .q:first-child{margin-top:6px}
+.fine-body{display:block}
+
+/* ============================================================== COMING SOON
+   The Salalah curtain (meta.salalahComingSoon). The spots sit finished in
+   content.js behind it, this is presentation, not absence. */
+.soon{display:grid;place-items:center;padding:26px 0 10px}
+.soon-card{
+  text-align:center;max-width:340px;width:100%;
+  background:#fff;border:1px solid var(--line);border-radius:20px;
+  padding:30px 24px 26px;box-shadow:var(--shadow);
+}
+.soon-art{font-size:44px;margin-bottom:10px}
+.soon-card h1{font-size:28px;letter-spacing:-.6px;margin:0 0 10px}
+.soon-pill{
+  display:inline-block;font-size:11px;font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--water-dark);background:var(--water-soft);
+  border-radius:999px;padding:6px 14px;margin-bottom:14px;
+}
+.soon-card p{margin:0 0 10px;font-size:14.5px;line-height:1.6;color:#37423d}
+.soon-card .soon-sub{font-size:12.5px;color:var(--muted);margin:0}
+
+/* the tab wears a small "soon" flag and dims a touch */
+.tab-dim{opacity:.62}
+.tab-soon{
+  font-style:normal;font-size:8.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;color:#fff;background:var(--gold);
+  border-radius:999px;padding:2px 6px;margin-left:5px;vertical-align:2px;
+}
+
+/* ============================================================ PLANNER LOCK
+   The locked Planner is the flagship of the paid guide, so it dresses like
+   one: the dark card in the app, compass front and centre, a padlock riding
+   its corner, gold check bullets. Same family as the Salalah curtain. */
+.lockcard{
+  background:linear-gradient(155deg,var(--water),var(--water-dark));
+  color:#fff;border-radius:20px;padding:28px 22px 22px;margin:6px 0 14px;
+  text-align:center;box-shadow:var(--shadow-lg);
+}
+.lock-art{
+  position:relative;width:74px;height:74px;margin:0 auto 14px;color:#fff;
+}
+.lock-art>svg{width:100%;height:100%;display:block;opacity:.95}
+.lock-pad{
+  position:absolute;right:-7px;bottom:-4px;width:28px;height:28px;
+  background:var(--gold);color:#fff;border-radius:9px;
+  display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.3);
+}
+.lock-pad svg{width:16px;height:16px}
+.lockcard h2{
+  font-size:24px;letter-spacing:-.5px;margin:0 0 10px;color:#fff;
+}
+.lock-pill{
+  display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--water-dark);background:#fff;
+  border-radius:999px;padding:6px 14px;margin-bottom:14px;
+}
+.lock-lead{
+  margin:0 auto 16px;max-width:30ch;
+  font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.92);
+}
+.lock-feats{
+  list-style:none;margin:0 auto 16px;padding:14px 16px;max-width:330px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  border-radius:14px;text-align:left;
+}
+.lock-feats li{
+  position:relative;padding-left:24px;margin-bottom:9px;
+  font-size:13px;line-height:1.45;color:rgba(255,255,255,.9);
+}
+.lock-feats li:last-child{margin-bottom:0}
+.lock-feats li::before{
+  content:"✓";position:absolute;left:0;top:0;
+  color:var(--gold);font-weight:800;
+}
+.lock-when{margin:0;font-size:12px;color:rgba(255,255,255,.65)}
+
+/* ======================================================== TAP AFFORDANCES
+   Nobody knew the Info elements opened. Now every tappable thing carries its
+   own cue: signs and stat tiles wear a small teal + badge that flips to a
+   dash when open, list rows wear a ringed chevron that rotates, and rows
+   with an external link (the eVisa portal) get a solid pill, the loudest
+   "this is a button" on the page. One hint line at the top for good measure. */
+.tap-hint{
+  font-size:12px !important;color:var(--muted) !important;
+  margin-top:4px !important;
+}
+/* the + badge, shared by signs and stat tiles */
+.sign-ic::before,.stat::after{
+  content:"+";position:absolute;z-index:2;
+  width:19px;height:19px;border-radius:50%;
+  background:var(--water);color:#fff;
+  font-size:14px;font-weight:700;line-height:19px;text-align:center;
+  box-shadow:0 1px 4px rgba(0,0,0,.22);
+}
+.sign-ic::before{right:-4px;bottom:-2px}
+.sign-ic.sign-forbid::before{background:var(--danger)}
+.sign.on .sign-ic::before{content:"–"}
+.stat{position:relative}
+.stat::after{right:10px;top:10px}
+.stat.on::after{content:"–"}
+/* list-row chevrons become ringed buttons */
+.irow-c{
+  width:26px;height:26px;border-radius:50%;
+  border:1.5px solid var(--line);background:var(--sand-2);
+  display:grid;place-items:center;font-size:14px;line-height:1;
+  color:var(--muted);
+}
+.irow.on .irow-c,.lad.on .irow-c{
+  background:var(--water);border-color:var(--water);color:#fff;
+}
+/* the chart gets one too */
+.bars{position:relative;padding-right:46px}
+.bars::after{
+  content:"›";position:absolute;right:12px;top:50%;margin-top:-13px;
+  width:26px;height:26px;border-radius:50%;
+  border:1.5px solid var(--line);background:var(--sand-2);
+  display:grid;place-items:center;font-size:14px;color:var(--muted);
+  transform:rotate(90deg);
+}
+.bars.on::after{background:var(--water);border-color:var(--water);color:#fff;transform:rotate(-90deg)}
+/* the external-link pill */
+.irow-pill{
+  flex:0 0 auto;padding:8px 13px;border-radius:999px;
+  background:var(--water);color:#fff;font-size:12px;font-weight:800;
+  white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.14);
+}
+.irow.on .irow-pill{background:var(--water-dark)}
+
+/* ========================================================= ABOUT HEADER
+   Photo NEXT TO the hook, not stacked over it: a rounded square headshot on
+   the left, the question and sub on the right, left-aligned. The asset is
+   already cropped to the face (cut from the OneDrive original), so the img
+   just fills its box. The stacked centred layout survives only as the
+   no-photo fallback. */
+.about-hero.has-photo{
+  display:flex;align-items:center;gap:16px;text-align:left;padding:8px 0 20px;
+}
+.about-hero.has-photo .about-poster{
+  flex:0 0 116px;width:116px;aspect-ratio:1;margin:0;
+  border-radius:18px;overflow:hidden;
+  box-shadow:var(--shadow-lg);background:var(--sand-2);
+}
+.about-poster img{
+  width:100%;height:100%;object-fit:cover;object-position:center;display:block;
+}
+.ah-txt{flex:1;min-width:0}
+.about-hero.has-photo h1.about-hook{
+  font-size:20px;line-height:1.22;letter-spacing:-.4px;
+  margin:0;max-width:none;text-wrap:balance;
+}
+.about-hero.has-photo .about-sub{
+  font-size:13px;line-height:1.5;margin:7px 0 0;max-width:none;
+}
+.about-hero.has-photo .about-byline{margin:7px 0 0;font-size:11.5px}
+@media(max-width:350px){
+  .about-hero.has-photo .about-poster{flex-basis:96px;width:96px}
+  .about-hero.has-photo h1.about-hook{font-size:18px}
+}

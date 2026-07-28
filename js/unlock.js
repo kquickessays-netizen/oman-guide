@@ -1,5 +1,5 @@
 /* =============================================================================
-   UNLOCK — Gumroad licence-key verification
+   UNLOCK, Gumroad licence-key verification
    -----------------------------------------------------------------------------
    HOW IT WORKS
    1. Buyer purchases on Gumroad. Gumroad emails them a licence key.
@@ -12,13 +12,13 @@
    The bundle key unlocks EVERYTHING. A single-guide key unlocks that tab only.
 
    ⚙️ NOTHING TO EDIT IN THIS FILE. The product permalinks are read straight out
-   of `meta.buyLinks` in data/content.js — paste your 9 Gumroad URLs there and
+   of `meta.buyLinks` in data/content.js, paste your 9 Gumroad URLs there and
    both the buy buttons and the key check are wired at once.
    ========================================================================== */
 
 const Unlock = (() => {
 
-  // ONE product. One key. It unlocks everything ("*") — spots, itineraries and
+  // ONE product. One key. It unlocks everything ("*"), spots, itineraries and
   // the Planner. (There used to be nine per-tab products; the tabs merged into
   // Explore + Salalah, so the products merged into one.)
   const GRANTS = {
@@ -41,9 +41,9 @@ const Unlock = (() => {
       .filter(p => p.permalink && !/^your-/i.test(p.permalink));
   }
 
-  // Master keys that always work — for you, for press, for refunds/gifts.
+  // Master keys that always work, for you, for press, for refunds/gifts.
   // Stored as SHA-256 HASHES so the plaintext never ships to visitors (this
-  // file is public — a plaintext key here is a skeleton key for anyone who
+  // file is public, a plaintext key here is a skeleton key for anyone who
   // opens devtools). The plaintext lives in delivery/OWNER-KEY.txt (not
   // deployed). To mint a new one, hash the UPPERCASED key:
   //   crypto.subtle.digest("SHA-256", new TextEncoder().encode("MY-KEY"))
@@ -53,7 +53,7 @@ const Unlock = (() => {
   ];
 
   async function sha256Hex(text) {
-    if (!(window.crypto && crypto.subtle)) return null;  // file:// — no subtle crypto
+    if (!(window.crypto && crypto.subtle)) return null;  // file://, no subtle crypto
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
     return [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2, "0")).join("");
   }
@@ -77,7 +77,7 @@ const Unlock = (() => {
   }
 
   /* ---------------------------------------------------------------- queries */
-  // FREE LAUNCH MODE — while meta.freeLaunch is true in content.js, EVERY
+  // FREE LAUNCH MODE, while meta.freeLaunch is true in content.js, EVERY
   // device counts as unlocked: all spots, all itineraries, the full Planner.
   // Flip the flag to false (one line) to turn the paywall on for the season.
   const FREE_LAUNCH = () =>
@@ -118,7 +118,7 @@ const Unlock = (() => {
     const licenceKey = (rawKey || "").trim();
     if (!licenceKey) return { ok: false, error: "Enter your licence key." };
 
-    // 1. master keys (compared by hash — needs a secure context, i.e. HTTPS
+    // 1. master keys (compared by hash, needs a secure context, i.e. HTTPS
     //    or localhost; on file:// master keys simply don't apply)
     const keyHash = await sha256Hex(licenceKey.toUpperCase());
     if (keyHash && MASTER_HASHES.includes(keyHash)) {
@@ -146,7 +146,7 @@ const Unlock = (() => {
         const body = new URLSearchParams({
           product_permalink: prod.permalink,
           license_key: licenceKey,
-          // count verifications on Gumroad's side — it's how you notice a key
+          // count verifications on Gumroad's side, it's how you notice a key
           // being shared around (Gumroad shows uses per licence)
           increment_uses_count: "true"
         });

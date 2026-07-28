@@ -4,8 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d5c63">
-<title>Exploring Oman — wadis, beaches &amp; itineraries</title>
-<meta name="description" content="Wadis, beaches and hidden corners of Oman — maps, logistics and a trip planner, from a licensed Omani guide.">
+<title>Exploring Oman: wadis, beaches &amp; itineraries</title>
+<meta name="description" content="Wadis, beaches and hidden corners of Oman: maps, logistics and a trip planner, from a licensed Omani guide.">
+
+<!-- Social previews: what the link looks like when shared on WhatsApp /
+     Instagram / anywhere. Without these it's a bare grey URL. If you move
+     to a custom domain, update the URLs below. -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Exploring Oman: the guide by @hussain_explores">
+<meta property="og:description" content="90+ wadis, beaches and hidden corners with real logistics, maps and a trip planner. By a licensed Omani guide. Free during launch season.">
+<meta property="og:url" content="https://kquickessays-netizen.github.io/oman-guide/">
+<meta property="og:image" content="https://kquickessays-netizen.github.io/oman-guide/assets/wadis/wadi-shab.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Exploring Oman: the guide by @hussain_explores">
+<meta name="twitter:description" content="90+ spots with real logistics, maps and a trip planner. Free during launch season.">
+<meta name="twitter:image" content="https://kquickessays-netizen.github.io/oman-guide/assets/wadis/wadi-shab.jpg">
 
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -72,8 +85,19 @@
 <script src="js/planner.js"></script>
 <script src="js/app.js"></script>
 <script>
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  // The service worker serves css/js stale-while-revalidate, which is right for
+  // a traveller in a wadi with no signal and WRONG on a laptop: every reload
+  // would show you the previous edit, forever. So it's off on localhost, and
+  // any worker left behind from an earlier session is torn down on sight.
+  var LOCAL = ['localhost', '127.0.0.1', '[::1]'].indexOf(location.hostname) !== -1;
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !LOCAL) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+  } else if (LOCAL && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations()
+      .then(rs => Promise.all(rs.map(r => r.unregister())))
+      .then(() => caches.keys())
+      .then(ks => Promise.all(ks.map(k => caches.delete(k))))
+      .catch(()=>{});
   }
 </script>
 </body>

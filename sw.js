@@ -1,7 +1,7 @@
-/* Service worker — makes the app installable and usable offline in a wadi
+/* Service worker, makes the app installable and usable offline in a wadi
    with no signal. Bump CACHE when you change content, or users keep the old
    version until the cache expires. */
-const CACHE = "oman-v18";
+const CACHE = "oman-v21";
 
 const CORE = [
   "./",
@@ -39,7 +39,7 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET") return;
 
-  // Never cache the Gumroad licence check or analytics — straight to network.
+  // Never cache the Gumroad licence check or analytics, straight to network.
   if (req.url.includes("api.gumroad.com") || req.url.includes(".supabase.co")) return;
 
   // Network-first for our own data so edits show up; cache as fallback.
@@ -56,7 +56,7 @@ self.addEventListener("fetch", e => {
     return;
   }
 
-  // Images and icons never change once published — pure cache-first.
+  // Images and icons never change once published, pure cache-first.
   if (req.destination === "image") {
     e.respondWith(
       caches.match(req).then(hit => hit || fetch(req).then(res => {
@@ -69,7 +69,7 @@ self.addEventListener("fetch", e => {
   }
 
   // Shell, css, js: stale-while-revalidate. Serve the cache instantly (works
-  // offline in a wadi), but refresh the copy in the background — so even if a
+  // offline in a wadi), but refresh the copy in the background, so even if a
   // deploy raced the CDN and cached a stale file, the next open heals it
   // instead of pinning it until the next CACHE bump.
   e.respondWith(
