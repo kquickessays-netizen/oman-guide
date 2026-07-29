@@ -319,7 +319,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/wadis/wadi-shab-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/wadis/wadi-shab-3.jpg", credit: "Photo: Uhooep · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "coast-east", coords: [22.839, 59.236],
+      ], region: "coast-east", coords: [22.83896, 59.24598],
       hours: 5, fitness: 3, needs4x4: false, swim: true, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["swimming","hiking","photography","canyoning"],
@@ -339,7 +339,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry fee": "~OMR 1 pp (incl. boat)"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Shab+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.83896,59.24598",
       insta: "https://www.instagram.com/hussain_explores/reel/DUsh1oYDMQC/", // the 14K reel — confirmed Wadi Shab, THE video
       verify: true,
       gettingThere: [
@@ -555,7 +555,7 @@ window.OMAN_DATA = {
         "Pair it with Wadi Shab in one day, they're minutes apart.",
         "The road is tight. Mind the villagers: this is their street, not a track."
       ],
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Tiwi+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.815,59.254",
       verify: true
     },
     {
@@ -568,7 +568,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/wadis/wadi-dayqah-2.jpg", credit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons" },
         { src: "assets/wadis/wadi-dayqah-3.jpg", credit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.08492, 58.84817],
+      ], region: "muscat", coords: [23.08509, 58.84815],
       hours: 3, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["photography","wildlife"],
@@ -588,7 +588,7 @@ window.OMAN_DATA = {
         "Opening hours": "~8am–10pm",
         "Entry fee": "~OMR 1 pp (visitors), cash"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Dayqah+Dam+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.08509,58.84815",
       verify: true
     },
     {
@@ -601,7 +601,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/wadis/wadi-tanuf-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/wadis/wadi-tanuf-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "dakhiliyah", coords: [23.058, 57.475],
+      ], region: "dakhiliyah", coords: [23.05246, 57.46948],
       hours: 3, fitness: 2, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["swimming","hiking","culture","photography"],
@@ -637,7 +637,7 @@ window.OMAN_DATA = {
         "Water levels swing hard with the season, check before you commit to a swim day.",
         "Pairs perfectly with Al Hoota Cave and Misfat in one Nizwa day."
       ],
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Tanuf+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.05246,57.46948",
       verify: true
     },
     {
@@ -766,7 +766,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry fee": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+As+Suwayh+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.331,59.591",
       verify: true,
       needsFirstHand: true
     },
@@ -878,7 +878,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Al+Abyad+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.389,57.662",
       verify: true
     },
     {
@@ -888,7 +888,7 @@ window.OMAN_DATA = {
       blurb: "The wadi everyone in Muscat drives over and almost nobody drives into. Past the dam the gorge narrows and holds year-round pools between smooth rock walls, a real wadi swim twenty minutes from the suburbs. After rain, the whole city comes to watch it flow.",
       img: "assets/wadis/wadi-al-khoudh.jpg",
       imgCredit: "Photo: Raymond M. Coveney, … · CC BY-SA 3.0 · Wikimedia Commons",
-      region: "muscat", coords: [23.559, 58.110],
+      region: "muscat", coords: [23.55945, 58.11025],
       hours: 3, fitness: 2, needs4x4: true, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["swimming","hiking","photography"],
@@ -907,7 +907,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr, never after rain upstream",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Al+Khoudh+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.55945,58.11025",
       verify: true
     },
 
@@ -923,7 +923,7 @@ window.OMAN_DATA = {
         { src: "assets/beaches/qurum-beach-2.jpg", credit: "Photo: Albinfo · CC BY 4.0 · Wikimedia Commons" },
         { src: "assets/beaches/qurum-beach-3.jpg", credit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.612, 58.462],
+      region: "muscat", coords: [23.61204, 58.46363],
       hours: 2, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["beach","swimming","sunset","food"],
@@ -938,7 +938,7 @@ window.OMAN_DATA = {
         "Best time": "Early morning or golden hour",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Qurum+Beach+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.61204,58.46363",
       insta: "https://www.instagram.com/hussain_explores/reel/DR7SH7kjGn8/",
       verify: true,
       gettingThere: [
@@ -966,7 +966,7 @@ window.OMAN_DATA = {
         { src: "assets/beaches/al-bustan-beach-2.jpg", credit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons" },
         { src: "assets/beaches/al-bustan-beach-3.jpg", credit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.559, 58.610],
+      region: "muscat", coords: [23.5561, 58.60104],
       hours: 2, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["beach","swimming","sunset","photography"],
@@ -981,7 +981,7 @@ window.OMAN_DATA = {
         "Best time": "Late afternoon, or a moonless winter night",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Bustan+Beach+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.5561,58.60104",
       insta: "https://www.instagram.com/hussain_explores/reel/DSHboeCjJek/", // the "planktons are still there" night
       verify: true,
       gettingThere: [
@@ -1007,7 +1007,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/beaches/sidab-2.jpg", credit: "Photo: Apemaninoman · CC BY 4.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.594, 58.601],
+      region: "muscat", coords: [23.60153, 58.59943],
       hours: 4, fitness: 2, needs4x4: false, swim: true, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["beach","snorkel","hiking","photography","swimming"],
@@ -1027,7 +1027,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry fee": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Sidab+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.60153,58.59943",
       insta: "https://www.instagram.com/hussain_explores/reel/DaEEFqvMzvf/", // the hike + snorkel cove reel
       verify: true,
       gettingThere: [
@@ -1075,7 +1075,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car to Qantab",
         "Entry": "Beach free, boat is the cost"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Qantab+Beach+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.556,58.632",
       insta: ["https://www.instagram.com/hussain_explores/reel/DSwgRMDDDcQ/", // the boat-booking reel
               "https://www.instagram.com/hussain_explores/reel/DS7BQFYDJdp/"], // part 2 — all ten beaches
       verify: true,
@@ -1168,7 +1168,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Tiwi+Beach+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.834,59.257",
       insta: "https://www.instagram.com/hussain_explores/reel/DUN_l4sDHKG/", // relaxed beach + the cave
       verify: false,
       gettingThere: [
@@ -1213,7 +1213,7 @@ window.OMAN_DATA = {
         "Facilities": "None, bring everything",
         "Entry": "Free (wild camping legal)"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Fins+Beach+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.098,59.024",
       verify: true,
       gettingThere: [
         "Coast road from Muscat toward Sur, 1.5 to 2 hrs, near Fins village.",
@@ -1259,7 +1259,7 @@ window.OMAN_DATA = {
         "Best time": "Morning (calmest water)",
         "Entry": "Boat/kayak hire (~OMR 15 for a kayak)"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Bandar+Khayran+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.523,58.717",
       insta: "https://www.instagram.com/hussain_explores/reel/DSPMoABDHsf/", // the two beaches + no-4×4 parking guide
       verify: true
     },
@@ -1273,7 +1273,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/beaches/ras-al-jinz-2.jpg", credit: "Photo: Kim Kash · CC BY-SA 2.0 · Wikimedia Commons" },
         { src: "assets/beaches/ras-al-jinz-3.jpg", credit: "Photo: Kim Kash · CC BY-SA 2.0 · Wikimedia Commons" }
-      ], region: "coast-east", coords: [22.41883, 59.83001],
+      ], region: "coast-east", coords: [22.42353, 59.82529],
       hours: 3, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["wildlife","photography"],
@@ -1291,7 +1291,7 @@ window.OMAN_DATA = {
         "Peak nesting": "Jun–Aug (year-round sightings)",
         "Entry": "~OMR 3 pp + ~OMR 7 pp guided tour"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Ras+Al+Jinz+Turtle+Reserve+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.42353,59.82529",
       verify: true
     },
     {
@@ -1350,7 +1350,7 @@ window.OMAN_DATA = {
         { src: "assets/beaches/marjan-beach-2.jpg", credit: "Photo: Bernard DUPONT from FRANCE · CC BY-SA 2.0 · Wikimedia Commons" },
         { src: "assets/beaches/marjan-beach-3.jpg", credit: "Photo: P.Lindgren · CC BY-SA 3.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.636, 58.505],
+      region: "muscat", coords: [23.62777, 58.50494],
       hours: 2, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4,5],
       tags: ["swimming","snorkel","wildlife","beach"],
@@ -1367,7 +1367,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Marjan+Beach+Ras+Al+Hamra+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.62777,58.50494",
       insta: ["https://www.instagram.com/hussain_explores/reel/DTU37gojIR0/", // turtles for free
               "https://www.instagram.com/hussain_explores/reel/DUqIWIhDKzt/"], // "my favourite beach in Oman"
       verify: true,
@@ -1422,7 +1422,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/beaches/al-sawadi-2.jpg", credit: "Photo: Ondřej Žváček · CC BY 2.5 · Wikimedia Commons" },
         { src: "assets/beaches/al-sawadi-3.jpg", credit: "Photo: Estelle from Paris, France · CC BY 2.0 · Wikimedia Commons" }
-      ], region: "batinah", coords: [23.775, 57.790],
+      ], region: "batinah", coords: [23.77636, 57.7849],
       hours: 4, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["beach","snorkel","wildlife","sunset"],
@@ -1440,7 +1440,7 @@ window.OMAN_DATA = {
         "Access": "Beach free; boat to the islands is paid",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Sawadi+Beach+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.77636,57.7849",
       verify: true
     },
 
@@ -1475,7 +1475,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry": "Free, wild camping is legal"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=White+Beach+Fins+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.926,59.108",
       verify: true,
       gettingThere: [
         "Coast road toward Fins, ~1h30 from Muscat.",
@@ -1536,7 +1536,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/salalah/mughsail-2.jpg", credit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons" },
         { src: "assets/salalah/mughsail-3.jpg", credit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons" }
-      ], region: "dhofar", coords: [16.873, 53.774],
+      ], region: "dhofar", coords: [16.87695, 53.76778],
       hours: 3, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [1,2,3,4,7,8,9,10,11,12],
       tags: ["beach","photography","sunset"],
@@ -1554,7 +1554,7 @@ window.OMAN_DATA = {
         "Getting there": "Fly to Salalah, it's ~1,000km from Muscat",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Mughsail+Beach+Salalah+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=16.87695,53.76778",
       verify: true,
       gettingThere: [
         "Drive west from Salalah, 40 min on good tarmac, any car.",
@@ -1585,7 +1585,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/khasab-2.jpg", credit: "Photo: (A1000 · CC0 · Wikimedia Commons" },
         { src: "assets/experiences/khasab-3.jpg", credit: "Photo: (A1000 · CC0 · Wikimedia Commons" }
       ],
-      region: "musandam", coords: [26.19, 56.243],
+      region: "musandam", coords: [26.18361, 56.24726],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["culture","photography"],
@@ -1597,7 +1597,7 @@ window.OMAN_DATA = {
         "Entry": "Castle ticketed, small fee [CONFIRM]",
         "Vehicle": "Any car in town"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Khasab+Castle+Musandam",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=26.18361,56.24726",
       verify: false,
       gettingThere: [
         "Three ways in: a short flight from Muscat, the Mwasalat car ferry from Shinas, or the drive through the UAE — border crossings need your passport and rules change, check before you commit.",
@@ -1624,7 +1624,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/bukha-fort-2.jpg", credit: "Photo: Sdtrams · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/bukha-fort-3.jpg", credit: "Photo: Sdtrams · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "musandam", coords: [26.143, 56.155],
+      region: "musandam", coords: [26.14324, 56.15494],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["culture","photography"],
@@ -1636,7 +1636,7 @@ window.OMAN_DATA = {
         "Entry": "[CONFIRM fee/hours]",
         "Vehicle": "Any car"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Bukha+Fort+Musandam",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=26.14324,56.15494",
       verify: false,
       gettingThere: [
         "It's directly on the Bukha–Khasab coast road, you'll see it from the car."
@@ -1697,7 +1697,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/sur-old-town-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/sur-old-town-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "sharqiyah", coords: [22.567, 59.529],
+      region: "sharqiyah", coords: [22.56798, 59.52198],
       hours: 3, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["culture","photography","sunset"],
@@ -1709,7 +1709,7 @@ window.OMAN_DATA = {
         "Pairs with": "Ras Al Jinz turtles, 40 min on",
         "Entry": "Town free, castle small fee [CONFIRM]"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Sur+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.56798,59.52198",
       verify: false,
       gettingThere: [
         "Route 17 all the way down the coast from Muscat, 2.5–3 hrs, tarmac throughout.",
@@ -1736,7 +1736,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/sur-dhow-factory-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/sur-dhow-factory-3.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" }
       ],
-      region: "sharqiyah", coords: [22.578, 59.529],
+      region: "sharqiyah", coords: [22.5769, 59.52494],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["culture","photography"],
@@ -1748,7 +1748,7 @@ window.OMAN_DATA = {
         "Entry": "Free or small tip/fee [CONFIRM]",
         "Vehicle": "Any car"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Dhow+Factory+Sur+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.5769,59.52494",
       verify: false,
       gettingThere: [
         "On the lagoon edge at the entrance to Sur, signposted, park beside it."
@@ -1786,7 +1786,7 @@ window.OMAN_DATA = {
         "Season": "Oct–Apr",
         "Cost": "Operator-priced [CONFIRM current operators & prices]"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Majlis+Al+Jinn+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.885,59.107",
       verify: false,
       gettingThere: [
         "The plateau track up from Fins/Tiwi side needs a proper 4×4 and a driver who's done mountain tracks.",
@@ -1864,7 +1864,7 @@ window.OMAN_DATA = {
         "Entry": "Free",
         "Vehicle": "Any car, park at the souq"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Nizwa+Goat+Market",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.933,57.531",
       verify: false,
       gettingThere: [
         "It's inside the Nizwa souq complex, follow the noise on a Friday morning.",
@@ -1890,7 +1890,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/harat-al-aqr-2.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" },
         { src: "assets/experiences/harat-al-aqr-3.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" }
       ],
-      region: "dakhiliyah", coords: [22.932, 57.526],
+      region: "dakhiliyah", coords: [22.93301, 57.52756],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["culture","photography","food"],
@@ -1902,7 +1902,7 @@ window.OMAN_DATA = {
         "Vehicle": "Walk from the fort",
         "Best time": "Morning or late afternoon"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Harat+Al+Aqr+Nizwa",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.93301,57.52756",
       verify: false,
       gettingThere: [
         "Walk from Nizwa Fort, it's the mudbrick district directly behind the souq side."
@@ -1927,7 +1927,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/national-museum-2.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/national-museum-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.614, 58.592],
+      region: "muscat", coords: [23.61467, 58.5926],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture"],
@@ -1939,7 +1939,7 @@ window.OMAN_DATA = {
         "Entry": "Ticketed, ~5 OMR [CONFIRM]",
         "Where": "Old Muscat, opposite Al Alam Palace"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=National+Museum+of+Oman+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.61467,58.5926",
       verify: false,
       gettingThere: [
         "Old Muscat, directly opposite the Al Alam Palace approach, park on the harbour side.",
@@ -1965,7 +1965,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/oman-across-ages-2.jpg", credit: "Photo: Almaddy2022 · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/oman-across-ages-3.jpg", credit: "Photo: Somerset County Council, Laura Burnett, 2019-08-13 09:56:38 · CC BY 2.0 · Wikimedia Commons" }
       ],
-      region: "dakhiliyah", coords: [22.8, 57.588],
+      region: "dakhiliyah", coords: [22.7921, 57.58814],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture"],
@@ -1977,7 +1977,7 @@ window.OMAN_DATA = {
         "Entry": "Ticketed [CONFIRM fee]",
         "Where": "Manah, ~25 min from Nizwa"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Oman+Across+Ages+Museum+Manah",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.7921,57.58814",
       verify: false,
       gettingThere: [
         "Signposted off the Nizwa–Salalah road at Manah, 25–30 km from Nizwa, any car."
@@ -2013,7 +2013,7 @@ window.OMAN_DATA = {
         "Where": "Al Baleed, Salalah",
         "Best time": "Late afternoon, then the ruins at sunset"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Museum+of+the+Frankincense+Land+Salalah",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.001,54.113",
       verify: false,
       gettingThere: [
         "Inside the Al Baleed Archaeological Park on Salalah's shore, the park entry in this guide has the logistics."
@@ -2048,7 +2048,7 @@ window.OMAN_DATA = {
         "Stay": "Masira Island Resort or camp",
         "Vehicle": "4×4 recommended for the wild coasts"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Masirah+Island+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=20.441,58.815",
       verify: false,
       gettingThere: [
         "Drive to Shannah (~4.5 hrs), roll onto the Mwasalat vehicle ferry, ~1–1.5 hrs across, times shift with tides [CONFIRM].",
@@ -2224,7 +2224,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/via-ferrata-akhdar-2.jpg", credit: "Photo: Ocyid · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/via-ferrata-akhdar-3.jpg", credit: "Photo: Zairon · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "dakhiliyah", coords: [23.07, 57.66],
+      region: "dakhiliyah", coords: [23.06915, 57.65798],
       hours: 4, fitness: 3, needs4x4: true, swim: false, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["adrenaline"],
@@ -2236,7 +2236,7 @@ window.OMAN_DATA = {
         "Requirements": "Age/height/fitness minimums apply",
         "Vehicle": "4×4 for the mountain checkpoint"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Jabal+Akhdar+Via+Ferrata",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.06915,57.65798",
       verify: false,
       gettingThere: [
         "Book ahead, meet the guides on the mountain, 4×4 required past the Birkat Al Mouz checkpoint."
@@ -2297,7 +2297,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/flamingo-lake-quriyat-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/flamingo-lake-quriyat-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.263, 58.92],
+      region: "muscat", coords: [23.25905, 58.91964],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [10,11,12,1,2,3],
       tags: ["wildlife","photography"],
@@ -2309,7 +2309,7 @@ window.OMAN_DATA = {
         "Entry": "Free",
         "Vehicle": "Any car"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Quriyat+lagoon+flamingo+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.25905,58.91964",
       verify: false,
       gettingThere: [
         "Turn into Quriyat off Route 17 and head for the khor/lagoon on the town's edge."
@@ -2334,7 +2334,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/matrah-fort-2.jpg", credit: "Photo: Safa.daneshvar · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/matrah-fort-3.jpg", credit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.621, 58.567],
+      region: "muscat", coords: [23.62031, 58.56677],
       hours: 2, fitness: 2, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography","sunset"],
@@ -2347,7 +2347,7 @@ window.OMAN_DATA = {
         "Best time": "Late afternoon into dusk",
         "Entry": "[CONFIRM current fee & opening hours]"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Mutrah+Fort+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.62031,58.56677",
       insta: "https://www.instagram.com/hussain_explores/reel/DSW1Z5MjKQL/", // the viewpoint reel
       verify: false,
       gettingThere: [
@@ -2388,7 +2388,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car to Qantab",
         "Entry": "Free from shore, boat optional"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Qantab+Beach+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.556,58.632",
       insta: "https://www.instagram.com/hussain_explores/reel/DSo_iEkjPfT/", // the glow, filmed real
       verify: true,
       gettingThere: [
@@ -2417,7 +2417,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/dhow-bandar-rowdha-2.jpg", credit: "Photo: see source · CC BY 2.0 · Wikimedia Commons" },
         { src: "assets/experiences/dhow-bandar-rowdha-3.jpg", credit: "Photo: Mostafameraji · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.573, 58.610],
+      region: "muscat", coords: [23.57445, 58.61115],
       hours: 3, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["boat","sunset","photography","culture"],
@@ -2430,7 +2430,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car / taxi to the marina",
         "Kids": "Easy yes"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Bandar+Al+Rowdha+Marina+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.57445,58.61115",
       insta: "https://www.instagram.com/hussain_explores/reel/DUJFPi8DFcL/", // the dhow explainer — 4.1K likes
       verify: false,
       gettingThere: [
@@ -2471,7 +2471,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Tiwi+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.834,59.257",
       insta: "https://www.instagram.com/hussain_explores/reel/DUN_l4sDHKG/", // the beach + cave reel
       verify: false,
       gettingThere: [
@@ -2500,7 +2500,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/ain-al-kasfah-2.jpg", credit: "Photo: Hans Birger Nilsen · CC BY-SA 2.0 · Wikimedia Commons" },
         { src: "assets/experiences/ain-al-kasfah-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "rustaq", coords: [23.390, 57.424],
+      region: "rustaq", coords: [23.38884, 57.42514],
       hours: 1, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","swimming"],
@@ -2515,7 +2515,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car, ~1 hr from Muscat (Seeb side)",
         "Entry": "[CONFIRM fee, small if any]"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Ain+Al+Kasfah+Rustaq",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.38884,57.42514",
       insta: "https://www.instagram.com/hussain_explores/reel/DT-QlnADBpL/",
       verify: true,
       gettingThere: [
@@ -2686,7 +2686,7 @@ window.OMAN_DATA = {
       // clock hours (visitor doors). closedFridays adds the Friday warning.
       visitWindow: [8, 11],
       closedFridays: true,
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Sultan+Qaboos+Grand+Mosque+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.58233,58.38961",
       insta: "https://www.instagram.com/hussain_explores/reel/DTnzHSpjPTj/",
       verify: false,
       gettingThere: [
@@ -2716,7 +2716,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/experiences/mutrah-2.jpg", credit: "Photo: see source · CC BY 2.0 · Wikimedia Commons" },
         { src: "assets/experiences/mutrah-3.jpg", credit: "Photo: Hafsa rk · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.617, 58.594],
+      ], region: "muscat", coords: [23.61729, 58.59395],
       hours: 2.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","food","photography","sunset"],
@@ -2733,7 +2733,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car / taxi",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Mutrah+Souq+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.61729,58.59395",
       verify: true,
       gettingThere: [
         "Muscat waterfront, 15 min from most hotels.",
@@ -2761,7 +2761,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/experiences/bimmah-sinkhole-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/bimmah-sinkhole-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "coast-east", coords: [23.040, 59.074],
+      ], region: "coast-east", coords: [23.03688, 59.07013],
       hours: 1.5, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["swimming","photography"],
@@ -2779,7 +2779,7 @@ window.OMAN_DATA = {
         "Opening hours": "8am–8pm",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Bimmah+Sinkhole+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.03688,59.07013",
       insta: "https://www.instagram.com/hussain_explores/reel/DUUCjQOjMWn/",
       verify: true,
       gettingThere: [
@@ -2859,7 +2859,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Mar",
         "Booking": "Book the camp ahead"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wahiba+Sands+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.439,58.832",
       insta: "https://www.instagram.com/hussain_explores/reel/Daw-U92sNGP/",
       verify: true
     },
@@ -2873,7 +2873,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/mountains/jabal-shams-2.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/mountains/jabal-shams-3.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "dakhiliyah", coords: [23.232, 57.203],
+      ], region: "dakhiliyah", coords: [23.22656, 57.20106],
       hours: 6, fitness: 4, needs4x4: true, swim: false, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["hiking","photography","adrenaline","mountains"],
@@ -2911,7 +2911,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Jabal+Shams+Balcony+Walk+Al+Khitaym",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.22656,57.20106",
       verify: true
     },
     {
@@ -2924,7 +2924,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/experiences/nizwa-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/nizwa-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "dakhiliyah", coords: [22.933, 57.533],
+      ], region: "dakhiliyah", coords: [22.93314, 57.53297],
       hours: 4, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","food","photography"],
@@ -2956,7 +2956,7 @@ window.OMAN_DATA = {
         "The fort tower bakes at midday. Early or late.",
         "Buy dates here, not at the airport."
       ],
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Nizwa+Fort+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.93314,57.53297",
       verify: true
     },
     {
@@ -3003,7 +3003,7 @@ window.OMAN_DATA = {
         "People live here. Don't photograph doorways and windows without asking.",
         "Stay the night, the village empties after 5pm and it's a different place."
       ],
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Misfat+Al+Abriyeen+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.12023,57.27959",
       insta: "https://www.instagram.com/hussain_explores/reel/DDC_F40yIa2/",
       verify: true
     },
@@ -3017,7 +3017,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/mountains/al-hoota-cave-2.jpg", credit: "Photo: Paul IJpelaar · CC BY 3.0 · Wikimedia Commons" },
         { src: "assets/mountains/al-hoota-cave-3.jpg", credit: "Photo: Ambreen Waseem · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "dakhiliyah", coords: [23.08207, 57.35436],
+      ], region: "dakhiliyah", coords: [23.08114, 57.34987],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","wildlife","photography","mountains"],
@@ -3050,7 +3050,7 @@ window.OMAN_DATA = {
         "The perfect midday stop on a hot Nizwa day, you're underground while the sun is at its worst.",
         "It closes some days. Check before you drive out there."
       ],
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Hoota+Cave+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.08114,57.34987",
       verify: true
     },
     {
@@ -3063,7 +3063,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/mountains/jabal-akhdar-2.jpg", credit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons" },
         { src: "assets/mountains/jabal-akhdar-3.jpg", credit: "Photo: Philipp Weigell · CC BY 3.0 · Wikimedia Commons" }
-      ], region: "dakhiliyah", coords: [23.070, 57.665],
+      ], region: "dakhiliyah", coords: [23.07176, 57.66722],
       hours: 5, fitness: 2, needs4x4: true, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["hiking","culture","photography","mountains"],
@@ -3097,7 +3097,7 @@ window.OMAN_DATA = {
         "Mar–Apr for the rose harvest and the rosewater distilleries.",
         "It's cold up there in the evening. Bring a layer."
       ],
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Jabal+Akhdar+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.07176,57.66722",
       insta: ["https://www.instagram.com/hussain_explores/reel/DXhGMJrkR5t/",
               "https://www.instagram.com/hussain_explores/reel/DXLpov7DHOm/",
               "https://www.instagram.com/hussain_explores/reel/DXKEqAajCc-/"], // terraces path · Al Ain village · rose season
@@ -3113,7 +3113,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/experiences/musandam-dhow-2.jpg", credit: "Photo: Robert Haandrikman · CC BY 2.0 · Wikimedia Commons" },
         { src: "assets/experiences/musandam-dhow-3.jpg", credit: "Photo: Robert Haandrikman · CC BY 2.0 · Wikimedia Commons" }
-      ], region: "musandam", coords: [26.180, 56.245],
+      ], region: "musandam", coords: [26.17893, 56.24776],
       hours: 6, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["wildlife","snorkel","photography","beach"],
@@ -3131,7 +3131,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Booking": "Ahead in peak season"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Khasab+Musandam+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=26.17893,56.24776",
       verify: true
     },
 
@@ -3147,7 +3147,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/bahla-fort-2.jpg", credit: "Photo: Francisco Anzola · CC BY 2.0 · Wikimedia Commons" },
         { src: "assets/experiences/bahla-fort-3.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "dakhiliyah", coords: [22.9645, 57.2986],
+      region: "dakhiliyah", coords: [22.96358, 57.29993],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -3164,7 +3164,7 @@ window.OMAN_DATA = {
         "Status": "UNESCO World Heritage",
         "Closed": "Check Friday hours"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Bahla+Fort+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.96358,57.29993",
       verify: true,
       gettingThere: [
         "Route 21 past Nizwa, about 2 hrs from Muscat, 25 min beyond Nizwa.",
@@ -3192,7 +3192,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/jabrin-castle-2.jpg", credit: "Photo: Muck · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/jabrin-castle-3.jpg", credit: "Photo: Muck · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "dakhiliyah", coords: [22.9155, 57.2490],
+      region: "dakhiliyah", coords: [22.91543, 57.24951],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -3208,7 +3208,7 @@ window.OMAN_DATA = {
         "Entry": "Small fee",
         "Closed": "Check Friday hours"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Jabrin+Castle+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.91543,57.24951",
       verify: true
     },
     {
@@ -3222,7 +3222,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/nakhal-fort-2.jpg", credit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons" },
         { src: "assets/experiences/nakhal-fort-3.jpg", credit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons" }
       ],
-      region: "rustaq", coords: [23.3950, 57.8291],
+      region: "rustaq", coords: [23.39514, 57.8291],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -3238,7 +3238,7 @@ window.OMAN_DATA = {
         "Entry": "Small fee",
         "Loop": "Start of the Rustaq loop (Nakhal → Rustaq → Al Hazm)"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Nakhal+Fort+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.39514,57.8291",
       verify: true
     },
     {
@@ -3268,7 +3268,7 @@ window.OMAN_DATA = {
         "Entry": "Small fee",
         "Loop": "Middle of the Rustaq loop"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Rustaq+Fort+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.3906,57.4249",
       verify: true
     },
     {
@@ -3282,7 +3282,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/al-hazm-castle-2.jpg", credit: "Photo: Hans Birger Nilsen · CC BY-SA 2.0 · Wikimedia Commons" },
         { src: "assets/experiences/al-hazm-castle-3.jpg", credit: "Photo: Reda Kerbush · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "rustaq", coords: [23.5507, 57.4728],
+      region: "rustaq", coords: [23.55053, 57.47279],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -3298,7 +3298,7 @@ window.OMAN_DATA = {
         "Entry": "Small fee",
         "Loop": "End of the Rustaq loop"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Hazm+Castle+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.55053,57.47279",
       verify: true
     },
     {
@@ -3312,7 +3312,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/birkat-al-mouz-2.jpg", credit: "Photo: John Crane from Prague, Czech Republic · CC BY 2.0 · Wikimedia Commons" },
         { src: "assets/experiences/birkat-al-mouz-3.jpg", credit: "Photo: John Crane from Prague, Czech Republic · CC BY 2.0 · Wikimedia Commons" }
       ],
-      region: "dakhiliyah", coords: [22.9253, 57.6734],
+      region: "dakhiliyah", coords: [22.92411, 57.6683],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -3328,7 +3328,7 @@ window.OMAN_DATA = {
         "Entry": "Free",
         "Status": "Falaj Al Khatmeen is UNESCO-listed"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Birkat+Al+Mouz+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.92411,57.6683",
       verify: true,
       gettingThere: [
         "On Route 21 just before the Jabal Akhdar checkpoint turn-off, 1h45 from Muscat.",
@@ -3372,7 +3372,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car, or walk from Mutrah",
         "Entry": "Palace viewed from outside; museum has a fee"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Alam+Palace+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.6159,58.5925",
       verify: true,
       gettingThere: [
         "10 min beyond Mutrah along the corniche road.",
@@ -3400,7 +3400,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/royal-opera-house-2.jpg", credit: "Photo: Taha Al-Hayali · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/royal-opera-house-3.jpg", credit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.6138, 58.4658],
+      region: "muscat", coords: [23.61258, 58.4657],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -3416,7 +3416,7 @@ window.OMAN_DATA = {
         "Entry": "Tour fee; performance tickets vary",
         "Season": "Sep–May typically"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Royal+Opera+House+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.61258,58.4657",
       insta: "https://www.instagram.com/hussain_explores/reel/DVNxLLWDP61/",
       verify: true,
       whatYoullDo: [
@@ -3458,7 +3458,7 @@ window.OMAN_DATA = {
         "Status": "UNESCO World Heritage",
         "Pair with": "Wadi Damm, 20 min away"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Ayn+beehive+tombs+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.2747,56.7477",
       verify: true
     },
     {
@@ -3472,7 +3472,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/al-mudhaireb-2.jpg", credit: "Photo: Bernhard Dunst · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/al-mudhaireb-3.jpg", credit: "Photo: Bernhard Dunst · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "sharqiyah", coords: [22.6139, 58.6755],
+      region: "sharqiyah", coords: [22.616, 58.67499],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["culture","photography"],
@@ -3487,7 +3487,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Mudhaireb+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.616,58.67499",
       verify: true
     },
     {
@@ -3531,7 +3531,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/mountains/wakan-village-2.jpg", credit: "Photo: Raijelani · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/mountains/wakan-village-3.jpg", credit: "Photo: Raijelani · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "rustaq", coords: [23.14348, 57.73461],
+      ], region: "rustaq", coords: [23.14337, 57.73537],
       hours: 3, fitness: 2, needs4x4: true, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["mountains","hiking","culture","photography"],
@@ -3549,7 +3549,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr (blossoms late Feb–Mar)",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wakan+Village+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.14337,57.73537",
       insta: "https://www.instagram.com/hussain_explores/reel/DU0cYhZDCvB/",
       verify: true,
       gettingThere: [
@@ -3599,7 +3599,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry": "Free, park outside, walk in"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Bilad+Sayt+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.187,57.387",
       verify: true
     },
     {
@@ -3674,7 +3674,7 @@ window.OMAN_DATA = {
         { src: "assets/mountains/muscat-ridge-treks-2.jpg", credit: "Photo: Abubakr Saeed from Sudan · CC BY 2.0 · Wikimedia Commons" },
         { src: "assets/mountains/muscat-ridge-treks-3.jpg", credit: "Photo: Eduard Marmet · CC BY-SA 2.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.632, 58.549],
+      region: "muscat", coords: [23.62908, 58.55861],
       hours: 3, fitness: 3, needs4x4: false, swim: false, kidOk: false,
       months: [10,11,12,1,2,3],
       tags: ["hiking","photography","sunset"],
@@ -3692,7 +3692,7 @@ window.OMAN_DATA = {
         "Best season": "Oct–Mar, early",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=C38+trek+Riyam+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.62908,58.55861",
       insta: ["https://www.instagram.com/hussain_explores/reel/DMLRTf1s0L0/",
               "https://www.instagram.com/hussain_explores/reel/DJ6K6kzsFvT/"], // Mutrah hike · Sidab trail 8/10
       verify: true,
@@ -3820,7 +3820,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/salalah/wadi-darbat-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/salalah/wadi-darbat-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "dhofar", coords: [17.103, 54.449],
+      ], region: "dhofar", coords: [17.10428, 54.45259],
       hours: 3, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [6,7,8,9,10],
       tags: ["photography","wildlife","hiking"],
@@ -3837,7 +3837,7 @@ window.OMAN_DATA = {
         "Best season": "Khareef (late Jun–early Sep) + the green weeks after",
         "Entry": "Free (small parking fee in season)"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Darbat+Salalah+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.10428,54.45259",
       verify: true,
       gettingThere: [
         "40 min east of Salalah, signposted off the Taqah road.",
@@ -3884,7 +3884,7 @@ window.OMAN_DATA = {
         "Entry": "A few OMR per car, museum included",
         "UNESCO": "Land of Frankincense site"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Baleed+Archaeological+Park+Salalah",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.002,54.114",
       verify: true
     },
     {
@@ -3897,7 +3897,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/salalah/khor-rori-2.jpg", credit: "Photo: Richard N Horne · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/salalah/khor-rori-3.jpg", credit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons" }
-      ], region: "dhofar", coords: [17.040, 54.434],
+      ], region: "dhofar", coords: [17.03991, 54.43393],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","wildlife","photography"],
@@ -3930,7 +3930,7 @@ window.OMAN_DATA = {
         "The beach at the sand bar is one of the quietly great picnic spots in Dhofar.",
         "Weekdays: you'll have the ruins nearly alone."
       ],
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Sumhuram+Khor+Rori+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.03991,54.43393",
       verify: true
     },
     {
@@ -3943,7 +3943,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/salalah/jabal-samhan-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/salalah/jabal-samhan-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "dhofar", coords: [17.11149, 54.71106],
+      ], region: "dhofar", coords: [17.1116, 54.7109],
       hours: 2.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [9,10,11,12,1,2,3],
       tags: ["mountains","photography","wildlife","sunset"],
@@ -3960,7 +3960,7 @@ window.OMAN_DATA = {
         "Altitude": "~1,800m",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Jabal+Samhan+viewpoint+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.1116,54.7109",
       verify: true
     },
     {
@@ -4034,7 +4034,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/salalah/ayn-razat-2.jpg", credit: "Photo: jack_246 from Salalah, Sultanate of Oman · CC BY-SA 2.0 · Wikimedia Commons" },
         { src: "assets/salalah/ayn-razat-3.jpg", credit: "Photo: Balou46 · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "dhofar", coords: [17.128, 54.235],
+      ], region: "dhofar", coords: [17.12943, 54.23734],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["photography","wildlife"],
@@ -4066,7 +4066,7 @@ window.OMAN_DATA = {
         "Combine with Ayn Athum and the other springs along the mountain base in khareef.",
         "No swimming in the spring, it feeds the irrigation channels."
       ],
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Ayn+Razat+Salalah+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.12943,54.23734",
       verify: true
     },
     {
@@ -4095,7 +4095,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Haffa+Souq+Salalah+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.002,54.093",
       verify: true
     },
     {
@@ -4123,7 +4123,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car, big car park",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Salalah+Gardens+Mall+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.048,54.068",
       verify: true
     },
     {
@@ -4136,7 +4136,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/salalah/dahariz-beach-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/salalah/dahariz-beach-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "dhofar", coords: [17.001, 54.152],
+      ], region: "dhofar", coords: [17.00908, 54.15084],
       hours: 2, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4,5],
       tags: ["beach","swimming","sunset"],
@@ -4153,7 +4153,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Dahariz+Beach+Salalah+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.00908,54.15084",
       verify: true
     },
     {
@@ -4166,7 +4166,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/salalah/taqah-castle-2.jpg", credit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons" },
         { src: "assets/salalah/taqah-castle-3.jpg", credit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons" }
-      ], region: "dhofar", coords: [17.039, 54.401],
+      ], region: "dhofar", coords: [17.04171, 54.39986],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -4182,7 +4182,7 @@ window.OMAN_DATA = {
         "Entry": "Small fee",
         "Closed": "Check Friday hours"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Taqah+Castle+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.04171,54.39986",
       verify: true
     },
     {
@@ -4195,7 +4195,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/salalah/ayn-athum-2.jpg", credit: "Photo: Syed99975 · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/salalah/ayn-athum-3.jpg", credit: "Photo: Syed99975 · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "dhofar", coords: [17.107, 54.205],
+      ], region: "dhofar", coords: [17.10706, 54.21507],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [6,7,8,9],
       tags: ["photography","wildlife"],
@@ -4212,7 +4212,7 @@ window.OMAN_DATA = {
         "Best season": "Khareef (late Jun–early Sep)",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Ayn+Athum+Salalah+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.10706,54.21507",
       verify: true
     },
 
@@ -4245,7 +4245,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Haffa+Beach+Salalah+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.001,54.113",
       verify: true,
       gettingThere: [
         "It's in the middle of town, off Sultan Qaboos Street, beside the Haffa souq.",
@@ -4272,7 +4272,7 @@ window.OMAN_DATA = {
         { src: "assets/salalah/taqah-beach-2.jpg", credit: "Photo: Ujj.w · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/salalah/taqah-beach-3.jpg", credit: "Photo: Ujj.w · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "dhofar", coords: [17.033, 54.393],
+      region: "dhofar", coords: [17.03781, 54.39558],
       hours: 2, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4,5],
       tags: ["beach","swimming","photography"],
@@ -4289,7 +4289,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Taqah+Beach+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.03781,54.39558",
       verify: true
     },
     {
@@ -4303,7 +4303,7 @@ window.OMAN_DATA = {
         { src: "assets/salalah/ayn-garziz-2.jpg", credit: "Photo: Syed99975 · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/salalah/ayn-garziz-3.jpg", credit: "Photo: Syed99975 · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "dhofar", coords: [17.075, 54.058],
+      region: "dhofar", coords: [17.07498, 54.06632],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [6,7,8,9,10],
       tags: ["photography","wildlife"],
@@ -4320,7 +4320,7 @@ window.OMAN_DATA = {
         "Best season": "Khareef (late Jun–early Sep)",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Ayn+Garziz+Salalah+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.07498,54.06632",
       verify: true
     },
     {
@@ -4361,7 +4361,7 @@ window.OMAN_DATA = {
       blurb: "The plateau straight up behind Salalah. In khareef you drive into the fog line and the hills turn green around you; year-round, the tomb of Nabi Ayoub (Job) sits quietly at the top, and the viewpoints on the way down look over the whole city to the sea.",
       img: "assets/salalah/jabal-ittin.jpg",
       imgCredit: "Photo: StellarD · CC BY-SA 4.0 · Wikimedia Commons",
-      region: "dhofar", coords: [17.115, 54.056],
+      region: "dhofar", coords: [17.10754, 54.05892],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography","sunset"],
@@ -4377,7 +4377,7 @@ window.OMAN_DATA = {
         "Entry": "Free",
         "Note": "Active religious site, quiet and respect"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Prophet+Ayoub+Tomb+Salalah+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.10754,54.05892",
       verify: true,
       gettingThere: [
         "Take the Ittin road out of the city, the climb starts almost immediately.",
@@ -4416,7 +4416,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Anti+Gravity+Point+Salalah+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.089,54.048",
       verify: true,
       gettingThere: [
         "On the Ittin road out of Salalah, same road as the Ayoub tomb.",
@@ -4443,7 +4443,7 @@ window.OMAN_DATA = {
         { src: "assets/salalah/tawi-atair-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/salalah/tawi-atair-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "dhofar", coords: [17.113, 54.552],
+      region: "dhofar", coords: [17.11411, 54.55783],
       hours: 1.5, fitness: 2, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["photography","wildlife","hiking"],
@@ -4461,7 +4461,7 @@ window.OMAN_DATA = {
         "Best season": "Khareef for the green; clear views the rest of the year",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Tawi+Atair+sinkhole+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.11411,54.55783",
       verify: true
     },
     {
@@ -4546,7 +4546,7 @@ window.OMAN_DATA = {
         { src: "assets/salalah/haffa-coconut-stands-2.jpg", credit: "Photo: PattayaPatrol · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/salalah/haffa-coconut-stands-3.jpg", credit: "Photo: Erfan.arafat · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "dhofar", coords: [17.002, 54.110],
+      region: "dhofar", coords: [17.00135, 54.1028],
       hours: 0.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"],
@@ -4558,7 +4558,7 @@ window.OMAN_DATA = {
         "Best for": "A stop between the beach and the souq",
         "Book?": "Just pull over"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=coconut+stalls+Al+Haffa+Salalah",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.00135,54.1028",
       verify: true,
       whatYoullDo: [
         "Pick a stand, busy ones turn their stock over fastest.",
@@ -4666,7 +4666,7 @@ window.OMAN_DATA = {
         "Vehicle": "Any car, big parking",
         "Book?": "No"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Salalah+Grand+Mall",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.024,54.083",
       verify: true
     },
     {
@@ -4691,7 +4691,7 @@ window.OMAN_DATA = {
         "Best for": "The one souvenir worth doing properly",
         "Book?": "No"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Al+Haffa+Souq+Salalah",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.002,54.109",
       verify: true
     },
     {
@@ -4716,7 +4716,7 @@ window.OMAN_DATA = {
         "Price": "$",
         "Book?": "No"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Salalah+central+fruits+vegetables+market",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.016,54.093",
       verify: true,
       whatYoullDo: [
         "Walk the fruit rows first, bananas, coconuts, papaya, and in season the famous local mangoes.",
@@ -4743,7 +4743,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"], guide: "",
       stats: { "Type": "Pop-up café / desserts", "Area": "Mutrah corniche, above the fish market [CONFIRM still there]", "Price": "$", "Best for": "The molten cake", "Book?": "Walk-in" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Mutrah+Fish+Market+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.622,58.565",
       insta: "https://www.instagram.com/hussain_explores/reel/DV--WZpDFAK/", // the lava cake reel
       verify: false
     },
@@ -4773,7 +4773,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
       stats: { "Type": "Traditional Omani", "Area": "Muscat [CONFIRM exact area]", "Price": "$$$", "Best for": "The occasion dinner", "Book?": "Book on weekends" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Rozna+Restaurant+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.588,58.284",
       insta: "https://www.instagram.com/hussain_explores/reel/DXmYNsDDBqN/", // "nicest restaurant design in Oman" — 3.6K likes
       verify: false
     },
@@ -4792,7 +4792,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"], guide: "",
       stats: { "Type": "Specialty coffee", "Area": "Al Ghubrah", "Price": "$", "Best for": "Morning / before a drive", "Book?": "Walk-in" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=La+Miel+Specialty+Coffee+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.588,58.408",
       verify: true,
       whatYoullDo: [
         "Coffee and a pastry.",
@@ -4816,7 +4816,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
       stats: { "Type": "Traditional Omani", "Must-order": "Shuwa", "Area": "Mutrah", "Price": "$$", "Best for": "Dinner with a view", "Book?": "Worth booking at sunset" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Bait+Al+Luban+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.617,58.564",
       verify: true,
       whatYoullDo: [
         "Order the shuwa.",
@@ -4847,7 +4847,7 @@ window.OMAN_DATA = {
       tips: [
         "The quiet one of the specialty cafés, good before an early drive."
       ],
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Qaha+Specialty+Coffee+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.56816,58.41489",
       verify: true
     },
     {
@@ -4865,7 +4865,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"], guide: "",
       stats: { "Type": "Specialty coffee / roastery", "Area": "Muscat", "Price": "$$", "Best for": "Buying beans", "Book?": "Walk-in" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Azura+The+Coffee+Company+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.588,58.408",
       verify: true
     },
     {
@@ -4883,7 +4883,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","sunset"], guide: "",
       stats: { "Type": "Beachfront café", "Area": "Azaiba Beach", "Price": "$$", "Best for": "Sunset", "Book?": "Walk-in" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Cafe+Farah+Azaiba+Beach+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.60493,58.35346",
       verify: true
     },
     {
@@ -4901,7 +4901,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
       stats: { "Type": "Omani / grill", "Must-order": "Mashuai (grilled kingfish)", "Area": "Madinat Qaboos", "Price": "$$", "Best for": "A long dinner outside", "Book?": "Yes, at weekends" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Kargeen+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.60055,58.455",
       verify: true
     },
     {
@@ -4919,7 +4919,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
       stats: { "Type": "Omani traditional", "Area": "Central Salalah", "Price": "$", "Best for": "Lunch, Omani-style", "Book?": "Walk-in" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Bin+Ateeq+Restaurant+Salalah",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=17.019,54.081",
       verify: true
     },
     {
@@ -4937,7 +4937,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
       stats: { "Type": "Traditional Omani", "Must-order": "Maqbous / harees", "Area": "Al Khuwair", "Price": "$", "Best for": "Lunch", "Book?": "Walk-in" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Bin+Ateeq+Restaurant+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.588,58.408",
       verify: true
     },
     {
@@ -4954,7 +4954,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
       stats: { "Type": "Sweets / halwa", "Must-order": "Omani halwa (black or saffron)", "Area": "Mutrah Souq", "Price": "$", "Best for": "Gifts", "Book?": "Walk-in" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Omani+halwa+Mutrah+Souq",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.617,58.594",
       verify: true
     },
 
@@ -4974,7 +4974,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","culture","photography"], guide: "",
       stats: { "Type": "Traditional souq", "Best time": "5–9pm", "Haggling": "Expected, start around half", "Cards": "Bigger shops yes; carry cash", "Best buys": "Frankincense + burner, silver, halwa" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Mutrah+Souq+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.617,58.592",
       verify: true
     },
     {
@@ -5025,7 +5025,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","culture","photography"], guide: "",
       stats: { "Type": "Traditional souq", "Best time": "Friday 6:30–9am for the goat market", "Haggling": "Expected", "Cards": "Carry cash", "Best buys": "Pottery, silver, Nizwa dates" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Nizwa+Souq",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.932,57.531",
       verify: true
     },
     {
@@ -5057,7 +5057,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","culture"], guide: "",
       stats: { "Type": "Perfume house / factory", "Time needed": "1–1.5 hrs", "Cards": "Yes", "Best buys": "Their classics, test before you choose" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Amouage+Visitor+Centre+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.541,58.183",
       verify: true
     },
     {
@@ -5075,7 +5075,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping"], guide: "",
       stats: { "Type": "Mall", "Highlights": "Snow Oman, cinema, food court", "Cards": "Everywhere", "Best time": "Midday, it's air-conditioned escape" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Mall+of+Oman+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.565,58.238",
       verify: true
     },
     {
@@ -5111,7 +5111,7 @@ window.OMAN_DATA = {
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping"], guide: "",
       stats: { "Type": "Mall", "Highlights": "Near the airport", "Cards": "Everywhere", "Best for": "Last-day souvenir sweep" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=City+Centre+Muscat",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.607,58.256",
       verify: true
     }
   ],
