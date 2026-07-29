@@ -1204,21 +1204,27 @@ img{max-width:100%;display:block}
    icon-over-label, the installed PWA reads as a native app. Desktop and
    tablets keep the top tab row. */
 @media(max-width:640px){
+  /* The bottom bar carries the RANK COLOUR, this is where your rank lives
+     now (the banner keeps only the photo tint). Climbs from teal through
+     blue, green, gold, crimson to purple with you. */
   .tabs{
     position:fixed;left:0;right:0;bottom:0;z-index:950;
     max-width:none;margin:0;display:flex;flex-wrap:nowrap;gap:0;
     justify-content:space-around;
-    background:#fff;border-top:1px solid var(--line);
+    background:linear-gradient(180deg,var(--water) 0%,var(--water-dark) 100%);
+    border-top:none;
     padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));
-    box-shadow:0 -4px 16px rgba(20,26,24,.06);
+    box-shadow:0 -1px 0 rgba(255,255,255,.18) inset, 0 -4px 16px rgba(20,26,24,.18);
   }
   .tab{
     flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:2px;
     background:transparent;border:none;border-radius:12px;
-    font-size:10.5px;font-weight:700;padding:4px 2px;color:var(--muted);
+    font-size:10.5px;font-weight:700;padding:4px 2px;color:rgba(255,255,255,.72);
   }
   .tab .t-icon{margin:0;font-size:21px;line-height:1}
-  .tab[aria-selected="true"]{background:var(--water-soft);color:var(--water-dark);border:none}
+  .tab[aria-selected="true"]{background:rgba(255,255,255,.94);color:var(--water-dark);border:none}
+  .tab-dim{opacity:.55}
+  .tab-soon{background:rgba(255,255,255,.25);color:#fff}
   .view{padding-bottom:92px}   /* content never hides behind the bar */
 }
 
@@ -1465,6 +1471,17 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
 }
 .save-heart:active{transform:scale(1.25)}
 .save-heart.on{color:#d4537e}
+/* the ✓ twin, right under the heart: tick a place off from the feed */
+.been-check{
+  position:absolute;top:50px;right:10px;z-index:2;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.92);color:#c9c2b4;
+  font-size:15px;font-weight:800;line-height:1;
+  display:grid;place-items:center;box-shadow:var(--shadow);
+  transition:transform .12s ease,color .12s ease,background .12s ease;
+}
+.been-check:active{transform:scale(1.25)}
+.been-check.on{background:#1e6b39;color:#fff}
 .been-badge{
   position:absolute;top:12px;left:10px;z-index:2;
   background:#e7f4ea;color:#1e6b39;font-size:11px;font-weight:700;
@@ -1542,9 +1559,11 @@ html{scroll-behavior:smooth}
   content:"";width:14px;height:4px;border-radius:2px;background:var(--clay);flex:0 0 auto;
 }
 
-/* tab bar (mobile): active tab gets a soft raised pill, not just colour */
+/* tab bar (mobile): the bar wears the rank colour now, so the active tab is
+   a WHITE pill on it, the one thing that pops on any rank's hue. (This used
+   to force --water-soft, which read as grey on the coloured bar.) */
 @media(max-width:640px){
-  .tab[aria-selected="true"]{background:var(--water-soft);box-shadow:inset 0 0 0 1px #cfe3e2}
+  .tab[aria-selected="true"]{background:rgba(255,255,255,.94);box-shadow:0 2px 8px rgba(0,0,0,.18)}
 }
 
 /* keyboard / switch-control users get a visible ring, invisible to touch */
@@ -2296,11 +2315,14 @@ body.tier-flash{animation:ruFlash .7s ease-out}
       sits behind the content, so even the "white" page belongs to your rank.
    3. Buttons, chips, rings, the dock and the filter were already on
       --water and follow along. */
+/* The picture, shaded in your rank's colour: a full-bleed tint (blue-ish for
+   Wanderer, gold for Regular, purple at the top) over the photo, with only a
+   light dark edge top and bottom so the white text stays readable. The heavy
+   teal slab gradients are gone; the rank colour IS the banner's mood now. */
 .topbar::after{
   background:
-    linear-gradient(180deg,rgba(4,32,35,.80) 0%,rgba(5,42,46,.52) 42%,rgba(6,52,56,.84) 100%),
-    radial-gradient(130% 100% at 80% 0%,var(--rank-glow,rgba(13,92,99,.46)),transparent 62%),
-    radial-gradient(120% 120% at 8% 100%,var(--rank-glow-2,rgba(13,92,99,.30)),transparent 55%);
+    linear-gradient(180deg,rgba(6,22,24,.52) 0%,rgba(6,22,24,.10) 34%,rgba(6,22,24,.14) 66%,rgba(6,22,24,.58) 100%),
+    linear-gradient(0deg,var(--rank-tint,rgba(13,92,99,.34)),var(--rank-tint,rgba(13,92,99,.34)));
 }
 body{
   background-image:

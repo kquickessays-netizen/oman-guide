@@ -598,6 +598,21 @@
         heart.classList.toggle("on", Store.toggleSaved(item.id));
       };
       media.appendChild(heart);
+      // ✓ been-here, right under the heart: tick a place off from the feed
+      // without opening it. The passive "✓ Been" badge stays on the LEFT.
+      const bn = el("button", "been-check" + (Store.isBeen(item.id) ? " on" : ""), "✓");
+      bn.setAttribute("aria-label", (Store.isBeen(item.id) ? "Been here, tap to undo: " : "Mark as been here: ") + item.name);
+      bn.onclick = e => {
+        e.stopPropagation();
+        const on = Store.toggleBeen(item.id);
+        applyRankTheme();
+        renderHud();
+        // Rebuild just this card, so the left badge appears/disappears without
+        // re-rendering the whole list (which would flicker every photo).
+        c.replaceWith(card(item, lockNum));
+        if (on) celebrate(Store.been().length); else toast("Unmarked");
+      };
+      media.appendChild(bn);
       if (Store.isBeen(item.id)) media.appendChild(el("span", "been-badge", "✓ Been"));
       // Rexby-style value badge: flag genuinely seasonal spots that are good
       // RIGHT NOW (year-round spots don't get one, it would mean nothing).
@@ -1239,6 +1254,7 @@
     r.style.setProperty("--rank-glow", `rgba(${rgb[0]},${rgb[1]},${rgb[2]},.46)`);
     r.style.setProperty("--rank-glow-2", `rgba(${rgb[0]},${rgb[1]},${rgb[2]},.30)`);
     r.style.setProperty("--rank-dot", `rgba(${rgb[0]},${rgb[1]},${rgb[2]},.10)`);
+    r.style.setProperty("--rank-tint", `rgba(${rgb[0]},${rgb[1]},${rgb[2]},.34)`);
     r.dataset.rank = String(RANKS.length - 1 - ix);   // 0 = just landed, 7 = done
     // The status bar above the banner photo stays photo-dark regardless of
     // rank: the rank shows in the UI accents and the page wash, not by
