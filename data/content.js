@@ -144,7 +144,7 @@ window.OMAN_DATA = {
     // history is kept without anyone having to scroll past it.
     changelog: [
       { date: "Late July 2026", items: [
-        "🎬 The reels audit: every place I've filmed is in the guide with its reel attached — Sidab's coves, Qantab's ten beaches, the As Sifah shark shallows, Matrah Fort, Ain Al Kasfah, Hijrat Al Sheikh, Caika, Batch, Rozna.",
+        "🎬 The reels audit: every place I've filmed is in the guide with its reel attached — Sidab's coves, Qantab's ten beaches, the Sifah shark shallows, Matrah Fort, Ain Al Kasfah, Hijrat Al Sheikh, Batch, Rozna.",
         "🌌 Seasonal experiences get their own entries: bioluminescence, rose season, whale-shark summer.",
         "🗓️ New one-day plan: The Perfect Wadi Shab Day, with real costs.",
         "🗺️ The country got bigger: Musandam properly (Khasab, Bukha, Khor Najd), Sur and its dhow yard, Masirah, Bar Al Hikman, the pink lakes and the Empty Quarter.",
@@ -1071,7 +1071,8 @@ window.OMAN_DATA = {
         "Best for": "Boat-hop beach day",
         "Time needed": "2–4 hrs",
         "Swim": "Yes",
-        "Boat": "From ~OMR 3 pp for a drop, more for a tour [CONFIRM current prices]",
+        "Boats": "Several operators on the beach — prices vary by season, group size and per-person vs whole-boat. Agree before boarding",
+        "On offer": "Beach drop-off & pick-up · sunset tour · dolphin watching · banana boat · jet ski",
         "Vehicle": "Any car to Qantab",
         "Entry": "Beach free, boat is the cost"
       },
@@ -1082,10 +1083,10 @@ window.OMAN_DATA = {
       gettingThere: [
         "Drive to Qantab village, 20–25 min from central Muscat.",
         "Walk onto the main beach, the fishermen with boats are right there.",
-        "Agree the price and pickup time before you get in. For a trusted contact, DM @hussain_explores and I'll connect you to the captain I use."
+        "Prices swing with the season and whether you pay per person or per boat — always agree the price and pickup time before you get in. For a trusted contact, DM @hussain_explores and I'll connect you to the captain I use."
       ],
       whatYoullDo: [
-        "Pick a beach from the water, the boatman knows them all.",
+        "Pick your ride: a simple beach drop, the sunset tour, dolphin watching, or the toys — banana boat and jet skis run from the same beach.",
         "Get dropped with your kit, swim and snorkel until pickup.",
         "Or take the full ride along the cliffs and count the beaches, I got to ten."
       ],
@@ -1097,16 +1098,16 @@ window.OMAN_DATA = {
     },
     {
       id: "sifah-hidden-beach", cat: "beaches", free: true, type: "Swim spot",
-      name: "The hidden beach at As Sifah",
-      tagline: "The shark beach. Yes, that one from the reel.",
-      blurb: "A tucked-away stretch of the As Sifah coast where baby reef sharks cruise the shallows at your feet. Harmless, skittish and completely mesmerising, the closest thing Oman has to a wildlife encounter you can walk into.",
+      name: "Sifah Beach",
+      tagline: "The easy wild beach an hour from town — with a famous surprise in the shallows.",
+      blurb: "The beach at Al Sifah: long sand, clear water, mountains behind, an hour from Muscat. And some days, baby reef sharks cruise the shallows at your feet — harmless, skittish and completely mesmerising (yes, the reel was filmed here).",
       img: "assets/beaches/sifah-hidden-beach.jpg",
       imgCredit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons",
       gallery: [
         { src: "assets/beaches/sifah-hidden-beach-2.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" },
         { src: "assets/beaches/sifah-hidden-beach-3.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.415, 58.855],  // [CONFIRM pin — kept deliberately loose, the fun is finding it]
+      region: "muscat", coords: [23.4204, 58.7869], // Sifah Beach pin confirmed by Hussain
       hours: 3, fitness: 2, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4,5],
       tags: ["beach","wildlife","swimming","photography"],
@@ -1120,7 +1121,7 @@ window.OMAN_DATA = {
         "Best for": "Reef-shark shallows",
         "Time needed": "Half day with the drive",
         "Swim": "Yes",
-        "Vehicle": "Any car to As Sifah, then walk [CONFIRM]",
+        "Vehicle": "Any car to Sifah — the sandy stretch itself is 4×4 only",
         "Best season": "Oct–May",
         "Entry": "Free"
       },
@@ -1128,8 +1129,9 @@ window.OMAN_DATA = {
       insta: "https://www.instagram.com/hussain_explores/reel/DTFXV2sjKDG/", // "Would you swim here?" — 8.3K likes
       verify: false,
       gettingThere: [
-        "Head for As Sifah, about an hour from Muscat on a good road.",
-        "The exact stretch stays un-pinned on purpose, walk the coast away from the main beach and keep your eyes on the shallows. Finding it is half the story you'll tell."
+        "Head for Al Sifah, about an hour from Muscat on a good sealed road — any car.",
+        "⚠️ The final sandy stretch swallows 2WDs: without a 4×4, stop where the hard ground ends and walk the last part. With one, drop tyre pressure a little and carry on.",
+        "Walk the shore away from the busiest section and watch the shallows — that's where the small sharks patrol."
       ],
       whatYoullDo: [
         "Wade in slowly and stand still, the small sharks come to you.",
@@ -1153,7 +1155,7 @@ window.OMAN_DATA = {
         { src: "assets/beaches/pebble-beach-tiwi-2.jpg", credit: "Photo: Harmer, T. (17..-18.. ; graveur). Graveur Grande-Bretagne. Hydrographic office. · Public domain · Wikimedia Commons" },
         { src: "assets/beaches/pebble-beach-tiwi-3.jpg", credit: "Photo: Adhilaslam · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "coast-east", coords: [22.834, 59.257],  // [CONFIRM pin]
+      region: "coast-east", coords: [22.8535, 59.2375], // right beside the Romantic Cave — confirmed area
       hours: 2, fitness: 1, needs4x4: false, swim: true, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["beach","swimming","photography"],
@@ -1168,9 +1170,9 @@ window.OMAN_DATA = {
         "Best season": "Oct–Apr",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.834,59.257",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.8535,59.2375",
       insta: "https://www.instagram.com/hussain_explores/reel/DUN_l4sDHKG/", // relaxed beach + the cave
-      verify: false,
+      verify: true,
       gettingThere: [
         "It's on the coast by Tiwi, right off Route 17, 5–10 min from the Wadi Shab bridge.",
         "Park above the beach and walk down, any car."
@@ -1594,13 +1596,13 @@ window.OMAN_DATA = {
         "Best for": "Fjord-trip base + the castle",
         "Time needed": "1–2 hrs for the castle",
         "Getting here": "Fly MCT→Khasab, Shinas–Khasab ferry, or 6–7 hrs via UAE (passport!)",
-        "Entry": "Castle ticketed, small fee [CONFIRM]",
+        "Entry": "500 baisa; Sat–Thu 9–4, Fri mornings [secondary source]",
         "Vehicle": "Any car in town"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=26.18361,56.24726",
       verify: false,
       gettingThere: [
-        "Three ways in: a short flight from Muscat, the Mwasalat car ferry from Shinas, or the drive through the UAE — border crossings need your passport and rules change, check before you commit.",
+        "Three ways in: a short flight from Muscat, the Shinas car ferry (runs ~4 days/week, car OMR 5.25 — schedules shift, confirm on nfc.mwasalat.om or tel. 1551), or the 6–7 hr drive through the UAE with your passport.",
         "The castle is in the middle of town, you can't miss it."
       ],
       whatYoullDo: [
@@ -1745,7 +1747,7 @@ window.OMAN_DATA = {
         "Best for": "Living heritage",
         "Time needed": "30–60 min",
         "When": "Mornings, when work is on",
-        "Entry": "Free or small tip/fee [CONFIRM]",
+        "Entry": "Free (per travel guides, 2025) — a polite hello to the carpenters is the real ticket",
         "Vehicle": "Any car"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=22.5769,59.52494",
@@ -1784,7 +1786,7 @@ window.OMAN_DATA = {
         "Access": "Interior: guided rope descent ONLY (licensed operators)",
         "Surface": "4×4 plateau drive, sinkhole rims",
         "Season": "Oct–Apr",
-        "Cost": "Operator-priced [CONFIRM current operators & prices]"
+        "Cost": "Permitted descents via Explore Majan (exploremajan.com), price on enquiry; OMRAN is developing wider access"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=22.885,59.107",
       verify: false,
@@ -1934,9 +1936,9 @@ window.OMAN_DATA = {
       guide: "",
       stats: {
         "Best for": "Context before the road trip",
-        "Hours": "Sat–Thu 10–5, Fri 2–6 [CONFIRM]",
+        "Hours": "Daily 10am–5pm, tickets until 4:30 (official)",
         "Time needed": "1.5–3 hrs",
-        "Entry": "Ticketed, ~5 OMR [CONFIRM]",
+        "Entry": "OMR 5 foreign visitors, card payment only",
         "Where": "Old Muscat, opposite Al Alam Palace"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=23.61467,58.5926",
@@ -1972,9 +1974,9 @@ window.OMAN_DATA = {
       guide: "",
       stats: {
         "Best for": "Families + museum people",
-        "Hours": "Sat–Thu 9–5, Fri 1:30–7 [CONFIRM]",
+        "Hours": "Galleries Sat–Thu 9–5, Fri 1:30–7 (official)",
         "Time needed": "2–3 hrs",
-        "Entry": "Ticketed [CONFIRM fee]",
+        "Entry": "OMR 5 tourists / OMR 2 residents; kids under 6 free",
         "Where": "Manah, ~25 min from Nizwa"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=22.7921,57.58814",
@@ -2043,7 +2045,8 @@ window.OMAN_DATA = {
       guide: "",
       stats: {
         "Best for": "Wild-island escape",
-        "Getting there": "Shannah car ferry (Mwasalat), ~5–6 hrs Muscat door to door [CONFIRM ferry times]",
+        "Getting there": "Shannah car ferry, daily sailings ~9am/12/3/5pm, ~1 hr crossing (nfc.mwasalat.om)",
+        "Ferry price": "Car OMR 8.4 / 4×4 OMR 10.5 one-way + OMR 3.6 pp",
         "Season": "Kitesurf May–Sep, turtles all summer, touring Oct–Apr",
         "Stay": "Masira Island Resort or camp",
         "Vehicle": "4×4 recommended for the wild coasts"
@@ -2051,7 +2054,7 @@ window.OMAN_DATA = {
       mapUrl: "https://www.google.com/maps/search/?api=1&query=20.441,58.815",
       verify: false,
       gettingThere: [
-        "Drive to Shannah (~4.5 hrs), roll onto the Mwasalat vehicle ferry, ~1–1.5 hrs across, times shift with tides [CONFIRM].",
+        "Drive to Shannah (~4.5 hrs), roll onto the vehicle ferry — daily sailings around 9am, noon, 3pm and 5pm, about an hour across. Book on nfc.mwasalat.om.",
         "Book the crossing ahead in season."
       ],
       whatYoullDo: [
@@ -2158,7 +2161,7 @@ window.OMAN_DATA = {
         "Best for": "The once-in-a-lifetime desert",
         "Season": "Oct–Mar",
         "Access": "From Salalah, 3–5+ hrs off-road, GUIDED convoys only",
-        "Operators": "Beautiful Salalah Tours, Bediyah Safari, Hud Hud (luxury) [CONFIRM prices]",
+        "Operators": "Beautiful Salalah Tours (~$90 day safari, ~$170 overnight camp), Bediyah Safari, Hud Hud (luxury)",
         "Sleep": "Operator camps under zero light pollution"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Rub+Al+Khali+Salalah",
@@ -2197,7 +2200,8 @@ window.OMAN_DATA = {
         "Best for": "Family adrenaline",
         "Time needed": "Half day",
         "Drive": "~1 hr from Muscat",
-        "Book": "wadidayqah.com [CONFIRM prices/season hours]",
+        "Book": "wadidayqah.com — day pass OMR 20 adult / 12 child / 60 family; zip+ferrata+bridge combo OMR 19",
+        "Hours": "8am–10pm (official)",
         "Vehicle": "Any car"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Wadi+Dayqah+Dam+Adventure+Park",
@@ -2210,7 +2214,7 @@ window.OMAN_DATA = {
         "Kayak or pedal-boat the flat water after, the dam's entry in this guide covers the viewpoint."
       ],
       tips: [
-        "Check season/hours before driving, operations pause in the hottest months [CONFIRM]."
+        "Book online first; summer-season operating pattern unconfirmed — check the site before the drive."
       ]
     },
     {
@@ -2232,7 +2236,7 @@ window.OMAN_DATA = {
       stats: {
         "Best for": "The nerve test with the view",
         "Season": "Oct–Apr",
-        "Operator": "Wadi Adventure Oman and hotel-run routes [CONFIRM operators/prices]",
+        "Operator": "Wadi Adventure Oman (book.wadi-adventure.com) or Anantara\u2019s resort route — prices on enquiry",
         "Requirements": "Age/height/fitness minimums apply",
         "Vehicle": "4×4 for the mountain checkpoint"
       },
@@ -2269,7 +2273,7 @@ window.OMAN_DATA = {
       stats: {
         "Best for": "The anniversary-level splurge",
         "Season": "~Oct–Mar, dawn flights",
-        "Operators": "Royal Desert Balloon, Binmajid [CONFIRM prices]",
+        "Operators": "Royal Balloon Oman / Bin Majid — roughly OMR 80 pp, residents less; season Oct–Apr",
         "Time needed": "3–4 hrs incl. transfers",
         "Base": "Wahiba edge camps"
       },
@@ -2345,11 +2349,12 @@ window.OMAN_DATA = {
         "Climb": "Steep steps, 10 min",
         "Vehicle": "Any car / taxi",
         "Best time": "Late afternoon into dusk",
-        "Entry": "[CONFIRM current fee & opening hours]"
+        "Hours": "Daily 8am–11pm (official site)",
+        "Entry": "OMR 3 non-resident adult / OMR 2 child"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=23.62031,58.56677",
       insta: "https://www.instagram.com/hussain_explores/reel/DSW1Z5MjKQL/", // the viewpoint reel
-      verify: false,
+      verify: true,
       gettingThere: [
         "It's the fort you can already see from anywhere on Mutrah corniche.",
         "Park along the corniche or by the souq and walk, the steps start at the base of the rock."
@@ -2426,13 +2431,13 @@ window.OMAN_DATA = {
         "Best for": "Sunset on the water",
         "Time needed": "2–3 hrs",
         "Departs": "Bandar Al Rowdha marina, 10 min past Mutrah",
-        "Book?": "Yes, ahead [CONFIRM operator & current price]",
+        "Book?": "Yes, ahead — several operators run from the marina; sunset slots sell out first",
         "Vehicle": "Any car / taxi to the marina",
         "Kids": "Easy yes"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=23.57445,58.61115",
       insta: "https://www.instagram.com/hussain_explores/reel/DUJFPi8DFcL/", // the dhow explainer — 4.1K likes
-      verify: false,
+      verify: true,
       gettingThere: [
         "Bandar Al Rowdha marina is 10 minutes past Mutrah on the Sidab road.",
         "Book ahead and arrive 20 min early, boats don't wait for parking."
@@ -2458,7 +2463,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/romantic-cave-tiwi-2.jpg", credit: "Photo: albinfo · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/romantic-cave-tiwi-3.jpg", credit: "Photo: yeowatzup · CC BY 2.0 · Wikimedia Commons" }
       ],
-      region: "coast-east", coords: [22.834, 59.257],  // [CONFIRM pin]
+      region: "coast-east", coords: [22.8539, 59.2380], // "Romantic cave (Love cave)" — pin confirmed by Hussain
       hours: 2, fitness: 3, needs4x4: false, swim: true, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["swimming","photography","adrenaline"],
@@ -2471,9 +2476,9 @@ window.OMAN_DATA = {
         "Vehicle": "Any car",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.834,59.257",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Romantic+cave+Love+cave+Tiwi",
       insta: "https://www.instagram.com/hussain_explores/reel/DUN_l4sDHKG/", // the beach + cave reel
-      verify: false,
+      verify: true,
       gettingThere: [
         "Start from Pebble Beach at Tiwi and walk the shoreline toward the cliffs.",
         "The cave mouth is reached from the water, size it up from land first."
@@ -2513,7 +2518,7 @@ window.OMAN_DATA = {
         "Water": "Hot, mineral spring",
         "Baths": "Separate men's and women's sections",
         "Vehicle": "Any car, ~1 hr from Muscat (Seeb side)",
-        "Entry": "[CONFIRM fee, small if any]"
+        "Entry": "Bath houses ~OMR 1 per ~15-min slot (as of early 2026); the spring area is free to visit"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=23.38884,57.42514",
       insta: "https://www.instagram.com/hussain_explores/reel/DT-QlnADBpL/",
@@ -2523,7 +2528,7 @@ window.OMAN_DATA = {
         "The spring is signposted in town, park beside it."
       ],
       whatYoullDo: [
-        "Soak in genuinely hot spring water, there are bath sections, separate for men and women.",
+        "Soak in genuinely hot spring water — the bath houses are open and usable (separate men's and women's sections), with improvement works still ongoing around the site.",
         "Watch the spring feed straight into the falaj system running off through the palms.",
         "Free fish spa included, the little fish in the channels have no boundaries."
       ],
@@ -2544,7 +2549,7 @@ window.OMAN_DATA = {
         { src: "assets/experiences/hijrat-al-sheikh-2.jpg", credit: "Photo: albinfo · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/hijrat-al-sheikh-3.jpg", credit: "Photo: NationalMuseumOman · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "rustaq", coords: [23.30, 57.42],  // [CONFIRM pin + region — set from memory, needs your check]
+      region: "rustaq", coords: [23.4516, 57.8094], // Hujrat Al Sheikh Heritage Walkway (pin confirmed by Hussain)
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["culture","photography","food"],
@@ -2553,15 +2558,16 @@ window.OMAN_DATA = {
         "Best for": "Slow culture + coffee",
         "Time needed": "1–2 hrs",
         "Walk": "Easy, flat village lanes",
-        "Vehicle": "[CONFIRM road / any car?]",
+        "Vehicle": "Any car",
         "Best time": "Morning or late afternoon",
         "Entry": "Free"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Hijrat+Al+Sheikh+Oman",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Hujrat+Al+Sheikh+Heritage+Walkway",
       insta: "https://www.instagram.com/hussain_explores/reel/DVGM8YoDNMA/",
-      verify: false,
+      verify: true,
       gettingThere: [
-        "[CONFIRM route & drive time — pin and directions need Hussain's check before this ships]"
+        "Head inland on the Nakhal road (Route 13), about 1¼–1½ hrs from Muscat — search 'Hujrat Al Sheikh Heritage Walkway' on Google Maps, the pin takes you straight there.",
+        "Any car does it; park by the walkway entrance."
       ],
       whatYoullDo: [
         "Walk the falaj lines through the farms, 300 years of engineering still doing its job.",
@@ -2625,20 +2631,20 @@ window.OMAN_DATA = {
       ],
       region: "muscat", coords: [23.850, 58.100],
       hours: 6, fitness: 2, needs4x4: false, swim: true, kidOk: false,
-      months: [6,7,8,9,10],
+      months: [8,9,10,11],
       tags: ["wildlife","snorkel","boat"],
       guide: "required",
       stats: {
         "Best for": "The biggest fish on Earth",
-        "Season": "~Jun–Oct, sightings luck-dependent",
+        "Season": "~Aug–Nov, peak late Aug–early Oct, sightings luck-dependent",
         "Time needed": "Full-day boat trip",
-        "Departs": "Muscat marinas [CONFIRM operator]",
+        "Departs": "Al Mouj & Bandar Al Rowdha marinas — Horizon Blue, SeaOman, Octopus Oman",
         "Swim level": "Confident snorkeller",
-        "Cost": "[CONFIRM current trip prices]"
+        "Cost": "From ~OMR 30 pp shared trip + OMR 3 island permit"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Daymaniyat+Islands",
       insta: "https://www.instagram.com/hussain_explores/reel/DapZDrDsnUD/", // cruising around looking for whale sharks
-      verify: false,
+      verify: true,
       gettingThere: [
         "Book a licensed Daymaniyat snorkel/dive operator out of Muscat, summer departures chase the sharks.",
         "Boats leave early, be at the marina by the time they say minus fifteen minutes."
@@ -2825,6 +2831,7 @@ window.OMAN_DATA = {
         "Access": "Boat tour only (nature reserve)",
         "Best season": "Nov–Mar (visibility, turtles)",
         "Booking": "2–3 days ahead in peak season",
+        "Permit": "OMR 3 pp day visit (Environment Authority, via your operator)",
         "⚠️ May–Oct": "Beach landing banned (turtle nesting) — boat + water only"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Daymaniyat+Islands+Oman",
@@ -4733,34 +4740,19 @@ window.OMAN_DATA = {
        Researched, well-known spots, SWAP THESE FOR THE ONES YOU ACTUALLY EAT
        AT. Your real picks are worth more than any list off the internet.      */
     {
-      id: "cafe-caika", cat: "food", sub: "Sweets", free: true, type: "Sweets",
-      name: "Caika",
-      tagline: "The lava cake above the fish market.",
-      blurb: "A small pop-up café on the Mutrah corniche doing molten chocolate cakes that broke my Instagram. Location is temporary by design, check their page before you drive.",
-      img: "assets/food/cafe-caika.jpg",
-      region: "muscat", coords: [23.622, 58.565],
-      hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
-      months: [1,2,3,4,5,6,7,8,9,10,11,12],
-      tags: ["food"], guide: "",
-      stats: { "Type": "Pop-up café / desserts", "Area": "Mutrah corniche, above the fish market [CONFIRM still there]", "Price": "$", "Best for": "The molten cake", "Book?": "Walk-in" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.622,58.565",
-      insta: "https://www.instagram.com/hussain_explores/reel/DV--WZpDFAK/", // the lava cake reel
-      verify: false
-    },
-    {
       id: "cafe-batch", cat: "food", sub: "Coffee", free: true, type: "Coffee",
       name: "Batch",
       tagline: "Al Khoud's cute one. Staff carry the place.",
       blurb: "Aesthetic little specialty café in Al Khoud with some of the friendliest staff in Muscat and bakes worth the drive, the maritozzo has fans.",
       img: "assets/food/cafe-batch.jpg",
-      region: "muscat", coords: [23.550, 58.180],  // [CONFIRM pin in Al Khoud]
+      region: "muscat", coords: [23.6207, 58.2122], // Batch — pin confirmed by Hussain
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"], guide: "",
       stats: { "Type": "Specialty café", "Area": "Al Khoud", "Price": "$$", "Best for": "Coffee + bakes", "Book?": "Walk-in" },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Batch+Cafe+Al+Khoud+Muscat",
       insta: "https://www.instagram.com/hussain_explores/reel/DWJnFtSDHfg/",
-      verify: false
+      verify: true
     },
     {
       id: "food-rozna", cat: "food", sub: "Traditional", free: true, type: "Omani food",
@@ -4768,14 +4760,14 @@ window.OMAN_DATA = {
       tagline: "Dinner inside a fort. The design does half the hosting.",
       blurb: "Traditional Omani food served in a building styled like a fort, majlis seating, carved doors, the works. The most designed restaurant in Muscat, and the food holds its end up.",
       img: "assets/food/food-rozna.jpg",
-      region: "muscat", coords: [23.588, 58.284],  // [CONFIRM pin]
+      region: "muscat", coords: [23.5888, 58.3221], // Rozna Restaurant — pin confirmed by Hussain
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
-      stats: { "Type": "Traditional Omani", "Area": "Muscat [CONFIRM exact area]", "Price": "$$$", "Best for": "The occasion dinner", "Book?": "Book on weekends" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.588,58.284",
+      stats: { "Type": "Traditional Omani", "Area": "Ghala, Muscat", "Price": "$$$", "Best for": "The occasion dinner", "Book?": "Book on weekends" },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Rozna+Restaurant+Muscat",
       insta: "https://www.instagram.com/hussain_explores/reel/DXmYNsDDBqN/", // "nicest restaurant design in Oman" — 3.6K likes
-      verify: false
+      verify: true
     },
     {
       id: "cafe-la-miel", cat: "food", sub: "Coffee", free: true, type: "Coffee",
