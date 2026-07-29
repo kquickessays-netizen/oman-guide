@@ -304,8 +304,7 @@ const Planner = (() => {
           day.end = clock;
         }
         day.note = "Free day around " + D.regions[home].base +
-                   ", go back to the one you loved, find a beach, drink karak, do nothing. " +
-                   "Every good Oman trip has one of these.";
+                   ", go back to a spot you liked, find a beach, drink karak.";
         day.stayIn = D.regions[home].base;
         day.stayRegion = home;
         day.mode = "free";
@@ -325,7 +324,7 @@ const Planner = (() => {
           type: "drive", t: clock, dur: anchor.out,
           title: `Drive ${D.regions[base].base} → ${D.regions[reg].base}`,
           note: anchor.mode === "roundtrip" ? "There and back today, no bag needed."
-              : anchor.mode === "last"      ? "Heading home the scenic way."
+              : anchor.mode === "last"      ? "Last stop of the trip, it's on the way back."
               : "You'll sleep this side tonight, bring the bag."
         });
         clock += anchor.out;
@@ -426,7 +425,7 @@ const Planner = (() => {
             atCoords = f.coords || atCoords;
             atRough = false;
           } else {
-            day.legs.push({ type: "note", icon: "🍽️", t: clock, title: "Lunch break", note: `Shawarma, grilled chicken or karak in ${D.regions[reg].base}, cheap, everywhere, exactly right.` });
+            day.legs.push({ type: "note", icon: "🍽️", t: clock, title: "Lunch break", note: `Shawarma, grilled chicken or karak in ${D.regions[reg].base}, cheap and everywhere.` });
             clock += 0.75;
           }
         }
@@ -440,7 +439,7 @@ const Planner = (() => {
 
       /* ---- where do we sleep? -------------------------------------------------- */
       if (anchor.mode === "overnight") {
-        day.legs.push({ type: "sleep", t: clock, title: "Night in the dunes", note: "Dinner, stars, no signal. This is the bit people remember." });
+        day.legs.push({ type: "sleep", t: clock, title: "Night in the dunes", note: "Dinner, stars, no signal." });
         base = reg;
         day.stayIn = D.regions[reg].base;
         day.stayRegion = reg;
@@ -449,7 +448,7 @@ const Planner = (() => {
         base = reg;
         day.stayIn = D.regions[reg].base;
         day.stayRegion = reg;
-        day.legs.push({ type: "sleep", t: clock, title: "Stay in " + D.regions[reg].base, note: "Closer to tomorrow this way." });
+        day.legs.push({ type: "sleep", t: clock, title: "Stay in " + D.regions[reg].base, note: "Tomorrow's stops are on this side." });
 
       } else if (anchor.mode === "last") {
         // From where the car actually is, the last spot, not from the town.
@@ -555,8 +554,8 @@ const Planner = (() => {
 
     if ([6,7,8].includes(p.month) && p.base !== "dhofar") {
       warnings.push(p.heatStyle === "late"
-        ? `${MONTHS[p.month]} is brutally hot inland, so this plan runs on your late clock: slow mornings, the hottest spots pushed to the end of the day, and midday for shade, food and AC. Drink more than you think you need.`
-        : `${MONTHS[p.month]} is brutally hot inland, so this plan runs on the summer clock: days start at 06:30, the hottest spots get the earliest slots, and midday is for shade, food and AC. Drink more than you think you need.`);
+        ? `${MONTHS[p.month]} is brutally hot inland, so this plan runs on your late clock: slow mornings, the hottest spots pushed to the end of the day, and midday for shade, food and AC. Carry 4L of water each.`
+        : `${MONTHS[p.month]} is brutally hot inland, so this plan runs on the summer clock: days start at 06:30, the hottest spots get the earliest slots, and midday is for shade, food and AC. Carry 4L of water each.`);
     }
     if (p.base === "dhofar" && [6,7,8,9].includes(p.month)) {
       warnings.push(`🌿 Khareef: expect drizzle, fog and green hillsides, pack a light rain layer and patience for the traffic near the waterfalls. The mountain viewpoints (Jabal Samhan) sit inside the fog in July–August; save them for a clear morning.`);
@@ -564,13 +563,13 @@ const Planner = (() => {
     const heatTimed = [];
     days.forEach(d => d.spots.forEach(s => { if (isHot(s, p) && s.region !== "dhofar") heatTimed.push(s.name); }));
     if (heatTimed.length) {
-      warnings.push(`🌡️ ${MONTHS[p.month]} isn't the best month for ${heatTimed.slice(0,3).join(", ")}${heatTimed.length>3 ? ` and ${heatTimed.length-3} more` : ""}, still absolutely doable, just go at first light or after 4pm. Each one is marked in the plan.`);
+      warnings.push(`🌡️ ${MONTHS[p.month]} isn't the best month for ${heatTimed.slice(0,3).join(", ")}${heatTimed.length>3 ? ` and ${heatTimed.length-3} more` : ""}. Go at first light or after 4pm. Each one is marked in the plan.`);
     }
     if (!p.has4x4 && dropped.vehicle.length) {
       warnings.push(`Without a 4×4 you lose ${dropped.vehicle.length} spot${dropped.vehicle.length>1?"s":""} (${dropped.vehicle.slice(0,3).join(", ")}). Worth the upgrade if the budget stretches.`);
     }
     if (!p.canSwim && dropped.swim.length) {
-      warnings.push(`Most Omani wadis are swim-in. Skipping the water rules out ${dropped.swim.length} of them, the coast and the culture days still work beautifully.`);
+      warnings.push(`Most Omani wadis are swim-in. Skipping the water rules out ${dropped.swim.length} of them, the coast and culture days still work.`);
     }
 
     const freeDays = days.filter(d => d.free).length;
@@ -580,7 +579,7 @@ const Planner = (() => {
 
     days.forEach(d => {
       if (d.driveHours > MAX_DRIVE_IN_DAY) {
-        warnings.push(`Day ${d.n} is ${dur(d.driveHours)} behind the wheel. That's a driving day with a swim in it, go in knowing that.`);
+        warnings.push(`Day ${d.n} is ${dur(d.driveHours)} behind the wheel. That's a driving day with a swim in it.`);
       }
     });
 
@@ -601,7 +600,7 @@ const Planner = (() => {
       if (s.closedFridays) tight.push(`${s.name} (day ${d.n})`);
     }));
     if (tight.length) {
-      warnings.push(`🕌 ${tight.join(", ")}: visitor hours are 8–11am only, and it's closed on Fridays and public holidays. If your day lands on a Friday, swap it, that's a three-hour window with no second chance.`);
+      warnings.push(`🕌 ${tight.join(", ")}: visitor hours are 8–11am only, and it's closed on Fridays and public holidays. If your day lands on a Friday, swap it.`);
     }
 
     if (days.some(d => d.spots.some(s => s.cat === "wadis"))) {

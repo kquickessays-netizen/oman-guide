@@ -29,7 +29,7 @@ window.OMAN_PREMIUM = {
     ],
     whatYoullDo: [
       "[REWRITE IN YOUR OWN VOICE, this is the core value of the product.]",
-      "Drop from the village to the canyon floor: emerald pools framed by high rock walls.",
+      "Drop from the village to the canyon floor: green pools between high walls.",
       "Swim and wade between 2–3 pools. Most people give it a couple of hours.",
       "How far you get depends entirely on water levels that week."
     ],
@@ -72,14 +72,13 @@ window.OMAN_PREMIUM = {
     ],
     whatYoullDo: [
       "[YOUR ROUTE.]",
-      "Azure pools and small waterfalls in a sheer-walled canyon, ferns growing out of the rock.",
+      "Blue-green pools and small waterfalls in a narrow canyon, ferns growing out of the rock.",
       "Unusually for Oman, there's water in it all year.",
       "Walk past the first pool, it's the least impressive one and where everyone stops.",
       "Keep going into the canyon: a string of better pools, often empty."
     ],
     tips: [
       "[Don't wade in, sit on the edge and slide. The entry rocks are like ice.]",
-      "[Walk past the first pool. That's the whole trick here.]",
       "[Nov–Mar for the best water levels.]"
     ],
     guideNote: ""
@@ -114,13 +113,12 @@ window.OMAN_PREMIUM = {
   "wadi-ghul": {
     gettingThere: [
       "Take the Ghul–Nakhar route below Jabal Shams, 2.5 hrs from Muscat via Nizwa.",
-      "Pavement ends past Al Hajir and turns into rough track. 4×4, and a full tank.",
-      "Most people only photograph this canyon from the rim at Jabal Shams. Come down into it too."
+      "Pavement ends past Al Hajir and turns into rough track. 4×4, and a full tank."
     ],
     whatYoullDo: [
       "[YOUR ROUTE, how far up you drove, where you stopped, what it does to your sense of scale.]",
       "Drive up the canyon floor with 1,000m walls closing in on both sides.",
-      "Stop the car. Get out and walk, that's when the scale lands.",
+      "Stop the car and walk. You can't read the height of the walls from inside it.",
       "Stop at Ghul village on the way: half-abandoned, stacked up the hillside."
     ],
     tips: [
@@ -266,7 +264,6 @@ window.OMAN_PREMIUM = {
       "Camp. It's one of the easiest wild nights you can have from Muscat."
     ],
     tips: [
-      "[Drive past the first bit everyone stops at.]",
       "[Wild camping is legal, but take every scrap of rubbish out with you.]",
       "[Weekdays. On a Friday it fills up.]"
     ],
@@ -309,7 +306,7 @@ window.OMAN_PREMIUM = {
       "Stay for dusk: the ruins are lit and the temperature finally behaves."
     ],
     tips: [
-      "[Evening. The site is lit, the museum is air-conditioned, and the midday heat is nobody's friend.]",
+      "[Go after 4pm.]",
       "[The buggy is worth it with kids, the site is bigger than it looks.]",
       "[Pair with a sunset walk on Al Haffa beach and dinner nearby.]"
     ],
@@ -328,7 +325,7 @@ window.OMAN_PREMIUM = {
       "Park at the viewpoint and walk the rim.",
       "The escarpment drops the best part of a kilometre, straight to the coastal plain.",
       "On a clear day you can trace the shoreline all the way to Mirbat.",
-      "This is the heart of the Arabian leopard reserve. You won't see one, the emptiness is the point."
+      "This is the Arabian leopard reserve. Camera traps see them; visitors don't."
     ],
     tips: [
       "[Avoid khareef for this one, the plateau sits inside the fog Jul–Aug and there is no view.]",
@@ -353,9 +350,8 @@ window.OMAN_PREMIUM = {
       "Walk one cove further than the first. That's where everyone stops."
     ],
     tips: [
-      "[The first cove gets the (few) visitors, walk one further.]",
       "[No shade, no water, no signal in the coves. Plan like it's a mini-expedition.]",
-      "[Sunset from the descent track, looking back down the coast, is the photograph.]"
+      "[Stop on the descent track on the way out at sunset, the angle is better than from the beach.]"
     ],
     guideNote: ""
   },
@@ -472,13 +468,12 @@ window.OMAN_PREMIUM = {
     whatYoullDo: [
       "[WHAT'S ACTUALLY THERE at peak, pool size, spray, the fog.]",
       "The fall comes off the green cliff into a shallow pool, mist, cows, silence.",
-      "This is Darbat's scenery with a tenth of the people.",
       "Give it a slow hour once you're there."
     ],
     tips: [
       "[Peak flow late Jul–Aug, confirm the week before recommending.]",
       "Track gets slick in drizzle, drive it in daylight.",
-      "No swimming, and pack out everything you bring in."
+      "No swimming."
     ],
     guideNote: "First-timers in khareef fog: easier with someone who knows the track."
   },
@@ -510,8 +505,7 @@ window.OMAN_PREMIUM = {
     whatYoullDo: [
       "[YOUR SPOT, where you stand for the full valley shot.]",
       "Look down the length of Wadi Darbat, lake, falls, camels, all from above.",
-      "The cave mouth itself is huge; the view is the reason you came.",
-      "In khareef this is arguably the single best view in Dhofar."
+      "The cave mouth itself is huge; the view is the reason you came."
     ],
     tips: [
       "[Morning vs afternoon light, confirm which works for the valley.]",
@@ -534,7 +528,7 @@ window.OMAN_PREMIUM = {
     ],
     tips: [
       "[A fair per-kilo price is __, know it before you point.]",
-      "Go at lunch, not dinner, freshness is the entire point.",
+      "Go at lunch, not dinner.",
       "Cash."
     ],
     guideNote: ""
@@ -562,14 +556,14 @@ window.OMAN_PREMIUM = {
     ],
     whatYoullDo: [
       "[YOUR PICK, plain, saffron or nutty, and the tub size that makes sense.]",
-      "Taste before you buy, every shop offers, take them up on it.",
+      "Every shop offers tastes, take them up on it.",
       "Watch it being turned in the copper pot if the timing's right, halwa is a spectator sport.",
       "Sealed tubs travel fine in checked luggage."
     ],
     tips: [
       "[A fair price per small tub is __.]",
       "Dhofari halwa is darker and smokier than the Muscat style, that's the local pride.",
-      "It keeps for weeks unrefrigerated: the correct souvenir."
+      "It keeps for weeks unrefrigerated."
     ],
     guideNote: ""
   },
@@ -644,15 +638,14 @@ window.OMAN_PREMIUM = {
     ],
     whatYoullDo: [
       "[YOUR ROUTE, where you stop for THE photo, and how you've seen tourists get it wrong.]",
-      "The village sits in a natural amphitheatre: green terraces below, mud-brick houses above, mountains sealing it in.",
+      "Green terraces below, mud-brick houses above, mountains all the way round.",
       "Wander the lanes quietly. People live here, dress modestly, ask before photographing anyone.",
       "Climb to the track above the football pitch for the classic panorama.",
       "Late afternoon is when that shot works."
     ],
     tips: [
       "[The famous shot is from the track above the village, late afternoon.]",
-      "[Combine into a loop: Al Hamra → Sharaf Al Alamayn → Balad Sayt → Snake Gorge viewpoint → Rustaq.]",
-      "[This is a conservative village that has been very patient with Instagram. Be the visitor that keeps it that way.]"
+      "[Combine into a loop: Al Hamra → Sharaf Al Alamayn → Balad Sayt → Snake Gorge viewpoint → Rustaq.]"
     ],
     guideNote: "If the mountain road worries you, a guide-driver turns a white-knuckle day into a great one. [Guide name] does this loop well."
   },
@@ -672,9 +665,9 @@ window.OMAN_PREMIUM = {
       "Then drive down in the last light, carefully."
     ],
     tips: [
-      "[It is COLD up here after sunset, even in May. Nobody believes it.]",
+      "[Single digits up here after sunset, even in May.]",
       "[The W9 trail to Balad Sayt starts near the pass, a serious, brilliant day hike if you arrange a pickup below.]",
-      "[Full moon nights up here are something else entirely.]"
+      "[On a full moon you can walk the rim without a torch.]"
     ],
     guideNote: ""
   },
@@ -706,7 +699,7 @@ window.OMAN_PREMIUM = {
     whatYoullDo: [
       "[Your order, and which beans you take home.]",
       "Specialty café and roastery.",
-      "This is the one the coffee people send you to."
+      "Ask what came off the roaster this week."
     ],
     tips: ["[Buy beans, not just a cup.]"],
     guideNote: ""
@@ -718,7 +711,7 @@ window.OMAN_PREMIUM = {
       "The view is doing a lot of the work, and that's fine.",
       "This is the sunset coffee, not the serious one."
     ],
-    tips: ["[Go for the sunset, not for the coffee.]"],
+    tips: [],
     guideNote: ""
   },
   "food-kargeen": {
@@ -734,10 +727,9 @@ window.OMAN_PREMIUM = {
   "food-bin-ateeq": {
     whatYoullDo: [
       "[Your order.]",
-      "Curtained rooms, cushions on the floor, no ceremony.",
-      "The closest a restaurant gets to eating in an Omani house."
+      "Curtained rooms, cushions on the floor, no ceremony."
     ],
-    tips: ["[Eat with your right hand. It tastes better, and it's polite.]"],
+    tips: ["[Eat with your right hand, the left one is rude here.]"],
     guideNote: ""
   },
   "food-halwa": {
@@ -747,7 +739,7 @@ window.OMAN_PREMIUM = {
       "Rosewater, saffron, cardamom, nuts, and about an hour of someone's shoulder.",
       "Taste before you buy."
     ],
-    tips: ["[Ask for a taste first. The quality swings wildly between stalls.]", "[Buy from where they make it, not where they box it.]"],
+    tips: ["[The quality swings wildly between stalls.]", "[Buy from where they make it, not where they box it.]"],
     guideNote: ""
   },
 
@@ -757,7 +749,7 @@ window.OMAN_PREMIUM = {
       { title: "Day 1, Muscat", body: "Land, settle, then the Grand Mosque if you're early enough. Mutrah Corniche at dusk, into the souq, dinner at Bait Al Luban looking over the harbour. Stay: [__].", spots: ["grand-mosque","mutrah","food-bait-al-luban"] },
       { title: "Day 2, The coast: Bimmah + Wadi Shab", body: "Coffee, then east on the coast road. Sinkhole swim mid-morning (an hour, no more), Wadi Shab all afternoon, boat across, walk in, swim into the cave. Stay: [__] near Sur.", spots: ["bimmah-sinkhole","wadi-shab"] },
       { title: "Day 3, Turtles at Ras Al Jinz", body: "Sur in the day, the dhow yards are worth an hour, then the turtle tour at night. Book directly through the reserve in advance; numbers are capped (~OMR 3 entry + ~OMR 7 tour). Stay: [__].", spots: ["ras-al-jinz"] },
-      { title: "Day 4, Wahiba Sands (desert night)", body: "Inland (~2.5–3 hrs, tarmac to Al Wasil then 4×4 into the dunes). The camp handles the dune bashing, the camels and the sunset ridge. Bring a warm layer, nobody believes me until they're cold. Stay: [__] camp.", spots: ["wahiba-sands"] },
+      { title: "Day 4, Wahiba Sands (desert night)", body: "Inland (~2.5–3 hrs, tarmac to Al Wasil then 4×4 into the dunes). The camp handles the dune bashing, the camels and the sunset ridge. Bring a warm layer for the night. Stay: [__] camp.", spots: ["wahiba-sands"] },
       { title: "Day 5, Wadi Bani Khalid & Nizwa", body: "Wadi Bani Khalid swim en route (easy, tarmac, free, walk 15 min upstream to lose the crowd), then on to Nizwa (~2 hrs) for the fort and the souq. Stay: [__].", spots: ["wadi-bani-khalid","nizwa"] },
       { title: "Day 6, Jabal Shams & Wadi Ghul", body: "The Balcony Walk on the rim (8.7km out-and-back, 4–5 hrs, W6 markers), then drop into Wadi Ghul below for the opposite view of the same canyon. Jacket, it's cold at 2,000m. Stay: [__] in the mountains.", spots: ["jabal-shams","wadi-ghul"] },
       { title: "Day 7, Misfat, Al Hoota & home", body: "Misfat Al Abriyeen in the morning light, Al Hoota Cave as the day heats up, then the easy run back to Muscat. Fly out. (Adventurous, and got a guide? Swap all of it for Snake Gorge.)", spots: ["misfat-al-abriyeen","al-hoota-cave","snake-gorge"] }
@@ -770,7 +762,7 @@ window.OMAN_PREMIUM = {
       { title: "Day 2, Wadi Shab, the proper way", body: "Early, be at the boat before the crowd. Walk in, swim the cave, then keep going where everyone else turns around. Afternoon: drive on and sleep near Tiwi. Stay: [__].", spots: ["wadi-shab","wadi-tiwi"] },
       { title: "Day 3, Wadi Mibam", body: "4×4 up through the date gardens to Mibam village, then down into the canyon. Emerald pools, high walls, nobody there. [Add your own route, which pool you stop at.] Stay: [__].", spots: ["wadi-mibam"] },
       { title: "Day 4, Wadi Hawer", body: "The full day. Remote, technical, and genuinely hard, go with a guide who knows the line. You'll be wet from morning to evening. Stay: [__].", spots: ["wadi-hawer"] },
-      { title: "Day 5, Snake Gorge, then home", body: "Canyoning: rock pools, 3–4m cliff jumps, two ~20m abseils. Guide, ropes, helmets, no exceptions. Then the drive back to Muscat with nothing left in the tank. Perfect.", spots: ["snake-gorge"] }
+      { title: "Day 5, Snake Gorge, then home", body: "Canyoning: rock pools, 3–4m cliff jumps, two ~20m abseils. Guide, ropes, helmets, no exceptions. Then the drive back to Muscat: allow 2.5 hrs and don't plan anything for the evening.", spots: ["snake-gorge"] }
     ]
   },
 
@@ -809,7 +801,7 @@ window.OMAN_PREMIUM = {
       "[YOUR PICKS, which dates, which tahini, what you actually take home.]"
     ],
     tips: [
-      "Taste before you buy, they'll offer.",
+      "They'll offer tastes, say yes.",
       "Do this stop on your last day: local prices, not airport prices, for the same gifts.",
       "[Roughly what a kilo of the good dates should cost.]"
     ],
@@ -862,7 +854,7 @@ window.OMAN_PREMIUM = {
     whatYoullDo: [
       "Cross the plateau, Bedouin stone villages, feral donkeys, total silence.",
       "Stand (carefully) near the 7th Hole rim, a sheer shaft dropping out of flat ground.",
-      "Tahery Cave's entrance chamber swallows a torch beam whole.",
+      "Tahery Cave's entrance chamber is too big for a hand torch to light.",
       "[Where you camp and where sunset is best.]"
     ],
     tips: [
@@ -948,8 +940,7 @@ window.OMAN_PREMIUM = {
       "[Your route up the ridge, the obvious line vs the easy line.]"
     ],
     tips: [
-      "Sunset, absolutely, the tombs glow and the mountain broods.",
-      "Don't climb on the tombs, they've stood 5,000 years, help them continue.",
+      "Don't climb on the tombs.",
       "Pair with Wadi Damm: swim, then sunset here."
     ],
     guideNote: ""
@@ -999,14 +990,13 @@ window.OMAN_PREMIUM = {
     ],
     whatYoullDo: [
       "Sunset over Wadi Ghul from your chair.",
-      "Stars like you've never seen from a city.",
+      "No light pollution: the Milky Way is visible with the naked eye.",
       "Dawn on the canyon rim, then the Balcony Walk before the day-trippers arrive.",
       "[Your cold-night kit list, what people always underestimate.]"
     ],
     tips: [
       "Camp WELL back from the rim, wind gusts here are real.",
-      "It can approach freezing most of the year at 2,000m. Pack like it.",
-      "Take every scrap out; the plateau has no cleanup crew."
+      "It can approach freezing most of the year at 2,000m. Pack like it."
     ],
     guideNote: ""
   },

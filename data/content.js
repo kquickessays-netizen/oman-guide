@@ -72,7 +72,7 @@ window.OMAN_DATA = {
     // because this line only repeated the "Licensed Oman tour guide" badge
     // sitting two centimetres below it. Kept in case you want it back.
     creatorLine: "Omani content creator · Licensed Oman tour guide 🪪",
-    tagline: "Wadis, beaches and hidden corners, from someone who actually lives here.",
+    tagline: "90+ spots across Oman: where they are, how hard they are, what to bring.",
 
     // >>> THE HOOK, the first line on the About tab, and the hardest-working
     //     twelve words in the app. It is a real question people send you, kept
@@ -128,7 +128,7 @@ window.OMAN_DATA = {
     // Shown in the banner at the top of every tab. Change the date each month, 
     // this line is the whole reason an app beats a PDF.
     lastUpdated: "July 2026",
-    updateNote: "I add new spots and re-check prices, opening hours and road conditions every month. Buy it once and every one of those updates is yours free, forever, no subscription, nothing to renew.",
+    updateNote: "I add new spots and re-check prices, opening hours and road conditions every month.",
 
     // Where shared plans point people (your bio link / deployed app URL).
     // Leave "" until deployed; the share footer falls back to Instagram.
@@ -302,7 +302,7 @@ window.OMAN_DATA = {
       id: "wadi-shab", cat: "wadis", free: true, type: "Wadi",
       name: "Wadi Shab",
       tagline: "The famous one, and for once the hype is real.",
-      blurb: "A flat walk past a string of turquoise pools ends at the bit nobody forgets: a narrow gap you swim through into a hidden cave with a waterfall thundering inside it. Bucket-list stuff, and surprisingly doable.",
+      blurb: "A flat 45–60 min walk from the boat drop past a string of pools. The last 200m is swim-only: through a narrow gap into a cave with a waterfall inside it.",
       img: "assets/wadis/wadi-shab.jpg",
       imgCredit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons",
       gallery: [
@@ -356,7 +356,7 @@ window.OMAN_DATA = {
       id: "wadi-bani-khalid", cat: "wadis", free: true, type: "Wadi",
       name: "Wadi Bani Khalid",
       tagline: "The easy one, and still stunning.",
-      blurb: "The most accessible wadi on this list, and somehow still one of the prettiest. Big emerald pools you can reach without a real hike, perfect if you're bringing people who aren't up for scrambling.",
+      blurb: "The pools start at the car park: no hike, any car, 2.5 hrs from Muscat on Route 23. Walk 15–20 min upstream and the crowds are gone.",
       img: "assets/wadis/wadi-bani-khalid.jpg",
       imgCredit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons",
       gallery: [
@@ -404,8 +404,8 @@ window.OMAN_DATA = {
     {
       id: "wadi-mibam", cat: "wadis", free: false, type: "Wadi",
       name: "Wadi Mibam",
-      tagline: "The one that made me fall for this country all over again.",
-      blurb: "Emerald pools tucked between towering canyon walls, water so clear it looks fake on camera, and, if you time it right, barely another soul around.",
+      tagline: "4×4 only, which is why it's still empty.",
+      blurb: "Fifteen minutes down from the parking to the first waterfall, then two or three pools you swim between. The last stretch of track is 4×4 only.",
       img: "assets/wadis/wadi-mibam.jpg",
       imgCredit: "Photo: Dr. Thomas Liptak · CC BY-SA 4.0 · Wikimedia Commons",
       gallery: [
@@ -473,7 +473,7 @@ window.OMAN_DATA = {
     {
       id: "wadi-damm", cat: "wadis", free: false, type: "Wadi",
       name: "Wadi Damm",
-      tagline: "Azure pools and ferns in a sheer-walled canyon, with water all year.",
+      tagline: "Holds water all year, almost no wadi here does.",
       blurb: "One of the few wadis that holds water year-round. Most people crowd the first pool, which isn't even the best one, walk a little further into the canyon and the good ones are yours.",
       img: "assets/wadis/wadi-damm.jpg",
       imgCredit: "Photo: A1000 · CC0 · Wikimedia Commons",
@@ -674,7 +674,7 @@ window.OMAN_DATA = {
       id: "wadi-hawer", cat: "wadis", free: false, type: "Wadi",
       name: "Wadi Hawer",
       tagline: "For people who want an adventure, not a viewpoint.",
-      blurb: "Long, remote and genuinely demanding, the kind of day that earns the views. Canyon scenery most visitors never reach. Get a guide for this one.",
+      blurb: "A full day: 6+ hours of scrambling and boulder-hopping, wet most of it, 4×4 to the start. Remote and technical enough that you go with a guide.",
       img: "assets/wadis/wadi-hawer.jpg",
       imgCredit: "Photo: Fabio Achilli from Milano, Italy · CC BY 2.0 · Wikimedia Commons",
       gallery: [
@@ -916,8 +916,8 @@ window.OMAN_DATA = {
     {
       id: "fins-beach", cat: "beaches", free: true, type: "Beach",
       name: "Fins Beach",
-      tagline: "White sand, turquoise water, mountains behind. Postcard Oman.",
-      blurb: "One of the most beautiful beaches in the country, and a favourite camping spot for a reason: soft white sand, impossibly blue water, and the Hajar mountains rising right behind you. Sunset here is unreal.",
+      tagline: "White sand, turquoise water, mountains behind.",
+      blurb: "The default beach camp on the Sur road, 1.5 to 2 hrs from Muscat, any car, free. No facilities at all: bring water, shade, food and a bag for your rubbish.",
       img: "assets/beaches/fins-beach.jpg",
       imgCredit: "Photo: Daredeep33 · CC BY-SA 4.0 · Wikimedia Commons",
       gallery: [
@@ -1028,7 +1028,7 @@ window.OMAN_DATA = {
       id: "yiti-qantab", cat: "beaches", free: true, type: "Beach",
       name: "Yiti & Qantab",
       tagline: "Quiet coves 30 minutes from the city.",
-      blurb: "When I want the coast without the drive, I come here. Calm coves and dramatic cliffs just outside Muscat, great for a quick swim, a sunset, or kayaking around the headlands.",
+      blurb: "Two coves on the coast road east of Muscat: Qantab 20–25 min, Yiti 30–45. Any car, free, empty midweek. Go late afternoon.",
       img: "assets/beaches/yiti-qantab.jpg",
       imgCredit: "Photo: Allan Henderson · CC BY 2.0 · Wikimedia Commons",
       gallery: [
@@ -1267,7 +1267,7 @@ window.OMAN_DATA = {
       id: "mughsail", cat: "salalah", free: true, group: "beaches", type: "Beach",
       name: "Mughsail Beach",
       tagline: "Blowholes, cliffs and a beach that doesn't look like the rest of Oman.",
-      blurb: "Golden sand, dramatic cliffs, and natural blowholes that fire seawater into the air. Green in the khareef, a sentence you can't write about anywhere else in the Gulf.",
+      blurb: "40 minutes west of Salalah on good tarmac, any car. The blowholes at the western end need a decent swell: flat sea and nothing happens. In khareef the cliffs behind turn green.",
       img: "assets/beaches/mughsail.jpg",
       imgCredit: "Photo: see source · CC BY-SA 2.0 · Wikimedia Commons",
       gallery: [
@@ -1495,7 +1495,7 @@ window.OMAN_DATA = {
       id: "wahiba-sands", cat: "experiences", free: false, type: "Desert",
       name: "Wahiba Sands",
       tagline: "A night in the dunes you won't get back home.",
-      blurb: "Tarmac to the sand's edge, then a 4×4 into the dunes. Dune bashing, camels, a sunset session on a ridge, and a night sky that ruins other night skies.",
+      blurb: "Tarmac to Al Wasil, then 4×4 into the dunes: dune bashing, camels, sunset on a ridge, then stars. Book the camp ahead and bring a warm layer, it gets cold at night.",
       img: "assets/experiences/wahiba-sands.jpg",
       imgCredit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons",
       gallery: [
@@ -1774,7 +1774,7 @@ window.OMAN_DATA = {
     {
       id: "musandam-dhow", cat: "experiences", free: false, type: "Boat trip",
       name: "Musandam dhow cruise",
-      tagline: "Norway's fjords, dropped into Arabia.",
+      tagline: "Fly to Khasab. From there it's boat-only.",
       blurb: "Limestone walls falling hundreds of metres straight into dark blue water, dolphins riding the bow, and swimming stops you can't reach any other way.",
       img: "assets/experiences/musandam-dhow.jpg",
       imgCredit: "Photo: Toppazz · CC BY 3.0 · Wikimedia Commons",
@@ -2179,7 +2179,7 @@ window.OMAN_DATA = {
       id: "sugar-dunes", cat: "experiences", free: false, type: "Camping",
       name: "The Sugar Dunes (Al Khaluf)",
       tagline: "Dunes so white they look like snow, falling straight into a turquoise sea.",
-      blurb: "Four hours south of the tourist trail: blinding-white gypsum dunes meeting an empty turquoise coast, flamingos in the lagoons, and nobody for kilometres. The most otherworldly camp in this guide, and the one that needs the most planning.",
+      blurb: "Four hours south of the tourist trail: white gypsum dunes meeting an empty turquoise coast, flamingos in the lagoons, nobody for kilometres. The camp in this guide that needs the most planning.",
       img: "",
       region: "sharqiyah", coords: [20.68, 58.05],
       hours: 4, fitness: 2, needs4x4: true, swim: true, kidOk: true,
@@ -2439,7 +2439,7 @@ window.OMAN_DATA = {
       id: "jabal-shams-camp", cat: "mountains", free: false, type: "Camping",
       name: "Jabal Shams rim camp",
       tagline: "Sleep on the edge of Arabia's Grand Canyon.",
-      blurb: "Pitch near the rim of Wadi Ghul, cook at 2,000m, and watch the canyon walls go from gold to black to silver under a sky with no light pollution worth mentioning. Cold, quiet, unforgettable, the best free hotel in the country.",
+      blurb: "Camp free on the rim of Wadi Ghul at ~2,000m; 4×4 for the upper tracks. It can approach freezing up here while Muscat sits at 35°, so bring a real sleeping bag and firewood from Al Hamra, there's none to gather on top.",
       img: "assets/mountains/jabal-shams-camp.jpg",
       imgCredit: "Photo: Ralf Hüsges · CC BY 2.0 · Wikimedia Commons",
       gallery: [
@@ -3493,7 +3493,7 @@ window.OMAN_DATA = {
       id: "cafe-qaha", cat: "food", sub: "Coffee", free: true, type: "Coffee",
       name: "Qaha Specialty Coffee",
       tagline: "Omani coffee culture, modernised.",
-      blurb: "White-and-blue, calm, and serious about the coffee. The slow morning where you're not going anywhere in a hurry.",
+      blurb: "Specialty coffee on Al Maha St. Walk-in, cheap, and quiet enough to sit for an hour before an early drive.",
       img: "assets/food/cafe-qaha.jpg",
       imgCredit: "Photo: Justwiki · CC0 · Wikimedia Commons",
       gallery: [
@@ -3714,7 +3714,7 @@ window.OMAN_DATA = {
       id: "shop-amouage", cat: "shopping", sub: "Speciality", free: false, type: "Shop",
       name: "Amouage Visitor Centre",
       tagline: "Oman's world-famous perfume house, at the source.",
-      blurb: "One of the most valuable perfume brands on earth is Omani, and the factory visitor centre sells the full range with tester bars and a tour of the production floor. A bottle here is the souvenir that outclasses everything else.",
+      blurb: "One of the most valuable perfume brands on earth is Omani. The factory visitor centre sells the full range, with tester bars and a tour of the production floor.",
       img: "assets/shopping/shop-amouage.jpg",
       imgCredit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons",
       gallery: [
@@ -3884,7 +3884,7 @@ window.OMAN_DATA = {
         { name: "Dress modestly", icon: "dress", short: "Shoulders and knees covered in villages and souqs.", text: "Shoulders and knees covered in villages, souqs and anywhere religious. Swimwear is fine at hotel pools and in the wadis, just cover up for the walk through the village to get there." },
         { name: "Alcohol in public", icon: "alcohol", no: true, short: "Licensed hotels and restaurants only.", text: "Licensed hotel bars and restaurants only. Never in public, never on a beach, never in the car." },
         { name: "Drones", icon: "drone", no: true, short: "No permit, no drone.", text: "Drones need a permit. Flying without one risks confiscation at the airport. Unless you've done the paperwork in advance, leave it at home." },
-        { name: "Photographing people", icon: "camera", no: true, short: "Not without permission, especially women and elders.", text: "Ask before photographing people, especially women and elders. Omanis are famously welcoming, asking first is what keeps it that way." },
+        { name: "Photographing people", icon: "camera", no: true, short: "Not without permission, especially women and elders.", text: "Ask before photographing people, especially women and elders. You'll almost always get a yes." },
         { name: "The weekend is Fri–Sat", icon: "weekend", short: "Friday morning the country slows down.", text: "Friday morning the country slows down for prayers, souqs and small shops open late. Plan a wadi or a slow breakfast, not errands." },
         { name: "Take your rubbish out", icon: "rubbish", short: "No bins at a wadi. Bring a bag.", text: "There are no bins at a wadi. Bring a bag, fill it, drive it home. Don't touch the coral or the turtles." }
       ]},
@@ -3898,29 +3898,29 @@ window.OMAN_DATA = {
           { label: "Vodafone", pct: 55, note: "fine in the cities" }
         ],
         items: [
-        { name: "The three networks", icon: "signal", short: "Omantel for the mountains. Ooredoo cheaper.", text: "Omantel has the best coverage in the mountains and the far south; Ooredoo is close behind and often cheaper; Vodafone Oman is the newest and fine in the cities. In a wadi or on a mountain track, Omantel is the one that still has a bar of signal." },
-        { name: "A physical SIM at the airport", icon: "sim", short: "Arrivals counter · ~3–8 OMR · 5 minutes", text: "Tourist SIM counters sit in arrivals at both Muscat and Salalah, passport, five minutes, and you walk out with data. Expect roughly 3–8 OMR for a tourist bundle with plenty of data for a week or two. Cheaper than the airport if you buy it in a mall shop instead, but the airport is the path of least resistance at 2am." },
+        { name: "The three networks", icon: "signal", short: "Omantel for the mountains. Ooredoo cheaper.", text: "Omantel: best coverage in the mountains and the far south, and the only one with a bar of signal on a wadi track. Ooredoo: close behind, often cheaper. Vodafone Oman: newest, fine in the cities." },
+        { name: "A physical SIM at the airport", icon: "sim", short: "Arrivals counter · ~3–8 OMR · 5 minutes", text: "Tourist SIM counters sit in arrivals at both Muscat and Salalah: passport, five minutes. 3–8 OMR for a week or two of data. Mall shops are cheaper; the airport counter is open at 2am." },
         { name: "Or an eSIM before you fly", icon: "esim", short: "Land already connected, no queue.", text: "If your phone takes an eSIM, buy it at home and land already connected, no counter, no queue, no passport copies. Slightly pricier per GB than a local SIM, and it usually rides on Omantel or Ooredoo anyway.", affiliate: "esim", affLabel: "Get an Oman eSIM →" },
         { name: "No signal in the wadis", icon: "nosignal", short: "Download offline maps before you drive in.", text: "Whatever you buy, assume no signal in the canyons and on the mountain tracks. Save the Muscat area and your route in Google Maps before you leave wifi, and send your \"here's where I'm going\" message before you drive in." }
       ]},
 
       { title: "Two apps that pay for themselves", layout: "apps", items: [
         { name: "OTaxi", icon: "otaxi", short: "Fixed fares, no haggling. An airport pickup without it costs triple.", text: "Oman's ride-hailing app, fixed fair prices, no haggling. An airport pickup without it can cost triple." },
-        { name: "Talabat", icon: "talabat", short: "Food delivery, for the evening you crawl back from a wadi.", text: "Food delivery for everything from shawarma to groceries. You'll thank yourself the evening you crawl back from a wadi too tired to move." },
+        { name: "Talabat", icon: "talabat", short: "Food delivery, for the evening you crawl back from a wadi.", text: "Food delivery for everything from shawarma to groceries." },
         { name: "Cards work almost everywhere", icon: "cardcash", short: "Keep 10–20 OMR cash for villages, wadi parking and souqs.", text: "Malls, restaurants and hotels all take card. Keep 10–20 OMR in cash for village shops, wadi parking and souq haggling." }
       ]},
 
       { title: "Getting around: best to worst", layout: "ranked", items: [
-        { name: "Rent a car", icon: "rentcar", short: "The only way to really do this country.", text: "The only way to really do this country, the best places aren't on any bus route. A 4×4 opens everything; a 2WD still covers the classics.", affiliate: "car", affLabel: "Rent a car →" },
+        { name: "Rent a car", icon: "rentcar", short: "Nothing good is on a bus route.", text: "Nothing good here is on a bus route. A 4×4 opens everything; a 2WD still covers the classics.", affiliate: "car", affLabel: "Rent a car →" },
         { name: "OTaxi inside the city", icon: "citytaxi", short: "Cheap and metered, but not down a wadi track.", text: "Cheap, metered and reliable around Muscat and Salalah. It just won't take you down a wadi track." },
-        { name: "Hire a guide with a car", icon: "guidecar", short: "Local knowledge, proper vehicle, zero stress.", text: "The best of both for the hard spots, local knowledge, proper vehicle, zero stress. Costs more, worth it for Snake Gorge-grade days.", affiliate: "guide", affLabel: "Book a guided trip →" },
+        { name: "Hire a guide with a car", icon: "guidecar", short: "Local knowledge, proper vehicle.", text: "Local knowledge and a proper vehicle for the hard spots. Costs more, worth it for Snake Gorge-grade days.", affiliate: "guide", affLabel: "Book a guided trip →" },
         { name: "Mwasalat buses", icon: "bus", short: "Fine between cities, useless for the spots.", text: "Clean, cheap intercity coaches (Muscat–Sur, Muscat–Nizwa, Muscat–Salalah). Fine for moving between cities; useless for the spots themselves." },
         { name: "Street taxis", icon: "streettaxi", short: "No meter. Agree the price before you get in.", text: "No meter. If you must: agree the price before you get in, and halve the first number you hear." }
       ]},
 
       { title: "Money", layout: "stats", items: [
         { name: "The rial is strong", big: "1 OMR", sub: "≈ USD 2.60, prices look small until you multiply", text: "1 OMR ≈ USD 2.60, prices look small until you multiply. ATMs are everywhere and exchange rates at the airport are fine." },
-        { name: "Tipping", big: "0", sub: "expected, rounding up is plenty", text: "Not expected anywhere. Rounding up a taxi or leaving a rial for great service is appreciated, never demanded." }
+        { name: "Tipping", big: "0", sub: "expected, rounding up is plenty", text: "Not expected. Round up a taxi or leave a rial if you want to." }
       ]},
 
       { title: "If something goes wrong", layout: "sos", items: [

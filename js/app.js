@@ -355,10 +355,10 @@
           <span class="price-tag">${D.meta.bundlePrice}</span>
         </div>
         <ul class="bulletlist">
-          <li>All <strong>${lockedCount()}</strong> locked spots, the remote wadis, the empty beaches, the mountain villages, the south.</li>
+          <li>All <strong>${lockedCount()}</strong> locked spots: wadis, beaches, mountain villages and the south.</li>
           <li>Every itinerary: 3-day, 5-day and the 7-day loop.</li>
           <li><strong>The trip Planner</strong>, a route built around your days, pace and fitness.</li>
-          <li>New spots and re-checked prices every month. Free, forever. No subscription.</li>
+          <li>New spots and re-checked prices every month. No subscription.</li>
         </ul>
         <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get the full guide, ${D.meta.bundlePrice}</a>
         <p class="price-fine">One key. Works on any phone, paste it again if you switch.</p>
@@ -384,10 +384,10 @@
     const w = el("div", "launchbox");
     w.innerHTML = `
       <div class="launch-badge">🎁 Launch season, the whole guide is free</div>
-      <p>Every spot, every itinerary and the trip Planner, open for everyone while I launch,
-         all through the khareef. <strong>In October it becomes a paid guide</strong> for the winter season.</p>
-      <p class="launch-ask">Leave your email and you're a <strong>founding explorer</strong>, you'll get the
-         updates and the best deal when the paid version lands.</p>
+      <p>Every spot, every itinerary and the trip Planner, free through the khareef.
+         <strong>In October it becomes a paid guide</strong> for the winter season.</p>
+      <p class="launch-ask">Leave your email and you're a <strong>founding explorer</strong>: you get the
+         best price when it does.</p>
       <div class="subrow">
         <input type="email" id="lbEmail" placeholder="you@email.com" autocomplete="email">
         <button class="pill" id="lbBtn">Count me in</button>
@@ -1136,8 +1136,6 @@
     if (D.meta.freeLaunch) {
       b.innerHTML = `
         <h2>🎁 It's all free right now</h2>
-        <p>Launch season: every spot, every itinerary and the Planner are open for everyone.
-           In October the guide becomes paid, founding explorers get the best deal.</p>
         <div id="lbHere"></div>
         <button class="btn-full" id="doneBtn" style="margin-top:12px">Keep exploring →</button>`;
       b.querySelector("#lbHere").appendChild(launchBox());
@@ -1507,8 +1505,7 @@
       view.appendChild(launchBox());
     } else if (lockedShown && !Unlock.hasBundle()) {
       const h = el("div", "section-head");
-      h.innerHTML = `<h2>${lockedShown} locked here 🔒</h2>` +
-        `<p>One payment unlocks all ${lockedCount()} locked spots in the guide, the itineraries and the Planner, and every update after that.</p>`;
+      h.innerHTML = `<h2>${lockedShown} locked here 🔒</h2>`;
       view.appendChild(h);
       view.appendChild(priceBlock(cat));
     }
@@ -1552,7 +1549,7 @@
       </div>
 
       <div class="about-body">
-        <p>${spotCount} spots. For each one: the drive, the walk in, the entry fee,
+        <p>For every spot: the drive, the walk in, the entry fee,
            the shoes, the right month, and whether I'd tell you to skip it.</p>
         <p>Oman changes. Fees go up, roads wash out, a two-hour wadi becomes a
            four-hour one. That's why this is an app and not a PDF.</p>
@@ -1584,7 +1581,7 @@
 
     // If the photo file isn't there yet (meta.aboutPhoto is set before the
     // file is dropped in), fall back to the placeholder circle instead of a
-    // giant broken-image poster at the top of the page — and put the byline
+    // giant broken-image poster at the top of the page, and put the byline
     // back, since with no photo there's nowhere else it appears.
     const av = w.querySelector(".about-photo");
     if (av) av.onerror = () => {
@@ -1603,7 +1600,7 @@
     // --- the asks, in order of how much they cost the reader -----------------
     if (!Unlock.hasBundle()) {
       const h = el("div", "section-head");
-      h.innerHTML = `<h2>Support the guide</h2><p>It's how the monthly updates keep coming.</p>`;
+      h.innerHTML = `<h2>Get the full guide</h2>`;
       view.appendChild(h);
       view.appendChild(priceBlock(null));
     }
@@ -1620,7 +1617,7 @@
       const sub = el("div", "about-subscribe");
       sub.innerHTML = `
         <h3>📬 New spots, monthly</h3>
-        <p>One email when the guide updates. No spam, ever.</p>
+        <p>One email when the guide updates.</p>
         <div class="subrow">
           <input type="email" id="subEmail" placeholder="you@email.com" autocomplete="email">
           <button class="pill" id="subBtn">Sign me up</button>
@@ -1669,7 +1666,7 @@
         <details class="fold fold-quiet">
           <summary>📷 Photo credits (${credited.length})</summary>
           <div class="fold-body">
-            <p class="credits-note">Photos from Wikimedia Commons under free licences, gratefully used.</p>
+            <p class="credits-note">Photos from Wikimedia Commons under free licences.</p>
             <ul>${credited.map(s => `<li><strong>${esc(s.name)}</strong>, ${esc(s.imgCredit.replace(/^Photo: /, ""))}</li>`).join("")}</ul>
           </div>
         </details>`;
@@ -1900,7 +1897,7 @@
     }));
 
     // logistics
-    fine.appendChild(question("Logistics", "These change what's even possible.", w => {
+    fine.appendChild(question("Logistics", "4×4 and swimming decide half the list.", w => {
       const o = el("div", "opts");
       [["has4x4","🚙 I'll have a 4×4"],["canSwim","🏊 Happy to swim"],["kids","👶 Travelling with kids"]].forEach(([k, label]) => {
         const b = el("button", "opt", esc(label));
@@ -2080,7 +2077,7 @@
       const m = el("div", "promo");
       m.innerHTML = `
         <h3>You didn't have time for…</h3>
-        <p>${plan.missed.map(s => esc(s.name)).join(" · ")}. Add a day, or come back, they're not going anywhere.</p>`;
+        <p>${plan.missed.map(s => esc(s.name)).join(" · ")}. Add a day, or catch them next trip.</p>`;
       view.appendChild(m);
     }
 
@@ -2103,7 +2100,7 @@
     const aff = D.meta.affiliates;
     if (aff.car || aff.hotel || aff.esim) {
       const box = el("div", "guidebox");
-      box.innerHTML = `<strong>Sort the basics</strong><p>You'll want a car, a bed and working maps.</p>`;
+      box.innerHTML = `<strong>Sort the basics</strong>`;
       if (aff.car)   box.innerHTML += `<a class="affbtn" href="${aff.car}" target="_blank" rel="noopener">Rent a ${plan.prefs.has4x4 ? "4×4" : "car"} →</a>`;
       if (aff.hotel) box.innerHTML += `<a class="affbtn" href="${aff.hotel}" target="_blank" rel="noopener">Book the stays →</a>`;
       if (aff.esim)  box.innerHTML += `<a class="affbtn" href="${aff.esim}" target="_blank" rel="noopener">Get an eSIM →</a>`;
@@ -2165,7 +2162,7 @@
 
     if (hiddenCount) {
       const note = el("div", "promo");
-      note.innerHTML = `<p>🔒 <strong>${hiddenCount} more pins</strong> appear here when you unlock, the spots most visitors never find.</p>`;
+      note.innerHTML = `<p>🔒 <strong>${hiddenCount} more pins</strong> appear here when you unlock.</p>`;
       box.appendChild(note);
     }
 
