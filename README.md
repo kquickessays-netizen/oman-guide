@@ -2,6 +2,22 @@
 
 One codebase. It's the website *and* the app — buyers "install" it from the browser and it lands on their home screen, works offline, and updates the moment you edit a file.
 
+## Two people work on this. Read first (added 29 Jul 2026)
+
+This GitHub repo (`kquickessays-netizen/oman-guide`, branch `main`) is the live
+site AND the shared source of truth. No build step: what you push is what ships.
+
+- **Working from a clone** (second machine, cloud session): `git pull` before you
+  start. Edit, bump `CACHE` in `sw.js` (`oman-v30` to `oman-v31` to ...), commit,
+  push. Push = deploy; Pages rebuilds in about a minute. If the push is rejected,
+  the other person deployed after your pull: `git pull --rebase`, re-check your
+  files, push again.
+- **Working on the home PC** (the one with `tools\`): run `tools\SYNC-NOW.bat` at
+  the start of every session, then deploy with `tools\DEPLOY-NOW.bat` as usual.
+  The deploy script refuses to run while the live repo has commits that machine
+  hasn't pulled, so you can't erase each other's work by accident.
+- Never `git push --force`. Don't add or delete `CNAME`.
+
 ```
 app/
   index.html              the shell — you'll rarely touch this
