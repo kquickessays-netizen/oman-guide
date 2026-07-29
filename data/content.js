@@ -568,7 +568,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/wadis/wadi-dayqah-2.jpg", credit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons" },
         { src: "assets/wadis/wadi-dayqah-3.jpg", credit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.070, 58.850],
+      ], region: "muscat", coords: [23.08492, 58.84817],
       hours: 3, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["photography","wildlife"],
@@ -1273,7 +1273,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/beaches/ras-al-jinz-2.jpg", credit: "Photo: Kim Kash · CC BY-SA 2.0 · Wikimedia Commons" },
         { src: "assets/beaches/ras-al-jinz-3.jpg", credit: "Photo: Kim Kash · CC BY-SA 2.0 · Wikimedia Commons" }
-      ], region: "coast-east", coords: [22.420, 59.836],
+      ], region: "coast-east", coords: [22.41883, 59.83001],
       hours: 3, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["wildlife","photography"],
@@ -2664,7 +2664,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/experiences/grand-mosque-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/grand-mosque-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.584, 58.389],
+      ], region: "muscat", coords: [23.58233, 58.38961],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -2969,7 +2969,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/mountains/misfat-al-abriyeen-2.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" },
         { src: "assets/mountains/misfat-al-abriyeen-3.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" }
-      ], region: "dakhiliyah", coords: [23.130, 57.281],
+      ], region: "dakhiliyah", coords: [23.12023, 57.27959],
       hours: 3, fitness: 2, needs4x4: false, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["culture","photography","hiking","mountains"],
@@ -3017,7 +3017,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/mountains/al-hoota-cave-2.jpg", credit: "Photo: Paul IJpelaar · CC BY 3.0 · Wikimedia Commons" },
         { src: "assets/mountains/al-hoota-cave-3.jpg", credit: "Photo: Ambreen Waseem · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "dakhiliyah", coords: [23.081, 57.363],
+      ], region: "dakhiliyah", coords: [23.08207, 57.35436],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","wildlife","photography","mountains"],
@@ -3531,7 +3531,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/mountains/wakan-village-2.jpg", credit: "Photo: Raijelani · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/mountains/wakan-village-3.jpg", credit: "Photo: Raijelani · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "rustaq", coords: [23.132, 57.752],
+      ], region: "rustaq", coords: [23.14348, 57.73461],
       hours: 3, fitness: 2, needs4x4: true, swim: false, kidOk: true,
       months: [10,11,12,1,2,3,4],
       tags: ["mountains","hiking","culture","photography"],
@@ -3943,7 +3943,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/salalah/jabal-samhan-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/salalah/jabal-samhan-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "dhofar", coords: [17.135, 54.663],
+      ], region: "dhofar", coords: [17.11149, 54.71106],
       hours: 2.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [9,10,11,12,1,2,3],
       tags: ["mountains","photography","wildlife","sunset"],
@@ -4835,7 +4835,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/food/cafe-qaha-2.jpg", credit: "Photo: Justwiki · CC0 · Wikimedia Commons" },
         { src: "assets/food/cafe-qaha-3.jpg", credit: "Photo: Justwiki · CC0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.588, 58.408],
+      ], region: "muscat", coords: [23.56816, 58.41489],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"], guide: "",
@@ -4878,7 +4878,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/food/cafe-farah-2.jpg", credit: "Photo: Andy Li · CC0 · Wikimedia Commons" },
         { src: "assets/food/cafe-farah-3.jpg", credit: "Photo: Goldberry23 · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.610, 58.380],
+      ], region: "muscat", coords: [23.60493, 58.35346],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","sunset"], guide: "",
@@ -4896,7 +4896,7 @@ window.OMAN_DATA = {
       gallery: [
         { src: "assets/food/food-kargeen-2.jpg", credit: "Photo: Majalam · CC BY 4.0 · Wikimedia Commons" },
         { src: "assets/food/food-kargeen-3.jpg", credit: "Photo: Majalam · CC BY 4.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.588, 58.408],
+      ], region: "muscat", coords: [23.60055, 58.455],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
