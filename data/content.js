@@ -132,7 +132,7 @@ window.OMAN_DATA = {
 
     // Where shared plans point people (your bio link / deployed app URL).
     // Leave "" until deployed; the share footer falls back to Instagram.
-    storeUrl: "https://kquickessays-netizen.github.io/oman-guide/",
+    storeUrl: "https://exploresoman.com/",
 
     // "What's new", shown on the About tab, collapsed. Newest entry FIRST.
     // This is the proof behind "updated monthly".
