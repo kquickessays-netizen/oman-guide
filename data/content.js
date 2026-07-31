@@ -4898,6 +4898,19 @@ window.OMAN_DATA = {
       verify: true
     },
     {
+      id: "food-najmat-sur", cat: "food", sub: "Traditional", free: true, type: "Omani food",
+      name: "Najmat Sur",
+      tagline: "The 2-rial lunch of the Wadi Shab day.",
+      blurb: "Roadside Omani grill on the coast road just north of Wadi Shab, on the way to Bimmah. Local lunch about 1.8, tea 0.3, no menu theatre, full plates. Where I actually eat after the canyon.",
+      region: "coast-east", coords: [22.86881, 59.22594],
+      hours: 0.75, fitness: 1, needs4x4: false, swim: false, kidOk: true,
+      months: [1,2,3,4,5,6,7,8,9,10,11,12],
+      tags: ["food"], guide: "",
+      stats: { "Type": "Omani grill", "Area": "Coast road, Shab → Bimmah", "Price": "$", "Best for": "Lunch after the wadi", "Book?": "Walk-in" },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=22.86881,59.22594",
+      verify: true
+    },
+    {
       id: "food-bin-ateeq-salalah", cat: "salalah", sub: "Traditional", free: true, group: "food", type: "Omani food",
       name: "Bin Ateeq (Salalah)",
       tagline: "The Salalah branch of the floor-cushion classic.",
@@ -5134,7 +5147,7 @@ window.OMAN_DATA = {
             { t: "08:00", icon: "🚗", title: "Leave Muscat", note: "Route 17 east, the scenic coast road. Fuel for the whole loop is about OMR 10." },
             { t: "10:00", icon: "🏞️", title: "Wadi Shab", note: "Boat across, hike the canyon 45–60 min, swim the last stretch into the waterfall cave. Give it 3 hours, it is the reason you came.", omr: "3.0", spot: "wadi-shab", hl: true },
             { t: "13:05", icon: "🌊", title: "Pebble Beach + the Romantic Cave", note: "3 minutes down the road at Tiwi. Rest, photos, and the cave if the sea is flat calm.", spot: "pebble-beach-tiwi" },
-            { t: "13:50", icon: "🍽️", title: "Lunch at Najmat Sur", note: "5 minutes away. Local lunch 1.8, tea 0.3.", omr: "2.1" },
+            { t: "13:50", icon: "🍽️", title: "Lunch at Najmat Sur", note: "On the coast road toward Bimmah. Local lunch 1.8, tea 0.3.", omr: "2.1", spot: "food-najmat-sur" },
             { t: "15:00", icon: "💧", title: "Bimmah Sinkhole", note: "Swim the sinkhole, walk the park, wind down. An hour or two.", spot: "bimmah-sinkhole" },
             { t: "17:00", icon: "🌇", title: "Drive home", note: "Back in Muscat around 19:00." }
           ] }
@@ -5175,7 +5188,7 @@ window.OMAN_DATA = {
           stops: [
             { t: "08:00", icon: "🚗", title: "Coast road east", note: "Breakfast on the way." },
             { t: "10:00", icon: "🏞️", title: "Wadi Shab", note: "Boat, canyon, cave. Three hours.", omr: "3.0", spot: "wadi-shab", hl: true },
-            { t: "13:50", icon: "🍽️", title: "Najmat Sur", note: "Local lunch about OMR 2.", omr: "2.1" },
+            { t: "13:50", icon: "🍽️", title: "Najmat Sur", note: "Local lunch about OMR 2.", omr: "2.1", spot: "food-najmat-sur" },
             { t: "15:00", icon: "💧", title: "Bimmah Sinkhole", note: "The swim on the way home.", spot: "bimmah-sinkhole" },
             { t: "17:00", icon: "🌇", title: "Back to Muscat", note: "Home by 19:00." }
           ], sleep: "Muscat" },
@@ -5233,7 +5246,7 @@ window.OMAN_DATA = {
             { t: "08:00", icon: "🕌", title: "Grand Mosque first", note: "Beat the heat and the buses, visitor window shuts 11:00.", spot: "grand-mosque" },
             { t: "09:45", icon: "🚗", title: "Coast road east", note: "Breakfast on the way." },
             { t: "11:30", icon: "🏞️", title: "Wadi Shab", note: "Boat, canyon, swim into the cave. Out by 14:30.", omr: "3.0", spot: "wadi-shab", hl: true },
-            { t: "14:40", icon: "🍽️", title: "Najmat Sur", note: "The 2-rial lunch that beats every hotel buffet.", omr: "2.1" },
+            { t: "14:40", icon: "🍽️", title: "Najmat Sur", note: "The 2-rial lunch that beats every hotel buffet.", omr: "2.1", spot: "food-najmat-sur" },
             { t: "15:30", icon: "💧", title: "Hawiyat Najm (Bimmah Sinkhole)", note: "One last swim.", spot: "bimmah-sinkhole" },
             { t: "16:30", icon: "🌇", title: "Drive back", note: "Hotel by 18:30." }
           ], sleep: "Muscat" },
