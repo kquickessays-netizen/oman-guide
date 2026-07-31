@@ -840,7 +840,7 @@
              <b>Day ${i + 1}</b><span aria-hidden="true">${d.chip || "📍"}</span><small>${esc(d.sub || "")}</small>
            </button>`).join("") + `</div>`;
       }
-      const pinOf = id => { const s = id && D.spots.find(x => x.id === id); return (s && isUnlocked(s) && s.mapUrl) ? s.mapUrl : null; };
+      const spotOf = id => { const s = id && D.spots.find(x => x.id === id); return (s && isUnlocked(s)) ? s : null; };
       h += R.map((d, i) => `
         <details class="trip-day"${i === 0 ? " open" : ""} data-tdd="${i}">
           <summary>
@@ -850,12 +850,20 @@
           </summary>
           <div class="td-body">
             ${d.stops.map(s => {
-              const pin = pinOf(s.spot);
+              // A stop that maps to a spot gets TWO taps: the name opens the
+              // spot's own sheet (all its info, photos, tips), the 📍 opens
+              // Google Maps. Locked spots render as plain text, nothing leaks.
+              const sp = spotOf(s.spot);
+              const title = sp
+                ? `<button type="button" class="ts-link" data-spot="${esc(sp.id)}">${s.icon ? s.icon + " " : ""}${esc(s.title)}</button>`
+                : `<span class="ts-title">${s.icon ? s.icon + " " : ""}${esc(s.title)}</span>`;
+              const pin = sp && sp.mapUrl
+                ? ` <a class="ts-pin" href="${sp.mapUrl}" target="_blank" rel="noopener" aria-label="Open in Google Maps">📍</a>` : "";
               return `<div class="ts${s.hl ? " hl" : ""}">
                 <span class="ts-t">${esc(s.t || "")}</span>
                 <span class="ts-rail" aria-hidden="true"></span>
                 <span class="ts-main">
-                  <span class="ts-title">${s.icon ? s.icon + " " : ""}${esc(s.title)}${pin ? ` <a class="ts-pin" href="${pin}" target="_blank" rel="noopener" aria-label="Open in Google Maps">📍</a>` : ""}</span>
+                  <span class="ts-titlerow">${title}${pin}</span>
                   ${s.note ? `<span class="ts-note">${esc(s.note)}</span>` : ""}
                 </span>
                 ${s.omr ? `<span class="ts-omr">${esc(s.omr)}</span>` : `<span class="ts-omr free"></span>`}
@@ -1059,6 +1067,16 @@
       dd.scrollIntoView({ block: "start", behavior: "smooth" });
     });
 
+    // Timeline stop names open the spot's own sheet; closing it comes back
+    // here (see sheetReturn in closeSheet).
+    b.querySelectorAll(".ts-link").forEach(btn => btn.onclick = () => {
+      const s = D.spots.find(x => x.id === btn.dataset.spot);
+      if (!s || !isUnlocked(s)) return;
+      sheetReturn = { item, scroll: $("#sheet").scrollTop };
+      openSheet(s);
+      $("#sheet").scrollTop = 0;
+    });
+
     /* ---- the photo slider -------------------------------------------------
        Swipe moves it natively (scroll-snap). A TAP on the photo advances to
        the next one, wrapping at the end, with a guard so the tap that ends a
@@ -1187,7 +1205,18 @@
     if (window.Analytics) Analytics.track("spot", { id: item.id, cat: item.cat || "itineraries" });
   }
 
+  // When a spot sheet was opened from a tap inside an itinerary timeline,
+  // closing it returns to the itinerary (same scroll position) instead of
+  // dumping the reader back on the tab. One level deep on purpose.
+  let sheetReturn = null;
+
   function closeSheet() {
+    if (sheetReturn) {
+      const r = sheetReturn; sheetReturn = null;
+      openSheet(r.item);
+      $("#sheet").scrollTop = r.scroll || 0;
+      return;
+    }
     $("#sheet").hidden = true;
     $("#sheetBackdrop").hidden = true;
     document.body.style.overflow = "";
