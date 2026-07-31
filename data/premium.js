@@ -756,15 +756,8 @@ window.OMAN_PREMIUM = {
     ]
   },
 
-  "adventure-5day": {
-    days: [
-      { title: "Day 1, Wadi Al Arbeieen", body: "Straight out of Muscat, no warm-up. Graded gravel through the pass, then 2+ hours of bouldering to the upper pools. Swim, eat, boulder back. This is the day that tells you whether the rest of the week is going to work. Stay: Muscat.", spots: ["wadi-al-arbeieen"] },
-      { title: "Day 2, Wadi Shab, the proper way", body: "Early, be at the boat before the crowd. Walk in, swim the cave, then keep going where everyone else turns around. Afternoon: drive on and sleep near Tiwi. Stay: [__].", spots: ["wadi-shab","wadi-tiwi"] },
-      { title: "Day 3, Wadi Mibam", body: "4×4 up through the date gardens to Mibam village, then down into the canyon. Emerald pools, high walls, nobody there. [Add your own route, which pool you stop at.] Stay: [__].", spots: ["wadi-mibam"] },
-      { title: "Day 4, Wadi Hawer", body: "The full day. Remote, technical, and genuinely hard, go with a guide who knows the line. You'll be wet from morning to evening. Stay: [__].", spots: ["wadi-hawer"] },
-      { title: "Day 5, Snake Gorge, then home", body: "Canyoning: rock pools, 3–4m cliff jumps, two ~20m abseils. Guide, ropes, helmets, no exceptions. Then the drive back to Muscat: allow 2.5 hrs and don't plan anything for the evening.", spots: ["snake-gorge"] }
-    ]
-  },
+  /* NOTE: the adventure-5day itinerary merged into classic-5day (content.js)
+     on 29 Jul 2026, its wadis live on as that route's adventure swaps. */
 
   /* ═══════════════════════════════════════════════════════════ SHOPPING */
   "shop-nizwa-souq": {

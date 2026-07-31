@@ -5217,11 +5217,15 @@ window.OMAN_DATA = {
     {
       id: "classic-5day", cat: "itineraries", free: false,
       name: "The 5-Day Grand Tour",
-      tagline: "Forts, islands, wadis, Nizwa and the sands. One hotel.",
-      blurb: "My real five days for visitors: the western forts and hot springs, a morning snorkelling the Daymaniyats, the Wadi Shab day, Nizwa, then the desert on the way out. Every day ends back at the same Muscat bed, no repacking, and the receipt at the bottom is the whole trip.",
+      tagline: "Forts, islands, wadis, Nizwa and the sands. One hotel, two speeds.",
+      blurb: "My real five days for visitors: the western forts and hot springs, a morning snorkelling the Daymaniyats, the Wadi Shab day, Nizwa, then the desert on the way out. Every day ends back at the same Muscat bed, no repacking, and the receipt at the bottom is the whole trip. Came to get wet and tired instead? Three of the days carry an adventure swap: same direction, harder wadi.",
       img: "assets/experiences/wahiba-sands.jpg",
       imgCredit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons",
-      stats: { "Best for": "First visit, one week off work", "Base": "One Muscat hotel, 4 nights", "Car": "Any car", "Days": "5" },
+      gallery: [
+        { src: "assets/itineraries/adventure-5day.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/itineraries/adventure-5day-2.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" }
+      ],
+      stats: { "Best for": "First visit, one week off work", "Base": "One Muscat hotel, 4 nights", "Car": "Any car (4×4 for the swaps)", "Days": "5" },
       route: [
         { name: "Forts & springs of the west", sub: "Seeb souq → Rustaq loop", chip: "🏰", cost: "≈ OMR 2 pp",
           stops: [
@@ -5232,7 +5236,8 @@ window.OMAN_DATA = {
             { t: "15:00", icon: "🍽️", title: "Late lunch in Rustaq", note: "Local, a couple of rials." },
             { t: "16:00", icon: "🏰", title: "Nakhal Fort + Ain A'Thawwarah", note: "The fort on the boulder, then the warm spring in the plantation. Small entry fee.", omr: "~0.5", spot: "nakhal-fort" },
             { t: "18:30", icon: "🌙", title: "Back to the hotel" }
-          ], sleep: "Muscat" },
+          ], sleep: "Muscat",
+          swap: "Adventure swap: Snake Gorge is this same side of the mountains. Canyoning, 3–4m cliff jumps, two ~20m abseils. Guide, ropes and helmets, no exceptions, and nothing planned for the evening." },
         { name: "Islands & the old capital", sub: "snorkel morning, souq evening", chip: "🐠", cost: "≈ OMR 25 pp",
           stops: [
             { t: "08:30", icon: "🚤", title: "Daymaniyat Islands boat trip", note: "Turtles, rays, reef. Book ahead; gear and the OMR 3 permit are usually included.", omr: "~25", spot: "daymaniyat", hl: true },
@@ -5245,11 +5250,12 @@ window.OMAN_DATA = {
           stops: [
             { t: "08:00", icon: "🕌", title: "Grand Mosque first", note: "Beat the heat and the buses, visitor window shuts 11:00.", spot: "grand-mosque" },
             { t: "09:45", icon: "🚗", title: "Coast road east", note: "Breakfast on the way." },
-            { t: "11:30", icon: "🏞️", title: "Wadi Shab", note: "Boat, canyon, swim into the cave. Out by 14:30.", omr: "3.0", spot: "wadi-shab", hl: true },
+            { t: "11:30", icon: "🏞️", title: "Wadi Shab", note: "Boat, canyon, swim into the cave. Fit and early? Keep going where everyone else turns around, the upper pools are empty. Out by 14:30.", omr: "3.0", spot: "wadi-shab", hl: true },
             { t: "14:40", icon: "🍽️", title: "Najmat Sur", note: "The 2-rial lunch that beats every hotel buffet.", omr: "2.1", spot: "food-najmat-sur" },
             { t: "15:30", icon: "💧", title: "Hawiyat Najm (Bimmah Sinkhole)", note: "One last swim.", spot: "bimmah-sinkhole" },
             { t: "16:30", icon: "🌇", title: "Drive back", note: "Hotel by 18:30." }
-          ], sleep: "Muscat" },
+          ], sleep: "Muscat",
+          swap: "Adventure swap: Wadi Al Arbeieen, the same direction out of Muscat. Graded gravel through the pass, then 2+ hours of bouldering to the upper pools. The day that tells you what the rest of the week can be." },
         { name: "Nizwa & the mountain village", sub: "souq, fort, Misfat", chip: "🏯", cost: "≈ OMR 5 pp",
           stops: [
             { t: "08:00", icon: "🚗", title: "Drive to Nizwa", note: "1h45." },
@@ -5267,7 +5273,8 @@ window.OMAN_DATA = {
             { t: "14:00", icon: "🏘️", title: "Al Mudhaireb old town", note: "Watchtowers and date gardens, the leg-stretch before the sand.", spot: "al-mudhaireb" },
             { t: "15:30", icon: "🏜️", title: "Wahiba Sands", note: "Dune bashing and a camel ride with a camp day-visit, stay for the sunset ridge.", omr: "~18", spot: "wahiba-sands" },
             { t: "18:30", icon: "🌇", title: "Back to Muscat", note: "2.5 hrs. Land with sand in your shoes." }
-          ], sleep: "Muscat, or swap this night for a desert camp" }
+          ], sleep: "Muscat, or swap this night for a desert camp",
+          swap: "Adventure swap: Wadi Mibam instead of Bani Khalid, 4×4 up through the date gardens, emerald pools, nobody there. Or, with a guide, Wadi Hawer: remote, technical, wet from morning to evening." }
       ],
       receipt: {
         rows: [
@@ -5280,21 +5287,8 @@ window.OMAN_DATA = {
           ["Car + fuel, 5 days", "~125 /car"]
         ],
         splits: [["two people", "≈ OMR 245 each"], ["four", "≈ OMR 215 each"], ["solo", "≈ OMR 385"]],
-        note: "Forts, permits and the Shab boat are posted prices; hotel, boat trip, desert and food are July 2026 estimates. OMR 1 ≈ USD 2.60."
+        note: "Forts, permits and the Shab boat are posted prices; hotel, boat trip, desert and food are July 2026 estimates. Adventure swaps add a guide, OMR 30–60 pp for Snake Gorge grade days. OMR 1 ≈ USD 2.60."
       }
-    },
-    {
-      id: "adventure-5day", cat: "itineraries", free: false,
-      name: "The 5-Day Adventure Route",
-      tagline: "For people who came here to get wet and tired.",
-      blurb: "No forts, no souqs. Canyoning, bouldering, cliff jumps and the wadis that hurt. 4×4 and real fitness required, this is the one I'd do myself.",
-      img: "assets/itineraries/adventure-5day.jpg",
-      imgCredit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons",
-      gallery: [
-        { src: "assets/itineraries/adventure-5day-2.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" },
-        { src: "assets/itineraries/adventure-5day-3.jpg", credit: "Photo: Davide Mauro · CC BY-SA 4.0 · Wikimedia Commons" }
-      ],
-      stats: { "Best for": "Fit, adventurous, been here before", "Base": "Moving", "Car": "4×4 required", "Days": "5" }
     },
     {
       id: "loop-7day", cat: "itineraries", free: false,

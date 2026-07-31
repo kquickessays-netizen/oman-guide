@@ -862,6 +862,7 @@
               </div>`;
             }).join("")}
             ${d.sleep ? `<div class="ts-sleep">🌙 ${esc(d.sleep)}</div>` : ""}
+            ${d.swap ? `<div class="ts-swap">🔀 ${esc(d.swap)}</div>` : ""}
           </div>
         </details>`).join("");
       const rc = item.receipt;

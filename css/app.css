@@ -2395,3 +2395,5 @@ body{
 .rc-split b{display:block;font-size:13px;color:var(--water-dark);white-space:nowrap}
 .rc-split span{font-size:10.5px;color:var(--muted)}
 .rc-note{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.5}
+.ts-swap{margin-top:8px;padding:8px 12px;background:var(--clay-soft);border-radius:10px;
+  font-size:12.5px;line-height:1.5;color:var(--ink);border-left:3px solid var(--clay)}
