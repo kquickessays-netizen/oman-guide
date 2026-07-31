@@ -824,7 +824,60 @@
       }
     }
 
-    if (isItin && days) {
+    if (isItin && item.route) {
+      /* ---- the hour-by-hour format -------------------------------------
+         Three pieces, in reading order:
+           the strip    one chip per day, the whole trip's shape in a glance
+           day cards    <details>, day 1 open, each a timed rail of stops
+           the receipt  what the trip costs, the thing nobody else publishes
+         Times sit in a fixed column so the eye can run straight down them.
+         A stop with `spot` gets a 📍 that opens the same Google Maps pin as
+         the spot sheet; locked spots are filtered so nothing leaks. */
+      const R = item.route;
+      if (R.length > 1) {
+        h += `<div class="trip-strip">` + R.map((d, i) =>
+          `<button type="button" class="tday" data-td="${i}">
+             <b>Day ${i + 1}</b><span aria-hidden="true">${d.chip || "📍"}</span><small>${esc(d.sub || "")}</small>
+           </button>`).join("") + `</div>`;
+      }
+      const pinOf = id => { const s = id && D.spots.find(x => x.id === id); return (s && isUnlocked(s) && s.mapUrl) ? s.mapUrl : null; };
+      h += R.map((d, i) => `
+        <details class="trip-day"${i === 0 ? " open" : ""} data-tdd="${i}">
+          <summary>
+            <span class="td-n">${R.length > 1 ? i + 1 : d.chip || "1"}</span>
+            <span class="td-t"><strong>${esc(d.name)}</strong>${d.sub ? `<small>${esc(d.sub)}</small>` : ""}</span>
+            ${d.cost ? `<span class="td-cost">${esc(d.cost)}</span>` : ""}
+          </summary>
+          <div class="td-body">
+            ${d.stops.map(s => {
+              const pin = pinOf(s.spot);
+              return `<div class="ts${s.hl ? " hl" : ""}">
+                <span class="ts-t">${esc(s.t || "")}</span>
+                <span class="ts-rail" aria-hidden="true"></span>
+                <span class="ts-main">
+                  <span class="ts-title">${s.icon ? s.icon + " " : ""}${esc(s.title)}${pin ? ` <a class="ts-pin" href="${pin}" target="_blank" rel="noopener" aria-label="Open in Google Maps">📍</a>` : ""}</span>
+                  ${s.note ? `<span class="ts-note">${esc(s.note)}</span>` : ""}
+                </span>
+                ${s.omr ? `<span class="ts-omr">${esc(s.omr)}</span>` : `<span class="ts-omr free"></span>`}
+              </div>`;
+            }).join("")}
+            ${d.sleep ? `<div class="ts-sleep">🌙 ${esc(d.sleep)}</div>` : ""}
+          </div>
+        </details>`).join("");
+      const rc = item.receipt;
+      if (rc) {
+        h += `<div class="receipt">
+          <div class="rc-head">🧾 What this trip actually costs</div>
+          ${rc.rows.map(r => `<div class="rc-row"><span>${esc(r[0])}</span><i></i><b>${esc(r[1])}</b></div>`).join("")}
+          ${rc.splits ? `<div class="rc-splits">` + rc.splits.map(s =>
+            `<div class="rc-split"><b>${esc(s[1])}</b><span>${esc(s[0])}</span></div>`).join("") + `</div>` : ""}
+          ${rc.note ? `<p class="rc-note">${esc(rc.note)}</p>` : ""}
+        </div>`;
+      }
+      if (aff.hotel) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.hotel)}" target="_blank" rel="noopener">Book the stays on this route →</a>`;
+      if (aff.car) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.car)}" target="_blank" rel="noopener">Rent a car →</a>`;
+
+    } else if (isItin && days) {
       days.forEach(d => {
         h += `<h3 class="sec">${esc(d.title)}</h3><p class="body">${esc(d.body)}</p>`;
         if (d.spots && d.spots.length) {
@@ -995,6 +1048,15 @@
     h += `</div>`;
 
     b.innerHTML = h;
+
+    // Trip strip: a chip opens its day card and brings it into view. The
+    // strip lives in normal flow (nothing sticky), so this is pure jump.
+    b.querySelectorAll(".tday").forEach(btn => btn.onclick = () => {
+      const dd = b.querySelector(`.trip-day[data-tdd="${btn.dataset.td}"]`);
+      if (!dd) return;
+      dd.open = true;
+      dd.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
 
     /* ---- the photo slider -------------------------------------------------
        Swipe moves it natively (scroll-snap). A TAP on the photo advances to

@@ -2334,3 +2334,64 @@ body{
 /* the HUD ring and bar pick up the rank colour at the top tiers */
 .hud[data-tier="2"] .hud-bar i{background:linear-gradient(90deg,var(--gold),#ffd9a0)}
 .hud[data-tier="3"] .hud-ring b{color:var(--gold)}
+
+/* ═══════════════════════════════════════════ ITINERARY TIMELINES (Jul 2026)
+   The hour-by-hour format: strip of day chips, day cards with a timed rail,
+   and the costs receipt. No position:sticky and no transforms on ancestors,
+   the sheet's X depends on it (see the containing-block gotcha). */
+
+.trip-strip{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;margin:4px 0 8px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none}
+.trip-strip::-webkit-scrollbar{display:none}
+.tday{flex:0 0 auto;min-width:92px;max-width:130px;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:8px 10px;text-align:left;cursor:pointer;font:inherit;box-shadow:var(--shadow)}
+.tday b{display:block;font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--clay)}
+.tday span{display:block;font-size:21px;line-height:1.25}
+.tday small{display:block;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.trip-day{border:1px solid var(--line);border-radius:var(--radius);background:#fff;
+  margin:10px 0;box-shadow:var(--shadow);overflow:hidden}
+.trip-day summary{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px;
+  padding:12px 14px;cursor:pointer;list-style:none}
+.trip-day summary::-webkit-details-marker{display:none}
+.trip-day summary::after{content:"▸";color:var(--muted);font-size:13px}
+.trip-day[open] summary::after{content:"▾"}
+.trip-day[open] summary{border-bottom:1px dashed var(--line)}
+.td-n{width:34px;height:34px;display:grid;place-items:center;background:var(--clay-soft);color:var(--clay);
+  font-weight:800;font-size:15px;border-radius:11px;flex:none}
+.td-t strong{display:block;font-size:14.5px;line-height:1.25}
+.td-t small{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
+.td-cost{font-size:11px;font-weight:800;color:var(--water-dark);background:var(--water-soft);
+  padding:3px 8px;border-radius:999px;white-space:nowrap}
+.td-body{padding:8px 14px 14px}
+
+.ts{display:grid;grid-template-columns:42px 16px 1fr auto;gap:0 8px;padding:7px 0;position:relative}
+.ts-t{font-size:12px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
+.ts-rail{position:relative;width:16px}
+.ts-rail::before{content:"";position:absolute;left:7px;top:-8px;bottom:-8px;width:2px;background:var(--line)}
+.ts:first-child .ts-rail::before{top:12px}
+.ts:last-child .ts-rail::before{bottom:auto;height:20px}
+.ts:first-child:last-child .ts-rail::before{display:none}
+.ts-rail::after{content:"";position:absolute;left:3px;top:7px;width:8px;height:8px;border-radius:50%;
+  background:var(--sand);border:2px solid var(--water)}
+.ts.hl .ts-rail::after{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
+.ts-title{font-size:14px;font-weight:700;line-height:1.3}
+.ts-pin{text-decoration:none;font-size:12px}
+.ts-note{display:block;font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:2px}
+.ts-omr{font-size:11px;font-weight:800;color:var(--water-dark);background:var(--water-soft);
+  border-radius:999px;padding:2px 7px;align-self:start;white-space:nowrap;margin-top:2px}
+.ts-omr:empty{display:none}
+.ts-sleep{margin-top:10px;padding:8px 12px;background:var(--sand-2);border-radius:10px;
+  font-size:12.5px;font-weight:600}
+
+.receipt{margin:16px 0 6px;border:1.5px dashed var(--gold);background:var(--gold-soft);
+  border-radius:var(--radius);padding:14px 16px}
+.rc-head{font-weight:800;font-size:14px;margin-bottom:8px}
+.rc-row{display:flex;align-items:baseline;gap:6px;font-size:13px;padding:3px 0}
+.rc-row i{flex:1;border-bottom:2px dotted rgba(27,35,32,.22);margin:0 2px 3px}
+.rc-row b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.rc-splits{display:flex;gap:8px;margin-top:12px}
+.rc-split{flex:1;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 6px;text-align:center}
+.rc-split b{display:block;font-size:13px;color:var(--water-dark);white-space:nowrap}
+.rc-split span{font-size:10.5px;color:var(--muted)}
+.rc-note{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.5}
