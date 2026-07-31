@@ -5214,7 +5214,9 @@ window.OMAN_DATA = {
          because those rules change; the official portal is the answer. */
       { title: "Before you fly", layout: "apps", items: [
         { name: "Do I need a visa?", icon: "visa", short: "Check your passport on the official eligibility page, two minutes.", text: "Many nationalities get a visa on arrival or an exemption for short stays, and the rules change. Check what your passport needs on the Royal Oman Police eVisa portal, the official source, and apply there rather than through third-party visa sites.", link: "https://evisa.rop.gov.om/visa-eligibility", linkLabel: "Check if you need a visa" },
-        { name: "Driving in over a land border?", icon: "rentcar", short: "Passport, car papers, and insurance that covers Oman.", text: "Oman has land crossings with the UAE and with Saudi Arabia. Whichever you use, you need your passport, the car's registration, and insurance that explicitly covers Oman; a rental also needs a no-objection letter from the hire company. The UAE crossings are the busiest and the best organised. Reaching Musandam by road from Muscat means transiting the UAE either way. Opening hours and rules change, so check the day before you drive.", link: "", linkLabel: "" },
+        { name: "Driving in over a land border?", icon: "border", short: "Passport, car papers, and insurance that covers Oman.", text: "Oman has land crossings with the UAE and with Saudi Arabia. Whichever you use, you need your passport, the car's registration, and insurance that explicitly covers Oman; a rental also needs a no-objection letter from the hire company. The UAE crossings are the busiest and the best organised. Reaching Musandam by road from Muscat means transiting the UAE either way. Opening hours and rules change, so check the day before you drive.", link: "", linkLabel: "" },
+        { name: "Do I need an IDP to drive?", icon: "idp", short: "If you need one, get it at home. You cannot buy one here.", text: "Gulf licences are accepted as they are. For everyone else the rental company sets the rule, and many want an International Driving Permit alongside your own licence, particularly if your licence is not in English or Arabic. The catch: an IDP is only issued by the country that issued your licence, usually through its automobile association, so it has to be done before you fly. It is cheap and takes a day or two. Ask your rental company what they need at the time you book, not at the desk.", link: "https://www.rop.gov.om/english/", linkLabel: "Royal Oman Police (official)" },
+        { name: "Download OTaxi and Talabat", icon: "otaxi", short: "Rides with no haggling, and food at the end of a wadi day.", text: "OTaxi is Oman's ride-hailing app: fixed fares, no haggling, and an airport pickup without it can cost triple. Talabat delivers everything from shawarma to groceries. Install both while you still have wifi at home.", link: "", linkLabel: "" },
       ]},
 
       { title: "The rules", layout: "signs", items: [
@@ -5241,12 +5243,6 @@ window.OMAN_DATA = {
         { name: "No signal in the wadis", icon: "nosignal", short: "Download offline maps before you drive in.", text: "Whatever you buy, assume no signal in the canyons and on the mountain tracks. Save the Muscat area and your route in Google Maps before you leave wifi, and send your \"here's where I'm going\" message before you drive in." }
       ]},
 
-      { title: "Two apps that pay for themselves", layout: "apps", items: [
-        { name: "OTaxi", icon: "otaxi", short: "Fixed fares, no haggling. An airport pickup without it costs triple.", text: "Oman's ride-hailing app, fixed fair prices, no haggling. An airport pickup without it can cost triple." },
-        { name: "Talabat", icon: "talabat", short: "Food delivery, for the evening you crawl back from a wadi.", text: "Food delivery for everything from shawarma to groceries." },
-        { name: "Cards work almost everywhere", icon: "cardcash", short: "Keep 10–20 OMR cash for villages, wadi parking and souqs.", text: "Malls, restaurants and hotels all take card. Keep 10–20 OMR in cash for village shops, wadi parking and souq haggling." }
-      ]},
-
       { title: "Getting around: best to worst", layout: "ranked", items: [
         { name: "Rent a car", icon: "rentcar", short: "Nothing good is on a bus route.", text: "Nothing good here is on a bus route. A 4×4 opens everything; a 2WD still covers the classics.", affiliate: "car", affLabel: "Rent a car →" },
         { name: "OTaxi inside the city", icon: "citytaxi", short: "Cheap and metered, but not down a wadi track.", text: "Cheap, metered and reliable around Muscat and Salalah. It just won't take you down a wadi track." },
@@ -5257,7 +5253,9 @@ window.OMAN_DATA = {
       ]},
 
       { title: "Money", layout: "stats", items: [
-        { name: "The rial is strong", big: "1 OMR", sub: "≈ USD 2.60, prices look small until you multiply", text: "1 OMR ≈ USD 2.60, prices look small until you multiply. ATMs are everywhere and exchange rates at the airport are fine." },
+        { name: "The rial is strong", big: "1 OMR", sub: "≈ USD 2.60, prices look small until you multiply", text: "1 OMR ≈ USD 2.60, and it is pegged there, so the rate barely moves while you are here. Prices look small until you multiply." },
+        { name: "Card in the cities, cash in the mountains", big: "10–20", sub: "OMR of cash is about the right amount to carry", text: "Malls, hotels, restaurants and fuel stations all take card. Cash is for village shops, wadi entry and parking, the boat at Wadi Shab, souq haggling and the small places worth eating in. Carry 10 to 20 OMR and top it up whenever you pass through a town, because the last ATM before the mountains is further back than you think." },
+        { name: "Where to change money", big: "ATM", sub: "the simplest answer, and they are in every town", text: "ATMs are in every town, take international cards, and are usually the cheapest route once you count the spread on cash. If you want notes in hand, the exchange houses in the malls and souqs beat hotel desks, and the airport counters are fine for your first 20 or 30 rials. Bring clean, untorn notes if you are exchanging cash, and expect to show your passport." },
         { name: "Tipping", big: "0", sub: "expected, rounding up is plenty", text: "Not expected. Round up a taxi or leave a rial if you want to." }
       ]},
 

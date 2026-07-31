@@ -2256,7 +2256,9 @@
     flood: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5l19 33H5z"/><path d="M17 30c2.4-2.2 4.6-2.2 7 0s4.6 2.2 7 0" stroke-width="2.2"/><path d="M24 15v7" stroke-width="3"/></svg>`,
     phone: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6h8l4 10-5 3a20 20 0 0 0 8 8l3-5 10 4v8a4 4 0 0 1-4 4C21 38 10 27 10 10a4 4 0 0 1 4-4z"/></svg>`,
     visa: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="5" width="28" height="38" rx="4"/><circle cx="24" cy="19" r="6"/><path d="M16 33h16M16 38h10"/><path d="M20.5 19l2.5 2.5 4.5-4.5" stroke-width="2.2"/></svg>`,
-    plane: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5c1.9 0 3 2.6 3 7.2V19l14 8.4v3.9l-14-4.1v8.3l4.2 3.4V43L24 40.6 16.8 43v-4.1l4.2-3.4v-8.3l-14 4.1v-3.9L21 19v-6.8C21 7.6 22.1 5 24 5z"/></svg>`
+    plane: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5c1.9 0 3 2.6 3 7.2V19l14 8.4v3.9l-14-4.1v8.3l4.2 3.4V43L24 40.6 16.8 43v-4.1l4.2-3.4v-8.3l-14 4.1v-3.9L21 19v-6.8C21 7.6 22.1 5 24 5z"/></svg>`,
+    idp: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="40" height="26" rx="4"/><circle cx="16" cy="21.5" r="4.2"/><path d="M9.5 31.5c1.5-3.1 3.8-4.6 6.5-4.6s5 1.5 6.5 4.6"/><path d="M29 19h10M29 24.5h10M29 30h6.5"/></svg>`,
+    border: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 41V15"/><circle cx="10" cy="10.5" r="3.4"/><path d="M14 19.5l28-6.6v7.2l-28 6.6z"/><path d="M21 17.9l1.7 5.9M28 16.2l1.7 5.9M35 14.6l1.7 5.9" opacity=".55"/></svg>`
   };
 
   /* ----------------------------------------------------------------- info
