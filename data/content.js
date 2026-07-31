@@ -151,7 +151,7 @@ window.OMAN_DATA = {
         "🏛️ Museums with real hours: the National Museum, Oman Across Ages, the Frankincense Land.",
         "🧗 Adventure bookings: via ferrata, Wadi Dayqah's zipline park, Wahiba ballooning, Majlis Al Jinn.",
         "🐐 Nizwa Fridays: the goat market and the old quarter join the guide.",
-        "🚌 Info tab: UAE border kit, VAT refunds, buses, flights and the car ferries."
+        "🚌 Info tab: the land-border kit, and domestic flights join the transport ladder."
       ]},
 
       { date: "July 2026", items: [
@@ -5214,8 +5214,7 @@ window.OMAN_DATA = {
          because those rules change; the official portal is the answer. */
       { title: "Before you fly", layout: "apps", items: [
         { name: "Do I need a visa?", icon: "visa", short: "Check your passport on the official eligibility page, two minutes.", text: "Many nationalities get a visa on arrival or an exemption for short stays, and the rules change. Check what your passport needs on the Royal Oman Police eVisa portal, the official source, and apply there rather than through third-party visa sites.", link: "https://evisa.rop.gov.om/visa-eligibility", linkLabel: "Check if you need a visa" },
-        { name: "Driving in from the UAE?", icon: "rentcar", short: "Land borders work fine — passport, car papers, insurance valid for Oman.", text: "The UAE crossings (Hatta/Al Wajajah, Mezyad, Buraimi) are the busiest and best organised. You need your passport, the car's registration, and insurance that explicitly covers Oman — rentals need a no-objection letter from the hire company. Musandam by road from Muscat also means transiting the UAE. Rules change; check before you drive.", link: "", linkLabel: "" },
-        { name: "VAT refund when you leave", icon: "cardcash", short: "Tourists reclaim 5% VAT on purchases over 25 OMR — desk at the airport.", text: "Keep receipts for bigger purchases (25 OMR minimum per claim). Refund points operate at the airport and land borders; tobacco, food, drinks and fuel are excluded. Ask the shop for a tax-refund-scheme receipt at purchase. [CONFIRM current process]", link: "", linkLabel: "" },
+        { name: "Driving in over a land border?", icon: "rentcar", short: "Passport, car papers, and insurance that covers Oman.", text: "Oman has land crossings with the UAE and with Saudi Arabia. Whichever you use, you need your passport, the car's registration, and insurance that explicitly covers Oman; a rental also needs a no-objection letter from the hire company. The UAE crossings are the busiest and the best organised. Reaching Musandam by road from Muscat means transiting the UAE either way. Opening hours and rules change, so check the day before you drive.", link: "", linkLabel: "" },
       ]},
 
       { title: "The rules", layout: "signs", items: [
@@ -5226,13 +5225,6 @@ window.OMAN_DATA = {
         { name: "The weekend is Fri–Sat", icon: "weekend", short: "Friday morning the country slows down.", text: "Friday morning the country slows down for prayers, souqs and small shops open late. Plan a wadi or a slow breakfast, not errands." },
         { name: "Take your rubbish out", icon: "rubbish", short: "No bins at a wadi. Bring a bag.", text: "There are no bins at a wadi. Bring a bag, fill it, drive it home. Don't touch the coral or the turtles." }
       ]},
-
-      { title: "Getting around the country", layout: "apps", items: [
-        { name: "Intercity buses (Mwasalat)", icon: "bus", short: "Cheap, comfortable, Muscat to Nizwa, Sur, Sohar and Salalah.", text: "Mwasalat runs intercity coaches from Muscat to the main towns — the Salalah run is an overnight haul (~10–12 hrs). Book ahead around holidays. Buses won't get you to wadis and mountains, but they connect the bases fine.", link: "https://mwasalat.om", linkLabel: "Mwasalat routes" },
-        { name: "Domestic flights", icon: "signal", short: "Muscat–Salalah daily; Khasab and Duqm also served.", text: "Oman Air and SalamAir fly Muscat–Salalah daily (saves the 10-hour drive), plus Khasab (Musandam) and Duqm. Book the khareef season early, everyone in the Gulf has the same idea.", link: "", linkLabel: "" },
-        { name: "Car ferries", icon: "bus", short: "Shinas–Khasab (Musandam) and Shannah–Masirah, vehicles welcome.", text: "Mwasalat ferries carry cars to Musandam and Masirah Island — the road-trip cheat codes. Timetables shift (tides on the Masirah run); check and book ahead. [CONFIRM current schedules]", link: "", linkLabel: "" }
-      ]},
-
 
       { title: "Stay connected", layout: "connect",
         /* The chart is a drawing of the text below it, not a measurement, 
@@ -5259,7 +5251,8 @@ window.OMAN_DATA = {
         { name: "Rent a car", icon: "rentcar", short: "Nothing good is on a bus route.", text: "Nothing good here is on a bus route. A 4×4 opens everything; a 2WD still covers the classics.", affiliate: "car", affLabel: "Rent a car →" },
         { name: "OTaxi inside the city", icon: "citytaxi", short: "Cheap and metered, but not down a wadi track.", text: "Cheap, metered and reliable around Muscat and Salalah. It just won't take you down a wadi track." },
         { name: "Hire a guide with a car", icon: "guidecar", short: "Local knowledge, proper vehicle.", text: "Local knowledge and a proper vehicle for the hard spots. Costs more, worth it for Snake Gorge-grade days.", affiliate: "guide", affLabel: "Book a guided trip →" },
-        { name: "Mwasalat buses", icon: "bus", short: "Fine between cities, useless for the spots.", text: "Clean, cheap intercity coaches (Muscat–Sur, Muscat–Nizwa, Muscat–Salalah). Fine for moving between cities; useless for the spots themselves." },
+        { name: "Domestic flights", icon: "plane", short: "Muscat–Salalah daily, Khasab and Duqm too.", text: "Oman Air and SalamAir fly Muscat–Salalah daily, which saves the 10-hour drive, plus Khasab for Musandam and Duqm. Book khareef early, everyone in the Gulf has the same idea. You still need a car at the other end." },
+        { name: "Mwasalat buses", icon: "bus", short: "Fine between cities, useless for the spots.", text: "Clean, cheap intercity coaches (Muscat–Sur, Muscat–Nizwa, Muscat–Salalah). Fine for moving between cities; useless for the spots themselves. The Salalah run is an overnight haul of 10 to 12 hours, so book ahead around holidays.", link: "https://mwasalat.om", linkLabel: "Mwasalat routes" },
         { name: "Street taxis", icon: "streettaxi", short: "No meter. Agree the price before you get in.", text: "No meter. If you must: agree the price before you get in, and halve the first number you hear." }
       ]},
 

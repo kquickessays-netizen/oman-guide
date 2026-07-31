@@ -2255,7 +2255,8 @@
     streettaxi: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 33l3-8h20l3 8v6h-4v-3H10v3H6z"/><circle cx="13" cy="35" r="2.2"/><circle cx="25" cy="35" r="2.2"/><path d="M36 9a5 5 0 0 1 5 5c0 3-3 3.6-4 5.4-.5.8-.6 1.6-.6 2.6" stroke-width="2.2"/><path d="M36.5 27h.01" stroke-width="3.4"/></svg>`,
     flood: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5l19 33H5z"/><path d="M17 30c2.4-2.2 4.6-2.2 7 0s4.6 2.2 7 0" stroke-width="2.2"/><path d="M24 15v7" stroke-width="3"/></svg>`,
     phone: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6h8l4 10-5 3a20 20 0 0 0 8 8l3-5 10 4v8a4 4 0 0 1-4 4C21 38 10 27 10 10a4 4 0 0 1 4-4z"/></svg>`,
-    visa: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="5" width="28" height="38" rx="4"/><circle cx="24" cy="19" r="6"/><path d="M16 33h16M16 38h10"/><path d="M20.5 19l2.5 2.5 4.5-4.5" stroke-width="2.2"/></svg>`
+    visa: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="5" width="28" height="38" rx="4"/><circle cx="24" cy="19" r="6"/><path d="M16 33h16M16 38h10"/><path d="M20.5 19l2.5 2.5 4.5-4.5" stroke-width="2.2"/></svg>`,
+    plane: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5c1.9 0 3 2.6 3 7.2V19l14 8.4v3.9l-14-4.1v8.3l4.2 3.4V43L24 40.6 16.8 43v-4.1l4.2-3.4v-8.3l-14 4.1v-3.9L21 19v-6.8C21 7.6 22.1 5 24 5z"/></svg>`
   };
 
   /* ----------------------------------------------------------------- info
