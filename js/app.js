@@ -224,7 +224,7 @@
     // "Still to go" is the one that turns 101 spots into a to-do list, so it
     // leads. It and "Been there" are opposites, turning one on turns the
     // other off, because both at once is always an empty list.
-    const nBeen = Store.been().length;
+    const nBeen = beenSpotCount();
     const defs = [
       ["todo", "◎", "Still to go", nBeen > 0],
       ["been", "✓", "Been there", nBeen > 0],
@@ -318,6 +318,11 @@
       toggleBeen:  id => { const on = toggle("oman_been", id);  if (window.Analytics) Analytics.track("been", { id: id, on: on }); return on; }
     };
   })();
+
+  // Rank counts SPOTS only. Itinerary cards carry ✓ too, and their ids land
+  // in the same oman_been list; without this filter, ticking a trip inflated
+  // the explorer rank ("done 4 of 101" after ticking four plans).
+  const beenSpotCount = () => Store.been().filter(id => D.spots.some(s => s.id === id)).length;
 
   // Smart filters (session state): season / no-4×4 / kids / saved.
   const smart = { season: false, no4x4: false, kids: false, saved: false,
@@ -610,7 +615,7 @@
         // Rebuild just this card, so the left badge appears/disappears without
         // re-rendering the whole list (which would flicker every photo).
         c.replaceWith(card(item, lockNum));
-        if (on) celebrate(Store.been().length); else toast("Unmarked");
+        if (on) celebrate(beenSpotCount()); else toast("Unmarked");
       };
       media.appendChild(bn);
       if (Store.isBeen(item.id)) media.appendChild(el("span", "been-badge", "✓ Been"));
@@ -834,19 +839,51 @@
          A stop with `spot` gets a 📍 that opens the same Google Maps pin as
          the spot sheet; locked spots are filtered so nothing leaks. */
       const R = item.route;
+      // Money strings arrive as bare numbers ("3.0", "~25"). Print them with
+      // the currency once, everywhere, so nobody has to infer that 3.0 means
+      // rials. Strings already carrying OMR (or words) pass through.
+      const fmtOMR = v => {
+        if (!v) return "";
+        if (/OMR|free/i.test(v)) return v;
+        const m = String(v).match(/^([~≈]?)\s*([\d.]+)(.*)$/);
+        return m ? `${m[1]}OMR ${m[2].replace(/\.0$/, "")}${m[3]}` : v;
+      };
+      const done = new Set((() => { try { return JSON.parse(localStorage.getItem("oman_trip_" + item.id) || "[]"); } catch { return []; } })());
+      let lastOpen = null;
+      try { const v = localStorage.getItem("oman_tripday_" + item.id); if (v !== null) lastOpen = +v; } catch {}
+      // Open where the traveller actually is: the day they last had open, else
+      // the first day not yet ticked off, else day 1.
+      let openIx = (lastOpen !== null && lastOpen >= 0 && lastOpen < R.length) ? lastOpen
+                 : R.findIndex((_, i) => !done.has(i));
+      if (openIx < 0) openIx = 0;
+
+      // The whole trip on one small map, numbered stops, a colour per day.
+      // Filled in after insert (Leaflet loads on demand); offline it folds
+      // into a one-line note, the day route buttons still work.
+      h += `<div class="mapwrap itinmap" data-itinmap><div class="map-loading">Drawing the route…</div></div>`;
+
       if (R.length > 1) {
         h += `<div class="trip-strip">` + R.map((d, i) =>
-          `<button type="button" class="tday" data-td="${i}">
+          `<button type="button" class="tday${done.has(i) ? " done" : ""}" data-td="${i}">
              <b>Day ${i + 1}</b><span aria-hidden="true">${d.chip || "📍"}</span><small>${esc(d.sub || "")}</small>
            </button>`).join("") + `</div>`;
       }
       const spotOf = id => { const s = id && D.spots.find(x => x.id === id); return (s && isUnlocked(s)) ? s : null; };
+      // One tap that drives the whole day: origin = wherever the phone is,
+      // waypoints = the day's stops in order, destination = the last stop.
+      const dayDriveUrl = d => {
+        const pts = d.stops.map(s => spotOf(s.spot)).filter(Boolean).map(s => s.coords.join(","));
+        if (!pts.length) return null;
+        const dest = pts.pop();
+        return `https://www.google.com/maps/dir/?api=1&destination=${dest}` +
+               (pts.length ? `&waypoints=${pts.join("%7C")}` : "") + `&travelmode=driving`;
+      };
       h += R.map((d, i) => `
-        <details class="trip-day"${i === 0 ? " open" : ""} data-tdd="${i}">
+        <details class="trip-day"${i === openIx ? " open" : ""} data-tdd="${i}">
           <summary>
-            <span class="td-n">${R.length > 1 ? i + 1 : d.chip || "1"}</span>
+            <span class="td-n${done.has(i) ? " done" : ""}">${done.has(i) ? "✓" : (R.length > 1 ? i + 1 : d.chip || "1")}</span>
             <span class="td-t"><strong>${esc(d.name)}</strong>${d.sub ? `<small>${esc(d.sub)}</small>` : ""}</span>
-            ${d.cost ? `<span class="td-cost">${esc(d.cost)}</span>` : ""}
+            <span class="td-chips">${d.drive ? `<span class="td-drive">🚗 ${esc(d.drive)}</span>` : ""}${d.cost ? `<span class="td-cost">${esc(d.cost)}</span>` : ""}</span>
           </summary>
           <div class="td-body">
             ${d.stops.map(s => {
@@ -866,18 +903,22 @@
                   <span class="ts-titlerow">${title}${pin}</span>
                   ${s.note ? `<span class="ts-note">${esc(s.note)}</span>` : ""}
                 </span>
-                ${s.omr ? `<span class="ts-omr">${esc(s.omr)}</span>` : `<span class="ts-omr free"></span>`}
+                ${s.omr ? `<span class="ts-omr">${esc(fmtOMR(s.omr))}</span>` : `<span class="ts-omr free"></span>`}
               </div>`;
             }).join("")}
+            ${dayDriveUrl(d) ? `<a class="routego" href="${dayDriveUrl(d)}" target="_blank" rel="noopener">🧭 Drive this day, every stop in one route</a>` : ""}
             ${d.sleep ? `<div class="ts-sleep">🌙 ${esc(d.sleep)}</div>` : ""}
             ${d.swap ? `<div class="ts-swap">🔀 ${esc(d.swap)}</div>` : ""}
+            <button type="button" class="td-done${done.has(i) ? " on" : ""}" data-tdone="${i}">
+              ${done.has(i) ? "✓ Day done, tap to undo" : "Did this day? Tick it off"}
+            </button>
           </div>
         </details>`).join("");
       const rc = item.receipt;
       if (rc) {
         h += `<div class="receipt">
-          <div class="rc-head">🧾 What this trip actually costs</div>
-          ${rc.rows.map(r => `<div class="rc-row"><span>${esc(r[0])}</span><i></i><b>${esc(r[1])}</b></div>`).join("")}
+          <div class="rc-head"><span>🧾 What this trip actually costs</span>${rc.checked ? `<span class="rc-chk">prices checked ${esc(rc.checked)}</span>` : ""}</div>
+          ${rc.rows.map(r => `<div class="rc-row"><span>${esc(r[0])}</span><i></i><b>${esc(fmtOMR(r[1]))}</b></div>`).join("")}
           ${rc.splits ? `<div class="rc-splits">` + rc.splits.map(s =>
             `<div class="rc-split"><b>${esc(s[1])}</b><span>${esc(s[0])}</span></div>`).join("") + `</div>` : ""}
           ${rc.note ? `<p class="rc-note">${esc(rc.note)}</p>` : ""}
@@ -1041,16 +1082,24 @@
     /* ---- 5 · THE DOCK ------------------------------------------------------
        Maps and Save were 89px of buttons halfway down a 2,400px sheet. They're
        stuck to the bottom of it now, so the two things a person actually does
-       here are reachable from anywhere in the page without scrolling back. */
-    if (!isItin) {
-      const wa = "https://wa.me/?text=" + encodeURIComponent(
-        `${item.name}, ${item.tagline}\n📍 ${item.mapUrl || ""}\nFrom the Exploring Oman guide by @hussain_explores:\n${D.meta.storeUrl || D.meta.instagram}`);
+       here are reachable from anywhere in the page without scrolling back.
+       Itineraries dock too now (share is how the plans travel between
+       friends); their middle slot shares the PLAN, not a map pin. Their ✓
+       marks the whole trip done, and rank maths ignores it (beenSpotCount). */
+    {
+      const waText = isItin
+        ? `${item.name}, ${item.tagline}\n${(item.route || []).length || ""} day plan from the Exploring Oman guide by @hussain_explores:\n${D.meta.storeUrl || D.meta.instagram}`
+        : `${item.name}, ${item.tagline}\n📍 ${item.mapUrl || ""}\nFrom the Exploring Oman guide by @hussain_explores:\n${D.meta.storeUrl || D.meta.instagram}`;
+      const wa = "https://wa.me/?text=" + encodeURIComponent(waText);
+      const mid = item.mapUrl
+        ? `<a class="dock-go" href="${item.mapUrl}" target="_blank" rel="noopener">📍 Google Maps</a>`
+        : (isItin ? `<a class="dock-go" href="${wa}" target="_blank" rel="noopener">📲 Send this plan</a>` : `<span class="dock-go dock-go-off">No pin yet</span>`);
       h += `<div class="dockbar">
         <button type="button" class="dock-ico${Store.isSaved(item.id) ? " on" : ""}" id="actSave"
-          aria-label="Save this spot">${Store.isSaved(item.id) ? "♥" : "♡"}</button>
+          aria-label="Save this ${isItin ? "plan" : "spot"}">${Store.isSaved(item.id) ? "♥" : "♡"}</button>
         <button type="button" class="dock-ico${Store.isBeen(item.id) ? " on" : ""}" id="actBeen"
-          aria-label="Mark as been here">✓</button>
-        ${item.mapUrl ? `<a class="dock-go" href="${item.mapUrl}" target="_blank" rel="noopener">📍 Google Maps</a>` : `<span class="dock-go dock-go-off">No pin yet</span>`}
+          aria-label="Mark as ${isItin ? "trip done" : "been here"}">✓</button>
+        ${mid}
         <a class="dock-ico dock-wa" href="${wa}" target="_blank" rel="noopener" aria-label="Share on WhatsApp">📲</a>
       </div>`;
     }
@@ -1076,6 +1125,31 @@
       openSheet(s);
       $("#sheet").scrollTop = 0;
     });
+
+    if (isItin && item.route) {
+      // Tick a day off; the strip chip, the day number and the button all
+      // reflect it, and the next open lands on the first unticked day.
+      const doneKey = "oman_trip_" + item.id;
+      b.querySelectorAll(".td-done").forEach(btn => btn.onclick = () => {
+        const i = +btn.dataset.tdone;
+        let arr; try { arr = JSON.parse(localStorage.getItem(doneKey) || "[]"); } catch { arr = []; }
+        const on = !arr.includes(i);
+        arr = on ? [...arr, i] : arr.filter(x => x !== i);
+        try { localStorage.setItem(doneKey, JSON.stringify(arr)); } catch {}
+        btn.classList.toggle("on", on);
+        btn.textContent = on ? "✓ Day done, tap to undo" : "Did this day? Tick it off";
+        const chip = b.querySelector(`.tday[data-td="${i}"]`);
+        if (chip) chip.classList.toggle("done", on);
+        const n = b.querySelector(`.trip-day[data-tdd="${i}"] .td-n`);
+        if (n) { n.classList.toggle("done", on); n.textContent = on ? "✓" : (item.route.length > 1 ? i + 1 : (item.route[i].chip || "1")); }
+        if (window.Analytics) Analytics.track("tripday", { id: item.id, day: i, on: on });
+      });
+      // Remember which day the traveller had open, per plan, on this phone.
+      b.querySelectorAll(".trip-day").forEach(dd => dd.addEventListener("toggle", () => {
+        if (dd.open) { try { localStorage.setItem("oman_tripday_" + item.id, dd.dataset.tdd); } catch {} }
+      }));
+      buildItinMap(item, b);
+    }
 
     /* ---- the photo slider -------------------------------------------------
        Swipe moves it natively (scroll-snap). A TAP on the photo advances to
@@ -1155,7 +1229,7 @@
       applyRankTheme();                      // the whole app's accent, live
       renderHud();                           // the banner HUD, live
       refreshBehind();                       // the rank ring and the ✓ badges
-      if (on) celebrate(Store.been().length); else toast("Unmarked");
+      if (on) celebrate(beenSpotCount()); else toast("Unmarked");
     };
 
     // wire the review box (if present)
@@ -1326,7 +1400,7 @@
     /* Just landed */ ["#0d5c63", "#08454b", "#e3f1f1"]
   ];
   function applyRankTheme() {
-    const ix = rankIx(Store.been().length);
+    const ix = rankIx(beenSpotCount());
     const [c, dark, soft] = RANK_SKIN[ix] || RANK_SKIN[RANK_SKIN.length - 1];
     const r = document.documentElement;
     r.style.setProperty("--water", c);
@@ -1411,7 +1485,7 @@
   }
 
   function rankBadge() {
-    const been = Store.been().length;
+    const been = beenSpotCount();
     const total = D.spots.length;
     const ix = rankIx(been);
     const floor = RANKS[ix][0];
@@ -1450,7 +1524,7 @@
   function renderHud() {
     const h = $("#topHud");
     if (!h) return;
-    const been = Store.been().length;
+    const been = beenSpotCount();
     const total = D.spots.length;
     const ix = rankIx(been);
     const floor = RANKS[ix][0];
@@ -2532,6 +2606,46 @@
      per day, lines base → stops → tonight's bed. Straight lines on purpose, 
      it's an overview; the per-day Google Maps button has the turn-by-turn.   */
   const DAY_COLORS = ["#0d8abc", "#d97706", "#7c3aed", "#dc2626", "#0f766e", "#4338ca", "#b45309", "#be185d"];
+
+  /* The itinerary overview map: every day's stops joined in visit order, one
+     colour per day, numbered dots, straight lines on purpose (the 🧭 button
+     on each day has the turn-by-turn). Leaflet loads on demand; offline the
+     box collapses to one quiet line and nothing else breaks. */
+  function buildItinMap(item, root) {
+    const wrap = root.querySelector("[data-itinmap]");
+    if (!wrap) return;
+    const days = item.route.map((d, i) => ({
+      color: DAY_COLORS[i % DAY_COLORS.length],
+      pts: d.stops.map(s => {
+        const sp = s.spot && D.spots.find(x => x.id === s.spot);
+        return (sp && isUnlocked(sp) && sp.coords) ? { c: sp.coords, name: sp.name } : null;
+      }).filter(Boolean)
+    })).filter(d => d.pts.length);
+    if (!days.length) { wrap.remove(); return; }
+    loadLeaflet().then(L => {
+      wrap.innerHTML = "";
+      const map = L.map(wrap, { scrollWheelZoom: false, zoomControl: false });
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 17,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+      const bounds = [];
+      let n = 0;
+      days.forEach(d => {
+        if (d.pts.length > 1) L.polyline(d.pts.map(p => p.c), { color: d.color, weight: 3, opacity: .7 }).addTo(map);
+        d.pts.forEach(p => {
+          n++;
+          L.marker(p.c, { icon: L.divIcon({ className: "itin-dot", html: `<span style="background:${d.color}">${n}</span>`, iconSize: [22, 22], iconAnchor: [11, 11] }) })
+            .addTo(map).bindPopup(esc(p.name));
+          bounds.push(p.c);
+        });
+      });
+      if (bounds.length) map.fitBounds(bounds, { padding: [26, 26], maxZoom: 12 });
+    }).catch(() => {
+      wrap.classList.add("mapwrap-fallback");
+      wrap.innerHTML = `<p class="map-loading">The map loads online. Each day's 🧭 route button below still works.</p>`;
+    });
+  }
 
   function routeMap(plan) {
     const box = el("div", "plan-mapbox");

@@ -5148,7 +5148,7 @@ window.OMAN_DATA = {
       stats: { "Best for": "Day-trippers from Muscat", "Base": "Muscat, back by dinner", "Car": "Any car", "Days": "1" },
       insta: "https://www.instagram.com/hussain_explores/reel/DUbTJINDJ6B/", // the costs & timing reel this plan is built from
       route: [
-        { name: "Muscat → the coast → back by dinner", sub: "the country's best single day", chip: "🏞️", cost: "from OMR 16 pp",
+        { name: "Muscat → the coast → back by dinner", sub: "the country's best single day", chip: "🏞️", cost: "from OMR 16 pp", drive: "~4h",
           stops: [
             { t: "08:00", icon: "🚗", title: "Leave Muscat", note: "Route 17 east, the scenic coast road. Fuel for the whole loop is about OMR 10." },
             { t: "10:00", icon: "🏞️", title: "Wadi Shab", note: "Boat across, hike the canyon 45–60 min, swim the last stretch into the waterfall cave. Give it 3 hours, it is the reason you came.", omr: "3.0", spot: "wadi-shab", hl: true },
@@ -5166,7 +5166,8 @@ window.OMAN_DATA = {
           ["Car rental + fuel, whole loop", "25.0 /car"]
         ],
         splits: [["solo", "OMR 35"], ["two people", "OMR 23 each"], ["four", "OMR 16 each"]],
-        note: "Posted prices, July 2026. OMR 1 ≈ USD 2.60."
+        checked: "Jul 2026",
+        note: "Posted prices. OMR 1 ≈ USD 2.60."
       }
     },
     {
@@ -5182,7 +5183,7 @@ window.OMAN_DATA = {
       ],
       stats: { "Best for": "First-timers", "Base": "One Muscat hotel", "Car": "Any car", "Days": "3" },
       route: [
-        { name: "Muscat", sub: "mosque, souq, forts, corniche", chip: "🕌", cost: "≈ OMR 3 pp",
+        { name: "Muscat", sub: "mosque, souq, forts, corniche", chip: "🕌", cost: "≈ OMR 3 pp", drive: "~1h",
           stops: [
             { t: "08:00", icon: "🕌", title: "Sultan Qaboos Grand Mosque", note: "Visitor window closes 11:00. Free; robe hire 2.5 if you need one.", spot: "grand-mosque", hl: true },
             { t: "11:30", icon: "🍽️", title: "Lunch in Old Muscat", note: "Bait Al Luban on the harbour is the one worth booking.", spot: "food-bait-al-luban" },
@@ -5190,7 +5191,7 @@ window.OMAN_DATA = {
             { t: "16:00", icon: "🏮", title: "Mutrah Souq + fort", note: "The souq wakes up late afternoon. Frankincense, silver, karak.", spot: "mutrah" },
             { t: "18:00", icon: "🌇", title: "Mutrah Corniche at dusk", note: "The postcard walk. Dinner idea: Al Bait Al Omani." }
           ], sleep: "Muscat" },
-        { name: "Wadi Tiwi & the Sur coast", sub: "the coast beyond Shab", chip: "🚤", cost: "entries free",
+        { name: "Wadi Tiwi & the Sur coast", sub: "the coast beyond Shab", chip: "🚤", cost: "entries free", drive: "~4.5h",
           stops: [
             { t: "08:00", icon: "🚗", title: "Coast road east", note: "Breakfast on the way. Same road as the famous wadis, different prizes." },
             { t: "10:00", icon: "🏞️", title: "Wadi Tiwi", note: "Nine villages stacked up a canyon you can drive into, pools a fraction as busy as Shab next door.", spot: "wadi-tiwi", hl: true },
@@ -5200,7 +5201,7 @@ window.OMAN_DATA = {
             { t: "16:30", icon: "🏖️", title: "White Beach on the way home", note: "The swim stop.", spot: "white-beach-fins" },
             { t: "18:30", icon: "🌇", title: "Back to Muscat" }
           ], sleep: "Muscat" },
-        { name: "Nizwa + the mountain village", sub: "souq, fort, old quarters", chip: "🏯", cost: "≈ OMR 5 pp",
+        { name: "Nizwa + the mountain village", sub: "souq, fort, old quarters", chip: "🏯", cost: "≈ OMR 5 pp", drive: "~4h",
           stops: [
             { t: "08:00", icon: "🚗", title: "Drive to Nizwa", note: "1h45 on smooth highway." },
             { t: "10:00", icon: "🏺", title: "Nizwa Souq", note: "Pottery, silver, dates. Friday morning adds the goat market.", spot: "nizwa" },
@@ -5218,7 +5219,8 @@ window.OMAN_DATA = {
           ["Car + fuel, 3 days", "~75 /car"]
         ],
         splits: [["two people", "≈ OMR 113 each"], ["four", "≈ OMR 94 each"], ["solo", "≈ OMR 190"]],
-        note: "The fort is a posted price; hotel, car and food are mid-range July 2026 estimates. OMR 1 ≈ USD 2.60."
+        checked: "Jul 2026",
+        note: "The fort is a posted price; hotel, car and food are mid-range estimates. OMR 1 ≈ USD 2.60."
       }
     },
     {
@@ -5234,7 +5236,7 @@ window.OMAN_DATA = {
       ],
       stats: { "Best for": "First visit, one week off work", "Base": "One Muscat hotel, 4 nights", "Car": "Any car (4×4 for the swaps)", "Days": "5" },
       route: [
-        { name: "Forts & springs of the west", sub: "Seeb souq → Rustaq loop", chip: "🏰", cost: "≈ OMR 2 pp",
+        { name: "Forts & springs of the west", sub: "Seeb souq → Rustaq loop", chip: "🏰", cost: "≈ OMR 2 pp", drive: "~3.5h",
           stops: [
             { t: "08:00", icon: "🚗", title: "Leave the hotel", note: "Batinah side today. All tarmac." },
             { t: "10:00", icon: "🐟", title: "Seeb fish market", note: "Fish auction, dates and frankincense under one roof.", spot: "shop-seeb-souq" },
@@ -5245,7 +5247,7 @@ window.OMAN_DATA = {
             { t: "18:30", icon: "🌙", title: "Back to the hotel" }
           ], sleep: "Muscat",
           swap: "Adventure swap: Snake Gorge is this same side of the mountains. Canyoning, 3–4m cliff jumps, two ~20m abseils. Guide, ropes and helmets, no exceptions, and nothing planned for the evening." },
-        { name: "Islands & the perfume house", sub: "snorkel morning, sunset beach", chip: "🐠", cost: "≈ OMR 25 pp",
+        { name: "Islands & the perfume house", sub: "snorkel morning, sunset beach", chip: "🐠", cost: "≈ OMR 25 pp", drive: "~1.5h",
           stops: [
             { t: "08:30", icon: "🚤", title: "Daymaniyat Islands boat trip", note: "Turtles, rays, reef. Book ahead; gear and the OMR 3 permit are usually included.", omr: "~25", spot: "daymaniyat", hl: true },
             { t: "14:00", icon: "🍽️", title: "Lunch at Rozna", note: "The Omani house restaurant. The splurge meal of the trip.", spot: "food-rozna" },
@@ -5253,7 +5255,7 @@ window.OMAN_DATA = {
             { t: "17:45", icon: "🏖️", title: "Qurum Beach at sunset", note: "The capital's long golden strip. Walk it, then dinner nearby.", spot: "qurum-beach" },
             { t: "19:30", icon: "🌙", title: "Back to the hotel" }
           ], sleep: "Muscat" },
-        { name: "Quriyat & Wadi Dayqah", sub: "flamingos, the dam, ziplines", chip: "🛶", cost: "≈ OMR 13 pp",
+        { name: "Quriyat & Wadi Dayqah", sub: "flamingos, the dam, ziplines", chip: "🛶", cost: "≈ OMR 13 pp", drive: "~2h",
           stops: [
             { t: "08:30", icon: "🚗", title: "Leave for Quriyat", note: "45 minutes southeast." },
             { t: "09:30", icon: "🦩", title: "Flamingo lake", note: "The khor on the edge of town, best in the cooler months.", spot: "flamingo-lake-quriyat" },
@@ -5263,7 +5265,7 @@ window.OMAN_DATA = {
             { t: "15:30", icon: "🌇", title: "Easy afternoon back", note: "Hotel pool, corniche walk, early night. Tomorrow is the long one." }
           ], sleep: "Muscat",
           swap: "Adventure swap: Wadi Al Arbeieen, the same direction out of Muscat. Graded gravel through the pass, then 2+ hours of bouldering to the upper pools. The day that tells you what the rest of the week can be." },
-        { name: "Bahla, Jabrin & the cave", sub: "the castle circuit", chip: "🗝️", cost: "≈ OMR 9 pp",
+        { name: "Bahla, Jabrin & the cave", sub: "the castle circuit", chip: "🗝️", cost: "≈ OMR 9 pp", drive: "~4.5h",
           stops: [
             { t: "08:00", icon: "🚗", title: "Route 15 inland", note: "Two hours, coffee at the Izki services." },
             { t: "10:00", icon: "🧱", title: "Bahla Fort", note: "The UNESCO one, biggest fort in the country, do the walls first.", omr: "~1", spot: "bahla-fort", hl: true },
@@ -5273,7 +5275,7 @@ window.OMAN_DATA = {
             { t: "16:00", icon: "🏚️", title: "Wadi Tanuf ruins", note: "The bombed old village at the canyon mouth, golden-hour photo stop.", spot: "wadi-tanuf" },
             { t: "18:00", icon: "🌙", title: "Back to Muscat" }
           ], sleep: "Muscat" },
-        { name: "Wadi Bani Khalid & the sands", sub: "the finale", chip: "🏜️", cost: "≈ OMR 20 pp",
+        { name: "Wadi Bani Khalid & the sands", sub: "the finale", chip: "🏜️", cost: "≈ OMR 20 pp", drive: "~5.5h",
           stops: [
             { t: "08:00", icon: "🚗", title: "Drive east", note: "2.5 hrs to the pools." },
             { t: "10:30", icon: "🏞️", title: "Wadi Bani Khalid", note: "Pools from the car park, walk 15 min upstream to lose the crowd. Free.", spot: "wadi-bani-khalid", hl: true },
@@ -5296,7 +5298,8 @@ window.OMAN_DATA = {
           ["Car + fuel, 5 days", "~125 /car"]
         ],
         splits: [["two people", "≈ OMR 260 each"], ["four", "≈ OMR 228 each"], ["solo", "≈ OMR 402"]],
-        note: "Entries are posted prices where signed; hotel, boat trip, park, desert and food are July 2026 estimates. Adventure swaps add a guide, OMR 30–60 pp for Snake Gorge grade days. OMR 1 ≈ USD 2.60."
+        checked: "Jul 2026",
+        note: "Entries are posted prices where signed; hotel, boat trip, park, desert and food are estimates. Adventure swaps add a guide, OMR 30–60 pp for Snake Gorge grade days. OMR 1 ≈ USD 2.60."
       }
     },
     {
@@ -5312,7 +5315,7 @@ window.OMAN_DATA = {
       ],
       stats: { "Best for": "The full picture, one week", "Base": "Moving loop, 6 nights", "Car": "4×4 recommended", "Days": "7" },
       route: [
-        { name: "Land & the capital", sub: "mosque, corniche, souq", chip: "🕌", cost: "entries free",
+        { name: "Land & the capital", sub: "mosque, corniche, souq", chip: "🕌", cost: "entries free", drive: "~1h",
           stops: [
             { t: "09:00", icon: "🕌", title: "Grand Mosque", note: "If you landed early enough, visitor window shuts 11:00. Otherwise slot it before the airport on day 7.", spot: "grand-mosque" },
             { t: "12:00", icon: "🍽️", title: "Settle in, eat, rest", note: "Long-haul landing day, don't overplan it." },
@@ -5320,14 +5323,14 @@ window.OMAN_DATA = {
             { t: "18:30", icon: "🏮", title: "Mutrah Souq", note: "Frankincense and silver as the lanterns come on." },
             { t: "20:00", icon: "🍽️", title: "Dinner at Bait Al Luban", note: "Omani classics over the harbour.", spot: "food-bait-al-luban" }
           ], sleep: "Muscat" },
-        { name: "The coast road", sub: "sinkhole + the famous wadi", chip: "🏞️", cost: "≈ OMR 3 pp",
+        { name: "The coast road", sub: "sinkhole + the famous wadi", chip: "🏞️", cost: "≈ OMR 3 pp", drive: "~3h",
           stops: [
             { t: "08:00", icon: "🚗", title: "Coast road east", note: "Route 17, the sea on your left." },
             { t: "10:00", icon: "💧", title: "Bimmah Sinkhole", note: "An hour, no more.", spot: "bimmah-sinkhole" },
             { t: "11:30", icon: "🏞️", title: "Wadi Shab", note: "Boat, canyon, swim into the waterfall cave. Give it the whole afternoon.", omr: "3.0", spot: "wadi-shab", hl: true },
             { t: "16:00", icon: "🌇", title: "Drive on toward Sur", note: "45 minutes down the coast." }
           ], sleep: "Near Tiwi or Sur" },
-        { name: "Sur & the turtles", sub: "dhow yard, then midnight nests", chip: "🐢", cost: "≈ OMR 10 pp",
+        { name: "Sur & the turtles", sub: "dhow yard, then midnight nests", chip: "🐢", cost: "≈ OMR 10 pp", drive: "~2h",
           stops: [
             { t: "09:30", icon: "⛵", title: "Sur dhow yard", note: "An hour among hand-built ocean-going hulls.", spot: "sur-dhow-factory" },
             { t: "11:00", icon: "🏘️", title: "Sur old town & Ayjah", note: "Whitewashed lanes and the lighthouse across the bay.", spot: "sur-old-town" },
@@ -5335,28 +5338,28 @@ window.OMAN_DATA = {
             { t: "15:00", icon: "🏖️", title: "Beach hours at Ras Al Hadd", note: "The first sunrise in Arabia is here, the afternoon is all yours." },
             { t: "21:00", icon: "🐢", title: "Ras Al Jinz turtle tour", note: "Green turtles nesting in the dark. Book direct with the reserve, numbers are capped: entry ~3, tour ~7.", omr: "~10", spot: "ras-al-jinz", hl: true }
           ], sleep: "The reserve lodge or Sur" },
-        { name: "Into the sands", sub: "dunes, camels, stars", chip: "🏜️", cost: "≈ OMR 35 pp",
+        { name: "Into the sands", sub: "dunes, camels, stars", chip: "🏜️", cost: "≈ OMR 35 pp", drive: "~3h",
           stops: [
             { t: "09:00", icon: "🚗", title: "Inland to Al Wasil", note: "2.5 hrs, smooth tarmac." },
             { t: "13:00", icon: "🏜️", title: "Meet your camp at the sand's edge", note: "They drive the dunes, you don't. Half board included in most camps.", omr: "~35", spot: "wahiba-sands", hl: true },
             { t: "16:30", icon: "🐪", title: "Camels, then the sunset ridge", note: "The photo you came for." },
             { t: "20:00", icon: "🌌", title: "Dinner, stars, no signal" }
           ], sleep: "Desert camp" },
-        { name: "Bani Khalid & Nizwa", sub: "the oasis, then the fort", chip: "🏯", cost: "≈ OMR 5 pp",
+        { name: "Bani Khalid & Nizwa", sub: "the oasis, then the fort", chip: "🏯", cost: "≈ OMR 5 pp", drive: "~3.5h",
           stops: [
             { t: "08:30", icon: "🚗", title: "Out of the sand", note: "The camp tows you back to tarmac." },
             { t: "10:00", icon: "🏞️", title: "Wadi Bani Khalid", note: "Pools from the car park, walk 15 minutes upstream and the crowd is gone.", spot: "wadi-bani-khalid" },
             { t: "13:00", icon: "🍽️", title: "Lunch en route", note: "Ibra or the highway grills." },
             { t: "15:00", icon: "🏯", title: "Nizwa Souq + Fort", note: "Pottery and dates below, then climb the round tower before it closes.", omr: "5.0", spot: "nizwa", hl: true }
           ], sleep: "Nizwa" },
-        { name: "The canyon rim", sub: "Jabal Shams & the Balcony Walk", chip: "⛰️", cost: "entries free",
+        { name: "The canyon rim", sub: "Jabal Shams & the Balcony Walk", chip: "⛰️", cost: "entries free", drive: "~2.5h",
           stops: [
             { t: "07:30", icon: "🚗", title: "Up the Jabal Shams road", note: "Last stretch is graded track, take it slow." },
             { t: "09:00", icon: "🥾", title: "The Balcony Walk", note: "8.7km out and back along the rim, W6 markers, 4 to 5 hours. Oman's best walk.", spot: "jabal-shams", hl: true },
             { t: "14:30", icon: "🍽️", title: "Late lunch at the top", note: "Jacket on, you are at 2,000m." },
             { t: "16:00", icon: "🏞️", title: "Wadi Ghul from below", note: "The same canyon from the floor, 1,000m walls both sides.", spot: "wadi-ghul" }
           ], sleep: "On the mountain" },
-        { name: "Villages, the cave, home", sub: "the loop closes", chip: "🏘️", cost: "≈ OMR 7 pp",
+        { name: "Villages, the cave, home", sub: "the loop closes", chip: "🏘️", cost: "≈ OMR 7 pp", drive: "~3h",
           stops: [
             { t: "09:00", icon: "⛰️", title: "Misfat Al Abriyeen", note: "Mud houses and the falaj in morning light, walk it slowly.", spot: "misfat-al-abriyeen", hl: true },
             { t: "11:30", icon: "🕳️", title: "Al Hoota Cave", note: "The cool hour underground. Book the slot ahead.", omr: "~7", spot: "al-hoota-cave" },
@@ -5377,7 +5380,8 @@ window.OMAN_DATA = {
           ["4×4 + fuel, the full loop", "~190 /car"]
         ],
         splits: [["two people", "≈ OMR 320 each"], ["four", "≈ OMR 273 each"], ["solo", "≈ OMR 515"]],
-        note: "Turtles, forts and the Shab boat are posted prices; camp, hotels, food and the 4×4 are July 2026 estimates. This is the one plan that repeats the classics on purpose. OMR 1 ≈ USD 2.60."
+        checked: "Jul 2026",
+        note: "Turtles, forts and the Shab boat are posted prices; camp, hotels, food and the 4×4 are estimates. This is the one plan that repeats the classics on purpose. OMR 1 ≈ USD 2.60."
       }
     }
   ],
