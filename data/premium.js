@@ -744,17 +744,8 @@ window.OMAN_PREMIUM = {
   },
 
   /* ═════════════════════════════════════════════════════════ ITINERARIES */
-  "loop-7day": {
-    days: [
-      { title: "Day 1, Muscat", body: "Land, settle, then the Grand Mosque if you're early enough. Mutrah Corniche at dusk, into the souq, dinner at Bait Al Luban looking over the harbour. Stay: [__].", spots: ["grand-mosque","mutrah","food-bait-al-luban"] },
-      { title: "Day 2, The coast: Bimmah + Wadi Shab", body: "Coffee, then east on the coast road. Sinkhole swim mid-morning (an hour, no more), Wadi Shab all afternoon, boat across, walk in, swim into the cave. Stay: [__] near Sur.", spots: ["bimmah-sinkhole","wadi-shab"] },
-      { title: "Day 3, Turtles at Ras Al Jinz", body: "Sur in the day, the dhow yards are worth an hour, then the turtle tour at night. Book directly through the reserve in advance; numbers are capped (~OMR 3 entry + ~OMR 7 tour). Stay: [__].", spots: ["ras-al-jinz"] },
-      { title: "Day 4, Wahiba Sands (desert night)", body: "Inland (~2.5–3 hrs, tarmac to Al Wasil then 4×4 into the dunes). The camp handles the dune bashing, the camels and the sunset ridge. Bring a warm layer for the night. Stay: [__] camp.", spots: ["wahiba-sands"] },
-      { title: "Day 5, Wadi Bani Khalid & Nizwa", body: "Wadi Bani Khalid swim en route (easy, tarmac, free, walk 15 min upstream to lose the crowd), then on to Nizwa (~2 hrs) for the fort and the souq. Stay: [__].", spots: ["wadi-bani-khalid","nizwa"] },
-      { title: "Day 6, Jabal Shams & Wadi Ghul", body: "The Balcony Walk on the rim (8.7km out-and-back, 4–5 hrs, W6 markers), then drop into Wadi Ghul below for the opposite view of the same canyon. Jacket, it's cold at 2,000m. Stay: [__] in the mountains.", spots: ["jabal-shams","wadi-ghul"] },
-      { title: "Day 7, Misfat, Al Hoota & home", body: "Misfat Al Abriyeen in the morning light, Al Hoota Cave as the day heats up, then the easy run back to Muscat. Fly out. (Adventurous, and got a guide? Swap all of it for Snake Gorge.)", spots: ["misfat-al-abriyeen","al-hoota-cave","snake-gorge"] }
-    ]
-  },
+  /* NOTE: loop-7day's day-by-day moved to content.js as a route/receipt
+     itinerary on 29 Jul 2026, same as the other plans. */
 
   /* NOTE: the adventure-5day itinerary merged into classic-5day (content.js)
      on 29 Jul 2026, its wadis live on as that route's adventure swaps. */
