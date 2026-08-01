@@ -1749,29 +1749,32 @@
     const quiet = hudQuiet();
 
     h.classList.toggle("hud-quiet", quiet);
-    h.innerHTML = quiet
-      ? `<span class="hud-count">${been} of ${total} visited</span>`
+    /* A visible switch, not a secret. The toggle used to be a 550ms long-press
+       with nothing on screen to suggest it existed, so nobody who disliked the
+       rank game could find their way out of it. */
+    const swap = `<button type="button" class="hud-swap" aria-label="${
+      quiet ? "Show explorer ranks" : "Just count places instead of ranks"}"
+      title="${quiet ? "Show explorer ranks" : "Just count places instead"}">${
+      quiet ? "Ranks" : "Count"}</button>`;
+    h.innerHTML = (quiet
+      ? `<span class="hud-count"><b>${been}</b> of ${total} places visited</span>`
       : `<span class="hud-ring" style="--pct:${Math.max(0, Math.min(100, pct))}"><b>${been}</b></span>` +
         `<span class="hud-txt">` +
           `<strong>${esc(rankFor(been))}</strong>` +
           `<small>${next ? `${next[0] - been} more to ${esc(next[1])}` : `all ${total} explored`}</small>` +
         `</span>` +
-        `<span class="hud-bar"><i style="width:${Math.max(3, Math.min(100, pct))}%"></i></span>`;
+        `<span class="hud-bar"><i style="width:${Math.max(3, Math.min(100, pct))}%"></i></span>`
+      ) + swap;
     h.dataset.tier = quiet ? "0" : (ix <= 1 ? "3" : ix <= 3 ? "2" : "1");
-    h.title = quiet ? "Hold to bring the explorer ranks back" : "Hold to turn the ranks into a plain counter";
 
-    // Long-press (or right-click on desktop) toggles it. A plain tap is left
-    // alone so nobody flips it by accident reaching for the banner.
-    let timer = null;
-    const flip = () => {
+    const flip = e => {
+      if (e) e.stopPropagation();
       try { localStorage.setItem("oman_hud_quiet", hudQuiet() ? "0" : "1"); } catch {}
       renderHud();
-      toast(hudQuiet() ? "Ranks off, just a counter now" : "Explorer ranks back on");
+      toast(hudQuiet() ? "Ranks off, just a count of places now" : "Explorer ranks back on");
     };
+    h.querySelector(".hud-swap").onclick = flip;
     h.oncontextmenu = e => { e.preventDefault(); flip(); };
-    h.onpointerdown = () => { timer = setTimeout(flip, 550); };
-    ["pointerup", "pointerleave", "pointercancel"].forEach(ev =>
-      h.addEventListener(ev, () => clearTimeout(timer)));
   }
 
   function renderCategory(cat) {
@@ -2447,7 +2450,10 @@
       : `<h2>Or follow one of mine 🗺️</h2><p>Fixed routes, day by day.</p>`;
     view.appendChild(h);
 
-    const grid = el("div", "grid");
+    // itin-grid centres its tracks: with four plans in a three-up row the
+    // fourth was stranded hard against the left edge instead of sitting under
+    // the middle of the row above.
+    const grid = el("div", "grid itin-grid");
     let lockN = 0;
     items.forEach(i => grid.appendChild(card(i, isUnlocked(i) ? 0 : ++lockN)));
     view.appendChild(grid);
@@ -3207,28 +3213,43 @@
     w.setAttribute("aria-modal", "true");
     w.setAttribute("aria-label", "Welcome to Exploring Oman");
     w.innerHTML = `
-      <div class="wc-photo" aria-hidden="true"></div>
-      <div class="wc-full" aria-hidden="true"></div>
-      <div class="wc-scrim" aria-hidden="true"></div>
-      <div class="wc-body">
-        <p class="wc-eyebrow">Oman, from someone who lives here</p>
-        <h1 class="wc-hook"><q>${esc(m.aboutHook)}</q></h1>
-        <p class="wc-sub">${esc(m.aboutSub)} ${D.spots.length} places, and for each one:
-           the drive, the walk in, the entry fee, the right month, and whether I'd
-           tell you to skip it.</p>
-        <button type="button" class="wc-go">Show me the places</button>
-        <p class="wc-fine">🪪 Licensed Omani guide · 🎥 1M+ views on my wadi reels
-           · 🔄 Updated ${esc(m.lastUpdated || "monthly")}</p>
+      <div class="wc-art" aria-hidden="true">
+        <div class="wc-photo"></div>
+        <div class="wc-full"></div>
+        <div class="wc-scrim"></div>
+      </div>
+      <div class="wc-panel">
+        <div class="wc-body">
+          <p class="wc-eyebrow"><i></i>Oman, from someone who lives here</p>
+          <h1 class="wc-hook">${esc(m.aboutHook)}</h1>
+          <p class="wc-sub">${esc(m.aboutSub)}</p>
+          <ul class="wc-list">
+            <li><b>${D.spots.length} places</b>, pinned to the parking, not the middle of the valley</li>
+            <li>The drive, the walk in, the <b>entry fee</b> and the right month</li>
+            <li>Day plans with <b>what they actually cost</b>, to the rial</li>
+          </ul>
+          <button type="button" class="wc-go">
+            <span>Show me the places</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5.5L18.5 12 12 18.5"/></svg>
+          </button>
+          <p class="wc-fine">Licensed Omani tour guide · 1M+ views on the wadi reels
+             · free while it launches</p>
+        </div>
       </div>`;
 
-    // Full-resolution hero fades in over the cached banner once it arrives.
+    // Full-resolution hero fades in over the cached banner. Two sources so the
+    // photo is never upscaled: a tall crop for phones, a wide one for the
+    // desktop split. The old hero was a 1100x575 strip stretched across a
+    // 1520px screen, which is exactly why it looked cheap.
     const hero = new Image();
     hero.onload = () => {
       const full = w.querySelector(".wc-full");
       full.style.backgroundImage = `url("${hero.src}")`;
       full.classList.add("on");
     };
-    hero.src = "assets/wadis/wadi-bani-khalid.jpg";
+    hero.src = matchMedia("(min-width: 900px)").matches
+      ? "assets/welcome-wide.jpg"
+      : "assets/welcome-hero.jpg";
 
     let closed = false;
     const close = () => {

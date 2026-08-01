@@ -1,7 +1,7 @@
 /* Service worker, makes the app installable and usable offline in a wadi
    with no signal. Bump CACHE when you change content, or users keep the old
    version until the cache expires. */
-const CACHE = "oman-v54";
+const CACHE = "oman-v55";
 
 const CORE = [
   "./",
@@ -77,20 +77,35 @@ self.addEventListener("fetch", e => {
     return;
   }
 
-  // Shell, css, js: stale-while-revalidate. Serve the cache instantly (works
-  // offline in a wadi), but refresh the copy in the background, so even if a
-  // deploy raced the CDN and cached a stale file, the next open heals it
-  // instead of pinning it until the next CACHE bump.
-  e.respondWith(
-    caches.match(req).then(hit => {
-      const refresh = fetch(req).then(res => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(req, copy));
-        }
-        return res;
-      }).catch(() => hit);
-      return hit || refresh;
-    })
-  );
+  /* Shell, css, js: NETWORK-FIRST with a cache fallback.
+     This was stale-while-revalidate, which hands over the cached copy and
+     fetches the update behind your back, so the reload after a deploy always
+     rendered the PREVIOUS build. That is invisible to a traveller and
+     infuriating to anyone editing the site: "I refreshed, nothing changed, I
+     had to open another browser profile."
+
+     Network-first costs one small request when there IS a network (these are
+     a few tens of KB from a CDN) and behaves identically the moment there
+     isn't: the fetch rejects, and the cached copy is served. Offline in a
+     wadi still works, which is the whole point of the worker. A short timeout
+     keeps a flaky roadside connection from stalling the page: if the network
+     hasn't answered in 3.5s, serve the cache and let the fetch refill it. */
+  e.respondWith((async () => {
+    const cached = await caches.match(req);
+    const net = fetch(req).then(res => {
+      if (res && res.ok) {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(req, copy));
+      }
+      return res;
+    });
+    if (!cached) return net;
+    try {
+      const timeout = new Promise(resolve => setTimeout(() => resolve(null), 3500));
+      const res = await Promise.race([net.catch(() => null), timeout]);
+      return res || cached;
+    } catch {
+      return cached;
+    }
+  })());
 });
