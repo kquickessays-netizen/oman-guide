@@ -42,8 +42,22 @@
 <!-- ============================ HEADER ============================ -->
 <header class="topbar">
   <div class="topbar-inner">
-    <a class="brand" href="#/wadis">
-      <span class="brand-mark">🧭</span>
+    <!-- Wordmark lockup. The mark was an emoji compass, which renders as a
+         different drawing on every phone and can't take the rank tint. This
+         is a drawn khanjar-and-sun mark: Omani, ownable, and it inherits
+         currentColor like the rest of the icon set. -->
+    <a class="brand" href="#/wadis" aria-label="Exploring Oman, home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="20" cy="20" r="17" opacity=".28"/>
+          <path d="M20 6.5a13.5 13.5 0 0 1 0 27" opacity=".28"/>
+          <path d="M13 15.5c4.5-2.2 9.5-2.2 14 0-1.6 6.4-5.2 10.6-7 12.2-1.8-1.6-5.4-5.8-7-12.2z"
+                fill="currentColor" fill-opacity=".16"/>
+          <path d="M13 15.5c4.5-2.2 9.5-2.2 14 0-1.6 6.4-5.2 10.6-7 12.2-1.8-1.6-5.4-5.8-7-12.2z"/>
+          <path d="M20 15v12.7" opacity=".55"/>
+        </svg>
+      </span>
       <span class="brand-text">
         <strong>Exploring Oman</strong>
         <small id="brandSub">by @hussain_explores</small>

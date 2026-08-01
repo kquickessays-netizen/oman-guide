@@ -2516,3 +2516,77 @@ body{
 .sf-body h4{font-size:13.5px;margin:0 0 8px}
 .sf-body p{margin:0 0 9px}
 .sf-body p:last-child{margin-bottom:0}
+
+/* ── One icon language (Aug 2026) ─────────────────────────────────────────
+   Tabs, dock and brand now use the same drawn set as the Info tab: inline
+   SVG on currentColor, so they take the rank tint and render identically on
+   every device (emoji did neither). */
+.tab .t-icon svg{width:18px;height:18px;display:block}
+.tab .t-icon{display:inline-flex;align-items:center}
+@media (max-width:560px){ .tab .t-icon svg{width:21px;height:21px} }
+.dock-ico svg{width:21px;height:21px;display:block}
+.dock-ico.on svg{fill:currentColor;fill-opacity:.9}
+.dock-go svg{width:17px;height:17px;display:inline-block;vertical-align:-3px;margin-right:5px}
+.brand-mark svg{width:26px;height:26px;display:block}
+.brand-mark{display:inline-flex;align-items:center;color:var(--gold)}
+
+/* ── Touch targets: tabs to 44px (Apple HIG floor) ───────────────────────── */
+.tab{min-height:44px}
+
+/* ── Type scale: give the page a real top note and a proper label style ──── */
+/* .cat-head h1 (26px) is more specific than a bare h1, so the page title has
+   to be raised where it is actually set. 26 -> 30 gives the page a real top
+   note against 16px body; everything sat in a 14-18px band before. */
+.cat-head h1{font-size:30px;letter-spacing:-.02em}
+@media (max-width:400px){ .cat-head h1{font-size:26px} }
+.lbl,.stat-k,.bn-price small,.tday b{
+  font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+}
+
+/* ── Locked cards: a blurred real photo sells, a grey box looks broken ───── */
+.card-media-locked{position:relative;overflow:hidden}
+.card-media-locked .lock-blur{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:blur(14px) saturate(.75) brightness(.82);transform:scale(1.12);
+}
+.card-media-locked::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(27,35,32,.15),rgba(27,35,32,.45));
+}
+.card-media-locked .lock-pill{position:relative;z-index:2}
+
+/* ── Desktop: use the screen instead of two columns in a sea of sand ─────── */
+@media (min-width:1100px){
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (min-width:1500px){
+  .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+
+/* ── CTA after a free plan's receipt ──────────────────────────────────────── */
+.afterplan{margin:16px 0 4px;padding:15px 16px;border-radius:var(--radius);
+  background:var(--water-soft);border:1px solid rgba(13,92,99,.18)}
+.afterplan strong{display:block;font-size:15px;margin-bottom:5px}
+.afterplan p{margin:0 0 12px;font-size:13px;line-height:1.55;color:var(--ink);opacity:.85}
+.ap-note{display:block;font-size:12.5px;font-weight:600;color:var(--water-dark)}
+.ap-buy{background:var(--gold);color:#fff;font-weight:800}
+
+/* ── Planner sample: proof instead of promise ─────────────────────────────── */
+.lock-demo{margin-top:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+  border-radius:14px;padding:13px 14px;text-align:left}
+.ld-head{font-size:13px;font-weight:800;letter-spacing:.02em;margin-bottom:2px}
+.ld-meta{font-size:11px;opacity:.62;margin-bottom:10px}
+.ld-day{display:grid;gap:7px}
+.ld-row{display:grid;grid-template-columns:46px 1fr;gap:8px;font-size:12.5px;align-items:baseline}
+.ld-row span{opacity:.6;font-variant-numeric:tabular-nums}
+.ld-row b{font-weight:700}
+.ld-row i{display:block;font-style:normal;font-size:11.5px;opacity:.6;grid-column:2}
+.ld-row.hot b{color:var(--gold)}
+.ld-row.sleep{opacity:.75}
+.ld-note{margin:11px 0 0;font-size:11.5px;line-height:1.55;opacity:.66}
+
+/* ── Testimonials in the bundle (renders only when real ones exist) ──────── */
+.bn-quotes{display:grid;gap:9px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.bn-q{margin:0;font-size:12.5px;line-height:1.55;font-style:italic;color:var(--ink)}
+.bn-q cite{display:block;font-style:normal;font-size:11px;font-weight:700;
+  color:var(--muted);margin-top:3px}

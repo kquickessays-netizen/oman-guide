@@ -219,9 +219,22 @@ window.OMAN_DATA = {
     },
 
     // >>> TESTIMONIALS, hand-picked quotes from real buyers (Gumroad
-    //     receipts, DMs, the reviews table). Shown on the price block and in
-    //     the unlock modal. Start empty; add as they arrive. Keep them short.
-    //     Format: { text: "Planned our whole trip with this.", by: "Sara, UK" } <<<
+    //     receipts, DMs, the reviews table). Shown on the price block, the
+    //     bundle section and the unlock modal. Keep them short.
+    //     Format: { text: "Planned our whole trip with this.", by: "Sara, UK" }
+    //
+    //     ⚠️ THESE MUST BE REAL, AND THEY ARE THE HIGHEST-VALUE THING YOU CAN
+    //     ADD BEFORE OCTOBER. The 20-persona review flagged "no reviews" as a
+    //     top-three reason not to buy: a stranger's word is the one form of
+    //     proof you cannot write yourself. Three is enough.
+    //     Where to get them today, without waiting for sales:
+    //       1. Your DMs. Anyone who said "this is so useful" after a reel.
+    //          Ask: "can I quote that on the site, first name and country?"
+    //       2. Anyone you've guided in person who used the spots.
+    //       3. The reviews table in Supabase once people start rating spots.
+    //     Never invent one. A fabricated review is the fastest way to lose the
+    //     honesty that the whole guide is built on, and it is illegal in most
+    //     of the markets your buyers live in. <<<
     testimonials: [],
 
     // >>> BACKEND (optional), paste your Supabase project URL + anon key to

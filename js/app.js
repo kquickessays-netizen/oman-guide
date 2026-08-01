@@ -454,6 +454,18 @@
         see there is exactly what you get.
       </div>`;
 
+    // Social proof, from meta.testimonials only. Renders nothing when the
+    // array is empty, which is correct: an empty quote block is worse than
+    // no quote block, and inventing one is not an option.
+    const quotes = (D.meta.testimonials || []).slice(0, 3);
+    if (quotes.length) {
+      const t = el("div", "bn-quotes");
+      t.innerHTML = quotes.map(q =>
+        `<blockquote class="bn-q">“${esc(q.text)}”${q.by ? `<cite>${esc(q.by)}</cite>` : ""}</blockquote>`
+      ).join("");
+      w.appendChild(t);
+    }
+
     if (D.meta.freeLaunch) {
       const note = el("p", "bn-launch",
         "🎁 Right now it's all free. In October it becomes a paid guide, and the email list gets the founding price.");
@@ -544,13 +556,28 @@
   }
 
   /* ------------------------------------------------------------------- tabs */
+  /* ONE ICON LANGUAGE. The Info tab had a hand-drawn line set while the tab
+     bar and dock used raw emoji, so the app spoke two visual dialects. Emoji
+     also render differently on every device and can't take the rank tint.
+     These are drawn to the same rules as the Info set: 48-box, currentColor,
+     2.4 stroke, round caps. Keyed by category id, with the emoji in
+     content.js kept as the fallback for anything unmapped. */
+  const NAV_ICONS = {
+    info: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="18"/><path d="M24 21.5v12"/><circle cx="24" cy="15.5" r="1.9" fill="currentColor" stroke="none"/></svg>`,
+    explore: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="18"/><path d="M31.5 16.5l-4.7 11.3-11.3 4.7 4.7-11.3z" fill="currentColor" fill-opacity=".18"/><path d="M31.5 16.5l-4.7 11.3-11.3 4.7 4.7-11.3z"/></svg>`,
+    salalah: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 20v20"/><path d="M24 20c-5-4-11-3.5-14 1 4-1.5 8.5-.5 11 2"/><path d="M24 20c5-4 11-3.5 14 1-4-1.5-8.5-.5-11 2"/><path d="M24 20c-2-5.5.5-10.5 5-12-1 4.5-2 8-2.5 10"/></svg>`,
+    plan: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13l12-5 12 5 12-5v27l-12 5-12-5-12 5z"/><path d="M18 8v27M30 13v27" opacity=".6"/></svg>`,
+    about: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="17" r="7.5"/><path d="M9 40c2.6-8 8.2-12 15-12s12.4 4 15 12"/></svg>`
+  };
+
   function renderTabs(active) {
     const tabs = $("#tabs");
     tabs.innerHTML = "";
     D.categories.forEach(c => {
       const soon = c.id === "salalah" && D.meta.salalahComingSoon;
+      const ico = NAV_ICONS[c.id] || c.icon;
       const b = el("button", "tab" + (soon ? " tab-dim" : ""),
-        `<span class="t-icon">${c.icon}</span>${esc(c.label)}` +
+        `<span class="t-icon">${ico}</span>${esc(c.label)}` +
         (soon ? `<i class="tab-soon">soon</i>` : ""));
       b.setAttribute("role", "tab");
       b.setAttribute("aria-selected", String(c.id === active));
@@ -626,8 +653,26 @@
         media.appendChild(im);
       } else media.textContent = "📷 " + item.name;
     } else {
+      /* A locked card used to be an empty grey box, which reads as a broken
+         image rather than as withheld treasure. Blur the real photo instead:
+         it shows there IS something there and it looks deliberate. The image
+         is decorative (aria-hidden) and the name is never exposed, so nothing
+         leaks; the blur is heavy enough that no detail survives it. */
       media.classList.add("card-media-locked");
-      media.innerHTML = `<span class="lock-pill">🔒 In the guide</span>`;
+      /* Deliberately the BANNER, not this spot's own photo. Using item.img
+         would put "assets/wadis/wadi-mibam.jpg" in the DOM, handing over the
+         name that the locked card exists to withhold. The banner is already
+         preloaded and cached, so this costs no bytes, and blurred behind a
+         scrim it reads as "there is something here" rather than as a broken
+         image, which is the whole point. */
+      const bg = new Image();
+      bg.src = "assets/banner.jpg";
+      bg.alt = "";
+      bg.setAttribute("aria-hidden", "true");
+      bg.decoding = "async";
+      bg.className = "lock-blur";
+      media.appendChild(bg);
+      media.insertAdjacentHTML("beforeend", `<span class="lock-pill">🔒 In the guide</span>`);
     }
     c.appendChild(media);
 
@@ -682,6 +727,20 @@
     if (unlocked) {
       c.style.cursor = "pointer";
       c.onclick = () => openSheet(item);
+      /* KEYBOARD ACCESS. This was an <article onclick> with no tabindex and no
+         key handler, which meant the entire catalogue, all 138 spots, could be
+         seen but not opened by anyone navigating with a keyboard or a switch.
+         A div that behaves like a button has to say so and has to answer to
+         both Enter and Space, which is what a real <button> would do. */
+      c.tabIndex = 0;
+      c.setAttribute("role", "button");
+      c.setAttribute("aria-label", `${item.name}. ${item.tagline || ""}`);
+      c.onkeydown = e => {
+        if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+        if (e.target !== c) return;        // let the ♥ and ✓ handle their own keys
+        e.preventDefault();                // Space must not scroll the page
+        openSheet(item);
+      };
       // ♥ save, top-right of the card, works without opening the sheet.
       const heart = el("button", "save-heart" + (Store.isSaved(item.id) ? " on" : ""), "♥");
       heart.setAttribute("aria-label", "Save " + item.name);
@@ -713,6 +772,15 @@
     } else {
       c.style.cursor = "pointer";
       c.onclick = () => openUnlock();
+      c.tabIndex = 0;
+      c.setAttribute("role", "button");
+      c.setAttribute("aria-label", `Locked ${singularOf(item)}, unlock for ${D.meta.bundlePrice}`);
+      c.onkeydown = e => {
+        if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+        if (e.target !== c) return;
+        e.preventDefault();
+        openUnlock();
+      };
     }
 
     if (body.hasChildNodes()) c.appendChild(body);
@@ -1010,6 +1078,23 @@
             `<div class="rc-split"><b>${esc(s[1])}</b><span>${esc(s[0])}</span></div>`).join("") + `</div>` : ""}
           ${rc.note ? `<p class="rc-note">${esc(rc.note)}</p>` : ""}
         </div>`;
+        /* The moment of highest intent in the whole app: someone has just read
+           a complete free plan, costs and all, and liked it. Until now that
+           moment had no ask at all. Only on the FREE plans, and never to
+           someone who already owns the guide. */
+        if (item.free && !Unlock.hasBundle()) {
+          const others = (D.itineraries || []).filter(i => !i.free);
+          if (others.length) {
+            h += `<div class="afterplan">
+              <strong>Liked this one?</strong>
+              <p>The ${others.map(i => esc(i.name.replace(/^The\s+/i, ""))).join(" and the ")} work
+                 exactly like this: same timeline, same tappable stops, same receipt at the bottom.</p>
+              ${D.meta.freeLaunch
+                ? `<span class="ap-note">🎁 Free right now, everything is unlocked during launch.</span>`
+                : `<button type="button" class="btn-full ap-buy">Unlock them, ${esc(D.meta.bundlePrice)}</button>`}
+            </div>`;
+          }
+        }
       }
       if (aff.hotel) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.hotel)}" target="_blank" rel="noopener">Book the stays on this route →</a>`;
       if (aff.car) h += `<a class="affbtn" data-spot="${esc(item.id)}" href="${affLink(aff.car)}" target="_blank" rel="noopener">Rent a car →</a>`;
@@ -1181,18 +1266,27 @@
       const mid = item.mapUrl
         ? `<a class="dock-go" href="${item.mapUrl}" target="_blank" rel="noopener">📍 Google Maps</a>`
         : (isItin ? `<a class="dock-go" href="${wa}" target="_blank" rel="noopener">📲 Send this plan</a>` : `<span class="dock-go dock-go-off">No pin yet</span>`);
+      const I = {
+        heart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5S3.5 15 3.5 8.9A4.9 4.9 0 0 1 12 5.6a4.9 4.9 0 0 1 8.5 3.3c0 6.1-8.5 11.6-8.5 11.6z"/></svg>`,
+        tick:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.8l4.8 4.7L19.5 6.8"/></svg>`,
+        pin:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5s7-6.4 7-11.5a7 7 0 1 0-14 0c0 5.1 7 11.5 7 11.5z"/><circle cx="12" cy="10" r="2.6"/></svg>`,
+        send:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5"/><path d="M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>`
+      };
       h += `<div class="dockbar">
         <button type="button" class="dock-ico${Store.isSaved(item.id) ? " on" : ""}" id="actSave"
-          aria-label="Save this ${isItin ? "plan" : "spot"}">${Store.isSaved(item.id) ? "♥" : "♡"}</button>
+          aria-label="Save this ${isItin ? "plan" : "spot"}">${I.heart}</button>
         <button type="button" class="dock-ico${Store.isBeen(item.id) ? " on" : ""}" id="actBeen"
-          aria-label="Mark as ${isItin ? "trip done" : "been here"}">✓</button>
-        ${mid}
-        <a class="dock-ico dock-wa" href="${wa}" target="_blank" rel="noopener" aria-label="Share on WhatsApp">📲</a>
+          aria-label="Mark as ${isItin ? "trip done" : "been here"}">${I.tick}</button>
+        ${mid.replace("📍 ", I.pin).replace("📲 ", I.send)}
+        <a class="dock-ico dock-wa" href="${wa}" target="_blank" rel="noopener" aria-label="Share on WhatsApp">${I.send}</a>
       </div>`;
     }
     h += `</div>`;
 
     b.innerHTML = h;
+
+    const apBuy = b.querySelector(".ap-buy");
+    if (apBuy) apBuy.onclick = openUnlock;
 
     // Trip strip: a chip opens its day card and brings it into view. The
     // strip lives in normal flow (nothing sticky), so this is pure jump.
@@ -1297,7 +1391,8 @@
     const sv = b.querySelector("#actSave");
     if (sv) sv.onclick = () => {
       const on = Store.toggleSaved(item.id);
-      sv.textContent = on ? "♥" : "♡";
+      // Do NOT rewrite textContent here: the dock icons are inline SVG now and
+      // assigning text would delete the drawing. Filled vs outline is CSS.
       sv.classList.toggle("on", on);
       sv.setAttribute("aria-label", on ? "Saved, tap to unsave" : "Save this spot");
       toast(on ? "♥ Saved" : "Removed from saved");
@@ -2118,7 +2213,25 @@
           <li>Heat-smart starts: 06:30 in summer, hot spots in the cool hours</li>
           <li>Every stop pinned in Google Maps, the whole route on one map</li>
         </ul>
-        <p class="lock-when">Opens in October, when the full guide launches.</p>`;
+        <p class="lock-when">Opens in October, when the full guide launches.</p>
+
+        <!-- A locked feature nobody can sample is just a promise. This is one
+             real day of real output from the Planner, so the reader can judge
+             the thing instead of taking the bullet points on faith. -->
+        <div class="lock-demo">
+          <div class="ld-head">A day it built, for real</div>
+          <div class="ld-meta">3 days · March · wadis + culture · no 4×4 · moderate pace</div>
+          <div class="ld-day">
+            <div class="ld-row"><span>07:40</span><b>Leave Muscat</b><i>Route 17 east</i></div>
+            <div class="ld-row"><span>09:10</span><b>Bimmah Sinkhole</b><i>1 hr, before the coaches</i></div>
+            <div class="ld-row hot"><span>10:45</span><b>Wadi Shab</b><i>3 hrs · moved earlier, March heat</i></div>
+            <div class="ld-row"><span>14:20</span><b>Lunch, Tiwi</b><i>on the route, not a detour</i></div>
+            <div class="ld-row"><span>16:00</span><b>Fins Beach</b><i>sunset side of the road</i></div>
+            <div class="ld-row sleep"><span>🌙</span><b>Sleep near Sur</b><i>tomorrow starts east</i></div>
+          </div>
+          <p class="ld-note">It picked the order, the times and the bed, then checked the
+             drive between each one. Change any answer and the whole day rebuilds.</p>
+        </div>`;
       view.appendChild(p);
       view.appendChild(bundleBox());
       if (!D.meta.freeLaunch) {
