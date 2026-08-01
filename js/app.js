@@ -3158,5 +3158,81 @@
   renderLivingLine();
   applyRankTheme();      // paint the app in the returning traveller's rank colour
 
-  Unlock.init().finally(route);
+  /* ------------------------------------------------------------ welcome
+     The app opened straight into tool mode: brand row, HUD, tabs, search,
+     cards. Perfect for someone who already trusts it, and nothing at all for
+     a stranger, who got no hero image, no pitch and nothing to press. This
+     sells once, to first-time visitors only, then never appears again, so
+     returning readers opening the guide in a car at 6am are not made to
+     scroll past a billboard.
+
+     Design rules it has to obey:
+       - it must never delay the app: the app renders underneath, this sits
+         on top and can be dismissed before the photo has even arrived
+       - no blank flash: the already-cached banner paints instantly as the
+         backdrop, the full photo fades in over it when it lands
+       - keyboard: focus moves to the button, Escape dismisses
+       - reduced motion: no fade (handled by the global media query) */
+  function showWelcome() {
+    let seen = true;
+    try { seen = localStorage.getItem("oman_welcomed") === "1"; } catch {}
+    if (seen) return;
+
+    const m = D.meta;
+    const w = el("div", "welcome");
+    w.setAttribute("role", "dialog");
+    w.setAttribute("aria-modal", "true");
+    w.setAttribute("aria-label", "Welcome to Exploring Oman");
+    w.innerHTML = `
+      <div class="wc-photo" aria-hidden="true"></div>
+      <div class="wc-full" aria-hidden="true"></div>
+      <div class="wc-scrim" aria-hidden="true"></div>
+      <div class="wc-body">
+        <p class="wc-eyebrow">Oman, from someone who lives here</p>
+        <h1 class="wc-hook"><q>${esc(m.aboutHook)}</q></h1>
+        <p class="wc-sub">${esc(m.aboutSub)} ${D.spots.length} places, and for each one:
+           the drive, the walk in, the entry fee, the right month, and whether I'd
+           tell you to skip it.</p>
+        <button type="button" class="wc-go">Show me the places</button>
+        <p class="wc-fine">🪪 Licensed Omani guide · 🎥 1M+ views on my wadi reels
+           · 🔄 Updated ${esc(m.lastUpdated || "monthly")}</p>
+      </div>`;
+
+    // Full-resolution hero fades in over the cached banner once it arrives.
+    const hero = new Image();
+    hero.onload = () => {
+      const full = w.querySelector(".wc-full");
+      full.style.backgroundImage = `url("${hero.src}")`;
+      full.classList.add("on");
+    };
+    hero.src = "assets/wadis/wadi-bani-khalid.jpg";
+
+    let closed = false;
+    const close = () => {
+      if (closed) return;
+      closed = true;
+      try { localStorage.setItem("oman_welcomed", "1"); } catch {}
+      // .closing sets pointer-events:none, so from this instant the overlay
+      // cannot intercept a tap even if its removal is delayed. That matters:
+      // background a tab mid-fade (switching apps on a phone is the common
+      // case) and Chrome pauses the animation and throttles the timer, which
+      // would otherwise leave an invisible sheet of glass over the app.
+      w.classList.add("closing");
+      document.body.style.overflow = "";
+      const kill = () => w.remove();
+      w.addEventListener("animationend", kill, { once: true });
+      setTimeout(kill, 400);                       // fallback if it never runs
+      const s = $("#catSearch");
+      if (s) s.focus({ preventScroll: true });
+      if (window.Analytics) Analytics.track("welcome", { action: "dismissed" });
+    };
+    w.querySelector(".wc-go").onclick = close;
+    w.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+
+    document.body.appendChild(w);
+    document.body.style.overflow = "hidden";
+    w.querySelector(".wc-go").focus({ preventScroll: true });
+  }
+
+  Unlock.init().finally(() => { route(); showWelcome(); });
 })();

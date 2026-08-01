@@ -2590,3 +2590,63 @@ body{
 .bn-q{margin:0;font-size:12.5px;line-height:1.55;font-style:italic;color:var(--ink)}
 .bn-q cite{display:block;font-style:normal;font-size:11px;font-weight:700;
   color:var(--muted);margin-top:3px}
+
+/* ══ WELCOME, first visit only (Aug 2026) ═════════════════════════════════
+   The one place the app is allowed to be a pitch instead of a tool. Shown
+   once, then never again (localStorage oman_welcomed). Full-bleed photo,
+   the hook, one button. Everything here is sized in vh/clamp so it fits a
+   small phone without scrolling: if this needs a scrollbar it has failed. */
+.welcome{
+  position:fixed;inset:0;z-index:200;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  background:var(--water-dark);
+  animation:wcIn .42s cubic-bezier(.2,.8,.2,1);
+}
+/* pointer-events:none the moment it starts closing: if the tab is backgrounded
+   mid-fade the animation pauses and the node can linger, and an invisible
+   fixed overlay would swallow every tap. */
+.welcome.closing{animation:wcOut .3s ease forwards;pointer-events:none}
+@keyframes wcIn{from{opacity:0}to{opacity:1}}
+@keyframes wcOut{to{opacity:0;transform:scale(1.02)}}
+
+/* Cached banner paints instantly so there is never a blank screen; the full
+   photo fades in on top when it arrives. */
+.wc-photo,.wc-full{position:absolute;inset:0;background-size:cover;background-position:center 55%}
+.wc-photo{background-image:url("../assets/banner.jpg");filter:saturate(.9)}
+.wc-full{opacity:0;transition:opacity .5s ease}
+.wc-full.on{opacity:1}
+.wc-scrim{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(8,69,75,.28) 0%,rgba(8,69,75,.12) 32%,rgba(8,69,75,.82) 72%,rgba(8,69,75,.96) 100%);
+}
+.wc-body{
+  position:relative;z-index:2;color:#fff;
+  padding:0 22px calc(30px + env(safe-area-inset-bottom));
+  max-width:600px;margin:0 auto;width:100%;
+}
+.wc-eyebrow{
+  margin:0 0 10px;font-size:11px;font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;opacity:.82;
+}
+.wc-hook{
+  margin:0 0 12px;font-size:clamp(27px,7.4vw,38px);line-height:1.16;
+  letter-spacing:-.02em;font-weight:800;text-wrap:balance;
+}
+.wc-hook q{quotes:"“" "”"}
+.wc-sub{
+  margin:0 0 22px;font-size:14.5px;line-height:1.58;opacity:.92;
+  max-width:46ch;
+}
+.wc-go{
+  width:100%;padding:16px 20px;border:0;border-radius:999px;
+  background:var(--gold);color:#fff;font-size:16px;font-weight:800;
+  letter-spacing:.01em;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.28);
+  transition:transform .14s ease,filter .14s ease;
+}
+.wc-go:active{transform:scale(.98);filter:brightness(1.06)}
+.wc-fine{
+  margin:14px 0 0;font-size:11.5px;line-height:1.6;opacity:.78;text-align:center;
+}
+@media (min-height:760px){
+  .wc-body{padding-bottom:calc(52px + env(safe-area-inset-bottom))}
+}
