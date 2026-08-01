@@ -30,7 +30,12 @@
 html,body{margin:0;padding:0}
 body{
   background:var(--sand);color:var(--ink);
-  font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  /* Body copy is Outfit too, not the phone's default. A paid guide that sets
+     its headings and then leaves the paragraphs to the system font reads as
+     half-finished, which is exactly how reviewers described it. Same family,
+     same web request as the headings, so it costs nothing extra to load. */
+  font:16px/1.62 "Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  letter-spacing:.002em;
   padding-bottom:env(safe-area-inset-bottom);
   overscroll-behavior-y:none;
 }
@@ -2426,3 +2431,8 @@ body{
 .rc-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .rc-chk{font-size:10.5px;font-weight:700;color:var(--gold);background:#fff;
   border:1px solid var(--gold);border-radius:999px;padding:2px 8px;white-space:nowrap}
+
+/* Quiet HUD: the rank game turned down to a plain counter (long-press the HUD).
+   Keeps the banner's vertical rhythm so nothing jumps when you toggle it. */
+.hud.hud-quiet{display:flex;align-items:center;min-height:34px}
+.hud-count{font-size:12.5px;font-weight:600;letter-spacing:.01em;opacity:.92}

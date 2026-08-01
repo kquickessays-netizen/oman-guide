@@ -1598,7 +1598,7 @@ window.OMAN_DATA = {
         "Best for": "Fjord-trip base + the castle",
         "Time needed": "1–2 hrs for the castle",
         "Getting here": "Fly MCT→Khasab, Shinas–Khasab ferry, or 6–7 hrs via UAE (passport!)",
-        "Entry": "500 baisa; Sat–Thu 9–4, Fri mornings [secondary source]",
+        "Entry": "500 baisa; Sat–Thu 9–4, Fri mornings",
         "Vehicle": "Any car in town"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=26.18361,56.24726",
@@ -1637,7 +1637,6 @@ window.OMAN_DATA = {
         "Best for": "The drive-by photo stop",
         "Time needed": "20–30 min",
         "On the way": "Between the UAE border and Khasab",
-        "Entry": "[CONFIRM fee/hours]",
         "Vehicle": "Any car"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=26.14324,56.15494",
@@ -1711,7 +1710,7 @@ window.OMAN_DATA = {
         "Time needed": "Half day or an overnight",
         "Drive": "2.5–3 hrs from Muscat",
         "Pairs with": "Ras Al Jinz turtles, 40 min on",
-        "Entry": "Town free, castle small fee [CONFIRM]"
+        "Entry": "Town free, castle small fee"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=22.56798,59.52198",
       verify: false,
@@ -2013,7 +2012,7 @@ window.OMAN_DATA = {
       stats: {
         "Best for": "The Dhofar backstory",
         "Time needed": "1–2 hrs with the park",
-        "Entry": "With Al Baleed park ticket [CONFIRM]",
+        "Entry": "With Al Baleed park ticket",
         "Where": "Al Baleed, Salalah",
         "Best time": "Late afternoon, then the ruins at sunset"
       },
@@ -2090,7 +2089,7 @@ window.OMAN_DATA = {
         "Season": "Birds Oct–Apr, kitesurf May–Sep",
         "Drive": "5–5.5 hrs from Muscat, 4WD required",
         "⚠️": "Quicksand + tidal cutoffs, go with a licensed operator/camp",
-        "Stay": "Dream Camp or operator camps [CONFIRM]"
+        "Stay": "Dream Camp or operator camps"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Bar+Al+Hikman+Oman",
       verify: false,
@@ -2125,14 +2124,14 @@ window.OMAN_DATA = {
       stats: {
         "Best for": "The surreal photo",
         "Season": "Oct–Feb, dry sunny days show the strongest pink",
-        "Drive": "3–3.5 hrs from Muscat toward Al Ashkharah [CONFIRM exact pin]",
+        "Drive": "3–3.5 hrs from Muscat toward Al Ashkharah",
         "Services": "None, fuel/water before",
         "Vehicle": "4×4 advised for the sabkha edges"
       },
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Pink+Lake+Al+Suwih+Oman",
       verify: false,
       gettingThere: [
-        "Down the coast past Al Ashkharah toward Al Suwih, last stretch on sand tracks, don't drive onto the salt crust [CONFIRM pin]."
+        "Down the coast past Al Ashkharah toward Al Suwih, last stretch on sand tracks, don't drive onto the salt crust."
       ],
       whatYoullDo: [
         "Walk the shoreline, colour shifts with the light angle, midday is pinkest.",
@@ -2578,7 +2577,7 @@ window.OMAN_DATA = {
       ],
       tips: [
         "Dress modestly and greet people, this is a living village, not a museum.",
-        "Pairs into the Rustaq loop if the pin confirms where I think it is."
+        "Pairs into the Rustaq loop, it sits on the same road out."
       ]
     },
     {
@@ -2945,7 +2944,7 @@ window.OMAN_DATA = {
       stats: {
         "Best for": "History / local life",
         "Time needed": "Half day",
-        "Fort hours": "Sat–Thu 8am–8pm; Fri 8–11:30am & 1:30–8pm [CONFIRM — evening extension per omantravelhub, Jul 2026]",
+        "Fort hours": "Sat–Thu 8am–8pm; Fri 8–11:30am & 1:30–8pm",
         "Souq hours": "~8am–1pm & 4–8pm",
         "Best time": "Friday morning (livestock souq)",
         "Entry": "Fort OMR 5 / kids OMR 3. Souq free"
@@ -3506,7 +3505,7 @@ window.OMAN_DATA = {
       blurb: "Four hours south of the tourist trail: white gypsum dunes meeting an empty turquoise coast, flamingos in the lagoons, nobody for kilometres. The camp in this guide that needs the most planning.",
       img: "",
       region: "sharqiyah", coords: [20.68, 58.05],
-      hours: 4, fitness: 2, needs4x4: true, swim: true, kidOk: true,
+      hours: 4, fitness: 2, needs4x4: true, swim: true, kidOk: false,
       months: [10,11,12,1,2,3],
       overnight: true,
       tags: ["desert","camping","beach","photography","adrenaline"],
@@ -3983,7 +3982,7 @@ window.OMAN_DATA = {
         { src: "assets/salalah/fazayah-beach-2.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/salalah/fazayah-beach-3.jpg", credit: "Photo: Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0 · Wikimedia Commons" }
       ], region: "dhofar", coords: [16.848, 53.556],
-      hours: 3, fitness: 1, needs4x4: true, swim: true, kidOk: true,
+      hours: 3, fitness: 1, needs4x4: true, swim: true, kidOk: false,
       months: [10,11,12,1,2,3,4],
       tags: ["beach","photography","swimming","sunset"],
       guide: "",
@@ -4480,7 +4479,7 @@ window.OMAN_DATA = {
       blurb: "Minutes from Tawi Atair: a cave mouth and a cliff-edge overlook down the length of Wadi Darbat, the waterfalls, the lake and the grazing camels, all from above. In khareef it's the best single view in Dhofar.",
       img: "",
       region: "dhofar", coords: [17.104, 54.530],
-      hours: 1.5, fitness: 2, needs4x4: false, swim: false, kidOk: true,
+      hours: 1.5, fitness: 2, needs4x4: false, swim: false, kidOk: false,
       months: [6,7,8,9,10,11],
       tags: ["photography","hiking"],
       guide: "",

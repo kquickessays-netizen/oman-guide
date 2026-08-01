@@ -331,7 +331,9 @@
   const smartPass = i =>
     (!smart.season || inSeason(i)) &&
     (!smart.no4x4 || !i.needs4x4) &&
-    (!smart.kids || i.kidOk !== false) &&
+    // Strict === true, not !== false: a spot added later without the flag
+    // considered must NOT quietly appear under a parent's kids filter.
+    (!smart.kids || i.kidOk === true) &&
     (!smart.saved || Store.isSaved(i.id)) &&
     (!smart.todo || !Store.isBeen(i.id)) &&
     (!smart.been || Store.isBeen(i.id));
@@ -1436,6 +1438,10 @@
     const total = D.spots.length;
     const ix = rankIx(been);
     const wasIx = rankIx(been - 1);
+    if (hudQuiet()) {                         // ranks turned off, never confetti
+      toast(`✓ ${been} of ${total} visited`);
+      return;
+    }
     if (ix === wasIx) {                       // no rank change, quiet toast
       const nx = nextRank(been);
       toast(nx ? `✓ ${been} of ${total} · ${nx[0] - been} more to ${nx[1]}`
@@ -1521,6 +1527,13 @@
      makes the banner carry something that CHANGES as you travel, and the
      progress bar under it fills toward the next rank rather than toward 101
      (see rankBadge for why that matters). */
+  /* The rank game delights some readers and irritates others ("I don't need a
+     rank to walk into a wadi"). It is off by nothing and on by default, but a
+     long-press on the HUD turns the whole game down to a quiet counter, and
+     that choice sticks on this phone. Quiet mode also suppresses the
+     rank-up confetti, see celebrate(). */
+  const hudQuiet = () => { try { return localStorage.getItem("oman_hud_quiet") === "1"; } catch { return false; } };
+
   function renderHud() {
     const h = $("#topHud");
     if (!h) return;
@@ -1530,14 +1543,32 @@
     const floor = RANKS[ix][0];
     const next = nextRank(been);
     const pct = next ? Math.round((been - floor) / (next[0] - floor) * 100) : 100;
-    h.innerHTML =
-      `<span class="hud-ring" style="--pct:${Math.max(0, Math.min(100, pct))}"><b>${been}</b></span>` +
-      `<span class="hud-txt">` +
-        `<strong>${esc(rankFor(been))}</strong>` +
-        `<small>${next ? `${next[0] - been} more to ${esc(next[1])}` : `all ${total} explored`}</small>` +
-      `</span>` +
-      `<span class="hud-bar"><i style="width:${Math.max(3, Math.min(100, pct))}%"></i></span>`;
-    h.dataset.tier = ix <= 1 ? "3" : ix <= 3 ? "2" : "1";
+    const quiet = hudQuiet();
+
+    h.classList.toggle("hud-quiet", quiet);
+    h.innerHTML = quiet
+      ? `<span class="hud-count">${been} of ${total} visited</span>`
+      : `<span class="hud-ring" style="--pct:${Math.max(0, Math.min(100, pct))}"><b>${been}</b></span>` +
+        `<span class="hud-txt">` +
+          `<strong>${esc(rankFor(been))}</strong>` +
+          `<small>${next ? `${next[0] - been} more to ${esc(next[1])}` : `all ${total} explored`}</small>` +
+        `</span>` +
+        `<span class="hud-bar"><i style="width:${Math.max(3, Math.min(100, pct))}%"></i></span>`;
+    h.dataset.tier = quiet ? "0" : (ix <= 1 ? "3" : ix <= 3 ? "2" : "1");
+    h.title = quiet ? "Hold to bring the explorer ranks back" : "Hold to turn the ranks into a plain counter";
+
+    // Long-press (or right-click on desktop) toggles it. A plain tap is left
+    // alone so nobody flips it by accident reaching for the banner.
+    let timer = null;
+    const flip = () => {
+      try { localStorage.setItem("oman_hud_quiet", hudQuiet() ? "0" : "1"); } catch {}
+      renderHud();
+      toast(hudQuiet() ? "Ranks off, just a counter now" : "Explorer ranks back on");
+    };
+    h.oncontextmenu = e => { e.preventDefault(); flip(); };
+    h.onpointerdown = () => { timer = setTimeout(flip, 550); };
+    ["pointerup", "pointerleave", "pointercancel"].forEach(ev =>
+      h.addEventListener(ev, () => clearTimeout(timer)));
   }
 
   function renderCategory(cat) {
