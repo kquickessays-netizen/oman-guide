@@ -113,7 +113,55 @@
   // any worker left behind from an earlier session is torn down on sight.
   var LOCAL = ['localhost', '127.0.0.1', '[::1]'].indexOf(location.hostname) !== -1;
   if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !LOCAL) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').then(function (reg) {
+        /* THE STALE-REFRESH PROBLEM.
+           stale-while-revalidate hands you the cached copy instantly and
+           fetches the new one behind your back, so the reload right after a
+           deploy still renders the OLD build and only the reload after that
+           shows the new one. That is correct for a traveller in a wadi and
+           maddening for everyone else: "I refreshed and nothing changed, I
+           had to open a different browser profile to see it."
+
+           So: when a new worker finishes installing, say so, and let the
+           reader take the update with one tap. No surprise reloads, because
+           yanking the page out from under someone mid-wadi is worse than
+           being one version behind for a minute. */
+        // Has the reader started reading? If they haven't, swapping the build
+        // under them costs nothing and they simply get the current version.
+        var touched = false;
+        ['scroll', 'pointerdown', 'keydown'].forEach(function (ev) {
+          addEventListener(ev, function () { touched = true; }, { once: true, passive: true });
+        });
+
+        function offer(worker) {
+          if (!worker) return;
+          worker.addEventListener('statechange', function () {
+            if (worker.state !== 'installed' || !navigator.serviceWorker.controller) return;
+            var take = function () { worker.postMessage({ type: 'SKIP_WAITING' }); };
+            if (!touched) { take(); return; }          // silent, they hadn't started
+            window.__omanUpdateReady = take;            // otherwise: their call
+            if (window.__omanShowUpdate) window.__omanShowUpdate();
+          });
+        }
+        offer(reg.installing);
+        reg.addEventListener('updatefound', function () { offer(reg.installing); });
+
+        // The new worker took over: reload once so the page matches its files.
+        var reloaded = false;
+        navigator.serviceWorker.addEventListener('controllerchange', function () {
+          if (reloaded) return;
+          reloaded = true;
+          location.reload();
+        });
+
+        // Check for a new build whenever the app is brought back to the front,
+        // otherwise an installed PWA can sit on one version for days.
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'visible') reg.update().catch(function () {});
+        });
+      }).catch(function () {});
+    });
   } else if (LOCAL && 'serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations()
       .then(rs => Promise.all(rs.map(r => r.unregister())))

@@ -588,9 +588,32 @@
     // scroll into view, and scrollIntoView here would jog the whole page.
   }
 
+  /* The update bar. index.html sets __omanShowUpdate once a new build is
+     installed and waiting; tapping hands over to it and the page reloads. */
+  window.__omanShowUpdate = () => {
+    if ($("#updateBar")) return;
+    const u = el("div", "updatebar");
+    u.id = "updateBar";
+    u.innerHTML = `<span>A newer version of the guide is ready.</span>
+                   <button type="button" class="ub-go">Update</button>`;
+    u.querySelector(".ub-go").onclick = () => {
+      u.querySelector(".ub-go").textContent = "Updating…";
+      if (window.__omanUpdateReady) window.__omanUpdateReady();
+    };
+    document.body.appendChild(u);
+  };
+
   function renderUnlockBtn() {
     const b = $("#unlockBtn");
-    if (D.meta.freeLaunch) { b.textContent = "🎁 Free launch"; b.className = "pill pill-unlocked"; return; }
+    /* The top-right slot is the only always-visible action in the app, so it
+       has to ASK for something. "🎁 Free launch" announced a state: nothing to
+       press, nothing to want. During the free run the thing worth asking for
+       is the email (the founding price); after it, the sale. */
+    if (D.meta.freeLaunch) {
+      b.textContent = "Get it free →";
+      b.className = "pill pill-cta";
+      return;
+    }
     if (Unlock.hasBundle()) { b.textContent = "✓ Full access"; b.className = "pill pill-unlocked"; }
     else if (Unlock.isAnythingOwned()) { b.textContent = "✓ " + Unlock.grants().length + " unlocked"; b.className = "pill pill-unlocked"; }
     else { b.textContent = "Unlock"; b.className = "pill pill-ghost"; }

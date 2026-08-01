@@ -1,7 +1,7 @@
 /* Service worker, makes the app installable and usable offline in a wadi
    with no signal. Bump CACHE when you change content, or users keep the old
    version until the cache expires. */
-const CACHE = "oman-v52";
+const CACHE = "oman-v53";
 
 const CORE = [
   "./",
@@ -23,7 +23,10 @@ self.addEventListener("install", e => {
       // cache:"reload" skips the browser's HTTP cache, so a new worker never
       // seeds its cache with files a previous visit left behind.
       .then(c => c.addAll(CORE.map(u => new Request(u, { cache: "reload" }))).catch(() => {}))
-      .then(() => self.skipWaiting())
+      /* NO automatic skipWaiting. The page decides when the new build takes
+         over: instantly if the reader has not started reading yet, or on a
+         tap if they have. Auto-activating here used to mean the reload could
+         land mid-scroll. See the registration block in index.html. */
   );
 });
 
@@ -33,6 +36,12 @@ self.addEventListener("activate", e => {
       .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
+});
+
+// The page asks the waiting worker to take over when the reader taps "Update".
+// Without this a new build sits in the wings until every tab is closed.
+self.addEventListener("message", e => {
+  if (e.data && e.data.type === "SKIP_WAITING") self.skipWaiting();
 });
 
 self.addEventListener("fetch", e => {
