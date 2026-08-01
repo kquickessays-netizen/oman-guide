@@ -2556,12 +2556,23 @@ body{
 .card-media-locked .lock-pill{position:relative;z-index:2}
 
 /* ── Desktop: use the screen instead of two columns in a sea of sand ─────── */
-@media (min-width:1100px){
-  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+/* Column COUNT was the wrong knob. #view is capped at 960px, so asking for
+   4 columns produced 219px cards and the photo-forward layout collapsed:
+   chips wrapped into the title, nothing fit. Ask for a minimum card WIDTH
+   instead and let the browser decide how many fit, so a card can never be
+   squeezed below the size this design needs (~330px). Then widen the
+   container on big screens so the extra columns have somewhere to live,
+   which was the actual complaint: two columns adrift in a sea of sand. */
+.grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr))}
+@media (min-width:1200px){
+  #view{max-width:1240px}
 }
-@media (min-width:1500px){
-  .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (min-width:1560px){
+  #view{max-width:1400px}
 }
+/* Prose must not follow the container: long measures are unreadable. */
+#view > .about,#view > .isec,.cat-vp,.plan-note,.soon{max-width:760px}
+#view > .about,#view > .isec{margin-left:auto;margin-right:auto}
 
 /* ── CTA after a free plan's receipt ──────────────────────────────────────── */
 .afterplan{margin:16px 0 4px;padding:15px 16px;border-radius:var(--radius);
