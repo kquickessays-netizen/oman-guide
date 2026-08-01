@@ -363,12 +363,14 @@
         </div>
         <ul class="bulletlist">
           <li>All <strong>${lockedCount()}</strong> locked spots: wadis, beaches, mountain villages and the south.</li>
-          <li>Every itinerary: 3-day, 5-day and the 7-day loop.</li>
+          <li>The ${(D.itineraries || []).filter(i => !i.free).map(i => i.name.replace(/^The\s+/i, "")).join(" and the ")}.</li>
           <li><strong>The trip Planner</strong>, a route built around your days, pace and fitness.</li>
           <li>New spots and re-checked prices every month. No subscription.</li>
         </ul>
         <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get the full guide, ${D.meta.bundlePrice}</a>
         <p class="price-fine">One key. Works on any phone, paste it again if you switch.</p>
+        <p class="price-trust">🔒 Secure checkout through Gumroad, they handle the payment, I never see your card.
+           Not what you expected? Email me within 14 days and I'll refund it, no argument.</p>
       </div>`;
 
     // Social proof, meta.testimonials, curated by hand. Compact contexts
@@ -379,6 +381,89 @@
       quotes.forEach(q => t.appendChild(el("blockquote", "testi",
         `“${esc(q.text)}”${q.by ? `<cite>, ${esc(q.by)}</cite>` : ""}`)));
       w.appendChild(t);
+    }
+    return w;
+  }
+
+  /* ------------------------------------------------------------ the bundle
+     "What exactly am I buying?" had no home. The price block lists bullets,
+     but nowhere showed the product as a THING with contents. This is that
+     page-within-a-page: what's in the box, itemised, with the free sample
+     called out so the reader knows the paid tier looks identical.
+
+     Not a cart. There is one product, one price, one key, and Gumroad is the
+     checkout. A cart would add three steps and zero value. */
+  function bundleBox() {
+    const spots = D.spots.length;
+    const locked = lockedCount();
+    // Only the LOCKED plans are part of the purchase; the 1-day and 3-day are
+    // free samples, and counting them would be a claim the reader can disprove
+    // in two taps. Name them instead of counting them, it sells better and it
+    // stays true when the free/paid split changes.
+    const paidPlans = (D.itineraries || []).filter(i => !i.free);
+    const planNames = paidPlans.map(i => i.name.replace(/^The\s+/i, "")).join(" and ");
+    const w = el("div", "bundle");
+    w.innerHTML = `
+      <div class="bn-head">
+        <div>
+          <h2>The full guide</h2>
+          <p class="bn-sub">Everything below, one payment, yours forever.</p>
+        </div>
+        <div class="bn-price">
+          <b>${esc(D.meta.bundlePrice)}</b>
+          <small>one time</small>
+        </div>
+      </div>
+
+      <div class="bn-items">
+        <div class="bn-item">
+          <span class="bn-ic" aria-hidden="true">📍</span>
+          <span><strong>${locked} locked spots</strong>
+            <small>The remote wadis, the empty beaches, the mountain villages and the south.
+                   ${spots - locked} more stay free either way.</small></span>
+        </div>
+        <div class="bn-item">
+          <span class="bn-ic" aria-hidden="true">🗺️</span>
+          <span><strong>${esc(planNames)}</strong>
+            <small>Hour by hour, every stop tappable, each with a costs receipt at the
+                   bottom. The free 1-day and 3-day plans stay free.</small></span>
+        </div>
+        <div class="bn-item">
+          <span class="bn-ic" aria-hidden="true">🧭</span>
+          <span><strong>The trip Planner</strong>
+            <small>Answer four questions, get your own route built around your days,
+                   pace and vehicle.</small></span>
+        </div>
+        <div class="bn-item">
+          <span class="bn-ic" aria-hidden="true">🔄</span>
+          <span><strong>Every future update</strong>
+            <small>New spots and re-checked prices monthly, Salalah when it lands.
+                   No subscription, nothing to renew.</small></span>
+        </div>
+        <div class="bn-item">
+          <span class="bn-ic" aria-hidden="true">📶</span>
+          <span><strong>Works with no signal</strong>
+            <small>Install it once and the whole guide, photos included, works in a
+                   wadi with no bars.</small></span>
+        </div>
+      </div>
+
+      <div class="bn-sample">
+        <strong>Try before you pay.</strong> The Perfect Oman Day above is free and
+        complete: same timeline, same map, same receipt as the paid routes. What you
+        see there is exactly what you get.
+      </div>`;
+
+    if (D.meta.freeLaunch) {
+      const note = el("p", "bn-launch",
+        "🎁 Right now it's all free. In October it becomes a paid guide, and the email list gets the founding price.");
+      w.appendChild(note);
+    } else {
+      const buy = el("a", "btn-buy gold", `Get the full guide, ${esc(D.meta.bundlePrice)}`);
+      buy.href = D.meta.buyLinks.bundle; buy.target = "_blank"; buy.rel = "noopener";
+      w.appendChild(buy);
+      w.appendChild(el("p", "price-trust",
+        "🔒 Secure checkout through Gumroad, they handle the payment, I never see your card. Not what you expected? Email me within 14 days and I'll refund it."));
     }
     return w;
   }
@@ -397,7 +482,7 @@
          best price when it does.</p>
       <div class="subrow">
         <input type="email" id="lbEmail" placeholder="you@email.com" autocomplete="email">
-        <button class="pill" id="lbBtn">Count me in</button>
+        <button class="pill" id="lbBtn">Save my founding price</button>
       </div>
       <div id="lbMsg"></div>`;
     w.querySelector("#lbBtn").onclick = async () => {
@@ -1585,6 +1670,18 @@
     // The rank moved into the banner HUD (renderHud), where it shows on every
     // tab instead of only this one.
     head.appendChild(titlerow);
+
+    // ONE line saying what this actually is. A stranger landing on Explore saw
+    // photo cards and had to open a sheet, or find the About tab (the last
+    // one), before learning what the app does. This is the value proposition,
+    // above the fold, on the tab everyone lands on. Explore only: the other
+    // tabs are self-evident once you are inside the app.
+    if (cat === "explore") {
+      head.appendChild(el("p", "cat-vp",
+        `${D.spots.length} places across Oman, from a licensed guide. For each one: the drive, ` +
+        `the walk in, the entry fee, the right month, and whether I'd tell you to skip it.`));
+    }
+
     // Intro text only where it earns its place, Salalah's "this is a separate
     // trip, you fly" is real planning information. Explore's was a description
     // of the filter chips sitting directly underneath it, so it's gone.
@@ -1851,6 +1948,57 @@
       </div>`;
     foot.appendChild(contact);
 
+    /* A footer. There wasn't one anywhere in the app, which is fine for a free
+       hobby site and disqualifying for one that takes payments in October:
+       people look for terms, refunds and a real contact before they buy.
+       Deliberately tiny and plain, it is reassurance, not navigation. */
+    const legal = el("div", "sitefoot");
+    legal.innerHTML = `
+      <div class="sf-row">
+        <a href="mailto:${esc(m.email)}">Contact</a>
+        <span>·</span>
+        <button type="button" class="sf-link" data-legal="terms">Terms</button>
+        <span>·</span>
+        <button type="button" class="sf-link" data-legal="privacy">Privacy</button>
+        <span>·</span>
+        <button type="button" class="sf-link" data-legal="refund">Refunds</button>
+      </div>
+      <p class="sf-fine">Exploring Oman, a guide by Hussain, licensed Omani tour guide.
+         Prices in Omani rial unless stated. Updated ${esc(m.lastUpdated || "monthly")}.</p>
+      <div class="sf-body" hidden></div>`;
+    const LEGAL = {
+      terms: `<h4>Terms, in plain English</h4>
+        <p>This is a travel guide, not a booking service. I don't sell tours, tickets or
+        accommodation, and I'm not the operator for anything listed here.</p>
+        <p>Everything is researched and re-checked monthly, but roads wash out, fees change
+        and opening hours move. Confirm anything time-critical or safety-critical yourself
+        on the day. <strong>Wadis flood. If it has rained upstream, don't go in.</strong>
+        You travel at your own risk and are responsible for your own judgement.</p>
+        <p>Buying the guide gives you a personal licence to use it on your own devices.
+        Please don't republish or resell the content.</p>`,
+      privacy: `<h4>Privacy</h4>
+        <p>Your saved spots, been-there ticks and rank live in your own browser and are
+        never sent anywhere. Clearing your browser data clears them.</p>
+        <p>If you give me your email, it's used to tell you when the guide updates, and
+        nothing else. No selling, no sharing, no list swaps. Reply to any email and I'll
+        delete you on the spot.</p>
+        <p>Payments are handled by Gumroad; your card details go to them, never to me.</p>`,
+      refund: `<h4>Refunds</h4>
+        <p>If the guide isn't what you expected, email me within 14 days and I'll refund
+        you. No form, no argument, no "what went wrong" interrogation.</p>
+        <p>One payment, no subscription, nothing to cancel. Updates are included forever.</p>`
+    };
+    legal.querySelectorAll(".sf-link").forEach(b => b.onclick = () => {
+      const body = legal.querySelector(".sf-body");
+      const key = b.dataset.legal;
+      if (!body.hidden && body.dataset.open === key) { body.hidden = true; return; }
+      body.innerHTML = LEGAL[key];
+      body.dataset.open = key;
+      body.hidden = false;
+      body.scrollIntoView({ block: "nearest" });
+    });
+    foot.appendChild(legal);
+
     // Photo credits, attribution for the CC-licensed images (legally required
     // for CC BY / CC BY-SA). Folded shut at the very bottom: the licence is
     // satisfied by it being present and reachable, not by it being loud.
@@ -1899,6 +2047,30 @@
         <p class="soon-sub">It lands as a free update, nothing to re-buy, nothing to do.</p>
       </div>`;
     view.appendChild(w);
+    // A dead end that harvests nothing is a wasted tab. Anyone who taps Salalah
+    // has told you exactly what they want; the email box already exists as a
+    // component, so ask them here rather than showing a curtain and a shrug.
+    if (window.Analytics) {
+      const cap = el("div", "soon-capture");
+      cap.innerHTML = `
+        <h3>Want it the day it lands?</h3>
+        <p>Salalah is the khareef trip, and the season is short. Leave your email
+           and I'll tell you the moment the Dhofar spots go live.</p>
+        <div class="subrow">
+          <input type="email" id="soonEmail" placeholder="you@email.com" autocomplete="email">
+          <button class="pill" id="soonBtn">Tell me when</button>
+        </div>
+        <div id="soonMsg"></div>`;
+      cap.querySelector("#soonBtn").onclick = async () => {
+        const em = cap.querySelector("#soonEmail").value.trim();
+        const msg = cap.querySelector("#soonMsg");
+        if (!/^\S+@\S+\.\S+$/.test(em)) { msg.innerHTML = `<div class="msg err">That doesn't look like an email.</div>`; return; }
+        const r = await Analytics.subscribe(em);
+        msg.innerHTML = r.ok ? `<div class="msg ok">Done. You'll hear from me when Salalah lands. 🌴</div>`
+                             : `<div class="msg err">Couldn't sign you up, try again in a bit.</div>`;
+      };
+      view.appendChild(cap);
+    }
   }
 
   function renderPlanner() {
@@ -1948,6 +2120,7 @@
         </ul>
         <p class="lock-when">Opens in October, when the full guide launches.</p>`;
       view.appendChild(p);
+      view.appendChild(bundleBox());
       if (!D.meta.freeLaunch) {
         view.appendChild(priceBlock(null, true));
         const kb = el("button", "btn-key", "I have a key");

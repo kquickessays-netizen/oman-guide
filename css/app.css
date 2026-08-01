@@ -6,7 +6,10 @@
   --sand:#faf6f0;
   --sand-2:#f2ebe1;
   --ink:#1b2320;
-  --muted:#6b7671;
+  /* #6b7671 measured 4.38:1 on sand, under the 4.5:1 WCAG AA floor, and it is
+     used at 12.5px where contrast matters most. This passes at 5.1:1 and is
+     visually indistinguishable to anyone who could already read it. */
+  --muted:#5c6763;
   --line:#e4dccf;
   --water:#0d5c63;
   --water-dark:#08454b;
@@ -21,6 +24,16 @@
 }
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+/* Form controls do NOT inherit type by default: every input on the site was
+   rendering in the browser's Arial, including the search field, which is the
+   most looked-at element on Explore. */
+input,textarea,select,button{font:inherit;color:inherit}
+
+/* Keyboard users had no visible focus anywhere except a few inputs. Mouse and
+   touch users never see this; for anyone on a keyboard it is the difference
+   between usable and not. :focus-visible keeps it off during pointer clicks. */
+:focus-visible{outline:2px solid var(--water);outline-offset:2px;border-radius:4px}
 
 /* MUST come before any display: rule below. `hidden` loses to `display:grid`
    / `display:flex` on specificity, which left the unlock modal and the search
@@ -1469,7 +1482,9 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
 /* --- saves, been-there, smart filters, safety (Jul 2026 gap features) ------- */
 .save-heart{
   position:absolute;top:10px;right:10px;z-index:2;
-  width:34px;height:34px;border-radius:50%;
+  /* 34px missed every touch-target guideline (Apple 44, Android 48) and sat
+     10px from the ✓, which mutates rank state. 40px + more separation. */
+  width:40px;height:40px;border-radius:50%;
   background:rgba(255,255,255,.92);color:#c9c2b4;font-size:17px;line-height:1;
   display:grid;place-items:center;box-shadow:var(--shadow);
   transition:transform .12s ease,color .12s ease;
@@ -1478,8 +1493,8 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
 .save-heart.on{color:#d4537e}
 /* the ✓ twin, right under the heart: tick a place off from the feed */
 .been-check{
-  position:absolute;top:50px;right:10px;z-index:2;
-  width:34px;height:34px;border-radius:50%;
+  position:absolute;top:58px;right:10px;z-index:2;
+  width:40px;height:40px;border-radius:50%;
   background:rgba(255,255,255,.92);color:#c9c2b4;
   font-size:15px;font-weight:800;line-height:1;
   display:grid;place-items:center;box-shadow:var(--shadow);
@@ -2436,3 +2451,68 @@ body{
    Keeps the banner's vertical rhythm so nothing jumps when you toggle it. */
 .hud.hud-quiet{display:flex;align-items:center;min-height:34px}
 .hud-count{font-size:12.5px;font-weight:600;letter-spacing:.01em;opacity:.92}
+
+/* ── Reduced motion (Aug 2026) ────────────────────────────────────────────
+   Some people get motion sickness or migraines from drifting backgrounds and
+   bursts of confetti. The banner's 34s ken-burns and the rank celebration are
+   decorative, so an OS-level "reduce motion" preference removes them without
+   removing a single piece of information. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+  /* The drift lives on .topbar::before, and the rank-up sky is .rankup .ru-sky i */
+  .topbar::before{animation:none !important;transform:none !important}
+  .rankup .ru-sky{display:none !important}
+  .rankup .ru-ring,.rankup .ru-medal{animation:none !important}
+}
+
+/* ── Value-prop line, Explore (Aug 2026) ─────────────────────────────────── */
+.cat-vp{margin:2px 0 14px;font-size:14px;line-height:1.55;color:var(--muted);max-width:60ch}
+
+/* ── The bundle: what's actually in the box ──────────────────────────────── */
+.bundle{border:1.5px solid var(--line);border-radius:var(--radius);background:#fff;
+  padding:18px 16px;margin:18px 0;box-shadow:var(--shadow)}
+.bn-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding-bottom:14px;border-bottom:1px dashed var(--line)}
+.bn-head h2{font-size:20px;margin:0}
+.bn-sub{margin:3px 0 0;font-size:12.5px;color:var(--muted)}
+.bn-price{text-align:right;flex:none}
+.bn-price b{display:block;font-size:26px;line-height:1;color:var(--water-dark);font-weight:800}
+.bn-price small{font-size:10.5px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase}
+.bn-items{display:grid;gap:12px;margin:14px 0}
+.bn-item{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.bn-ic{font-size:18px;line-height:1.2}
+.bn-item strong{display:block;font-size:14px;line-height:1.3}
+.bn-item small{display:block;font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:2px}
+.bn-sample{margin-top:14px;padding:11px 13px;background:var(--water-soft);
+  border-radius:12px;font-size:12.5px;line-height:1.55}
+.bn-launch{margin:14px 0 0;padding:11px 13px;background:var(--gold-soft);
+  border:1px dashed var(--gold);border-radius:12px;font-size:12.5px;line-height:1.55}
+.bundle .btn-buy{margin-top:14px}
+
+/* ── Purchase trust line under the price ─────────────────────────────────── */
+.price-trust{margin:10px 0 0;font-size:11.5px;line-height:1.55;color:var(--muted)}
+
+/* ── Salalah: capture the intent instead of shrugging ────────────────────── */
+.soon-capture{margin:16px auto 0;max-width:520px;background:#fff;border:1px solid var(--line);
+  border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);text-align:center}
+.soon-capture h3{font-size:16px;margin:0 0 6px}
+.soon-capture p{font-size:13px;color:var(--muted);line-height:1.55;margin:0 0 12px}
+
+/* ── Site footer: the reassurance a paid site needs ──────────────────────── */
+.sitefoot{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);text-align:center}
+.sf-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;
+  font-size:12.5px;color:var(--muted)}
+.sf-row a,.sf-link{color:var(--water-dark);text-decoration:none;font-weight:600;
+  background:none;border:0;padding:4px 2px;cursor:pointer;font-size:12.5px}
+.sf-row a:hover,.sf-link:hover{text-decoration:underline}
+.sf-fine{font-size:11px;color:var(--muted);line-height:1.6;margin:10px 0 0}
+.sf-body{margin-top:12px;text-align:left;background:var(--sand-2);border-radius:12px;
+  padding:14px 15px;font-size:12.5px;line-height:1.6}
+.sf-body h4{font-size:13.5px;margin:0 0 8px}
+.sf-body p{margin:0 0 9px}
+.sf-body p:last-child{margin-bottom:0}
