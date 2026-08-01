@@ -20,6 +20,18 @@
 <meta name="twitter:title" content="Exploring Oman: the guide by @hussain_explores">
 <meta name="twitter:description" content="90+ spots with real logistics, maps and a trip planner. Free during launch season.">
 <meta name="twitter:image" content="https://exploresoman.com/assets/wadis/wadi-shab.jpg">
+<link rel="canonical" href="https://exploresoman.com/">
+
+<!-- The app is client-rendered, so anything that does not run JavaScript
+     (most link-preview scrapers, some indexers) sees an empty shell. This
+     tells them what the site is, and tools/build_seo.py generates a real
+     page per free spot with the sitemap that points at them all. -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite",
+ "name":"Exploring Oman","url":"https://exploresoman.com/",
+ "description":"A guide to Oman by a licensed Omani tour guide: wadis, beaches, mountains and food, each with the drive, the walk in, the entry fee and the right month.",
+ "inLanguage":"en","author":{"@type":"Person","name":"Hussain","jobTitle":"Licensed Omani tour guide","sameAs":"https://instagram.com/hussain_explores"}}
+</script>
 
 <!-- The banner photo is the first thing anyone sees: fetch it FIRST, before
      the browser discovers it late inside the stylesheet. Dedicated 91KB
@@ -38,6 +50,30 @@
 <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
+
+<!-- Real content for anything that does not run JavaScript: link-preview
+     scrapers, indexers, reader modes, and people on a dead connection. The
+     app replaces nothing here; this simply exists underneath it. -->
+<noscript>
+  <div style="max-width:680px;margin:0 auto;padding:28px 20px;font:16px/1.6 system-ui,sans-serif;color:#1b2320">
+    <h1 style="font-size:28px;line-height:1.2">Exploring Oman</h1>
+    <p><strong>A guide to Oman by Hussain, a licensed Omani tour guide.</strong>
+       Wadis, beaches, mountains, food and souqs. For each place: the drive from
+       Muscat, the walk in, the entry fee, what to bring, the right month, and
+       whether he would tell you to skip it.</p>
+    <p>The full guide needs JavaScript, but every free place has its own page:</p>
+    <ul>
+      <li><a href="/s/wadi-shab.html">Wadi Shab</a></li>
+      <li><a href="/s/wadi-bani-khalid.html">Wadi Bani Khalid</a></li>
+      <li><a href="/s/bimmah-sinkhole.html">Bimmah Sinkhole</a></li>
+      <li><a href="/s/jabal-shams.html">Jabal Shams</a></li>
+      <li><a href="/s/nizwa.html">Nizwa Fort &amp; Souq</a></li>
+      <li><a href="/p/shab-1day.html">The Perfect Oman Day, a full 1-day plan</a></li>
+    </ul>
+    <p><a href="/sitemap.xml">All pages</a> &middot;
+       <a href="https://instagram.com/hussain_explores">@hussain_explores</a></p>
+  </div>
+</noscript>
 
 <!-- ============================ HEADER ============================ -->
 <header class="topbar">
