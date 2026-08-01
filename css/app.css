@@ -150,7 +150,10 @@ img{max-width:100%;display:block}
 .searchbar input:focus{border-color:var(--water)}
 
 /* -------------------------------------------------------------------- view */
-.view{max-width:var(--maxw);margin:0 auto;padding:20px 16px 60px}
+/* The tail padding is a variable because the sticky ask lives down there and
+   its height is measured, not assumed (see fitStickyBar). 60px is the value
+   from before the bar existed, and the fallback when it is dismissed. */
+.view{max-width:var(--maxw);margin:0 auto;padding:20px 16px var(--bar-space,60px)}
 
 .cat-head{margin-bottom:12px}
 .cat-head h1{font-size:26px;letter-spacing:-.5px}
@@ -2743,3 +2746,227 @@ body{
 }
 #view .grid.itin-grid > *{flex:1 1 330px;max-width:420px;min-width:0}
 @media (max-width:719px){ #view .grid.itin-grid > *{flex-basis:100%;max-width:none} }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE SHOP, THE CAPTURE AND THE STICKY BAR            (Aug 2026)
+   ---------------------------------------------------------------------------
+   Everything the app asks for lives in this block: the three products on
+   #/shop, the trip-date capture that goes with them, the WhatsApp planning
+   service, and the one-line bar that carries the ask down a 22,000px page.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── trip capture ──────────────────────────────────────────────────────────
+   Two taps and an address. Deliberately quiet: it appears inside darker
+   panels (.launchbox) and lighter ones (.prod), so it inherits its colours
+   from the parent instead of fighting them. */
+.capture{margin-top:14px}
+.cap-title{font-size:17px;margin-bottom:6px}
+.cap-lead{margin:0 0 12px;font-size:13.5px;line-height:1.55;opacity:.92}
+.cap-q{
+  display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;opacity:.7;margin:12px 0 6px;
+}
+.cap-row{margin-bottom:2px}
+.cap-sel{
+  width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;
+  background:var(--sand-2);font-size:14px;appearance:none;-webkit-appearance:none;
+}
+.cap-sel:focus{outline:2px solid var(--water);border-color:transparent}
+.cap-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.cap-chip{
+  padding:8px 13px;border-radius:999px;border:1px solid var(--line);
+  background:var(--sand-2);font-size:13px;font-weight:600;cursor:pointer;
+}
+.cap-chip[aria-pressed="true"]{background:var(--water);border-color:var(--water);color:#fff}
+.cap-fine{font-size:11.5px;opacity:.62;margin-top:9px;line-height:1.5}
+.capture-compact .cap-q{margin-top:8px}
+/* inside the dark launch panel the fields keep their light chrome */
+.launchbox .cap-sel,.launchbox .cap-chip{background:#fff;border-color:transparent;color:var(--ink)}
+.launchbox .cap-chip[aria-pressed="true"]{background:var(--gold);color:#fff}
+.launchbox .cap-q,.launchbox .cap-fine{color:#cfe3df;opacity:.85}
+.launchbox .cap-lead{color:#d9ece8}
+
+/* ── the shop screen ─────────────────────────────────────────────────────── */
+.shop-head .shop-sub{margin:6px 0 0;color:var(--muted);font-size:14.5px;line-height:1.55}
+.shop-free{
+  background:var(--water-soft);border:1px solid #c7e3e3;border-radius:14px;
+  padding:13px 16px;margin:16px 0 4px;font-size:13.5px;line-height:1.6;color:#0b4a50;
+}
+.shop-or{
+  text-align:center;font-size:11.5px;font-weight:800;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:30px 0 -6px;
+}
+
+/* ── a product card ──────────────────────────────────────────────────────── */
+.prod{
+  background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:20px;margin:18px 0;box-shadow:var(--shadow);
+}
+.prod-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.prod-name h3{font-size:20px;letter-spacing:-.3px}
+.prod-badge{
+  display:inline-block;margin-top:7px;padding:4px 11px;border-radius:999px;
+  font-size:11px;font-weight:800;letter-spacing:.04em;
+  background:var(--sand-2);color:var(--muted);
+}
+.prod-badge.best{background:var(--gold-soft);color:#8a5b12;border:1px solid #ecd3a4}
+.prod-badge.soon{background:var(--water-soft);color:#0b4a50;border:1px solid #c7e3e3}
+.prod-price{text-align:right;flex:none}
+.prod-price b{display:block;font-size:26px;letter-spacing:-.8px;line-height:1}
+.prod-price small{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.prod-lead{margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--muted)}
+.prod-list{list-style:none;padding:0;margin:14px 0 0}
+.prod-list li{
+  position:relative;padding-left:24px;margin-bottom:10px;
+  font-size:13.5px;line-height:1.55;color:var(--ink);
+}
+.prod-list li::before{
+  content:"";position:absolute;left:2px;top:6px;width:13px;height:8px;
+  border-left:2.4px solid var(--water);border-bottom:2.4px solid var(--water);
+  transform:rotate(-45deg);border-radius:1px;
+}
+.prod-nots{margin-top:2px}
+.prod-nots li{color:var(--muted);font-size:12.5px}
+.prod-nots li::before{
+  border:none;left:4px;top:9px;width:9px;height:0;
+  border-top:2.4px solid #ccc3b4;transform:none;
+}
+.prod-action{margin-top:16px}
+.prod-action .btn-buy{
+  display:block;width:100%;text-align:center;padding:13px;border-radius:12px;
+  font-size:15px;border:none;cursor:pointer;
+}
+.prod-capture{
+  margin-top:2px;background:var(--sand-2);border-radius:14px;padding:16px;
+}
+.prod-fine{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.prod-prem{background:linear-gradient(170deg,#ffffff,#f4f9f9);border-color:#cfe4e4}
+
+/* ── the $2.99 shelf ─────────────────────────────────────────────────────── */
+.single-row{display:grid;gap:9px;margin-top:14px}
+.single{
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 12px;
+  width:100%;text-align:left;padding:13px 15px;border-radius:13px;
+  border:1px solid var(--line);background:var(--sand-2);cursor:pointer;
+  text-decoration:none;color:inherit;
+}
+.single b{font-size:14.5px;grid-column:1}
+.single small{
+  grid-column:1;grid-row:2;font-size:12px;color:var(--muted);line-height:1.45;
+}
+.single-price{
+  grid-column:2;grid-row:1/span 2;align-self:center;
+  padding:7px 13px;border-radius:999px;background:var(--gold);color:#fff;
+  font-size:12.5px;font-weight:800;white-space:nowrap;
+}
+.single-own .single-price{background:#e7f4ea;color:#1e6b39}
+
+/* ── plan my trip: group tiers + WhatsApp ────────────────────────────────── */
+.bk-q{
+  display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:4px 0 8px;
+}
+.bk-tiers{display:grid;gap:8px;margin-bottom:16px}
+@media(min-width:520px){.bk-tiers{grid-template-columns:repeat(3,1fr)}}
+.bk-tier{
+  display:flex;flex-direction:column;gap:2px;align-items:flex-start;
+  padding:11px 14px;border-radius:13px;border:1px solid var(--line);
+  background:var(--sand-2);cursor:pointer;text-align:left;
+}
+.bk-tier[aria-pressed="true"]{border-color:var(--water);background:var(--water-soft)}
+.bk-t-label{font-size:14px;font-weight:700}
+.bk-t-sub{font-size:11.5px;color:var(--muted)}
+.bk-t-price{margin-top:3px;font-size:12.5px;font-weight:800;color:var(--gold)}
+.bk-actions{display:grid;gap:8px;margin-top:4px}
+@media(min-width:520px){.bk-actions{grid-template-columns:1.3fr 1fr;align-items:stretch}}
+.bk-wa{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  padding:13px;border-radius:999px;background:#25D366;color:#08361c;
+  font-size:14.5px;font-weight:800;text-decoration:none;
+}
+.bk-wa svg{width:20px;height:20px;flex:none}
+.bookbox .bk-actions .rate-send{
+  margin:0;background:transparent;color:var(--water);
+  border:1px solid var(--line);font-weight:700;
+}
+.bk-priceline{margin-top:12px;font-size:13px;color:var(--muted)}
+.bk-price{font-size:17px;color:var(--ink);margin-left:4px}
+.bk-price.bk-quote{font-size:14px;color:var(--water)}
+.bk-priceline small{display:block;font-size:11.5px;margin-top:2px}
+
+/* ── the shop teaser, foot of the Plan tab ───────────────────────────────── */
+.shopteaser{
+  background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:18px 20px;margin:24px 0 8px;box-shadow:var(--shadow);
+}
+.shopteaser h3{font-size:17px;margin-bottom:12px}
+.st-rows{display:grid;gap:1px;background:var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.st-row{
+  display:flex;align-items:baseline;gap:12px;background:#fff;
+  padding:11px 14px;font-size:13.5px;
+}
+.st-row b{flex:0 0 62px;font-size:15px;letter-spacing:-.4px;color:var(--gold)}
+.st-row span{color:var(--muted);line-height:1.45}
+.st-svc b{color:var(--water)}
+
+/* ── the sticky ask ──────────────────────────────────────────────────────
+   ONE line, one ask, and it sits ABOVE the bottom tab bar, never over it:
+   navigation always wins. Dismissing it is remembered for the session, so
+   "no" is an answer and not a question we keep re-asking. */
+.stickycta{
+  position:fixed;left:0;right:0;bottom:0;z-index:940;
+  display:flex;align-items:stretch;
+  padding:9px 12px calc(9px + env(safe-area-inset-bottom,0px));
+  background:rgba(250,246,240,.94);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);
+  box-shadow:0 -6px 22px rgba(27,35,32,.09);
+}
+/* The entrance animates the CONTENTS, never the fixed shell. A transform on
+   the shell itself is a loaded gun: any environment where the animation
+   frame never fires (a backgrounded tab, a throttled phone, the headless
+   pane this was tested in) freezes it at translateY(105%) and parks the ask
+   squarely on top of the bottom navigation. Animating the inside can't move
+   the shell, so the worst frozen frame is a slightly low button. */
+.stickycta .sc-main,.stickycta .sc-x{animation:barUp .3s cubic-bezier(.2,.8,.3,1)}
+@keyframes barUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.stickycta.bar-hidden{display:none}
+.sc-main{
+  flex:1;min-width:0;display:flex;align-items:center;gap:12px;
+  padding:10px 16px;border-radius:999px;border:none;cursor:pointer;
+  background:var(--gold);color:#fff;text-align:left;
+  box-shadow:0 3px 14px rgba(200,137,47,.34);
+}
+.sc-txt{min-width:0;flex:1}
+.sc-txt b{display:block;font-size:14.5px;font-weight:800;line-height:1.2}
+.sc-txt small{
+  display:block;font-size:11.5px;opacity:.9;line-height:1.35;margin-top:1px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.sc-go{flex:none;display:flex;width:26px;height:26px}
+.sc-go svg{width:100%;height:100%}
+.sc-x{
+  flex:none;width:38px;margin-left:6px;border:none;background:transparent;
+  color:var(--muted);font-size:15px;cursor:pointer;border-radius:10px;
+}
+.sc-x:active{background:var(--sand-2)}
+/* On phones the tab bar owns the bottom edge and the ask rides on top of it.
+   The offset is NOT written here: fitStickyBar() measures the real tab bar
+   and sets `bottom` inline, because the height moves with font scaling,
+   notches and any future tab, and a guess put the ask over the navigation.
+   --bar-space is written by the same function, so the last card clears the
+   bar exactly, whatever the two of them actually measure. */
+@media(max-width:640px){
+  .stickycta{padding-bottom:9px}
+  /* --bar-space already counts the tab bar AND the ask. Dismiss the ask and
+     the variable is removed, so this falls back to clearing the tabs alone. */
+  .view{padding-bottom:var(--bar-space, 92px)}
+}
+
+/* ── welcome: the second door ────────────────────────────────────────────── */
+.wc-alt{
+  display:block;width:100%;margin-top:9px;padding:11px;border-radius:999px;
+  background:transparent;border:1px solid rgba(255,255,255,.42);color:#fff;
+  font-size:13.5px;font-weight:600;cursor:pointer;
+}
+.wc-alt:active{background:rgba(255,255,255,.12)}

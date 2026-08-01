@@ -70,17 +70,45 @@ window.Analytics = (() => {
     } catch {}
   }
 
-  /* -------------------------------------------------------------- subscribe */
-  function subscribe(email) {
+  /* -------------------------------------------------------------- subscribe
+     `trip` is optional: { trip_month, trip_days, source }. It is the whole
+     reason the email is worth having, so it is sent two ways.
+
+     1. As real columns on `subscribers`, if they exist. Run the ALTER TABLE
+        at the bottom of delivery/backend-schema.sql once and they do.
+     2. If they DON'T exist yet, PostgREST rejects the whole insert with a
+        400 rather than ignoring the unknown column, which would silently
+        break every email signup on the site the moment this shipped. So a
+        400 is caught and retried with email + device_id only: the address is
+        never lost to a migration nobody has run yet.
+
+     Either way app.js has already fired a `trip_intent` event, and events
+     take any shape, so the dates are recorded even in case 2. */
+  function subscribe(email, trip) {
     if (!enabled) return Promise.resolve({ ok: false, error: "No backend configured." });
     email = String(email || "").trim().toLowerCase();
     if (!email || email.indexOf("@") < 1) return Promise.resolve({ ok: false, error: "Enter a valid email." });
-    return post("subscribers", { email: email, device_id: deviceId() })
-      .then(res => {
-        if (res.ok || res.status === 409) return { ok: true };  // 409 = already on the list. Still a yes.
-        return { ok: false, error: "Couldn't subscribe (" + res.status + "). Try again later." };
-      })
+
+    const base = { email: email, device_id: deviceId() };
+    const full = Object.assign({}, base);
+    if (trip) {
+      if (trip.trip_month) full.trip_month = String(trip.trip_month).slice(0, 20);
+      if (trip.trip_days)  full.trip_days  = String(trip.trip_days).slice(0, 20);
+      if (trip.source)     full.source     = String(trip.source).slice(0, 40);
+    }
+    const settle = res => {
+      if (res.ok || res.status === 409) return { ok: true };   // 409 = already listed. Still a yes.
+      return { ok: false, error: "Couldn't subscribe (" + res.status + "). Try again later." };
+    };
+    const bare = () => post("subscribers", base).then(settle);
+
+    if (full === base || Object.keys(full).length === Object.keys(base).length) return bare()
       .catch(() => ({ ok: false, error: "Couldn't reach the server. Check your connection." }));
+
+    return post("subscribers", full)
+      .then(res => (res.status === 400 || res.status === 404) ? bare() : settle(res))
+      .catch(() => bare().catch(() =>
+        ({ ok: false, error: "Couldn't reach the server. Check your connection." })));
   }
 
   /* ------------------------------------------------------------------ review

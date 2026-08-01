@@ -18,11 +18,23 @@
 
 const Unlock = (() => {
 
-  // ONE product. One key. It unlocks everything ("*"), spots, itineraries and
-  // the Planner. (There used to be nine per-tab products; the tabs merged into
-  // Explore + Salalah, so the products merged into one.)
+  /* WHAT EACH PRODUCT UNLOCKS. Key = the name in meta.buyLinks, value = the
+     grant string stored on the device.
+
+       "*"                 everything, forever: every spot, every plan, the
+                           Planner, Salalah when it lands
+       "basic"             the locked spots + the plans in meta.basicItineraries
+       "itin:<id>"         that one itinerary and nothing else
+
+     `bundle` is the original single product and still grants "*", so every
+     licence sold or gifted before the tiers existed keeps working. */
   const GRANTS = {
-    bundle: "*"
+    bundle:  "*",
+    premium: "*",
+    basic:   "basic",
+    "itin-escape-3day":  "itin:escape-3day",
+    "itin-classic-5day": "itin:classic-5day",
+    "itin-loop-7day":    "itin:loop-7day"
   };
 
   // "https://hussain.gumroad.com/l/oman-bundle?x=1"  →  "oman-bundle"
@@ -86,6 +98,21 @@ const Unlock = (() => {
   function hasBundle()      { return FREE_LAUNCH() || state.grants.includes("*"); }
   function has(category)    { return hasBundle() || state.grants.includes(category); }
   function isAnythingOwned(){ return state.grants.length > 0; }
+
+  /* One exact grant, WITHOUT the free-launch and "*" shortcuts folded in.
+     app.js needs the raw answer to decide what a $9.99 Guide holder can see
+     versus a Full Kit holder; hasBundle() would say yes to both. */
+  function hasGrant(g)      { return state.grants.includes(g); }
+
+  /* Human label for what this device owns, for the header pill and the
+     "you're unlocked" panel. Most-to-least, first match wins. */
+  function tierName() {
+    if (state.grants.includes("*")) return "The Full Kit";
+    if (state.grants.includes("basic")) return "The Guide";
+    const n = state.grants.filter(g => g.indexOf("itin:") === 0).length;
+    if (n) return n + (n === 1 ? " plan" : " plans");
+    return "";
+  }
   function grants()         { return state.grants.slice(); }
   function key()            { return state.key; }
   function email()          { return state.email; }   // buyer email from Gumroad (analytics)
@@ -189,5 +216,5 @@ const Unlock = (() => {
     return Promise.resolve();
   }
 
-  return { has, hasBundle, isAnythingOwned, grants, key, email, verify, reset, init, loadPremium, detail, products };
+  return { has, hasBundle, hasGrant, tierName, isAnythingOwned, grants, key, email, verify, reset, init, loadPremium, detail, products };
 })();

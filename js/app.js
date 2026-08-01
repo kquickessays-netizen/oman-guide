@@ -295,8 +295,32 @@
     return `<p class="body">${esc(v)}</p>`;
   }
 
-  /* One product now: a key unlocks everything. */
-  const isUnlocked = item => item.free || Unlock.hasBundle();
+  /* ------------------------------------------------------------ who sees what
+     Three products, so "is this unlocked?" is no longer one question.
+
+       free: true          everyone, always (the shop window)
+       freeLaunch / "*"    the Full Kit, or the free-launch season: everything
+       "basic"             every locked SPOT, plus the plans named in
+                           meta.basicItineraries (the 3-day)
+       "itin:<id>"         that one plan, bought on its own for $2.99
+
+     Order matters: the cheap, specific grants are checked last, so a Full Kit
+     holder never falls through to a per-plan check. */
+  function isUnlocked(item) {
+    if (item.free) return true;
+    if (Unlock.hasBundle()) return true;               // "*" or free launch
+    if ((item.cat || "") === "itineraries") {
+      if (Unlock.hasGrant("itin:" + item.id)) return true;
+      return Unlock.hasGrant("basic") &&
+             (D.meta.basicItineraries || []).indexOf(item.id) !== -1;
+    }
+    return Unlock.hasGrant("basic");                    // every locked spot
+  }
+
+  /* What it costs to open THIS thing, the smallest price that works. A plan
+     is $2.99 on its own; everything else needs the Guide. */
+  const priceFor = item =>
+    (item.cat || "") === "itineraries" ? D.meta.itineraryPrice : D.meta.bundlePrice;
 
   /* ------------------------------------------------------- saved & been-there
      Two id-lists in localStorage. No login: the phone remembers. Saved feeds
@@ -362,12 +386,17 @@
           <span class="price-tag">${D.meta.bundlePrice}</span>
         </div>
         <ul class="bulletlist">
-          <li>All <strong>${lockedCount()}</strong> locked spots: wadis, beaches, mountain villages and the south.</li>
-          <li>The ${(D.itineraries || []).filter(i => !i.free).map(i => i.name.replace(/^The\s+/i, "")).join(" and the ")}.</li>
-          <li><strong>The trip Planner</strong>, a route built around your days, pace and fitness.</li>
+          <li>All <strong>${D.spots.filter(s => !s.free).length}</strong> locked spots: wadis, beaches, mountain villages and the south.</li>
+          <li>The ${(D.meta.basicItineraries || []).map(id => {
+                const p = (D.itineraries || []).find(x => x.id === id);
+                return p ? p.name.replace(/^The\s+/i, "") : id;
+              }).join(" and the ")}, hour by hour, with the costs receipt.</li>
           <li>New spots and re-checked prices every month. No subscription.</li>
+          <li>The big routes and the trip Planner are in
+              <strong>${esc((D.meta.tiers && D.meta.tiers.premium && D.meta.tiers.premium.name) || "the Full Kit")}</strong>,
+              ${esc((D.meta.tiers && D.meta.tiers.premium && D.meta.tiers.premium.price) || "$19.99")}.</li>
         </ul>
-        <a class="btn-buy gold" href="${D.meta.buyLinks.bundle}" target="_blank" rel="noopener">Get the full guide, ${D.meta.bundlePrice}</a>
+        <a class="btn-buy gold" href="${buyUrl("basic") || buyUrl("bundle") || "#/shop"}"${buyUrl("basic") || buyUrl("bundle") ? ` target="_blank" rel="noopener"` : ""}>Get the Guide, ${D.meta.bundlePrice}</a>
         <p class="price-fine">One key. Works on any phone, paste it again if you switch.</p>
         <p class="price-trust">🔒 Secure checkout through Gumroad, they handle the payment, I never see your card.
            Not what you expected? Email me within 14 days and I'll refund it, no argument.</p>
@@ -426,7 +455,7 @@
           <span class="bn-ic" aria-hidden="true">🗺️</span>
           <span><strong>${esc(planNames)}</strong>
             <small>Hour by hour, every stop tappable, each with a costs receipt at the
-                   bottom. The free 1-day and 3-day plans stay free.</small></span>
+                   bottom. The 1-day plan stays free, it's the sample.</small></span>
         </div>
         <div class="bn-item">
           <span class="bn-ic" aria-hidden="true">🧭</span>
@@ -480,64 +509,243 @@
     return w;
   }
 
+  /* ========================================================== TRIP CAPTURE
+     THE most important twelve lines in the app.
+
+     An email address on its own tells you nothing: it is a stranger who
+     liked a photo. An email with WHEN THEY ARE COMING is a customer with a
+     deadline, and the difference decides whether October is a launch or a
+     shrug. Somebody flying in six weeks wants the guide today. Somebody
+     idly scrolling in Berlin wants a reminder in the spring. Same address,
+     opposite emails, and you cannot tell them apart without this.
+
+     Two taps: a month and a trip length. Neither is required, because a
+     required field is a wall and half the point is getting the address at
+     all, but both are ONE TAP and pre-set to the likeliest answer, so most
+     people leave them filled in.
+
+     Reused everywhere something is locked or not yet sellable, so the ask is
+     identical in every corner of the app: the shop, the unlock modal, the
+     Salalah curtain, the sticky bar and every $2.99 plan. */
+
+  // The next 15 months, starting this one. A traveller planning further out
+  // than that is not a lead, they're a daydream.
+  function tripMonths() {
+    const M = ["January","February","March","April","May","June","July",
+               "August","September","October","November","December"];
+    const now = new Date();
+    const out = [];
+    for (let i = 0; i < 15; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+      out.push({ v: d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"),
+                 label: M[d.getMonth()] + " " + d.getFullYear() });
+    }
+    return out;
+  }
+
+  /* opts: { title, lead, cta, done, source, compact } */
+  function tripCapture(opts) {
+    opts = opts || {};
+    const w = el("div", "capture" + (opts.compact ? " capture-compact" : ""));
+    const months = tripMonths();
+    w.innerHTML = `
+      ${opts.title ? `<h3 class="cap-title">${esc(opts.title)}</h3>` : ""}
+      ${opts.lead ? `<p class="cap-lead">${opts.lead}</p>` : ""}
+      <label class="cap-q" for="capWhen">When are you coming?</label>
+      <div class="cap-row">
+        <select id="capWhen" class="cap-sel">
+          ${months.map(m => `<option value="${m.v}">${esc(m.label)}</option>`).join("")}
+          <option value="unsure">Not decided yet</option>
+        </select>
+      </div>
+      <span class="cap-q">How long?</span>
+      <div class="cap-chips" id="capDays">
+        ${[["3","A long weekend"],["5","About 5 days"],["7","A week"],["10","10 days or more"]]
+          .map(([v, l], i) => `<button type="button" class="cap-chip" data-v="${v}" aria-pressed="${i === 1}">${esc(l)}</button>`).join("")}
+      </div>
+      <div class="subrow cap-send">
+        <input type="email" id="capEmail" placeholder="you@email.com" autocomplete="email" inputmode="email">
+        <button class="pill" id="capBtn">${esc(opts.cta || "Send it to me")}</button>
+      </div>
+      <div id="capMsg"></div>
+      <p class="cap-fine">No spam, no list swapping. One email when it lands, and the
+         founding price when it does.</p>`;
+
+    let days = "5";
+    const chips = w.querySelectorAll(".cap-chip");
+    chips.forEach(c => c.onclick = () => {
+      days = c.dataset.v;
+      chips.forEach(x => x.setAttribute("aria-pressed", String(x === c)));
+    });
+
+    const send = async () => {
+      const em = w.querySelector("#capEmail").value.trim();
+      const msg = w.querySelector("#capMsg");
+      if (!/^\S+@\S+\.\S+$/.test(em)) {
+        msg.innerHTML = `<div class="msg err">That doesn't look like an email.</div>`;
+        return;
+      }
+      const when = w.querySelector("#capWhen").value;
+      const btn = w.querySelector("#capBtn");
+      btn.disabled = true; btn.textContent = "Sending…";
+      const trip = { trip_month: when, trip_days: days, source: opts.source || "shop" };
+      // Always log the intent as an event too. Events take any shape, so the
+      // dates survive even on a database that predates the trip columns.
+      if (window.Analytics) Analytics.track("trip_intent", trip);
+      const r = await Analytics.subscribe(em, trip);
+      btn.disabled = false; btn.textContent = opts.cta || "Send it to me";
+      if (r.ok) {
+        const m = months.find(x => x.v === when);
+        msg.innerHTML = `<div class="msg ok">${esc(opts.done ||
+          (m ? "You're on the list. I'll have this with you well before " + m.label + ". 🇴🇲"
+             : "You're on the list. 🇴🇲"))}</div>`;
+        w.querySelector(".cap-send").hidden = true;
+      } else {
+        msg.innerHTML = `<div class="msg err">Couldn't sign you up, try again in a bit.</div>`;
+      }
+    };
+    w.querySelector("#capBtn").onclick = send;
+    w.querySelector("#capEmail").onkeydown = e => { if (e.key === "Enter") send(); };
+    return w;
+  }
+
   /* ----------------------------------------------------------- free launch
      While meta.freeLaunch is true the guide is fully open. Instead of buy
-     buttons, the ask is an EMAIL: join the founding-explorer list before the
-     paywall lands in October. One box, reused everywhere. */
+     buttons, the ask is an EMAIL AND A DATE: join the founding-explorer list
+     before the paywall lands in October. One box, reused everywhere. */
   function launchBox() {
     const w = el("div", "launchbox");
     w.innerHTML = `
       <div class="launch-badge">🎁 Launch season, the whole guide is free</div>
       <p>Every spot, every itinerary and the trip Planner, free through the khareef.
-         <strong>In October it becomes a paid guide</strong> for the winter season.</p>
-      <p class="launch-ask">Leave your email and you're a <strong>founding explorer</strong>: you get the
-         best price when it does.</p>
-      <div class="subrow">
-        <input type="email" id="lbEmail" placeholder="you@email.com" autocomplete="email">
-        <button class="pill" id="lbBtn">Save my founding price</button>
-      </div>
-      <div id="lbMsg"></div>`;
-    w.querySelector("#lbBtn").onclick = async () => {
-      const em = w.querySelector("#lbEmail").value.trim();
-      const msg = w.querySelector("#lbMsg");
-      if (!/^\S+@\S+\.\S+$/.test(em)) { msg.innerHTML = `<div class="msg err">That doesn't look like an email.</div>`; return; }
-      const r = await Analytics.subscribe(em);
-      msg.innerHTML = r.ok ? `<div class="msg ok">You're in, founding explorer. 🇴🇲</div>`
-                           : `<div class="msg err">Couldn't sign you up, try again in a bit.</div>`;
-    };
+         <strong>In October it becomes a paid guide</strong> for the winter season.</p>`;
+    w.appendChild(tripCapture({
+      lead: "Tell me when you're coming and you're a <strong>founding explorer</strong>: " +
+            "the best price when it goes paid, and I'll time it to your trip.",
+      cta: "Save my founding price",
+      done: "You're in, founding explorer. 🇴🇲",
+      source: "launch"
+    }));
     return w;
   }
 
-  /* ------------------------------------------------------- plan-my-trip form
-     "Book me": travellers leave their details and what they're planning;
-     Hussain gets the lead (Supabase `bookings`, or an email until the
-     backend is on) and contacts them to plan the trip personally. */
-  function bookBox() {
+  /* ================================================= plan my trip for me
+     PRODUCT THREE, and the only one nobody can copy: a real Omani guide who
+     answers. An app can be rebuilt in a weekend; you cannot.
+
+     It is priced by GROUP SIZE, because a route for two and a route for
+     eight are not the same job. Pick a size, the price changes, and the
+     WhatsApp message is pre-written with the size and the dates already in
+     it, so the traveller's first message is a brief instead of "hi".
+
+     While a tier's `price` is "" (they ship empty on purpose, the prices are
+     Hussain's to set) the card says he'll quote on WhatsApp, and every
+     button still works. Fill in meta.planService.tiers[].price and the
+     numbers appear here, on the shop and on the sticky bar. */
+
+  // "+968 7921 8186" → wa.me link with the message already typed.
+  function waLink(text) {
+    const num = (D.meta.planService && D.meta.planService.whatsapp || "").replace(/\D/g, "");
+    if (!num) return null;
+    return "https://wa.me/" + num + (text ? "?text=" + encodeURIComponent(text) : "");
+  }
+
+  function bookBox(opts) {
+    opts = opts || {};
+    const svc = D.meta.planService || {};
+    const tiers = svc.tiers || [];
     const w = el("div", "bookbox");
+    let tier = tiers[0] || null;
+
+    const priceLine = t =>
+      t && t.price ? `<b class="bk-price">${esc(t.price)}</b>`
+                   : `<b class="bk-price bk-quote">I'll quote you</b>`;
+
     w.innerHTML = `
       <h3>🤝 Want me to plan it for you?</h3>
-      <p>Tell me your dates and what you want to see. I'll send back a route, and
-         answer whatever you ask before you book anything.</p>
+      <p>Tell me your dates and what you want, and I'll send back a real route:
+         the order, the drives, where to sleep, what it costs. Then I answer
+         whatever you ask before you book anything.</p>
+
+      ${tiers.length ? `
+      <span class="bk-q">Who's coming?</span>
+      <div class="bk-tiers" id="bkTiers">
+        ${tiers.map((t, i) => `
+          <button type="button" class="bk-tier" data-i="${i}" aria-pressed="${i === 0}">
+            <span class="bk-t-label">${esc(t.label)}</span>
+            <span class="bk-t-sub">${esc(t.sub || "")}</span>
+            <span class="bk-t-price">${t.price ? esc(t.price) : "quote"}</span>
+          </button>`).join("")}
+      </div>` : ""}
+
       <div class="bookgrid">
         <input id="bkName" maxlength="80" placeholder="Your name">
         <input id="bkContact" maxlength="120" placeholder="Email or WhatsApp number">
         <input id="bkDates" maxlength="80" placeholder="When? (e.g. 12–19 Dec, or 'flexible')">
-        <input id="bkGroup" maxlength="40" placeholder="Who's coming? (e.g. couple, family of 5)">
+        <input id="bkGroup" maxlength="40" placeholder="How many of you?">
       </div>
       <textarea id="bkNote" maxlength="1000" rows="3" placeholder="What do you want from the trip? Wadis, desert, culture, kids along, fitness level, budget…"></textarea>
-      <button type="button" class="rate-send" id="bkSend">Request my trip plan</button>
-      <p class="book-fine">I reply personally, usually within 48 hours.</p>
+
+      <div class="bk-actions">
+        ${waLink("") ? `<a class="bk-wa" id="bkWa" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.94.53 3.76 1.45 5.32L2 22l4.98-1.6a9.8 9.8 0 0 0 5.06 1.4h.01c5.43 0 9.84-4.4 9.84-9.84 0-2.63-1.03-5.1-2.9-6.96A9.75 9.75 0 0 0 12.04 2Zm5.76 13.9c-.24.68-1.42 1.32-1.95 1.36-.5.05-.98.24-3.3-.69-2.78-1.1-4.55-3.95-4.69-4.13-.13-.19-1.12-1.5-1.12-2.86 0-1.36.71-2.03.96-2.3.25-.28.55-.35.73-.35.18 0 .37 0 .53.01.17.01.4-.06.62.48.24.57.8 1.97.87 2.11.07.14.12.31.02.5-.1.19-.14.31-.28.47-.14.17-.3.37-.42.5-.14.14-.29.29-.12.57.16.28.73 1.2 1.56 1.95 1.08.96 1.98 1.26 2.26 1.4.28.14.45.12.61-.07.17-.19.7-.81.89-1.09.19-.28.37-.23.62-.14.25.09 1.65.78 1.93.92.28.14.47.21.54.33.07.11.07.66-.17 1.34Z"/></svg>
+          <span id="bkWaTxt">Message me on WhatsApp</span>
+        </a>` : ""}
+        <button type="button" class="rate-send" id="bkSend">Send it as a form instead</button>
+      </div>
+      <p class="book-fine">I reply personally, ${esc(svc.replyTime || "usually within 48 hours")}.
+         ${svc.whatsappLabel ? esc(svc.whatsappLabel) : ""}</p>
+      <div class="bk-priceline">${tiers.length ? `Your price: ${priceLine(tier)}
+        <small id="bkPriceSub">${esc(tier && tier.sub || "")}</small>` : ""}</div>
       <div id="bkMsg"></div>`;
+
+    const val = id => { const n = w.querySelector(id); return n ? n.value.trim() : ""; };
+
+    /* The WhatsApp message writes itself from whatever they've typed. An
+       empty first message gets a slow reply; a brief gets a fast one. */
+    const waText = () => {
+      const bits = ["Hi Hussain, I'd like you to plan my Oman trip."];
+      if (tier) bits.push("Group: " + tier.label + (tier.sub ? " (" + tier.sub + ")" : ""));
+      if (val("#bkDates")) bits.push("Dates: " + val("#bkDates"));
+      if (val("#bkGroup")) bits.push("How many: " + val("#bkGroup"));
+      if (val("#bkNote")) bits.push("What we want: " + val("#bkNote"));
+      bits.push("(from exploresoman.com)");
+      return bits.join("\n");
+    };
+    const syncWa = () => {
+      const a = w.querySelector("#bkWa");
+      if (a) a.href = waLink(waText()) || "#";
+    };
+
+    const tierRow = w.querySelector("#bkTiers");
+    if (tierRow) {
+      tierRow.querySelectorAll(".bk-tier").forEach(b => b.onclick = () => {
+        tier = tiers[+b.dataset.i];
+        tierRow.querySelectorAll(".bk-tier").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+        const pl = w.querySelector(".bk-priceline");
+        if (pl) pl.innerHTML = `Your price: ${priceLine(tier)}<small>${esc(tier.sub || "")}</small>`;
+        syncWa();
+      });
+    }
+    w.querySelectorAll("input,textarea").forEach(i => i.addEventListener("input", syncWa));
+    syncWa();
+    if (w.querySelector("#bkWa")) {
+      w.querySelector("#bkWa").addEventListener("click", () => {
+        if (window.Analytics) Analytics.track("whatsapp_click", { tier: tier && tier.id, source: opts.source || "plan" });
+      });
+    }
+
     w.querySelector("#bkSend").onclick = async () => {
-      const val = id => w.querySelector(id).value.trim();
       const data = { name: val("#bkName"), contact: val("#bkContact"),
-                     dates: val("#bkDates"), group: val("#bkGroup"), note: val("#bkNote") };
+                     dates: val("#bkDates"),
+                     group: (tier ? tier.label + " · " : "") + val("#bkGroup"),
+                     note: val("#bkNote") };
       const msg = w.querySelector("#bkMsg");
       if (!data.name || !data.contact) {
         msg.innerHTML = `<div class="msg err">I need at least your name and a way to reach you.</div>`;
         return;
       }
-      if (window.Analytics) Analytics.track("book_click", {});
+      if (window.Analytics) Analytics.track("book_click", { tier: tier && tier.id, source: opts.source || "plan" });
       if (window.Analytics && Analytics.enabled) {
         const r = await Analytics.book(data);
         msg.innerHTML = r.ok
@@ -606,17 +814,22 @@
   function renderUnlockBtn() {
     const b = $("#unlockBtn");
     /* The top-right slot is the only always-visible action in the app, so it
-       has to ASK for something. "🎁 Free launch" announced a state: nothing to
-       press, nothing to want. During the free run the thing worth asking for
-       is the email (the founding price); after it, the sale. */
-    if (D.meta.freeLaunch) {
-      b.textContent = "Get it free →";
-      b.className = "pill pill-cta";
+       has to ASK for something, and it has to ask the RIGHT thing.
+
+       It used to say "Get it free →" on a site where everything is already
+       free, which is a download button for something the reader already has:
+       it announced a state instead of opening a door. What the app actually
+       wants from a stranger is not a click, it is a TRIP: who they are and
+       when they're coming. So the always-visible button asks exactly that,
+       and lands on the shop, where all three products and the date capture
+       live. Once someone owns something, it goes back to reporting that. */
+    if (Unlock.isAnythingOwned() && !D.meta.freeLaunch) {
+      b.textContent = "✓ " + (Unlock.tierName() || "Unlocked");
+      b.className = "pill pill-unlocked";
       return;
     }
-    if (Unlock.hasBundle()) { b.textContent = "✓ Full access"; b.className = "pill pill-unlocked"; }
-    else if (Unlock.isAnythingOwned()) { b.textContent = "✓ " + Unlock.grants().length + " unlocked"; b.className = "pill pill-unlocked"; }
-    else { b.textContent = "Unlock"; b.className = "pill pill-ghost"; }
+    b.textContent = "Planning a trip? →";
+    b.className = "pill pill-cta";
   }
 
   /* ----------------------------------------------------------- living line
@@ -734,14 +947,20 @@
         if (sl) body.insertAdjacentHTML("beforeend", sl);
         // (blurb + full stats live in the sheet, cards stay short)
       } else {
-        // Compact locked card: one strip, one line, one button. The full
-        // sales pitch lives in the price block ONCE per tab, not on all 40+
-        // locked cards, that's what made the feed feel endless.
+        /* Compact locked card: one strip, one line, one button. The full
+           sales pitch lives in the shop ONCE, not on all 40+ locked cards,
+           that's what made the feed feel endless.
+
+           The PRICE is the item's own cheapest route in, not the bundle's:
+           a plan says $2.99, a spot says $9.99. Quoting $9.99 on a $2.99
+           plan is the difference between an impulse and a decision. */
         const row = el("div", "lock-row");
+        const isPlan = (item.cat || "") === "itineraries";
         row.appendChild(el("span", "lock-row-txt",
+          isPlan ? `Full plan, hour by hour` :
           `Hidden ${singularOf(item)}${lockNum ? " #" + lockNum : ""} · in the paid guide`));
-        const go = el("button", "lock-row-btn", `Unlock ${D.meta.bundlePrice}`);
-        go.onclick = e => { e.stopPropagation(); openUnlock(); };
+        const go = el("button", "lock-row-btn", `Unlock ${priceFor(item)}`);
+        go.onclick = e => { e.stopPropagation(); location.hash = "#/shop"; };
         row.appendChild(go);
         body.appendChild(row);
       }
@@ -1480,6 +1699,7 @@
     $("#sheet").hidden = false;
     $("#sheetBackdrop").hidden = false;
     document.body.style.overflow = "hidden";
+    barVisible(false);
     $("#sheet").scrollTop = 0;
     if (window.Analytics) Analytics.track("spot", { id: item.id, cat: item.cat || "itineraries" });
   }
@@ -1499,6 +1719,7 @@
     $("#sheet").hidden = true;
     $("#sheetBackdrop").hidden = true;
     document.body.style.overflow = "";
+    barVisible(true);
   }
 
   /* ----------------------------------------------------------------- unlock */
@@ -1512,6 +1733,8 @@
       b.querySelector("#lbHere").appendChild(launchBox());
       b.querySelector("#doneBtn").onclick = closeModal;
       $("#modalBackdrop").hidden = false;
+      document.body.style.overflow = "hidden";
+      barVisible(false);
       return;
     }
     if (Unlock.isAnythingOwned()) {
@@ -1562,11 +1785,13 @@
     }
     $("#modalBackdrop").hidden = false;
     document.body.style.overflow = "hidden";
+    barVisible(false);
   }
 
   function closeModal() {
     $("#modalBackdrop").hidden = true;
     document.body.style.overflow = "";
+    barVisible(true);
   }
 
   /* ---------------------------------------------------------------- category */
@@ -2172,26 +2397,270 @@
     // has told you exactly what they want; the email box already exists as a
     // component, so ask them here rather than showing a curtain and a shrug.
     if (window.Analytics) {
+      // Same ask as everywhere else, dates included. Anyone tapping Salalah
+      // has already told you what they want; the khareef is a six-week
+      // window, so WHEN they're coming decides whether this email is worth
+      // sending at all.
       const cap = el("div", "soon-capture");
-      cap.innerHTML = `
-        <h3>Want it the day it lands?</h3>
-        <p>Salalah is the khareef trip, and the season is short. Leave your email
-           and I'll tell you the moment the Dhofar spots go live.</p>
-        <div class="subrow">
-          <input type="email" id="soonEmail" placeholder="you@email.com" autocomplete="email">
-          <button class="pill" id="soonBtn">Tell me when</button>
-        </div>
-        <div id="soonMsg"></div>`;
-      cap.querySelector("#soonBtn").onclick = async () => {
-        const em = cap.querySelector("#soonEmail").value.trim();
-        const msg = cap.querySelector("#soonMsg");
-        if (!/^\S+@\S+\.\S+$/.test(em)) { msg.innerHTML = `<div class="msg err">That doesn't look like an email.</div>`; return; }
-        const r = await Analytics.subscribe(em);
-        msg.innerHTML = r.ok ? `<div class="msg ok">Done. You'll hear from me when Salalah lands. 🌴</div>`
-                             : `<div class="msg err">Couldn't sign you up, try again in a bit.</div>`;
-      };
+      cap.appendChild(tripCapture({
+        title: "Want it the day it lands?",
+        lead: "Salalah is the khareef trip and the season is short. Tell me when you're going and I'll have the Dhofar spots with you before it.",
+        cta: "Tell me when",
+        done: "Done. You'll hear from me when Salalah lands. 🌴",
+        source: "salalah"
+      }));
       view.appendChild(cap);
     }
+  }
+
+  /* ============================================================== THE SHOP
+     #/shop. Everything that costs money, in one place, in one order.
+
+     Why a screen and not a sixth tab: the bottom bar already carries five,
+     which is the most a phone can hold without the labels turning to mush,
+     and a shop tab would compete with Plan for the same thumb. This is
+     reached from the header button, the sticky bar and every lock in the
+     app, which between them are far more entrances than a tab would be.
+
+     Three products, cheapest first, because a ladder only works upward:
+       $2.99  one plan          →  $9.99  the Guide  →  $19.99  the Full Kit
+     and then the one thing no download can do: me, on WhatsApp.
+
+     HONESTY RULE, and it is not optional: while meta.freeLaunch is on the
+     whole guide really is free, so this screen says so at the top and every
+     price is labelled as what it becomes in October. Showing a price for
+     something a reader can already have for nothing is how you lose them. */
+
+  // A live Gumroad link, or null while the permalink is still a placeholder.
+  function buyUrl(name) {
+    const u = (D.meta.buyLinks || {})[name] || "";
+    return /^https?:/i.test(u) && !/\/l\/YOUR-/i.test(u) ? u : null;
+  }
+
+  function productCard(o) {
+    const c = el("div", "prod" + (o.cls ? " " + o.cls : ""));
+    c.innerHTML = `
+      <div class="prod-head">
+        <div class="prod-name">
+          <h3>${esc(o.name)}</h3>
+          ${o.badge ? `<span class="prod-badge${o.badgeCls ? " " + o.badgeCls : ""}">${esc(o.badge)}</span>` : ""}
+        </div>
+        <div class="prod-price"><b>${esc(o.price)}</b><small>${esc(o.priceSub || "one time")}</small></div>
+      </div>
+      ${o.lead ? `<p class="prod-lead">${esc(o.lead)}</p>` : ""}
+      <ul class="prod-list">${(o.items || []).map(i => `<li>${i}</li>`).join("")}</ul>
+      ${(o.nots || []).length ? `<ul class="prod-list prod-nots">${o.nots.map(i => `<li>${i}</li>`).join("")}</ul>` : ""}
+      <div class="prod-action"></div>
+      ${o.fine ? `<p class="prod-fine">${o.fine}</p>` : ""}`;
+    const slot = c.querySelector(".prod-action");
+
+    if (o.url) {
+      const a = el("a", "btn-buy gold", o.cta);
+      a.href = o.url; a.target = "_blank"; a.rel = "noopener";
+      slot.appendChild(a);
+    } else {
+      // Not sellable yet. The button opens the date capture right here
+      // rather than going nowhere, so the reader's interest is caught at
+      // the exact moment they had it.
+      const b = el("button", "btn-buy gold", o.cta);
+      const box = el("div", "prod-capture");
+      box.hidden = true;
+      b.onclick = () => {
+        if (window.Analytics) Analytics.track("product_click", { product: o.track || o.name });
+        if (!box.children.length) {
+          box.appendChild(tripCapture({
+            lead: o.captureLead || "Tell me when you're coming and I'll email you the moment it opens, at the founding price.",
+            cta: "Tell me when it opens",
+            source: o.track || "shop"
+          }));
+        }
+        box.hidden = false;
+        b.hidden = true;
+        const inp = box.querySelector("#capEmail");
+        if (inp) inp.focus({ preventScroll: true });
+      };
+      slot.appendChild(b);
+      slot.appendChild(box);
+    }
+    return c;
+  }
+
+  /* The shop, compressed to one card. Lives at the foot of the Plan tab and
+     anywhere else that needs to point at the prices without becoming a price
+     list itself. Three rows, three numbers, one tap. */
+  function shopTeaser() {
+    const m = D.meta, T = m.tiers || {};
+    const b = T.basic || {}, p = T.premium || {};
+    const w = el("div", "shopteaser");
+    w.innerHTML = `
+      <h3>Three ways to get it</h3>
+      <div class="st-rows">
+        <div class="st-row"><b>${esc(m.itineraryPrice)}</b><span>One plan on its own</span></div>
+        <div class="st-row"><b>${esc(b.price || m.bundlePrice)}</b><span>${esc(b.name || "The Guide")}, every locked spot</span></div>
+        <div class="st-row"><b>${esc(p.price || "$19.99")}</b><span>${esc(p.name || "The Full Kit")}, plus the Planner · ${esc(p.opens || "October")}</span></div>
+        <div class="st-row st-svc"><b>You</b><span>I plan the whole trip with you, on WhatsApp</span></div>
+      </div>
+      <button type="button" class="btn-full st-go">See what's in each →</button>`;
+    w.querySelector(".st-go").onclick = () => (location.hash = "#/shop");
+    return w;
+  }
+
+  function renderShop() {
+    clearView();
+    const m = D.meta;
+    const T = m.tiers || {};
+    const basic = T.basic || {}, prem = T.premium || {};
+    const locked = D.spots.filter(s => !s.free).length;
+    const freeSpots = D.spots.length - locked;
+    const plans = D.itineraries || [];
+    const paidPlans = plans.filter(p => !p.free);
+    const inBasic = m.basicItineraries || [];
+    const nameOf = id => { const p = plans.find(x => x.id === id); return p ? p.name.replace(/^The\s+/i, "") : id; };
+
+    const head = el("div", "cat-head shop-head");
+    head.innerHTML = `<h1>Get the guide</h1>
+      <p class="shop-sub">Three ways to use this, from three rials to a route I write for you by hand.</p>`;
+    view.appendChild(head);
+
+    if (m.freeLaunch) {
+      view.appendChild(el("div", "shop-free",
+        `<strong>🎁 Right now, all of it is free.</strong> Every spot, every plan, the
+         Planner, nothing to pay and nothing to enter. These are the prices from
+         ${esc(prem.opens || "October")}. Leave your dates below and you keep the
+         founding price when they start.`));
+    }
+
+    /* ---- 1. the Guide, $9.99, live ------------------------------------- */
+    view.appendChild(productCard({
+      name: basic.name || "The Guide",
+      price: basic.price || m.bundlePrice,
+      badge: "Most people want this",
+      badgeCls: "best",
+      track: "basic",
+      lead: "The whole country, unlocked. The one to buy if you're coming once and want to get it right.",
+      items: [
+        `<b>All ${locked} locked spots.</b> The remote wadis, the empty beaches, the mountain villages. ${freeSpots} more stay free either way.`,
+        `<b>${esc(nameOf("escape-3day"))}</b>, hour by hour, with the costs receipt.`,
+        `<b>Every future update.</b> New spots and re-checked prices monthly. No subscription, nothing to renew.`,
+        `<b>Works with no signal.</b> Install it once and the whole guide, photos included, opens in a wadi with no bars.`
+      ],
+      nots: paidPlans.filter(p => inBasic.indexOf(p.id) === -1)
+        .map(p => `Not included: <b>${esc(p.name.replace(/^The\s+/i, ""))}</b>, ${esc(m.itineraryPrice)} on its own or in the Full Kit.`),
+      url: buyUrl("basic") || buyUrl("bundle"),
+      cta: (buyUrl("basic") || buyUrl("bundle")) ? `Get the Guide, ${basic.price}`
+           : m.freeLaunch ? "Lock my founding price" : "Tell me when it opens",
+      captureLead: m.freeLaunch
+        ? "It's free until " + esc(prem.opens || "October") + ", so there's nothing to buy today. Tell me when you're coming and I'll make sure you have it before you fly, at the founding price."
+        : "Checkout opens in a few days. Tell me when you're coming and you get it first, at the founding price.",
+      fine: "One key. Works on any phone, paste it again if you switch."
+    }));
+
+    /* ---- 2. the Full Kit, $19.99, October ------------------------------ */
+    view.appendChild(productCard({
+      name: prem.name || "The Full Kit",
+      price: prem.price,
+      badge: "Opens " + (prem.opens || "October"),
+      badgeCls: "soon",
+      cls: "prod-prem",
+      track: "premium",
+      lead: "Everything in the Guide, plus the two big routes and the machine that builds your own.",
+      items: [
+        `<b>Everything in ${esc(basic.name || "the Guide")}.</b>`,
+        ...paidPlans.filter(p => inBasic.indexOf(p.id) === -1)
+          .map(p => `<b>${esc(p.name.replace(/^The\s+/i, ""))}</b>, ${esc(p.tagline || "")}`),
+        `<b>The trip Planner.</b> Answer four questions and it builds your route: days clustered by region so you never backtrack, real drive times, heat-smart starts, every stop pinned.`,
+        `<b>Salalah and Dhofar</b> the day it lands, as a free update.`
+      ],
+      url: buyUrl("premium"),
+      cta: buyUrl("premium") ? `Get the Full Kit, ${prem.price}` : `Tell me when it opens`,
+      captureLead: "The Full Kit opens in " + esc(prem.opens || "October") + ". Leave your dates and you get first access at the founding price.",
+      fine: "One payment, no subscription. Every update after it is free."
+    }));
+
+    /* ---- 3. single plans, $2.99 ---------------------------------------- */
+    {
+      const box = el("div", "prod prod-singles");
+      box.innerHTML = `
+        <div class="prod-head">
+          <div class="prod-name"><h3>One plan on its own</h3></div>
+          <div class="prod-price"><b>${esc(m.itineraryPrice)}</b><small>each</small></div>
+        </div>
+        <p class="prod-lead">Know exactly how long you've got? Buy that day and nothing else.</p>`;
+      const row = el("div", "single-row");
+      /* "Yours" means BOUGHT, not "open because everything is open this
+         month". During the free launch every plan is readable, and tagging
+         them all ✓ yours on a screen headed $2.99 each reads as a bug. They
+         show their price and open on tap, which is the honest version of
+         both facts at once. */
+      const owns = p => !m.freeLaunch && isUnlocked(p);
+      paidPlans.forEach(p => {
+        const url = buyUrl("itin-" + p.id);
+        const open = isUnlocked(p);                    // readable right now
+        const toShop = !open && !!url;                 // send them to checkout
+        const b = el(toShop ? "a" : "button", "single" + (owns(p) ? " single-own" : ""));
+        b.innerHTML = `<b>${esc(p.name.replace(/^The\s+/i, ""))}</b>
+                       <small>${esc((p.stats && p.stats.Days ? p.stats.Days + " days · " : "") + (p.tagline || ""))}</small>
+                       <span class="single-price">${owns(p) ? "✓ yours" : m.freeLaunch ? "free now" : esc(m.itineraryPrice)}</span>`;
+        if (toShop) {
+          b.href = url; b.target = "_blank"; b.rel = "noopener";
+        } else if (open) {
+          b.onclick = () => openSheet(p);
+        } else {
+          b.onclick = () => { if (window.Analytics) Analytics.track("product_click", { product: "itin:" + p.id }); openCapture(p.name); };
+        }
+        row.appendChild(b);
+      });
+      box.appendChild(row);
+      const freePlan = plans.find(p => p.free);
+      if (freePlan) {
+        const s = el("p", "prod-fine",
+          `<b>${esc(freePlan.name)}</b> is free and always will be: same timeline, same map, same receipt as the paid ones. Read it before you spend anything.`);
+        s.style.cursor = "pointer";
+        s.onclick = () => openSheet(freePlan);
+        box.appendChild(s);
+      }
+      view.appendChild(box);
+    }
+
+    /* ---- 4. plan my trip for me ---------------------------------------- */
+    view.appendChild(el("div", "shop-or", "or, the thing an app can't do"));
+    view.appendChild(bookBox({ source: "shop" }));
+
+    /* ---- 5. the capture, and the key ----------------------------------- */
+    view.appendChild(tripCapture({
+      title: "Not buying anything today?",
+      lead: "Fair enough. Tell me when you're coming and I'll send the guide before you fly, at the founding price. That's the whole email.",
+      cta: "Send it before I fly",
+      source: "shop"
+    }));
+
+    const kb = el("button", "btn-key", "I already have a key");
+    kb.onclick = openUnlock;
+    view.appendChild(kb);
+  }
+
+  /* The date capture as a modal, for the places that have no room for it:
+     a $2.99 plan tile, a lock row, the sticky bar. */
+  function openCapture(what) {
+    const b = $("#modalBody");
+    b.innerHTML = "";
+    const h = el("h2", null, what ? esc(what) : "Tell me when you're coming");
+    b.appendChild(h);
+    b.appendChild(tripCapture({
+      lead: (what ? "<b>" + esc(what) + "</b> opens with the paid guide in " +
+                    esc((D.meta.tiers && D.meta.tiers.premium && D.meta.tiers.premium.opens) || "October") + ". "
+                  : "") +
+            "Leave your dates and you get it first, at the founding price.",
+      cta: "Save my founding price",
+      source: "capture-modal"
+    }));
+    const done = el("button", "btn-full", "Keep exploring →");
+    done.style.marginTop = "12px";
+    done.onclick = closeModal;
+    b.appendChild(done);
+    $("#modalBackdrop").hidden = false;
+    document.body.style.overflow = "hidden";
+    barVisible(false);
   }
 
   function renderPlanner() {
@@ -2259,14 +2728,10 @@
              drive between each one. Change any answer and the whole day rebuilds.</p>
         </div>`;
       view.appendChild(p);
-      view.appendChild(bundleBox());
-      if (!D.meta.freeLaunch) {
-        view.appendChild(priceBlock(null, true));
-        const kb = el("button", "btn-key", "I have a key");
-        kb.style.marginTop = "12px";
-        kb.onclick = openUnlock;
-        view.appendChild(kb);
-      }
+      // Plan is the LANDING screen now, so it must not also be the shop: a
+      // stranger's first impression cannot be a price list. One line, three
+      // prices, one tap through to the room where they're explained.
+      view.appendChild(shopTeaser());
       return;
     }
 
@@ -3114,11 +3579,31 @@
     // #/map still resolves: renderMap() is kept for old links.
   };
 
+  /* WHERE A STRANGER LANDS. It used to be Explore, which opens on 138 cards:
+     impressive, and the wrong answer to the question they actually arrived
+     with. Nobody's first thought is "show me a hundred and thirty-eight
+     things"; it is "I have four days, what do I do with them". Plan answers
+     that, and Explore is one tap away in the bar for anyone who'd rather
+     browse. Change this one word to move the front door. */
+  const HOME = "plan";
+
   let lastCat = null;
   function route() {
-    let cat = location.hash.replace("#/", "") || "explore";
+    let cat = location.hash.replace("#/", "") || HOME;
+
+    /* The shop is a screen, not a tab: it has no slot in the bottom bar (five
+       is already the most a phone fits) and it keeps whichever tab you came
+       from highlighted, so buying never feels like leaving the guide. */
+    if (cat === "shop") {
+      applyRankTheme(); renderHud(); renderTabs(lastCat || HOME); renderUnlockBtn();
+      renderShop();
+      renderStickyBar();
+      window.scrollTo(0, 0);
+      return;
+    }
+
     if (!D.categories.find(c => c.id === cat) && LEGACY[cat]) cat = LEGACY[cat];
-    const known = D.categories.find(c => c.id === cat) ? cat : "explore";
+    const known = D.categories.find(c => c.id === cat) ? cat : HOME;
     if (known !== lastCat) { typeFilter = null; viewMode = "list"; lastCat = known; }  // fresh tab
     applyRankTheme();       // keep the skin in step with the rank, on every page
     renderHud();
@@ -3131,8 +3616,107 @@
     else if (meta.special === "info") renderInfo();
     else if (meta.special === "about") renderAbout();
     else renderCategory(known);
+    renderStickyBar();
     window.scrollTo(0, 0);
   }
+
+  /* ========================================================= THE STICKY BAR
+     The page is 22,000 pixels tall and, until this existed, the only thing
+     asking for anything sat at the very top of it, scrolled out of sight one
+     flick after landing. A reader thirty spots deep is the most interested
+     person on the site and had nothing to press.
+
+     Rules it obeys, all of them learned the expensive way:
+       - it sits ABOVE the bottom tab bar, never over it. The tab bar is
+         navigation and must never be covered.
+       - it is not "a control that follows the scroll" in the sense he hates:
+         the FILTER row must stay put, because losing your place in a list is
+         maddening. This is a single ask, one line tall, and it is the only
+         fixed thing besides the nav.
+       - closing it closes it for the session. Asked once, refused once,
+         that's an answer.
+       - it never appears over the shop (you're already there), over the
+         welcome, or while a sheet or modal is open.
+       - anyone who already owns something never sees it at all. */
+  let barDismissed = false;
+  try { barDismissed = sessionStorage.getItem("oman_bar_off") === "1"; } catch {}
+
+  function renderStickyBar() {
+    const old = $("#stickyCta");
+    if (old) old.remove();
+    if (barDismissed) return;
+    if (Unlock.isAnythingOwned() && !D.meta.freeLaunch) return;   // they've bought
+    if ((location.hash.replace("#/", "") || "") === "shop") return;
+
+    const svc = D.meta.planService || {};
+    const bar = el("div", "stickycta");
+    bar.id = "stickyCta";
+    bar.innerHTML = `
+      <button type="button" class="sc-main">
+        <span class="sc-txt">
+          <b>Planning a trip?</b>
+          <small>Tell me your dates, I'll send the guide before you fly</small>
+        </span>
+        <span class="sc-go" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5.5L18.5 12 12 18.5"/></svg>
+        </span>
+      </button>
+      <button type="button" class="sc-x" aria-label="Hide this">✕</button>`;
+
+    bar.querySelector(".sc-main").onclick = () => {
+      if (window.Analytics) Analytics.track("sticky_click", { from: location.hash.replace("#/", "") || HOME });
+      location.hash = "#/shop";
+    };
+    bar.querySelector(".sc-x").onclick = () => {
+      barDismissed = true;
+      try { sessionStorage.setItem("oman_bar_off", "1"); } catch {}
+      bar.remove();
+      document.documentElement.style.removeProperty("--bar-space");
+      if (window.Analytics) Analytics.track("sticky_dismiss", {});
+    };
+    document.body.appendChild(bar);
+    fitStickyBar();
+  }
+
+  /* MEASURE the tab bar, never guess it. The first version hardcoded 62px
+     from the CSS padding sums and the real bar renders at 80, so the ask sat
+     ON TOP of the navigation: the one thing this must never do. Heights move
+     with font scaling, notches and any future tab, so the only safe number
+     is the one the browser reports. Re-run on resize and on rotate.
+
+     The same measurement sets --bar-space, the tail padding under the page,
+     so the last card is never buried under the bar either. */
+  function fitStickyBar() {
+    const bar = $("#stickyCta");
+    if (!bar) {
+      document.documentElement.style.removeProperty("--bar-space");
+      return;
+    }
+    const tabs = $("#tabs");
+    // Phones dock the tabs to the bottom edge; desktop keeps them in the
+    // header, where the bottom edge is free and the ask sits on it.
+    const docked = tabs && getComputedStyle(tabs).position === "fixed";
+    const tabH = docked ? Math.round(tabs.getBoundingClientRect().height) : 0;
+    bar.style.bottom = tabH ? tabH + "px" : "0px";
+    document.documentElement.style.setProperty(
+      "--bar-space", (tabH + Math.round(bar.getBoundingClientRect().height) + 16) + "px");
+  }
+  // Rotating a phone, opening the keyboard and crossing the 640px breakpoint
+  // all change which of the two layouts is in force, so the measurement is
+  // taken again rather than trusted from the last one.
+  addEventListener("resize", fitStickyBar);
+  addEventListener("orientationchange", fitStickyBar);
+  if (window.matchMedia) {
+    const mq = matchMedia("(max-width:640px)");
+    if (mq.addEventListener) mq.addEventListener("change", fitStickyBar);
+  }
+  // The sheet and the modal own the screen while they're open; the bar hides
+  // under them rather than poking through the backdrop.
+  function barVisible(on) {
+    const b = $("#stickyCta");
+    if (b) b.classList.toggle("bar-hidden", !on);
+  }
+  window.__barVisible = barVisible;
 
   /* Re-draw the page UNDER the sheet, without scrolling it or closing anything.
      Saving a spot or ticking "been here" changes the rank ring and the card
@@ -3151,7 +3735,14 @@
   window.__refreshBehind = refreshBehind;
 
   /* -------------------------------------------------------------------- wire */
-  $("#unlockBtn").onclick = openUnlock;
+  /* The header button goes to the shop, where all three products and the
+     date capture live. Someone who already owns something wants the key
+     panel instead, which is what that button used to be for. */
+  $("#unlockBtn").onclick = () => {
+    if (Unlock.isAnythingOwned() && !D.meta.freeLaunch) return openUnlock();
+    if (window.Analytics) Analytics.track("header_cta", { from: location.hash.replace("#/", "") || HOME });
+    location.hash = "#/shop";
+  };
   $("#sheetClose").onclick = closeSheet;
   $("#sheetBackdrop").onclick = closeSheet;
   $("#modalClose").onclick = closeModal;
@@ -3228,10 +3819,17 @@
             <li>The drive, the walk in, the <b>entry fee</b> and the right month</li>
             <li>Day plans with <b>what they actually cost</b>, to the rial</li>
           </ul>
+          <!-- TWO doors, not one. The app lands on Plan now, so a single
+               button reading "show me the places" would promise a catalogue
+               and deliver a planner. More usefully, the two buttons ask the
+               only question that matters about a stranger: are you coming,
+               or are you looking? One tap sorts them, and each gets the
+               screen they actually wanted. -->
           <button type="button" class="wc-go">
-            <span>Show me the places</span>
+            <span>I'm planning a trip</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5.5L18.5 12 12 18.5"/></svg>
           </button>
+          <button type="button" class="wc-alt">Just show me the ${D.spots.length} places</button>
           <p class="wc-fine">Licensed Omani tour guide · 1M+ views on the wadi reels
              · free while it launches</p>
         </div>
@@ -3252,9 +3850,10 @@
       : "assets/welcome-hero.jpg";
 
     let closed = false;
-    const close = () => {
+    const close = (where) => {
       if (closed) return;
       closed = true;
+      if (where && location.hash.replace("#/", "") !== where) location.hash = "#/" + where;
       try { localStorage.setItem("oman_welcomed", "1"); } catch {}
       // .closing sets pointer-events:none, so from this instant the overlay
       // cannot intercept a tap even if its removal is delayed. That matters:
@@ -3268,9 +3867,10 @@
       setTimeout(kill, 400);                       // fallback if it never runs
       const s = $("#catSearch");
       if (s) s.focus({ preventScroll: true });
-      if (window.Analytics) Analytics.track("welcome", { action: "dismissed" });
+      if (window.Analytics) Analytics.track("welcome", { action: where || "dismissed" });
     };
-    w.querySelector(".wc-go").onclick = close;
+    w.querySelector(".wc-go").onclick = () => close("plan");
+    w.querySelector(".wc-alt").onclick = () => close("explore");
     w.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
 
     document.body.appendChild(w);

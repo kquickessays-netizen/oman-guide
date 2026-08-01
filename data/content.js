@@ -116,14 +116,71 @@ window.OMAN_DATA = {
     salalahComingSoon: true,
     plannerLocked: true,
 
-    // ONE product, ONE price, ONE key. It unlocks every locked spot, both extra
-    // itineraries and the Planner, forever, updates included. (There used to be
-    // nine per-tab guides; the tabs merged, so the products did too.)
-    // PRICING PLAN (see MONETIZATION.md): $9.99/OMR 3.9 is the LAUNCH INTRO
-    // ("first 100 buyers"). ~Week 5: raise to $14.99/OMR 4.9 here + on Gumroad
-    // + announce the raise (reliably the best sales day). 12-month target: $19.
+    /* ======================= THE THREE PRODUCTS =============================
+       Everything the app sells lives in this block and on the Shop screen
+       (#/shop). Change a price here and it changes on every card, every lock
+       row, the sticky bar and the shop, in one edit.
+
+         basic    $9.99   the 57 locked spots + the 3-day plan. LIVE NOW.
+         premium  $19.99  all of basic + the 5 and 7-day plans + the Planner
+                          + Salalah when it lands + every update. OCTOBER.
+         plans    $2.99   any single itinerary, bought on its own.
+                          The 1-day stays free forever, it is the sample.
+         service  ---     "plan my trip for me", priced by group size,
+                          answered personally on WhatsApp. See planService.
+
+       `live: false` = the product is announced but not sellable yet: the
+       button captures an email + their travel dates instead of opening a
+       checkout. Nothing in the app is ever a dead link. ==================== */
+    tiers: {
+      basic: {
+        name: "The Guide",
+        price: "$9.99",
+        priceNum: 9.99,
+        live: true,
+        note: "One payment. Yours forever."
+      },
+      premium: {
+        name: "The Full Kit",
+        price: "$19.99",
+        priceNum: 19.99,
+        live: false,
+        opens: "October",
+        note: "Everything, including the Planner."
+      }
+    },
+
+    // Any single itinerary, on its own. The 1-day plan is free and is not
+    // sold; it is the sample that proves the paid ones are worth it.
+    itineraryPrice: "$2.99",
+    itineraryPriceNum: 2.99,
+
+    // Which itineraries the $9.99 Guide includes. Everything not listed here
+    // (and not `free: true`) needs either the Full Kit or its own $2.99.
+    basicItineraries: ["escape-3day"],
+
+    // Kept as the alias the older price blocks read. It is the Guide's price.
     bundlePrice: "$9.99",
     bundlePriceNum: 9.99,
+
+    /* ------------------------------------------------- plan my trip for me
+       The one thing on this site that cannot be copied: you. A lead form
+       plus a one-tap WhatsApp with their dates and group already typed in.
+
+       ⚠️ PRICES ARE YOURS TO SET, so they ship EMPTY. While a `price` is ""
+       the card reads "I'll quote you on WhatsApp" and still works. Put a
+       number in and it appears everywhere instantly.
+       Suggested, if you want a starting point: 25 / 40 / 60 OMR. <<<          */
+    planService: {
+      whatsapp: "96879218186",          // international format, no + and no spaces
+      whatsappLabel: "+968 7921 8186",
+      replyTime: "usually within 48 hours",
+      tiers: [
+        { id: "solo",   label: "Solo or a couple", sub: "1–2 people",   price: "" },
+        { id: "family", label: "Family or friends", sub: "3–5 people",  price: "" },
+        { id: "group",  label: "A group",           sub: "6 or more",   price: "" }
+      ]
+    },
 
     // Shown in the banner at the top of every tab. Change the date each month, 
     // this line is the whole reason an app beats a PDF.
@@ -187,11 +244,25 @@ window.OMAN_DATA = {
       ]}
     ],
 
-    // >>> PASTE YOUR REAL GUMROAD LINK HERE, one product, that's it. <<<
-    //     js/unlock.js reads the permalink out of this URL, so there is
-    //     nothing else to edit anywhere. See delivery/GUMROAD-SETUP.md.
+    /* >>> PASTE YOUR REAL GUMROAD LINKS HERE. <<<
+       js/unlock.js reads the permalink out of each URL, so pasting a link is
+       the ONLY thing needed to make both the buy button and the licence-key
+       check work for that product. See delivery/GUMROAD-SETUP.md.
+
+       Anything still starting "YOUR-" is treated as not-yet-published: the
+       button becomes an email capture instead of a broken checkout, and the
+       key checker skips it. So a half-finished shop is never a broken shop.
+
+       `bundle` is the old single-product key and is kept so any licence you
+       have already sold or given out still unlocks everything.               */
     buyLinks: {
-      bundle: "https://gumroad.com/l/YOUR-BUNDLE"
+      bundle:  "https://gumroad.com/l/YOUR-BUNDLE",     // legacy "everything" key
+      basic:   "https://gumroad.com/l/YOUR-GUIDE",      // $9.99 The Guide
+      premium: "https://gumroad.com/l/YOUR-FULL-KIT",   // $19.99 The Full Kit
+      // one product per paid itinerary, $2.99 each
+      "itin-escape-3day": "https://gumroad.com/l/YOUR-3DAY",
+      "itin-classic-5day": "https://gumroad.com/l/YOUR-5DAY",
+      "itin-loop-7day": "https://gumroad.com/l/YOUR-7DAY"
     },
 
     // >>> AFFILIATE SLOTS, one link each, dropped in everywhere relevant.
@@ -5183,7 +5254,10 @@ window.OMAN_DATA = {
       }
     },
     {
-      id: "escape-3day", cat: "itineraries", free: true,
+      /* PAID from Aug 2026: included in the $9.99 Guide (meta.basicItineraries)
+         or $2.99 on its own. The 1-day plan above stays free forever, it is
+         the sample that shows this one is worth paying for. */
+      id: "escape-3day", cat: "itineraries", free: false,
       name: "The 3-Day Muscat & Wadis Escape",
       tagline: "The long weekend that covers the classics.",
       blurb: "One day for the capital, one for Wadi Tiwi and the Sur coast, one for Nizwa and the mountains. First-timer proof, any car, one hotel, no repacking. Shares no days with the 1-day plan: do both back to back and nothing repeats.",
