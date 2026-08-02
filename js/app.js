@@ -2589,7 +2589,10 @@
     const w = el("div", "soon");
     w.innerHTML = `
       <div class="soon-card">
-        <div class="soon-count"><b>${n}+</b><span>spots</span></div>
+        <div class="soon-count">
+          <b>${n}+</b><span>spots</span>
+          <i class="soon-palm" aria-hidden="true">🌴</i>
+        </div>
         <h1>Salalah &amp; Dhofar</h1>
         <p class="soon-lead">Late June to September the khareef turns the whole coast green.
            The rest of the year, empty beaches and the frankincense coast.</p>

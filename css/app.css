@@ -2144,6 +2144,15 @@ body.tier-flash{animation:ruFlash .7s ease-out}
   font-size:15px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
   color:var(--muted);
 }
+/* The palm sits at the far end of the count row, balancing the number's
+   weight instead of floating above it the way the old centred one did.
+   margin-left:auto rather than a fixed position, so it stays put whether
+   the count reads 30+ or 130+. */
+.soon-palm{
+  margin-left:auto;font-size:46px;line-height:1;font-style:normal;
+  align-self:center;flex:0 0 auto;
+}
+@media(max-width:400px){ .soon-palm{font-size:38px} }
 .soon-card h1{font-size:26px;letter-spacing:-.5px;margin:0 0 12px}
 .soon-lead{margin:0 0 16px !important;font-size:14.5px;line-height:1.62}
 
