@@ -60,8 +60,17 @@
                    Source: the reviews table in Supabase. Curation = moderation:
                    nothing appears in the app unless you paste it here.
      verify        true = researched from public sources, NOT yet confirmed by
-                   you. The app shows a small "confirm on the day" note.
-                   Set to false once you've checked it yourself.
+                   you. Kept for your own tracking; the reader no longer sees
+                   a different note either way (see `checked`).
+
+     checked       "Aug 2026". THE DATE ON THE SPOT, shown at the bottom of
+                   its sheet as "Checked Aug 2026. I re-check these monthly."
+                   Leave it out and the spot inherits meta.lastUpdated, which
+                   is what every spot does today. Set it per spot as you
+                   actually re-walk them, and the promise stops being one
+                   line in the footer and starts being 138 dated receipts.
+                   This is the single highest-value field in the file: it is
+                   the whole answer to "why is this an app and not a PDF".
    ========================================================================== */
 
 window.OMAN_DATA = {
@@ -94,17 +103,21 @@ window.OMAN_DATA = {
     //     fills the frame survives that size. <<<
     aboutPhoto: "assets/hussain.jpg",
 
-    // >>> FREE LAUNCH MODE <<<
-    // true  = the ENTIRE guide is free for everyone: all spots, itineraries
-    //         and the Planner. Buy buttons disappear; the ask everywhere
-    //         becomes "leave your email" (founding-explorer list) + reviews.
-    //         Use this phase to build users, emails and reviews through the
-    //         khareef, with Supabase tracking every step.
-    // false = the paywall is ON (normal paid mode).
-    // THE PLAN: flip to false in early October, before the Oct–Apr peak.
-    // Announce the flip as content ("the guide becomes paid on Friday"), and
-    // give the founding-explorer email list a discount code on day one.
-    freeLaunch: true,
+    /* >>> FREE LAUNCH MODE <<<
+       true  = the ENTIRE guide is free for everyone: all spots, itineraries
+               and the Planner, and every lock in the app disappears.
+       false = the paywall is ON. 80 of the 138 spots and 3 of the 4 plans
+               render as blurred, locked cards in the feed.
+
+       TURNED OFF 2 Aug 2026, deliberately, and this is the biggest single
+       change in the app. While it was true, NOTHING was ever shown locked,
+       which meant the whole paid guide was invisible: a reader scrolled 138
+       open cards and had no reason on earth to want anything else. You
+       cannot sell what nobody can see they are missing. The locked cards ARE
+       the shop window; the price block only explains what they already want.
+
+       Flip back to true and every lock lifts again, one word, no other edit. */
+    freeLaunch: false,
 
     // >>> HARD LOCKS, these override freeLaunch. <<<
     // salalahComingSoon: the Salalah tab shows a "coming soon" panel instead
@@ -184,7 +197,7 @@ window.OMAN_DATA = {
 
     // Shown in the banner at the top of every tab. Change the date each month, 
     // this line is the whole reason an app beats a PDF.
-    lastUpdated: "July 2026",
+    lastUpdated: "August 2026",
     updateNote: "I add new spots and re-check prices, opening hours and road conditions every month.",
 
     // Where shared plans point people (your bio link / deployed app URL).
@@ -200,7 +213,7 @@ window.OMAN_DATA = {
     // Everything below the first entry renders inside a second fold, so the
     // history is kept without anyone having to scroll past it.
     changelog: [
-      { date: "Late July 2026", items: [
+      { date: "August 2026", items: [
         "🎬 The reels audit: every place I've filmed is in the guide with its reel attached — Sidab's coves, Qantab's ten beaches, the Sifah shark shallows, Matrah Fort, Ain Al Kasfah, Hijrat Al Sheikh, Batch, Rozna.",
         "🌌 Seasonal experiences get their own entries: bioluminescence, rose season, whale-shark summer.",
         "🗓️ New one-day plan: The Perfect Wadi Shab Day, with real costs.",
@@ -214,7 +227,7 @@ window.OMAN_DATA = {
       ]},
 
       { date: "July 2026", items: [
-        "🎁 Launch season: the whole guide is free, every spot, every itinerary, the Planner. It goes paid in October.",
+        "🔓 58 places stay free to read. The other 80, the remote wadis, the empty beaches and the mountain villages, are the paid guide.",
         "♥ Save spots and tick off where you've been. No account, your phone remembers.",
         "🌡️ One-tap filters: In season now · No 4×4 · Kids OK · Saved.",
         "⚠️ Every wadi now carries the flash-flood rule, and your plan has a one-tap \"send to family\" copy on WhatsApp.",
@@ -678,7 +691,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "wadi-tanuf", cat: "wadis", free: true, type: "Wadi",
+      id: "wadi-tanuf", cat: "wadis", free: false, type: "Wadi",
       name: "Wadi Tanuf",
       tagline: "A ruined village, a gorge, and almost nobody there.",
       blurb: "Palm groves, turquoise pools under small waterfalls, and the bombed-out ruins of old Tanuf village at the mouth of the gorge. Half an hour from Nizwa and a fraction of the traffic.",
@@ -891,7 +904,7 @@ window.OMAN_DATA = {
       needsFirstHand: true
     },
     {
-      id: "wadi-al-hoqain", cat: "wadis", free: true, type: "Wadi",
+      id: "wadi-al-hoqain", cat: "wadis", free: false, type: "Wadi",
       name: "Wadi Al Hoqain, the trenches",
       tagline: "Sulfur-blue water in carved rock channels, and it's easy.",
       blurb: "Long, straight rock trenches filled with pale-blue, sulfur-rich water, south of Rustaq. No serious hike, no scramble, you walk in, float down the channels, and wonder why nobody told you about it sooner. From my wadi series: one of the easiest wins in the north.",
@@ -1084,7 +1097,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "sidab", cat: "beaches", free: true, type: "Snorkel",
+      id: "sidab", cat: "beaches", free: false, type: "Snorkel",
       name: "Sidab & its hidden coves",
       tagline: "The 100/10 coves. My favourite corner of the Muscat coast.",
       blurb: "Behind the fishing village of Sidab, a short rough hike drops you into coves you'd swear were photoshopped, clear turquoise water, empty sand, snorkelling straight off the beach. The two reels everyone asks about were filmed here.",
@@ -1133,7 +1146,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "qantab-beaches", cat: "beaches", free: true, type: "Boat trip",
+      id: "qantab-beaches", cat: "beaches", free: false, type: "Boat trip",
       name: "Qantab & its ten beaches",
       tagline: "One fishing village, ten beaches, three rials.",
       blurb: "Qantab looks like one small beach until a local boat takes you around the corner: coves and beaches strung along the cliffs, most reachable only by sea. A short ride costs a few rials and skips every hike.",
@@ -1428,7 +1441,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "marjan-beach", cat: "beaches", free: true, type: "Snorkel",
+      id: "marjan-beach", cat: "beaches", free: false, type: "Snorkel",
       name: "Marjan Beach (Ras Al Hamra)",
       tagline: "Turtles grazing metres from the sand, inside the city, for free.",
       blurb: "The PDO beach at Ras Al Hamra, 'Al Marjan' on the maps. Swim out over the seagrass and you're snorkelling with green turtles, no boat and no tour required; the brave take the jump rock at the far end. Public access until 7pm.",
@@ -1535,7 +1548,7 @@ window.OMAN_DATA = {
     /* ── Camping (added Jul 2026), wild camping is legal, free and one of
        Oman's superpowers. Every camp spot carries the safety rules. ──────── */
     {
-      id: "white-beach-fins", cat: "beaches", free: true, type: "Camping",
+      id: "white-beach-fins", cat: "beaches", free: false, type: "Camping",
       name: "White Beach (Fins)",
       tagline: "The classic first camp, white pebbles, clear water, fire on the beach.",
       blurb: "The little white cove past Fins is where half of Muscat learned to beach-camp: sheltered, swimmable, and close enough to bail out if the kids mutiny. Pitch above the tide line, cook on the sand, wake up and swim before breakfast. Wild camping in Oman is legal and free, this is the place to start.",
@@ -1736,7 +1749,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "khor-najd", cat: "experiences", free: true, type: "Viewpoint",
+      id: "khor-najd", cat: "experiences", free: false, type: "Viewpoint",
       name: "Khor Najd",
       tagline: "The fjord photo every Musandam ad uses, and you can drive to it.",
       blurb: "A steep graded track climbs from Khasab to the one place you can see a Musandam fjord from above without a boat. The hairpin viewpoint over the bay is the region's defining image.",
@@ -1851,7 +1864,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "majlis-al-jinn", cat: "experiences", free: true, type: "Cave",
+      id: "majlis-al-jinn", cat: "experiences", free: false, type: "Cave",
       name: "Majlis Al Jinn",
       tagline: "One of the largest cave chambers on Earth, under a plateau you can drive.",
       blurb: "Beneath the Selma Plateau hides a chamber big enough to swallow a cathedral, one of the world's largest underground rooms. Entry is a 120-metre free-hanging rope descent, professionals only, with a licensed caving operator. For everyone else, standing on the plateau above the sinkholes is its own trip.",
@@ -1889,7 +1902,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "wadi-bani-awf", cat: "experiences", free: true, type: "Canyon",
+      id: "wadi-bani-awf", cat: "experiences", free: false, type: "Canyon",
       name: "Wadi Bani Awf, the mountain road",
       tagline: "Oman's most famous off-road drive, village to village through the Hajar.",
       blurb: "The graded track over the mountains between Al Awabi and Balad Sayt is the country's benchmark 4×4 day: hairpins, cliff edges, Snake Gorge's slot far below, and Bilad Sayt's terraces at the end. You don't drive it for the destination, the road IS the destination.",
@@ -2113,7 +2126,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "masirah-island", cat: "experiences", free: true, type: "Wildlife",
+      id: "masirah-island", cat: "experiences", free: false, type: "Wildlife",
       name: "Masirah Island",
       tagline: "Oman's big wild island: ferries, empty coasts, four turtle species.",
       blurb: "A car-ferry ride off the east coast, Masirah is where Oman keeps its emptiest beaches, its kitesurf season and some of the world's densest turtle nesting. Take the vehicle ferry from Shannah, stay a night or three, do laps of the island.",
@@ -2153,7 +2166,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "bar-al-hikman", cat: "experiences", free: true, type: "Wildlife",
+      id: "bar-al-hikman", cat: "experiences", free: false, type: "Wildlife",
       name: "Bar Al Hikman",
       tagline: "The flamingo flats: Arabia's greatest birdwatching, and its trickiest ground.",
       blurb: "A vast tidal peninsula opposite Masirah where tens of thousands of flamingos and waders winter on the flats, and kitesurfers ride the shallows in summer. Also home to genuine quicksand and tide traps, this is licensed-operator territory, not a casual detour.",
@@ -2190,7 +2203,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "pink-lakes", cat: "experiences", free: true, type: "Nature",
+      id: "pink-lakes", cat: "experiences", free: false, type: "Nature",
       name: "The pink lakes",
       tagline: "Yes, actually pink. Algae-tinted salt lagoons on the empty coast.",
       blurb: "Salt lagoons at Al Suwih on the Sharqiyah coast turn shades of rose when the algae bloom, strongest on dry, bright days in the cool months. Remote, serviceless and surreal, a photo stop wrapped in a proper road trip.",
@@ -2227,7 +2240,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "empty-quarter", cat: "experiences", free: true, type: "Desert",
+      id: "empty-quarter", cat: "experiences", free: false, type: "Desert",
       name: "The Empty Quarter",
       tagline: "The biggest sand desert on Earth. Dunes the size of hills, silence the size of everything.",
       blurb: "Rub' al Khali, reached from Salalah with a licensed desert operator, dunes that dwarf Wahiba's, sunsets that shut everyone up, and the hardest solitude money can buy. This is a guided expedition, not a self-drive, and it's worth every rial.",
@@ -2376,7 +2389,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "flamingo-lake-quriyat", cat: "experiences", free: true, type: "Wildlife",
+      id: "flamingo-lake-quriyat", cat: "experiences", free: false, type: "Wildlife",
       name: "Quriyat's flamingo lagoon",
       tagline: "Pink birds, twenty minutes off the Muscat–Sur road.",
       blurb: "The khor at Quriyat pulls in flamingos and migrating waders through the cool months, an easy add-on to the coast-road day everyone already drives. Binoculars, golden light, zero effort.",
@@ -2455,7 +2468,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "bioluminescence-qantab", cat: "experiences", free: true, type: "Night glow",
+      id: "bioluminescence-qantab", cat: "experiences", free: false, type: "Night glow",
       name: "Bioluminescence at Qantab",
       tagline: "The night the sea glows blue. Sometimes.",
       blurb: "On the right winter night, the water around Qantab lights up electric blue wherever it's disturbed, every wave, every splash, every kick of your feet. It's plankton, it's real, and it's never guaranteed, which is exactly why it feels like magic when you catch it.",
@@ -2538,7 +2551,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "romantic-cave-tiwi", cat: "experiences", free: true, type: "Cave",
+      id: "romantic-cave-tiwi", cat: "experiences", free: false, type: "Cave",
       name: "The Romantic Cave, Tiwi",
       tagline: "Beautiful enough to name, dangerous enough to respect.",
       blurb: "A sea cave in the cliffs by Tiwi's pebble beach, light bouncing off turquoise water inside dark rock. It is genuinely stunning and genuinely unforgiving: swell funnels into the entrance, and the rocks give you nothing to hold.",
@@ -2580,7 +2593,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "ain-al-kasfah", cat: "experiences", free: true, type: "Spring",
+      id: "ain-al-kasfah", cat: "experiences", free: false, type: "Spring",
       name: "Ain Al Kasfah hot springs",
       tagline: "Rustaq's natural hot bath, and your post-wadi recovery plan.",
       blurb: "A genuinely hot mineral spring bubbling out at Rustaq, feeding bath houses and a falaj that's watered these palms for centuries. Locals have used it for aches and skin for generations. An hour from Muscat and criminally uncombined with the wadis next door.",
@@ -2624,7 +2637,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "hijrat-al-sheikh", cat: "experiences", free: true, type: "Village",
+      id: "hijrat-al-sheikh", cat: "experiences", free: false, type: "Village",
       name: "Hijrat Al Sheikh",
       tagline: "A 300-year-old village where the falaj still runs the show.",
       blurb: "'The sheikh's room': three centuries of village, working falaj channels threading the farms exactly as classical Omani irrigation intended, a little market, a walk-in bird enclosure, and more coffee shops than a village this size has any right to. Come to walk slowly and sit long.",
@@ -2704,7 +2717,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "whale-sharks", cat: "experiences", free: true, type: "Wildlife",
+      id: "whale-sharks", cat: "experiences", free: false, type: "Wildlife",
       name: "Whale shark season",
       tagline: "Summer's consolation prize: the biggest fish on Earth, off Muscat.",
       blurb: "When the summer heat empties the wadis, the sea delivers: whale sharks gather off the Daymaniyat Islands roughly June to October. Snorkelling beside one is the single most humbling thing you can do in Omani water, and it's a day trip from the capital.",
@@ -3614,7 +3627,7 @@ window.OMAN_DATA = {
        (Jabal Shams, Jabal Akhdar, Misfat and Al Hoota moved here from
        Experiences when this tab was created, their ids are unchanged.)      */
     {
-      id: "wakan-village", cat: "mountains", free: true, type: "Village",
+      id: "wakan-village", cat: "mountains", free: false, type: "Village",
       name: "Wakan Village",
       tagline: "700 steps up through the orchards, and the blossoms in spring.",
       blurb: "A tiny terraced village hanging 2,000m up the wall of Wadi Mistal, stone steps climbing through apricot and pomegranate gardens to a viewpoint over the whole valley. In late February the orchards blossom white and pink, and half of Oman drives up to see it.",
@@ -3756,7 +3769,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "muscat-ridge-treks", cat: "mountains", free: true, type: "Hike",
+      id: "muscat-ridge-treks", cat: "mountains", free: false, type: "Hike",
       name: "The Mutrah ridge treks",
       tagline: "Real mountain trails that start where the city parking ends.",
       blurb: "Muscat is one of the few capitals where marked treks leave from the corniche: the C38 climbs from Riyam to the ridgeline above Mutrah harbour, and its sister paths (Sidab coastal, the Geotrek) thread the same bare hills. Two hours, city shoes optional, views you'd fly for.",
@@ -4855,7 +4868,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "cafe-la-miel", cat: "food", sub: "Coffee", free: true, type: "Coffee",
+      id: "cafe-la-miel", cat: "food", sub: "Coffee", free: false, type: "Coffee",
       name: "La Miel Specialty Coffee",
       tagline: "The pre-wadi flat white.",
       blurb: "Al Ghubrah. Properly sourced beans, properly pulled shots, and a room that doesn't feel like a hotel lobby. This is where I start a driving day.",
@@ -4903,7 +4916,7 @@ window.OMAN_DATA = {
       tips: ["Portions are big. Two mains between three people is usually enough."]
     },
     {
-      id: "cafe-qaha", cat: "food", sub: "Coffee", free: true, type: "Coffee",
+      id: "cafe-qaha", cat: "food", sub: "Coffee", free: false, type: "Coffee",
       name: "Qaha Specialty Coffee",
       tagline: "Omani coffee culture, modernised.",
       blurb: "Specialty coffee on Al Maha St. Walk-in, cheap, and quiet enough to sit for an hour before an early drive.",
@@ -5068,7 +5081,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "shop-seeb-souq", cat: "shopping", sub: "Traditional souq", free: true, type: "Souq",
+      id: "shop-seeb-souq", cat: "shopping", sub: "Traditional souq", free: false, type: "Souq",
       name: "Seeb Souq",
       tagline: "Where Muscat actually shops, fish, dates and zero tourists.",
       blurb: "A working local souq on the Seeb waterfront: the morning fish auction, dates by the kilo, abayas and kummas. Nothing here is staged for visitors, that's the point.",
@@ -5169,7 +5182,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "shop-avenues-mall", cat: "shopping", sub: "Mall", free: true, type: "Mall",
+      id: "shop-avenues-mall", cat: "shopping", sub: "Mall", free: false, type: "Mall",
       name: "Oman Avenues Mall",
       tagline: "Central, calm and easy.",
       blurb: "Big, central and rarely overwhelming, Carrefour for road-trip supplies, plus the usual brands and cafés. The practical stop, not the destination.",
@@ -5249,7 +5262,7 @@ window.OMAN_DATA = {
           ["Car rental + fuel, whole loop", "25.0 /car"]
         ],
         splits: [["solo", "OMR 35"], ["two people", "OMR 23 each"], ["four", "OMR 16 each"]],
-        checked: "Jul 2026",
+        checked: "Aug 2026",
         note: "Posted prices. OMR 1 ≈ USD 2.60."
       }
     },
@@ -5305,7 +5318,7 @@ window.OMAN_DATA = {
           ["Car + fuel, 3 days", "~75 /car"]
         ],
         splits: [["two people", "≈ OMR 113 each"], ["four", "≈ OMR 94 each"], ["solo", "≈ OMR 190"]],
-        checked: "Jul 2026",
+        checked: "Aug 2026",
         note: "The fort is a posted price; hotel, car and food are mid-range estimates. OMR 1 ≈ USD 2.60."
       }
     },
@@ -5384,7 +5397,7 @@ window.OMAN_DATA = {
           ["Car + fuel, 5 days", "~125 /car"]
         ],
         splits: [["two people", "≈ OMR 260 each"], ["four", "≈ OMR 228 each"], ["solo", "≈ OMR 402"]],
-        checked: "Jul 2026",
+        checked: "Aug 2026",
         note: "Entries are posted prices where signed; hotel, boat trip, park, desert and food are estimates. Adventure swaps add a guide, OMR 30–60 pp for Snake Gorge grade days. OMR 1 ≈ USD 2.60."
       }
     },
@@ -5466,7 +5479,7 @@ window.OMAN_DATA = {
           ["4×4 + fuel, the full loop", "~190 /car"]
         ],
         splits: [["two people", "≈ OMR 320 each"], ["four", "≈ OMR 273 each"], ["solo", "≈ OMR 515"]],
-        checked: "Jul 2026",
+        checked: "Aug 2026",
         note: "Turtles, forts and the Shab boat are posted prices; camp, hotels, food and the 4×4 are estimates. This is the one plan that repeats the classics on purpose. OMR 1 ≈ USD 2.60."
       }
     }

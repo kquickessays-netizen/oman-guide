@@ -689,9 +689,9 @@
       <div class="bk-actions">
         ${waLink("") ? `<a class="bk-wa" id="bkWa" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.94.53 3.76 1.45 5.32L2 22l4.98-1.6a9.8 9.8 0 0 0 5.06 1.4h.01c5.43 0 9.84-4.4 9.84-9.84 0-2.63-1.03-5.1-2.9-6.96A9.75 9.75 0 0 0 12.04 2Zm5.76 13.9c-.24.68-1.42 1.32-1.95 1.36-.5.05-.98.24-3.3-.69-2.78-1.1-4.55-3.95-4.69-4.13-.13-.19-1.12-1.5-1.12-2.86 0-1.36.71-2.03.96-2.3.25-.28.55-.35.73-.35.18 0 .37 0 .53.01.17.01.4-.06.62.48.24.57.8 1.97.87 2.11.07.14.12.31.02.5-.1.19-.14.31-.28.47-.14.17-.3.37-.42.5-.14.14-.29.29-.12.57.16.28.73 1.2 1.56 1.95 1.08.96 1.98 1.26 2.26 1.4.28.14.45.12.61-.07.17-.19.7-.81.89-1.09.19-.28.37-.23.62-.14.25.09 1.65.78 1.93.92.28.14.47.21.54.33.07.11.07.66-.17 1.34Z"/></svg>
-          <span id="bkWaTxt">Message me on WhatsApp</span>
+          <span id="bkWaTxt">Plan my trip for me</span>
         </a>` : ""}
-        <button type="button" class="rate-send" id="bkSend">Send it as a form instead</button>
+        <button type="button" class="rate-send" id="bkSend">Or send it as a form</button>
       </div>
       <p class="book-fine">I reply personally, ${esc(svc.replyTime || "usually within 48 hours")}.
          ${svc.whatsappLabel ? esc(svc.whatsappLabel) : ""}</p>
@@ -1000,6 +1000,7 @@
         const on = Store.toggleBeen(item.id);
         applyRankTheme();
         renderHud();
+        refreshRankStrip();     // the scoreboard is in the page now, not the header
         // Rebuild just this card, so the left badge appears/disappears without
         // re-rendering the whole list (which would flicker every photo).
         c.replaceWith(card(item, lockNum));
@@ -1027,6 +1028,30 @@
 
     if (body.hasChildNodes()) c.appendChild(body);
     return c;
+  }
+
+  /* Every stop in a plan, in order, as one Google Maps directions link.
+     Day one's first stop is the origin, the last stop of the last day is the
+     destination, everything between is a waypoint. Maps caps the URL well
+     above what any of these plans need, but the slice keeps a future 14-day
+     monster from silently producing a link that 414s. Locked spots are
+     skipped: a free plan must never leak a paid pin. */
+  function itineraryRouteUrl(item) {
+    const days = item.route || [];
+    if (!days.length) return null;
+    const pts = [];
+    days.forEach(d => (d.stops || []).forEach(st => {
+      const s = st.spot && D.spots.find(x => x.id === st.spot);
+      if (s && isUnlocked(s) && s.coords) pts.push(s.coords.join(","));
+      else if (s && isUnlocked(s)) pts.push(s.name + ", Oman");
+    }));
+    const uniq = pts.filter((p, i) => pts.indexOf(p) === i).slice(0, 12);
+    if (uniq.length < 2) return null;
+    return "https://www.google.com/maps/dir/?api=1" +
+      "&origin=" + encodeURIComponent(uniq[0]) +
+      "&destination=" + encodeURIComponent(uniq[uniq.length - 1]) +
+      (uniq.length > 2 ? "&waypoints=" + uniq.slice(1, -1).map(encodeURIComponent).join("%7C") : "") +
+      "&travelmode=driving";
   }
 
   /* ------------------------------------------------------------------ sheet */
@@ -1203,13 +1228,9 @@
       }).join("") + `</div>`;
     }
 
-    // Maps / Save / Been / Share are the DOCK now, see the end of this
-    // function. They sit stuck to the bottom of the sheet so they're reachable
-    // without scrolling back up. Itineraries have no dock, so they keep the
-    // plain button here.
-    if (isItin && item.mapUrl) {
-      h += `<a class="mapbtn" href="${item.mapUrl}" target="_blank" rel="noopener">📍 Open in Google Maps</a>`;
-    }
+    /* Maps / Save / Been / Share are the DOCK, at the end of this function.
+       Itineraries used to ALSO get a plain Maps button here, so a plan with
+       a pin offered the same link twice, forty lines apart. The dock has it. */
 
     // ONE reel per place. `insta` may still be an ARRAY in content.js, some
     // spots have three or four, but only the first is shown. Two identical
@@ -1444,10 +1465,19 @@
       });
     }
 
+    /* THE MAINTENANCE PROMISE, not a liability disclaimer.
+
+       This used to read "researched from public sources and change often,
+       confirm on the day", which is honest and reads like "I googled it".
+       On the one line that is supposed to prove a licensed local guide
+       wrote this, it handed the reader a reason to doubt every number
+       above it. The facts have not changed. Who is standing behind them
+       has. A promise to fix it beats an apology for maybe being wrong. */
+    const checked = item.checked || D.meta.lastUpdated;
     if (item.needsFirstHand) {
       h += `<div class="verifynote warn">⚠️ Public info on this one is thin and inconsistent. Confirm access and water levels locally before you commit a day to it.</div>`;
-    } else if (item.verify) {
-      h += `<div class="verifynote thin">ℹ️ Times, fees and access details are researched from public sources and change often, confirm on the day.</div>`;
+    } else {
+      h += `<div class="verifynote thin">🔄 <b>Checked ${esc(checked)}.</b> I re-check these monthly. If a fee has moved or a road has washed out, tell me and I'll fix it that week.</div>`;
     }
 
     // Their own posted review, rendered right on the spot, so posting
@@ -1505,9 +1535,24 @@
         ? `${item.name}, ${item.tagline}\n${(item.route || []).length || ""} day plan from the Exploring Oman guide by @hussain_explores:\n${D.meta.storeUrl || D.meta.instagram}`
         : `${item.name}, ${item.tagline}\n📍 ${item.mapUrl || ""}\nFrom the Exploring Oman guide by @hussain_explores:\n${D.meta.storeUrl || D.meta.instagram}`;
       const wa = "https://wa.me/?text=" + encodeURIComponent(waText);
-      const mid = item.mapUrl
-        ? `<a class="dock-go" href="${item.mapUrl}" target="_blank" rel="noopener">📍 Google Maps</a>`
-        : (isItin ? `<a class="dock-go" href="${wa}" target="_blank" rel="noopener">📲 Send this plan</a>` : `<span class="dock-go dock-go-off">No pin yet</span>`);
+
+      /* THE LOUD BUTTON IS MAPS, on every sheet that can have one.
+
+         It is the moment the guide stops being reading and starts being
+         useful: the reader is standing up and going. It is also the single
+         cleanest intent signal in the whole app, worth more than any scroll
+         depth, so it should be the easiest thing on the screen to hit.
+
+         For a PLAN, the useful pin is not one place, it is the whole day in
+         driving order. Building that from the plan's own stops replaces what
+         used to sit here for plans with no mapUrl: a second "Send this plan"
+         button, right next to the share icon that already sent the plan. */
+      const itinRoute = isItin ? itineraryRouteUrl(item) : null;
+      const goHref = itinRoute || item.mapUrl;
+      const goLabel = itinRoute ? "📍 Open the route" : "📍 Google Maps";
+      const mid = goHref
+        ? `<a class="dock-go" href="${goHref}" target="_blank" rel="noopener">${goLabel}</a>`
+        : `<span class="dock-go dock-go-off">No pin yet</span>`;
       const I = {
         heart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5S3.5 15 3.5 8.9A4.9 4.9 0 0 1 12 5.6a4.9 4.9 0 0 1 8.5 3.3c0 6.1-8.5 11.6-8.5 11.6z"/></svg>`,
         tick:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.8l4.8 4.7L19.5 6.8"/></svg>`,
@@ -1700,6 +1745,7 @@
     $("#sheetBackdrop").hidden = false;
     document.body.style.overflow = "hidden";
     barVisible(false);
+    noteSheetOpened();            // three of these and the app has earned its ask
     $("#sheet").scrollTop = 0;
     if (window.Analytics) Analytics.track("spot", { id: item.id, cat: item.cat || "itineraries" });
   }
@@ -1720,6 +1766,8 @@
     $("#sheetBackdrop").hidden = true;
     document.body.style.overflow = "";
     barVisible(true);
+    // The ask waits for a clear screen, so a sheet closing is its cue.
+    setTimeout(maybeAsk, 350);
   }
 
   /* ----------------------------------------------------------------- unlock */
@@ -1758,9 +1806,13 @@
         </div>
         <button class="btn-full" id="verifyBtn">Unlock</button>
         <div id="msg"></div>
-        <div id="pricehere" style="margin-top:20px"></div>`;
+        <button class="btn-key" id="noKeyBtn" style="margin-top:14px;width:100%">I don't have one yet, show me the guide</button>`;
 
-      b.querySelector("#pricehere").appendChild(priceBlock("wadis", true));
+      /* No price block and no email box in here. Someone who tapped "I have
+         a key" is telling you they already paid; selling to them again is
+         answering a question they didn't ask. One link out for the person
+         who tapped it by mistake, and nothing else. */
+      b.querySelector("#noKeyBtn").onclick = () => { closeModal(); location.hash = "#/shop"; };
 
       const input = b.querySelector("#keyIn");
       const btn = b.querySelector("#verifyBtn");
@@ -1962,10 +2014,52 @@
      rank-up confetti, see celebrate(). */
   const hudQuiet = () => { try { return localStorage.getItem("oman_hud_quiet") === "1"; } catch { return false; } };
 
+  /* ============================================== WHERE THE RANK LIVES NOW
+     The explorer HUD, the ring, the rank name and the "1 more to Visitor"
+     bar, used to sit in the header on EVERY tab. It was the first thing a
+     stranger saw and it read as a loyalty-card counter reading zero: it
+     asked them to care about a score before they cared about Oman, and it
+     occupied the most valuable strip in the app to do it.
+
+     The feature itself is good, and it is NOT deleted. Ticking off where
+     you've been is genuinely fun and the rank-up celebration lands. It is
+     simply moved to the two places a score makes sense:
+
+       · Explore, inline at the top, where the ✓ buttons actually are, and
+         only once you have ticked something. At zero it says nothing.
+       · About, where "how far have I got" is a fair question to ask.
+
+     It scrolls away with the page in both, so it is never a control that
+     follows you. renderHud() now only clears the header slot. */
   function renderHud() {
     const h = $("#topHud");
-    if (!h) return;
+    if (h) { h.innerHTML = ""; h.classList.add("hud-off"); }
+  }
+
+  /* Ticking a place from the feed changes the score, and the score is in the
+     PAGE now rather than the header, so it has to be re-drawn in place: the
+     first ever tick has to create the strip (there was nothing to update),
+     and un-ticking the last one has to remove it again. Without this, the
+     scoreboard only appeared on the next full render, which felt broken at
+     exactly the moment it was meant to feel rewarding. */
+  function refreshRankStrip() {
+    const head = $(".cat-head");
+    if (!head) return;
+    const cur = head.querySelector(".rankstrip");
+    const next = rankStrip();
+    if (cur && next) cur.replaceWith(next);
+    else if (cur && !next) cur.remove();
+    else if (next) head.appendChild(next);
+  }
+
+  /* The same scoreboard, as an inline block for Explore and About. */
+  function rankStrip() {
     const been = beenSpotCount();
+    // Nothing to score yet: a counter reading zero is not a reward, it is a
+    // chore list. It appears the moment they tick their first place.
+    if (!been) return null;
+
+    const h = el("div", "hud rankstrip");
     const total = D.spots.length;
     const ix = rankIx(been);
     const floor = RANKS[ix][0];
@@ -1995,11 +2089,13 @@
     const flip = e => {
       if (e) e.stopPropagation();
       try { localStorage.setItem("oman_hud_quiet", hudQuiet() ? "0" : "1"); } catch {}
-      renderHud();
+      const fresh = rankStrip();
+      if (fresh) h.replaceWith(fresh);
       toast(hudQuiet() ? "Ranks off, just a count of places now" : "Explorer ranks back on");
     };
     h.querySelector(".hud-swap").onclick = flip;
     h.oncontextmenu = e => { e.preventDefault(); flip(); };
+    return h;
   }
 
   function renderCategory(cat) {
@@ -2013,8 +2109,6 @@
     const head = el("div", "cat-head");
     const titlerow = el("div", "cat-titlerow");
     titlerow.appendChild(el("h1", null, esc(meta.label)));
-    // The rank moved into the banner HUD (renderHud), where it shows on every
-    // tab instead of only this one.
     head.appendChild(titlerow);
 
     // ONE line saying what this actually is. A stranger landing on Explore saw
@@ -2026,6 +2120,10 @@
       head.appendChild(el("p", "cat-vp",
         `${D.spots.length} places across Oman, from a licensed guide. For each one: the drive, ` +
         `the walk in, the entry fee, the right month, and whether I'd tell you to skip it.`));
+      // The scoreboard belongs where the ✓ buttons are, and nowhere else.
+      // Silent until they have ticked something, and it scrolls away.
+      const strip = rankStrip();
+      if (strip) head.appendChild(strip);
     }
 
     // Intro text only where it earns its place, Salalah's "this is a separate
@@ -2121,19 +2219,46 @@
     const addCards = (list, parent) =>
       list.forEach(i => parent.appendChild(card(i, isUnlocked(i) ? 0 : ++lockN)));
 
-    // Unfiltered and long? Break it into type sections with headers, a 50-card
-    // flat scroll is a wall. One chip tapped = one clean grid, no headers.
+    /* GROUPED BY REGION, NOT BY TYPE.
+
+       The sections used to read Wadis 16 · Beaches 15 · Mountains 12 ·
+       Experiences 46, which answers "what kinds of things exist in Oman".
+       Nobody plans that way. A trip is a place and a number of days: "I'm
+       in Muscat for two days, then driving to Nizwa." Sorted by region, the
+       first screen answers that directly, and the type chips in the filter
+       row are still one tap away for anyone who really does want every wadi
+       in the country at once.
+
+       Region order is the driving order out of Muscat, not the alphabet, so
+       scrolling the page is roughly scrolling the trip. */
+    const REGION_ORDER = ["muscat", "coast-east", "rustaq", "dakhiliyah",
+                          "sharqiyah", "batinah", "musandam", "dhofar"];
     if (!typeFilter && !query && shown.length > 12) {
-      typesIn(shown).forEach(t => {
-        const grp = shown.filter(i => groupOf(i) === t.type);
+      /* A heading over one card is a heading that costs more than it earns,
+         so a region only gets its own section once it has THREE. Thin ones,
+         plus anything with no region at all, fall into one honest bucket at
+         the end rather than vanishing from the list. */
+      const MIN = 3;
+      const seen = REGION_ORDER.filter(r => shown.filter(i => i.region === r).length >= MIN);
+      const rest = shown.filter(i => seen.indexOf(i.region) === -1);
+      seen.forEach(r => {
+        const grp = shown.filter(i => i.region === r);
         const h = el("div", "group-head");
-        h.innerHTML = `<h2>${esc(groupLabel(t.type))}</h2><span class="group-n">${t.n}</span>`;
-        h.onclick = () => { typeFilter = t.type; renderCategory(cat); };
+        h.innerHTML = `<h2>${esc((D.regions[r] && D.regions[r].label) || REGION_SHORT[r] || r)}</h2>` +
+                      `<span class="group-n">${grp.length}</span>`;
         view.appendChild(h);
         const g = el("div", "grid");
         addCards(grp, g);
         view.appendChild(g);
       });
+      if (rest.length) {
+        const h = el("div", "group-head");
+        h.innerHTML = `<h2>Further afield</h2><span class="group-n">${rest.length}</span>`;
+        view.appendChild(h);
+        const g = el("div", "grid");
+        addCards(rest, g);
+        view.appendChild(g);
+      }
     } else {
       const grid = el("div", "grid");
       addCards(shown, grid);
@@ -2260,18 +2385,28 @@
         <p>One email when the guide updates.</p>
         <div class="subrow">
           <input type="email" id="subEmail" placeholder="you@email.com" autocomplete="email">
-          <button class="pill" id="subBtn">Sign me up</button>
+          <button class="pill" id="subBtn">Send me the new spots</button>
         </div>
         <div id="subMsg"></div>`;
       sub.querySelector("#subBtn").onclick = async () => {
         const em = sub.querySelector("#subEmail").value.trim();
         const msg = sub.querySelector("#subMsg");
         if (!/^\S+@\S+\.\S+$/.test(em)) { msg.innerHTML = `<div class="msg err">That doesn't look like an email.</div>`; return; }
-        const r = await Analytics.subscribe(em);
+        const r = await Analytics.subscribe(em, { source: "about" });
         msg.innerHTML = r.ok ? `<div class="msg ok">You're on the list. 🇴🇲</div>`
                              : `<div class="msg err">Couldn't sign you up, try again in a bit.</div>`;
       };
       foot.appendChild(sub);
+    }
+
+    // The scoreboard, here rather than in the header: "how far have I got"
+    // is a fair question on the About tab and an interruption everywhere else.
+    const strip = rankStrip();
+    if (strip) {
+      const rh = el("div", "section-head");
+      rh.innerHTML = `<h3 style="margin-bottom:8px">Where you've been</h3>`;
+      foot.appendChild(rh);
+      foot.appendChild(strip);
     }
 
     // Get in touch, LAST, as asked. It's the thing people scroll to the bottom
@@ -2302,6 +2437,8 @@
     legal.innerHTML = `
       <div class="sf-row">
         <a href="mailto:${esc(m.email)}">Contact</a>
+        <span>·</span>
+        <button type="button" class="sf-link" data-legal="key">I have a key</button>
         <span>·</span>
         <button type="button" class="sf-link" data-legal="terms">Terms</button>
         <span>·</span>
@@ -2337,6 +2474,7 @@
     legal.querySelectorAll(".sf-link").forEach(b => b.onclick = () => {
       const body = legal.querySelector(".sf-body");
       const key = b.dataset.legal;
+      if (key === "key") return openUnlock();          // not a legal panel, a door
       if (!body.hidden && body.dataset.open === key) { body.hidden = true; return; }
       body.innerHTML = LEGAL[key];
       body.dataset.open = key;
@@ -2405,7 +2543,7 @@
       cap.appendChild(tripCapture({
         title: "Want it the day it lands?",
         lead: "Salalah is the khareef trip and the season is short. Tell me when you're going and I'll have the Dhofar spots with you before it.",
-        cta: "Tell me when",
+        cta: "Tell me when it lands",
         done: "Done. You'll hear from me when Salalah lands. 🌴",
         source: "salalah"
       }));
@@ -2470,7 +2608,7 @@
         if (!box.children.length) {
           box.appendChild(tripCapture({
             lead: o.captureLead || "Tell me when you're coming and I'll email you the moment it opens, at the founding price.",
-            cta: "Tell me when it opens",
+            cta: "Give me the Full Kit first",
             source: o.track || "shop"
           }));
         }
@@ -2497,10 +2635,10 @@
       <div class="st-rows">
         <div class="st-row"><b>${esc(m.itineraryPrice)}</b><span>One plan on its own</span></div>
         <div class="st-row"><b>${esc(b.price || m.bundlePrice)}</b><span>${esc(b.name || "The Guide")}, every locked spot</span></div>
-        <div class="st-row"><b>${esc(p.price || "$19.99")}</b><span>${esc(p.name || "The Full Kit")}, plus the Planner · ${esc(p.opens || "October")}</span></div>
+        <div class="st-row"><b>${esc(p.price || "$19.99")}</b><span>${esc(p.name || "The Full Kit")}, the big routes and the Planner</span></div>
         <div class="st-row st-svc"><b>You</b><span>I plan the whole trip with you, on WhatsApp</span></div>
       </div>
-      <button type="button" class="btn-full st-go">See what's in each →</button>`;
+      <button type="button" class="btn-full st-go">Show me what's in each →</button>`;
     w.querySelector(".st-go").onclick = () => (location.hash = "#/shop");
     return w;
   }
@@ -2549,9 +2687,7 @@
       url: buyUrl("basic") || buyUrl("bundle"),
       cta: (buyUrl("basic") || buyUrl("bundle")) ? `Get the Guide, ${basic.price}`
            : m.freeLaunch ? "Lock my founding price" : "Tell me when it opens",
-      captureLead: m.freeLaunch
-        ? "It's free until " + esc(prem.opens || "October") + ", so there's nothing to buy today. Tell me when you're coming and I'll make sure you have it before you fly, at the founding price."
-        : "Checkout opens in a few days. Tell me when you're coming and you get it first, at the founding price.",
+      captureLead: "Checkout is being switched on. Tell me when you're coming and I'll send you the key myself, at the founding price, before you fly.",
       fine: "One key. Works on any phone, paste it again if you switch."
     }));
 
@@ -2572,8 +2708,8 @@
         `<b>Salalah and Dhofar</b> the day it lands, as a free update.`
       ],
       url: buyUrl("premium"),
-      cta: buyUrl("premium") ? `Get the Full Kit, ${prem.price}` : `Tell me when it opens`,
-      captureLead: "The Full Kit opens in " + esc(prem.opens || "October") + ". Leave your dates and you get first access at the founding price.",
+      cta: buyUrl("premium") ? `Get the Full Kit, ${prem.price}` : `Give me the Full Kit first`,
+      captureLead: "Leave your dates and you get the Full Kit first, at the founding price.",
       fine: "One payment, no subscription. Every update after it is free."
     }));
 
@@ -2626,33 +2762,45 @@
     view.appendChild(el("div", "shop-or", "or, the thing an app can't do"));
     view.appendChild(bookBox({ source: "shop" }));
 
-    /* ---- 5. the capture, and the key ----------------------------------- */
-    view.appendChild(tripCapture({
-      title: "Not buying anything today?",
-      lead: "Fair enough. Tell me when you're coming and I'll send the guide before you fly, at the founding price. That's the whole email.",
-      cta: "Send it before I fly",
-      source: "shop"
-    }));
+    /* ---- 5. the key, and the way out -----------------------------------
+       No email box down here. Three products, a WhatsApp and a service is
+       already four asks; a fifth one, at the bottom, aimed at the reader
+       who has just declined all four, reads as pleading. The gated ask
+       catches them elsewhere.
 
-    const kb = el("button", "btn-key", "I already have a key");
+       And an EXIT. A shop with no door out is a trap: the reader who
+       decides "not today" has to hunt the bottom bar for a way back to the
+       thing they were enjoying. That is the moment they close the tab. */
+    const kb = el("button", "btn-key", "I already have my key");
     kb.onclick = openUnlock;
     view.appendChild(kb);
+
+    const out = el("div", "shop-exit");
+    out.innerHTML = `<p>Not today? Nothing here expires, and 58 places stay free either way.</p>`;
+    const back = el("button", "btn-full", "← Take me back to the places");
+    back.onclick = () => (location.hash = "#/explore");
+    out.appendChild(back);
+    const plan = el("button", "pill pill-ghost", "Show me the free 1-day plan");
+    plan.onclick = () => {
+      const f = (D.itineraries || []).find(p => p.free);
+      if (f) openSheet(f); else location.hash = "#/plan";
+    };
+    out.appendChild(plan);
+    view.appendChild(out);
   }
 
   /* The date capture as a modal, for the places that have no room for it:
-     a $2.99 plan tile, a lock row, the sticky bar. */
-  function openCapture(what) {
+     a $2.99 plan tile, a lock row, and the one earned interruption. */
+  function openCapture(what, o) {
+    o = o || {};
     const b = $("#modalBody");
     b.innerHTML = "";
-    const h = el("h2", null, what ? esc(what) : "Tell me when you're coming");
-    b.appendChild(h);
+    b.appendChild(el("h2", null, esc(o.title || what || "Tell me when you're coming")));
     b.appendChild(tripCapture({
-      lead: (what ? "<b>" + esc(what) + "</b> opens with the paid guide in " +
-                    esc((D.meta.tiers && D.meta.tiers.premium && D.meta.tiers.premium.opens) || "October") + ". "
-                  : "") +
-            "Leave your dates and you get it first, at the founding price.",
-      cta: "Save my founding price",
-      source: "capture-modal"
+      lead: o.lead || ((what ? "<b>" + esc(what) + "</b> is part of the paid guide. " : "") +
+            "Leave your dates and you get it first, at the founding price."),
+      cta: o.cta || "Save my founding price",
+      source: o.source || (what ? "capture-modal" : "earned-ask")
     }));
     const done = el("button", "btn-full", "Keep exploring →");
     done.style.marginTop = "12px";
@@ -2708,7 +2856,7 @@
           <li>Heat-smart starts: 06:30 in summer, hot spots in the cool hours</li>
           <li>Every stop pinned in Google Maps, the whole route on one map</li>
         </ul>
-        <p class="lock-when">Opens in October, when the full guide launches.</p>
+        <p class="lock-when">Part of the Full Kit.</p>
 
         <!-- A locked feature nobody can sample is just a promise. This is one
              real day of real output from the Planner, so the reader can judge
@@ -3641,10 +3789,62 @@
   let barDismissed = false;
   try { barDismissed = sessionStorage.getItem("oman_bar_off") === "1"; } catch {}
 
+  /* ================================================== THE EARNED ASK
+     Nothing asks a stranger for anything until they have shown the app is
+     worth something to them. The old order was backwards: the welcome
+     offered a choice and a gold bar slid up over it before the reader had
+     read one word, so the first thing the app did was interrupt the first
+     thing the app asked. Two competing asks, zero earned.
+
+     The gate: THREE spot sheets opened, or SIXTY seconds on the page.
+     Either one proves the reader is reading rather than bouncing. Then,
+     once, the ask arrives as a modal; the sticky bar stays afterwards as
+     the quiet reminder. Both are silent until the gate opens, and both stay
+     silent while the welcome, a sheet or a modal is on screen.
+
+     Asked once, refused once, gone for the session. */
+  const GATE_SHEETS = 3, GATE_SECONDS = 60;
+  let sheetsOpened = 0, gateOpen = false, askShown = false;
+  try { askShown = localStorage.getItem("oman_asked") === "1"; } catch {}
+
+  function openGate(why) {
+    if (gateOpen) return;
+    gateOpen = true;
+    if (window.Analytics) Analytics.track("ask_earned", { via: why, sheets: sheetsOpened });
+    maybeAsk();
+    renderStickyBar();
+  }
+  function noteSheetOpened() {
+    if (++sheetsOpened >= GATE_SHEETS) openGate("sheets");
+  }
+  setTimeout(() => openGate("time"), GATE_SECONDS * 1000);
+
+  /* The one interruption in the app, and it waits its turn: if a sheet or
+     the welcome is open it does nothing and tries again when they close. */
+  function maybeAsk() {
+    if (askShown || !gateOpen) return;
+    if (Unlock.isAnythingOwned()) return;
+    if (document.querySelector(".welcome")) return;
+    if (!$("#sheet").hidden || !$("#modalBackdrop").hidden) return;
+    if ((location.hash.replace("#/", "") || "") === "shop") return;   // already there
+    askShown = true;
+    try { localStorage.setItem("oman_asked", "1"); } catch {}
+    openCapture(null, {
+      title: "Before you scroll on",
+      lead: "You've read a few of these, so here's the one thing I'll ask for. " +
+            "Tell me when you're coming and I'll send the guide before you fly, " +
+            "at the founding price.",
+      cta: "Send it to me before I fly"
+    });
+  }
+
   function renderStickyBar() {
     const old = $("#stickyCta");
     if (old) old.remove();
+    document.documentElement.style.removeProperty("--bar-space");
     if (barDismissed) return;
+    if (!gateOpen) return;                                        // not earned yet
+    if (document.querySelector(".welcome")) return;               // never over the welcome
     if (Unlock.isAnythingOwned() && !D.meta.freeLaunch) return;   // they've bought
     if ((location.hash.replace("#/", "") || "") === "shop") return;
 
@@ -3811,7 +4011,11 @@
       </div>
       <div class="wc-panel">
         <div class="wc-body">
-          <p class="wc-eyebrow"><i></i>Oman, from someone who lives here</p>
+          <!-- The credential goes FIRST, above the hook. "Someone who lives
+               here" is a million Instagram accounts; a licence is a fact
+               nobody else on the reader's feed can claim, and it is the
+               cheapest trust in the whole app. -->
+          <p class="wc-eyebrow"><i></i>Oman, from a licensed Omani tour guide</p>
           <h1 class="wc-hook">${esc(m.aboutHook)}</h1>
           <p class="wc-sub">${esc(m.aboutSub)}</p>
           <ul class="wc-list">
@@ -3830,8 +4034,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5.5L18.5 12 12 18.5"/></svg>
           </button>
           <button type="button" class="wc-alt">Just show me the ${D.spots.length} places</button>
-          <p class="wc-fine">Licensed Omani tour guide · 1M+ views on the wadi reels
-             · free while it launches</p>
+          <p class="wc-fine">1M+ views on the wadi reels · 58 places free to read
+             · updated every month</p>
         </div>
       </div>`;
 

@@ -2963,6 +2963,59 @@ body{
   .view{padding-bottom:var(--bar-space, 92px)}
 }
 
+/* ═══════════════════════ RANK OUT OF THE HEADER, MAPS TURNED UP ═════════ */
+
+/* The header HUD slot is empty now. Collapse it so the brand row sits
+   straight on top of the tabs instead of leaving a 45px hole where the
+   scoreboard used to be. */
+.hud-off{display:none !important}
+
+/* The same scoreboard, inline on Explore and About. The header version was
+   white-on-photo; here it sits on sand, so every colour has to come back
+   down to the page palette or it renders as white text on cream. */
+.rankstrip{
+  display:flex;align-items:center;gap:10px;max-width:none;
+  margin:14px 0 2px;padding:11px 14px;
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  box-shadow:var(--shadow);
+}
+.rankstrip .hud-ring{background:conic-gradient(var(--gold) calc(var(--pct)*1%), var(--sand-2) 0)}
+.rankstrip .hud-ring b{background:var(--ink);color:#fff}
+.rankstrip .hud-txt strong{color:var(--ink);text-shadow:none}
+.rankstrip .hud-txt small{color:var(--muted);text-shadow:none}
+.rankstrip .hud-bar{background:var(--sand-2)}
+.rankstrip .hud-count{font-size:13.5px;color:var(--ink);font-weight:600}
+.rankstrip .hud-swap{
+  background:var(--sand-2);border:1px solid var(--line);color:var(--muted);
+  backdrop-filter:none;
+}
+.rankstrip .hud-swap:hover{background:var(--line)}
+.rankstrip[data-tier] .hud-ring{background:conic-gradient(var(--gold) calc(var(--pct)*1%), var(--sand-2) 0)}
+.rankstrip[data-tier] .hud-bar i{background:linear-gradient(90deg,var(--gold),#f0c073)}
+
+/* ── the loud button is Maps ──────────────────────────────────────────────
+   It is the moment the guide stops being reading and starts being useful,
+   and the cleanest intent signal in the app. It was already the only filled
+   pill in the dock; now it takes the room to look like the point of it. */
+.dock-go{
+  flex:1 1 auto;height:48px;font-size:15px;font-weight:800;letter-spacing:.01em;
+  box-shadow:0 5px 18px rgba(13,92,99,.34);
+}
+.dock-go svg{width:19px;height:19px}
+.dock-go-off{
+  background:var(--sand-2);color:var(--muted);box-shadow:none;font-weight:700;
+}
+.dockbar .dock-ico{width:42px;height:42px}
+
+/* ── the way out of the shop ─────────────────────────────────────────────── */
+.shop-exit{
+  margin:26px 0 4px;padding:18px 20px;text-align:center;
+  background:var(--sand-2);border-radius:16px;
+}
+.shop-exit p{margin:0 0 12px;font-size:13.5px;color:var(--muted);line-height:1.55}
+.shop-exit .btn-full{margin:0}
+.shop-exit .pill{margin-top:10px;background:transparent;color:var(--water);font-weight:600}
+
 /* ── welcome: the second door ────────────────────────────────────────────── */
 .wc-alt{
   display:block;width:100%;margin-top:9px;padding:11px;border-radius:999px;
