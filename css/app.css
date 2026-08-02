@@ -2128,6 +2128,61 @@ body.tier-flash{animation:ruFlash .7s ease-out}
 .soon-card p{margin:0 0 10px;font-size:14.5px;line-height:1.6;color:#37423d}
 .soon-card .soon-sub{font-size:12.5px;color:var(--muted);margin:0}
 
+/* ── Salalah: the curtain sells instead of apologising ────────────────────
+   The count is the hook, so it gets the size. Everything else on this card
+   is names and numbers, because "a Dhofar guide" is an abstraction and
+   "Wadi Darbat" is a picture. The card is wider than the old one: it now
+   has something to say. */
+.soon-card{max-width:520px;text-align:left;padding:26px 24px 24px}
+.soon-kicker{
+  font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--water);margin-bottom:6px;
+}
+.soon-count{display:flex;align-items:baseline;gap:9px;margin:0 0 2px}
+.soon-count b{
+  font-size:64px;line-height:.9;letter-spacing:-.045em;font-weight:800;
+  background:linear-gradient(160deg,var(--water),#1a8f79 70%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.soon-count span{
+  font-size:15px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);
+}
+.soon-card h1{font-size:26px;letter-spacing:-.5px;margin:0 0 12px}
+.soon-lead{margin:0 0 16px !important;font-size:14.5px;line-height:1.62}
+
+/* the names, two up, doing the actual selling */
+.soon-heroes{display:grid;gap:8px;margin-bottom:16px}
+@media(min-width:460px){.soon-heroes{grid-template-columns:1fr 1fr}}
+.soon-heroes .sh{
+  background:var(--sand-2);border-radius:12px;padding:10px 13px;min-width:0;
+}
+.soon-heroes .sh b{display:block;font-size:13.5px;letter-spacing:-.1px}
+.soon-heroes .sh small{
+  display:block;font-size:11.5px;color:var(--muted);line-height:1.4;margin-top:2px;
+}
+
+.soon-mix{
+  list-style:none;padding:0;margin:0 0 14px;
+  display:flex;flex-wrap:wrap;gap:7px;
+}
+.soon-mix li{
+  background:#fff;border:1px solid var(--line);border-radius:999px;
+  padding:6px 12px;font-size:12.5px;color:var(--muted);
+}
+.soon-mix li b{color:var(--ink);font-weight:800}
+.soon-note{font-size:12.5px !important;color:var(--muted) !important;margin:0 0 14px !important}
+
+/* who actually gets it, stated plainly. This used to promise "a free
+   update" to everybody, which quietly gave away the thing the paid tiers
+   are meant to include. */
+.soon-deliver{
+  background:var(--water-soft);border:1px solid #c7e3e3;border-radius:14px;
+  padding:13px 15px;
+}
+.soon-deliver b{display:block;font-size:13.5px;color:#0b4a50;margin-bottom:3px}
+.soon-deliver span{display:block;font-size:12.5px;color:#0b4a50;opacity:.85;line-height:1.5}
+
 /* the tab wears a small "soon" flag and dims a touch */
 .tab-dim{opacity:.62}
 .tab-soon{

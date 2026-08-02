@@ -2563,17 +2563,67 @@
      content.js, ready, this is a curtain, not a demolition. */
   function renderComingSoon(meta) {
     clearView();
-    const n = D.spots.filter(s => s.cat === "salalah").length;
+
+    /* THE CURTAIN HAS TO SELL, NOT APOLOGISE.
+
+       It used to be a palm-tree emoji, the word "Salalah", a grey
+       "coming soon" pill and one sentence. A reader who tapped that tab has
+       just told you the single most specific thing they will ever tell you:
+       they are thinking about the south. Answering with a shrug wastes the
+       best-qualified visitor on the site.
+
+       So: the COUNT is the hook and it goes big, the names do the selling
+       (nobody wants "a Dhofar guide", they want Wadi Darbat and Fazayah),
+       and the number is COUNTED from the data so it can never drift. Add
+       five spots and this page says 35 by itself. */
+    const salalah = D.spots.filter(s => s.cat === "salalah");
+    const n = salalah.length;
+    const paid = salalah.filter(s => s.free === false).length;
+    const T = D.meta.tiers || {};
+
+    // What's actually in there, grouped the way a traveller thinks about a
+    // trip rather than the way the data is filed.
+    const has = re => salalah.filter(s => re.test(s.type || "")).length;
+    const mix = [
+      [has(/beach/i), "empty beaches"],
+      [has(/waterfall|spring|sinkhole/i), "waterfalls & springs"],
+      [has(/viewpoint|mountain|nature/i), "viewpoints & wadis"],
+      [has(/food|seafood|sweets|dinner|street/i), "places to eat"],
+      [has(/souq|shop|market|museum|fort|ruins|mall/i), "souqs, forts & ruins"]
+    ].filter(([c]) => c > 0);
+
+    // Named, because a name is a picture and a category is not.
+    const HERO = ["wadi-darbat", "fazayah-beach", "tawi-atair", "jabal-samhan",
+                  "mughsail", "wadi-dawkah", "khor-rori", "ayn-khor"];
+    const heroes = HERO.map(id => salalah.find(s => s.id === id)).filter(Boolean).slice(0, 6);
+
     const w = el("div", "soon");
     w.innerHTML = `
       <div class="soon-card">
-        <div class="soon-art" aria-hidden="true">🌴</div>
-        <h1>Salalah</h1>
-        <div class="soon-pill">Coming soon</div>
-        <p>The Dhofar guide, the khareef season, Wadi Darbat, the frankincense
-           coast and the empty beaches west. ${n ? n + " spots, " : ""}being
-           checked and finished now.</p>
-        <p class="soon-sub">It lands as a free update, nothing to re-buy, nothing to do.</p>
+        <div class="soon-kicker">The monsoon-green south</div>
+        <div class="soon-count"><b>${n}</b><span>spots</span></div>
+        <h1>Salalah &amp; Dhofar</h1>
+        <p class="soon-lead">Late June to early September the khareef rolls in off the Indian
+           Ocean and turns the whole coast green: waterfalls run, the mountains go under cloud,
+           and camels stand in fog on roads that were desert in May. Any other month it's empty
+           beaches and the frankincense coast, warm and quiet.</p>
+
+        ${heroes.length ? `<div class="soon-heroes">${heroes.map(s =>
+          `<div class="sh"><b>${esc(s.name)}</b><small>${esc(s.tagline || "")}</small></div>`).join("")}</div>` : ""}
+
+        ${mix.length ? `<ul class="soon-mix">${mix.map(([c, label]) =>
+          `<li><b>${c}</b> ${esc(label)}</li>`).join("")}</ul>` : ""}
+
+        <p class="soon-note">It's a separate trip, not a day out of Muscat: 1,000km south, so
+           you fly. Being checked and finished now.</p>
+
+        <div class="soon-deliver">
+          <b>🔑 It lands inside ${esc((T.basic && T.basic.name) || "The Guide")} and
+             ${esc((T.premium && T.premium.name) || "The Full Kit")}.</b>
+          <span>${paid >= n ? `All ${n} are part of the paid guide.`
+                            : `${paid} of the ${n} are part of the paid guide, the rest stay free like the north.`}
+                 Own either tier and Dhofar simply appears, nothing to re-buy and nothing to do.</span>
+        </div>
       </div>`;
     view.appendChild(w);
     // A dead end that harvests nothing is a wasted tab. Anyone who taps Salalah
@@ -2587,7 +2637,8 @@
       const cap = el("div", "soon-capture");
       cap.appendChild(tripCapture({
         title: "Want it the day it lands?",
-        lead: "Salalah is the khareef trip and the season is short. Tell me when you're going and I'll have the Dhofar spots with you before it.",
+        lead: "The khareef is a six-week window and it is the reason to come south. " +
+              "Tell me when you're going and I'll have Dhofar with you before it.",
         cta: "Tell me when it lands",
         done: "Done. You'll hear from me when Salalah lands. 🌴",
         source: "salalah"
