@@ -145,9 +145,9 @@ window.OMAN_DATA = {
          premium  $19.99  all of basic + the 5 and 7-day plans + the Planner
                           + every update.
          plans    $2.99   any single itinerary, bought on its own.
-         allPlans $7      all three paid plans together, which is a rial
-                          under buying two. The rung for someone who wants
-                          the routes and not the country.
+         allPlans $6.99   all three paid plans, $1.98 off buying them one at
+                          a time. The rung for someone who wants the routes
+                          and not the country.
                           The 1-day stays free forever, it is the sample.
          service  ---     "plan my trip for me", priced by group size,
                           answered personally on WhatsApp. See planService.
@@ -175,8 +175,8 @@ window.OMAN_DATA = {
       // the shop can render all four boxes from one place.
       plans: {
         name: "All three plans",
-        price: "$7",
-        priceNum: 7,
+        price: "$6.99",
+        priceNum: 6.99,
         live: true,
         note: "The routes, without the country."
       }
@@ -187,13 +187,25 @@ window.OMAN_DATA = {
     itineraryPrice: "$2.99",
     itineraryPriceNum: 2.99,
 
-    // All three paid plans together. Priced UNDER two singles on purpose:
-    // at $7 against $5.98 for two, nobody sensible buys the second one
-    // separately, which is the whole job of this rung. It is also the
-    // cheapest way into the ladder for someone who wants the routes and
-    // does not care about the other 68 spots.
-    plansBundlePrice: "$7",
-    plansBundlePriceNum: 7,
+    /* All three paid plans together. $6.99 against $8.97 bought one at a
+       time, so the honest claim is SAVE $1.98 and nothing stronger.
+
+       ⚠️ THE ARITHMETIC, because it decides what the shop is allowed to say:
+         one plan     $2.99
+         two singles  $5.98   <- CHEAPER than this bundle
+         three        $8.97   <- the bundle beats this by $1.98
+       So the bundle wins for somebody who wants all three from the start,
+       and loses for somebody adding a second plan to one they already own.
+       At $5.99 it would have beaten two singles as well, which is what made
+       the second single an irrational purchase; at $6.99 it does not, and
+       the app must not claim otherwise.
+
+       The badge in renderShop() is COMPUTED from these two numbers, not
+       typed, so it says "3 for the price of two" only while that is
+       arithmetically true and falls back to "Save $X" the moment it isn't.
+       Change either price freely; the wording follows. */
+    plansBundlePrice: "$6.99",
+    plansBundlePriceNum: 6.99,
 
     // Which itineraries the $9.99 Guide includes. Everything not listed here
     // (and not `free: true`) needs either the Full Kit or its own $2.99.

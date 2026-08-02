@@ -2664,7 +2664,11 @@
       <h3>Four ways to get it</h3>
       <div class="st-rows">
         <div class="st-row"><b>${esc(m.itineraryPrice)}</b><span>One plan on its own</span></div>
-        <div class="st-row"><b>${esc(m.plansBundlePrice)}</b><span>All three plans, cheaper than two</span></div>
+        <div class="st-row"><b>${esc(m.plansBundlePrice)}</b><span>All three plans together${
+          (m.itineraryPriceNum && m.plansBundlePriceNum &&
+           m.itineraryPriceNum * 3 > m.plansBundlePriceNum)
+            ? ", save $" + (m.itineraryPriceNum * 3 - m.plansBundlePriceNum).toFixed(2) : ""
+        }</span></div>
         <div class="st-row"><b>${esc(b.price || m.bundlePrice)}</b><span>${esc(b.name || "The Guide")}, every locked spot and Salalah</span></div>
         <div class="st-row"><b>${esc(p.price || "$19.99")}</b><span>${esc(p.name || "The Full Kit")}, the big routes and the Planner</span></div>
         <div class="st-row st-svc"><b>You</b><span>I plan the whole trip with you, on WhatsApp</span></div>
@@ -2745,26 +2749,43 @@
       fine: "One payment, no subscription. Every update after it is free."
     }));
 
-    /* ---- 3. the plans: all three for $7, or one for $2.99 ---------------
-       Two singles cost $5.98 and three cost $8.97, so the bundle at $7 is
-       priced under the second purchase on purpose: anyone who wants a second
-       plan is better off taking all three, and that is the entire job of
-       this rung. It is also the cheapest door into the ladder for someone
-       who wants the routes and does not care about the other 68 spots. */
+    /* ---- 3. the plans: all three, or one at a time ----------------------
+       THE BADGE IS COMPUTED, NEVER TYPED. It was hardcoded "Cheaper than
+       two" while the bundle was $7 against $5.98 for two singles, which was
+       simply false, and false in the one place on the site where a reader
+       is deciding whether to trust a number. A claim about two prices has
+       to be derived from those two prices or it becomes a lie the first
+       time either one moves.
+
+       So: it reads "3 for the price of two" only while that is
+       arithmetically true, and otherwise states the real saving against
+       buying them one at a time. If there is no saving it says nothing at
+       all, which is the correct thing for a bundle that isn't one. */
     {
       const box = el("div", "prod prod-singles");
       const bundleUrl = buyUrl("itin-all");
       const ownsAll = !m.freeLaunch && paidPlans.every(p => isUnlocked(p));
+
+      const single = m.itineraryPriceNum || 0;
+      const bundle = m.plansBundlePriceNum || 0;
+      const n = paidPlans.length || 3;
+      const saved = single * n - bundle;
+      const badge = (single && bundle && bundle <= single * 2 + 0.02)
+        ? `${n} for the price of two`
+        : (saved > 0 ? `Save $${saved.toFixed(2)}` : "");
+
       box.innerHTML = `
         <div class="prod-head">
           <div class="prod-name">
             <h3>${esc((T.plans && T.plans.name) || "All three plans")}</h3>
-            <span class="prod-badge best">Cheaper than two</span>
+            ${badge ? `<span class="prod-badge best">${esc(badge)}</span>` : ""}
           </div>
           <div class="prod-price"><b>${esc(m.plansBundlePrice)}</b><small>all three</small></div>
         </div>
         <p class="prod-lead">Every paid route: the 3-day, the 5-day and the 7-day, hour by hour,
-           each with its costs receipt. Under the price of buying two.</p>
+           each with its costs receipt.${badge === n + " for the price of two"
+             ? " Buy two separately and you've already spent more."
+             : saved > 0 ? ` That's $${saved.toFixed(2)} off buying them one at a time.` : ""}</p>
         <div class="prod-action" id="plansAct"></div>`;
 
       const act = box.querySelector("#plansAct");
