@@ -109,15 +109,21 @@ window.OMAN_DATA = {
        false = the paywall is ON. 80 of the 138 spots and 3 of the 4 plans
                render as blurred, locked cards in the feed.
 
-       TURNED OFF 2 Aug 2026, deliberately, and this is the biggest single
-       change in the app. While it was true, NOTHING was ever shown locked,
-       which meant the whole paid guide was invisible: a reader scrolled 138
-       open cards and had no reason on earth to want anything else. You
-       cannot sell what nobody can see they are missing. The locked cards ARE
-       the shop window; the price block only explains what they already want.
+       BACK ON 2 Aug 2026 (later the same day): everything is open again
+       while the Gumroad checkout is still being built. Locking 80 spots
+       against a shop that cannot take money makes 80 dead ends, and a dead
+       end costs more than a free read.
 
-       Flip back to true and every lock lifts again, one word, no other edit. */
-    freeLaunch: false,
+       NOTHING ELSE WAS UNDONE. The tiers, the grants, the 80/58 split, the
+       $2.99 plans and the whole shop are exactly as they were; this one
+       word is the only thing standing between here and a live paywall. Flip
+       it to false the day the Gumroad links go in and every lock returns.
+
+       While it is true, the spots that WILL be paid still say so on the
+       card ("🔓 Free right now"), so the shape of the paid guide stays
+       visible even though nothing is withheld. That marker is drawn in
+       card() in app.js and disappears with this flag. */
+    freeLaunch: true,
 
     // >>> HARD LOCKS, these override freeLaunch. <<<
     // salalahComingSoon: the Salalah tab shows a "coming soon" panel instead
@@ -180,18 +186,28 @@ window.OMAN_DATA = {
        The one thing on this site that cannot be copied: you. A lead form
        plus a one-tap WhatsApp with their dates and group already typed in.
 
-       ⚠️ PRICES ARE YOURS TO SET, so they ship EMPTY. While a `price` is ""
-       the card reads "I'll quote you on WhatsApp" and still works. Put a
-       number in and it appears everywhere instantly.
-       Suggested, if you want a starting point: 25 / 40 / 60 OMR. <<<          */
+       PRICED IN USD, because almost everyone reading this is paying from
+       abroad and the rial is the one currency that makes a number look four
+       times smaller than it is. The anchor is 25 OMR for a couple; the other
+       two scale with the work, since a route for eight is not a route for
+       two with more names on it.
+
+         from $65   ≈ 25 OMR    1–2 people
+         from $105  ≈ 40 OMR    3–5 people
+         from $155  ≈ 60 OMR    6 or more
+
+       "from" on purpose: it opens the conversation instead of closing it,
+       and it means a two-day question and a two-week itinerary don't have
+       to cost the same. Set a `price` to "" and that tier goes back to
+       "I'll quote you on WhatsApp" with nothing else to change. <<<          */
     planService: {
       whatsapp: "96879218186",          // international format, no + and no spaces
       whatsappLabel: "+968 7921 8186",
       replyTime: "usually within 48 hours",
       tiers: [
-        { id: "solo",   label: "Solo or a couple", sub: "1–2 people",   price: "" },
-        { id: "family", label: "Family or friends", sub: "3–5 people",  price: "" },
-        { id: "group",  label: "A group",           sub: "6 or more",   price: "" }
+        { id: "solo",   label: "Solo or a couple",  sub: "1–2 people",  price: "from $65" },
+        { id: "family", label: "Family or friends", sub: "3–5 people",  price: "from $105" },
+        { id: "group",  label: "A group",           sub: "6 or more",   price: "from $155" }
       ]
     },
 

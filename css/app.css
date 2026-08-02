@@ -3016,6 +3016,14 @@ body{
 .shop-exit .btn-full{margin:0}
 .shop-exit .pill{margin-top:10px;background:transparent;color:var(--water);font-weight:600}
 
+/* "🔓 Free right now" on a spot that will be paid once the checkout is on.
+   Gold, because it is the same family as every other price in the app, and
+   quiet, because it is a note on a gift and not a padlock. */
+.chip-freenow{background:var(--gold-soft);color:#8a5b12;font-weight:800}
+.card-kicker.on-photo .chip-freenow{
+  background:rgba(200,137,47,.92);color:#fff;
+}
+
 /* ── welcome: the second door ────────────────────────────────────────────── */
 .wc-alt{
   display:block;width:100%;margin-top:9px;padding:11px;border-radius:999px;

@@ -927,6 +927,22 @@
     if (item.region && item.region !== "dhofar" && REGION_SHORT[item.region])
       kick.appendChild(el("span", "chip chip-region", "📍 " + REGION_SHORT[item.region]));
     if (item.insta) kick.appendChild(el("span", "chip chip-reel", "🎬 Reel"));
+
+    /* THE SHAPE OF THE PAID GUIDE, WITHOUT WITHHOLDING ANYTHING.
+
+       While meta.freeLaunch is on, everything opens, which is right when
+       there is no checkout to send anyone to. The cost is that the paid
+       guide becomes invisible again: 138 identical open cards, and no
+       reason to want the thing you are about to start selling.
+
+       So a spot that WILL be paid says so, and says it as a gift rather
+       than a wall. The reader gets the whole spot; they also learn, at the
+       moment they enjoy it, that it is one of the 80. That is the same
+       desire a lock creates, banked for the day the lock comes back, and
+       it costs the reader nothing. It disappears the instant freeLaunch
+       goes false, because then the real lock is doing the job. */
+    if (D.meta.freeLaunch && item.free === false)
+      kick.appendChild(el("span", "chip chip-freenow", "🔓 Free right now"));
     if (photoCard) {
       media.classList.add("card-media-photo");
       const ov = el("div", "card-overlay");
