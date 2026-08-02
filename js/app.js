@@ -2578,21 +2578,10 @@
        five spots and this page says 35 by itself. */
     const salalah = D.spots.filter(s => s.cat === "salalah");
     const n = salalah.length;
-    const paid = salalah.filter(s => s.free === false).length;
     const T = D.meta.tiers || {};
 
-    // What's actually in there, grouped the way a traveller thinks about a
-    // trip rather than the way the data is filed.
-    const has = re => salalah.filter(s => re.test(s.type || "")).length;
-    const mix = [
-      [has(/beach/i), "empty beaches"],
-      [has(/waterfall|spring|sinkhole/i), "waterfalls & springs"],
-      [has(/viewpoint|mountain|nature/i), "viewpoints & wadis"],
-      [has(/food|seafood|sweets|dinner|street/i), "places to eat"],
-      [has(/souq|shop|market|museum|fort|ruins|mall/i), "souqs, forts & ruins"]
-    ].filter(([c]) => c > 0);
-
-    // Named, because a name is a picture and a category is not.
+    // Named, because a name is a picture and a category is not. Six is the
+    // most that still reads as a taste rather than a list.
     const HERO = ["wadi-darbat", "fazayah-beach", "tawi-atair", "jabal-samhan",
                   "mughsail", "wadi-dawkah", "khor-rori", "ayn-khor"];
     const heroes = HERO.map(id => salalah.find(s => s.id === id)).filter(Boolean).slice(0, 6);
@@ -2600,29 +2589,18 @@
     const w = el("div", "soon");
     w.innerHTML = `
       <div class="soon-card">
-        <div class="soon-kicker">The monsoon-green south</div>
-        <div class="soon-count"><b>${n}</b><span>spots</span></div>
+        <div class="soon-count"><b>${n}+</b><span>spots</span></div>
         <h1>Salalah &amp; Dhofar</h1>
-        <p class="soon-lead">Late June to early September the khareef rolls in off the Indian
-           Ocean and turns the whole coast green: waterfalls run, the mountains go under cloud,
-           and camels stand in fog on roads that were desert in May. Any other month it's empty
-           beaches and the frankincense coast, warm and quiet.</p>
+        <p class="soon-lead">Late June to September the khareef turns the whole coast green.
+           The rest of the year, empty beaches and the frankincense coast.</p>
 
         ${heroes.length ? `<div class="soon-heroes">${heroes.map(s =>
           `<div class="sh"><b>${esc(s.name)}</b><small>${esc(s.tagline || "")}</small></div>`).join("")}</div>` : ""}
 
-        ${mix.length ? `<ul class="soon-mix">${mix.map(([c, label]) =>
-          `<li><b>${c}</b> ${esc(label)}</li>`).join("")}</ul>` : ""}
-
-        <p class="soon-note">It's a separate trip, not a day out of Muscat: 1,000km south, so
-           you fly. Being checked and finished now.</p>
-
         <div class="soon-deliver">
-          <b>🔑 It lands inside ${esc((T.basic && T.basic.name) || "The Guide")} and
+          <b>🔑 Inside ${esc((T.basic && T.basic.name) || "The Guide")} and
              ${esc((T.premium && T.premium.name) || "The Full Kit")}.</b>
-          <span>${paid >= n ? `All ${n} are part of the paid guide.`
-                            : `${paid} of the ${n} are part of the paid guide, the rest stay free like the north.`}
-                 Own either tier and Dhofar simply appears, nothing to re-buy and nothing to do.</span>
+          <span>Own either one and Dhofar appears, nothing to re-buy.</span>
         </div>
       </div>`;
     view.appendChild(w);

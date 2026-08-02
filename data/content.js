@@ -1680,7 +1680,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "mughsail", cat: "salalah", free: true, group: "beaches", type: "Beach",
+      id: "mughsail", cat: "salalah", free: false, group: "beaches", type: "Beach",
       name: "Mughsail Beach",
       tagline: "Blowholes, cliffs and a beach that doesn't look like the rest of Oman.",
       blurb: "40 minutes west of Salalah on good tarmac, any car. The blowholes at the western end need a decent swell: flat sea and nothing happens. In khareef the cliffs behind turn green.",
@@ -3968,7 +3968,7 @@ window.OMAN_DATA = {
        Dhofar is a flight, not a day trip, the planner knows (region "dhofar"
        is fly:true) and only routes these on a Salalah-based plan.            */
     {
-      id: "wadi-darbat", cat: "salalah", free: true, group: "wadis", type: "Waterfall",
+      id: "wadi-darbat", cat: "salalah", free: false, group: "wadis", type: "Waterfall",
       name: "Wadi Darbat",
       tagline: "Waterfalls, green meadows and camels in the mist.",
       blurb: "In khareef season this valley turns into something that shouldn't exist in Arabia: waterfalls pouring off a travertine cliff, lakes, mist, and camels grazing on actual grass. The rest of the year it's a calm green valley with a lake and boat rides, still the first place I'd send anyone in Dhofar.",
@@ -4045,7 +4045,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "khor-rori", cat: "salalah", free: true, group: "experiences", type: "Ruins",
+      id: "khor-rori", cat: "salalah", free: false, group: "experiences", type: "Ruins",
       name: "Khor Rori & Sumhuram",
       tagline: "2,000-year-old ruins above a lagoon full of flamingos.",
       blurb: "The ancient port of Sumhuram, once the edge of the frankincense trade, now a hilltop ruin looking down on a blue lagoon where the wadi meets the sea. Flamingos in the water, camels on the beach, and almost nobody there on a weekday.",
@@ -4182,7 +4182,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "ayn-razat", cat: "salalah", free: true, group: "wadis", type: "Spring",
+      id: "ayn-razat", cat: "salalah", free: false, group: "wadis", type: "Spring",
       name: "Ayn Razat",
       tagline: "Spring water, gardens and a cave, Salalah's easiest hour.",
       blurb: "A natural spring at the foot of the mountains feeding a strip of ornamental gardens, running water year-round, lush and loud with birds in khareef, and a small cave in the cliff above. The local picnic spot, and a gentle first stop after landing.",
@@ -4227,7 +4227,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "haffa-souq", cat: "salalah", free: true, group: "shopping", type: "Souq",
+      id: "haffa-souq", cat: "salalah", free: false, group: "shopping", type: "Souq",
       name: "Al Haffa Souq",
       tagline: "Frankincense by the scoop, a street back from the sea.",
       blurb: "The old frankincense souq near the corniche, sacks of resin graded by colour, bakhoor, Dhofari incense burners, and the smell that tells you you're in Salalah and nowhere else. Come at dusk when the town wakes up.",
@@ -4256,7 +4256,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "salalah-gardens-mall", cat: "salalah", free: true, group: "shopping", type: "Mall",
+      id: "salalah-gardens-mall", cat: "salalah", free: false, group: "shopping", type: "Mall",
       name: "Salalah Gardens Mall",
       tagline: "The AC hours, where Salalah goes at midday.",
       blurb: "The city's main mall: supermarket, food court, cafés and cinema. Not a sight, a tool. It's where you restock, cool down between the morning and the late afternoon, and where the kids forgive you for the long drive.",
@@ -4284,7 +4284,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "dahariz-beach", cat: "salalah", free: true, group: "beaches", type: "Beach",
+      id: "dahariz-beach", cat: "salalah", free: false, group: "beaches", type: "Beach",
       name: "Dahariz Beach",
       tagline: "Salalah's own beach, coconut palms to the sand.",
       blurb: "The long city beach on the east side of town, backed by coconut plantations. Outside khareef it's calm, warm and swimmable ten minutes from your hotel; in khareef the sea turns wild and you walk it instead.",
@@ -4375,7 +4375,7 @@ window.OMAN_DATA = {
 
     /* ── Salalah additions (Jul 2026): every chip now has ≥5 spots ────────── */
     {
-      id: "al-haffa-beach", cat: "salalah", free: true, group: "beaches", type: "Beach",
+      id: "al-haffa-beach", cat: "salalah", free: false, group: "beaches", type: "Beach",
       name: "Al Haffa Beach",
       tagline: "The city beach, coconuts on one side, the Arabian Sea on the other.",
       blurb: "Salalah's own beach: a long palm-backed strip right next to the Haffa souq, with coconut stands on the road behind it. Not a hidden cove, it's where the city comes to walk at sunset, and that's the point.",
@@ -4512,7 +4512,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "jabal-ittin", cat: "salalah", free: true, group: "mountains", type: "Viewpoint",
+      id: "jabal-ittin", cat: "salalah", free: false, group: "mountains", type: "Viewpoint",
       name: "Ateen Plateau & Prophet Ayoub's Tomb",
       tagline: "The city from above, and one of the oldest pilgrimage sites in the south.",
       blurb: "The plateau straight up behind Salalah. In khareef you drive into the fog line and the hills turn green around you; year-round, the tomb of Nabi Ayoub (Job) sits quietly at the top, and the viewpoints on the way down look over the whole city to the sea.",
@@ -4553,7 +4553,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "gravity-point", cat: "salalah", free: true, group: "mountains", type: "Viewpoint",
+      id: "gravity-point", cat: "salalah", free: false, group: "mountains", type: "Viewpoint",
       name: "Gravity Point (Anti-Gravity Road)",
       tagline: "Put the car in neutral. It rolls uphill. Argue about why on the drive back.",
       blurb: "A stretch of the Ittin road where a stopped car in neutral appears to roll up the slope. It's an optical illusion, the horizon lies to you, but nobody believes that until they've tried it. Twenty minutes of pure fun on the way to the plateau.",
@@ -4649,7 +4649,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "marneef-cave", cat: "salalah", free: true, group: "experiences", type: "Nature",
+      id: "marneef-cave", cat: "salalah", free: false, group: "experiences", type: "Nature",
       name: "Marneef Cave & the Mughsail blowholes",
       tagline: "The sea fires through the rock at your feet.",
       blurb: "At the west end of Mughsail beach: a big rock shelter over a paved walkway, and blowholes in the cliff shelf that jet seawater metres into the air when the swell is up. In khareef they go off like geysers.",
@@ -4693,7 +4693,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "haffa-coconut-stands", cat: "salalah", sub: "Street food", free: true, group: "food", type: "Street food",
+      id: "haffa-coconut-stands", cat: "salalah", sub: "Street food", free: false, group: "food", type: "Street food",
       name: "The Haffa coconut stands",
       tagline: "A machete, a straw, and the freshest thing you'll drink in Oman.",
       blurb: "The row of fruit stands along the plantation road behind Haffa beach: coconuts opened while you wait, tiny sweet Dhofari bananas, papaya and sugarcane straight from the plantations you're standing in. This is Salalah's whole southern-tropics act in one stop.",
@@ -4801,7 +4801,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "salalah-grand-mall", cat: "salalah", sub: "Mall", free: true, group: "shopping", type: "Mall",
+      id: "salalah-grand-mall", cat: "salalah", sub: "Mall", free: false, group: "shopping", type: "Mall",
       name: "Salalah Grand Mall",
       tagline: "The rainy-day option, khareef drizzle included free.",
       blurb: "The other big mall in town: hypermarket, food court, cinema, the usual brands. Nobody flies to Dhofar for a mall, but in a khareef downpour or a June afternoon you'll be glad it exists.",
@@ -4852,7 +4852,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "salalah-central-market", cat: "salalah", sub: "Market", free: true, group: "shopping", type: "Market",
+      id: "salalah-central-market", cat: "salalah", sub: "Market", free: false, group: "shopping", type: "Market",
       name: "The fruit & vegetable market",
       tagline: "Dhofari bananas, coconuts and papaya, where the plantations sell wholesale.",
       blurb: "Salalah's central produce market: stalls piled with the plantation crops the south is famous for. Louder, cheaper and more local than the roadside stands, come in the morning when everything is fresh off the trucks.",
@@ -5060,7 +5060,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "food-bin-ateeq-salalah", cat: "salalah", sub: "Traditional", free: true, group: "food", type: "Omani food",
+      id: "food-bin-ateeq-salalah", cat: "salalah", sub: "Traditional", free: false, group: "food", type: "Omani food",
       name: "Bin Ateeq (Salalah)",
       tagline: "The Salalah branch of the floor-cushion classic.",
       blurb: "Same formula as the Muscat original: private majlis rooms, cushions on the floor, big plates of Omani rice and meat. The reliable lunch between a morning in the mountains and an afternoon on the coast.",

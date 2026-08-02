@@ -2134,10 +2134,6 @@ body.tier-flash{animation:ruFlash .7s ease-out}
    "Wadi Darbat" is a picture. The card is wider than the old one: it now
    has something to say. */
 .soon-card{max-width:520px;text-align:left;padding:26px 24px 24px}
-.soon-kicker{
-  font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--water);margin-bottom:6px;
-}
 .soon-count{display:flex;align-items:baseline;gap:9px;margin:0 0 2px}
 .soon-count b{
   font-size:64px;line-height:.9;letter-spacing:-.045em;font-weight:800;
@@ -2161,17 +2157,6 @@ body.tier-flash{animation:ruFlash .7s ease-out}
 .soon-heroes .sh small{
   display:block;font-size:11.5px;color:var(--muted);line-height:1.4;margin-top:2px;
 }
-
-.soon-mix{
-  list-style:none;padding:0;margin:0 0 14px;
-  display:flex;flex-wrap:wrap;gap:7px;
-}
-.soon-mix li{
-  background:#fff;border:1px solid var(--line);border-radius:999px;
-  padding:6px 12px;font-size:12.5px;color:var(--muted);
-}
-.soon-mix li b{color:var(--ink);font-weight:800}
-.soon-note{font-size:12.5px !important;color:var(--muted) !important;margin:0 0 14px !important}
 
 /* who actually gets it, stated plainly. This used to promise "a free
    update" to everybody, which quietly gave away the thing the paid tiers
