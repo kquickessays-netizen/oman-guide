@@ -2664,11 +2664,14 @@
       <h3>Four ways to get it</h3>
       <div class="st-rows">
         <div class="st-row"><b>${esc(m.itineraryPrice)}</b><span>One plan on its own</span></div>
-        <div class="st-row"><b>${esc(m.plansBundlePrice)}</b><span>All three plans together${
-          (m.itineraryPriceNum && m.plansBundlePriceNum &&
-           m.itineraryPriceNum * 3 > m.plansBundlePriceNum)
-            ? ", save $" + (m.itineraryPriceNum * 3 - m.plansBundlePriceNum).toFixed(2) : ""
-        }</span></div>
+        <div class="st-row"><b>${esc(m.plansBundlePrice)}</b><span>All three plans${(() => {
+          // same arithmetic as the shop, same rule: derived, never typed
+          const s = m.itineraryPriceNum || 0, b = m.plansBundlePriceNum || 0;
+          if (!s || !b || s * 3 <= b) return " together";
+          const x = b - s * 2;
+          const money = v => "$" + (Math.abs(v % 1) < 0.005 ? v.toFixed(0) : v.toFixed(2));
+          return x <= 0.005 ? ", the third one free" : ", the third one for " + money(x);
+        })()}</span></div>
         <div class="st-row"><b>${esc(b.price || m.bundlePrice)}</b><span>${esc(b.name || "The Guide")}, every locked spot and Salalah</span></div>
         <div class="st-row"><b>${esc(p.price || "$19.99")}</b><span>${esc(p.name || "The Full Kit")}, the big routes and the Planner</span></div>
         <div class="st-row st-svc"><b>You</b><span>I plan the whole trip with you, on WhatsApp</span></div>
@@ -2766,13 +2769,36 @@
       const bundleUrl = buyUrl("itin-all");
       const ownsAll = !m.freeLaunch && paidPlans.every(p => isUnlocked(p));
 
+      /* THE HOOK IS "THE THIRD ONE FOR A DOLLAR", and it is arithmetic, not
+         a slogan. "Save $1.98" compares against $8.97, a number almost
+         nobody was ever going to pay: buying three plans one at a time is
+         not a thing people do. The decision a reader is actually making is
+         "I want two of these", and against two singles the bundle costs a
+         dollar. Same money, a comparison they are really running.
+
+         Everything below is derived from the two prices, so no wording here
+         can outlive a price change:
+           extra <= 0   the third is free, say so
+           extra small  name it: "3rd plan for $1"
+           no saving    say nothing, because there is nothing to say */
       const single = m.itineraryPriceNum || 0;
       const bundle = m.plansBundlePriceNum || 0;
       const n = paidPlans.length || 3;
+      const twoCost = single * 2;
+      const extra = bundle - twoCost;          // what the LAST plan costs you
       const saved = single * n - bundle;
-      const badge = (single && bundle && bundle <= single * 2 + 0.02)
-        ? `${n} for the price of two`
-        : (saved > 0 ? `Save $${saved.toFixed(2)}` : "");
+      const money = v => "$" + (Math.abs(v % 1) < 0.005 ? v.toFixed(0) : v.toFixed(2));
+
+      let badge = "", leadTail = "";
+      if (single && bundle && saved > 0) {
+        if (extra <= 0.005) {
+          badge = `${n} for the price of two`;
+          leadTail = ` Two on their own already cost ${money(twoCost)}, so the third is free.`;
+        } else {
+          badge = `3rd plan for ${money(extra)}`;
+          leadTail = ` Two on their own cost ${money(twoCost)}. The third one is ${money(extra)}.`;
+        }
+      }
 
       box.innerHTML = `
         <div class="prod-head">
@@ -2783,9 +2809,7 @@
           <div class="prod-price"><b>${esc(m.plansBundlePrice)}</b><small>all three</small></div>
         </div>
         <p class="prod-lead">Every paid route: the 3-day, the 5-day and the 7-day, hour by hour,
-           each with its costs receipt.${badge === n + " for the price of two"
-             ? " Buy two separately and you've already spent more."
-             : saved > 0 ? ` That's $${saved.toFixed(2)} off buying them one at a time.` : ""}</p>
+           each with its costs receipt.${leadTail}</p>
         <div class="prod-action" id="plansAct"></div>`;
 
       const act = box.querySelector("#plansAct");
