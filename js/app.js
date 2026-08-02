@@ -2150,6 +2150,21 @@
       head.appendChild(el("p", "cat-vp",
         `${D.spots.length} places across Oman, from a licensed guide. For each one: the drive, ` +
         `the walk in, the entry fee, the right month, and whether I'd tell you to skip it.`));
+
+      /* WHAT THE PADLOCK MEANS. The chip on a paid-but-currently-open card
+         is deliberately just 🔓, because the worded version ran the kicker
+         row under the ♥ and ✓. That solved the crowding and created a
+         mystery: an unexplained icon on 53 cards, with a tooltip that only
+         exists for people using a mouse. One line, once, at the top of the
+         only tab it appears on, and the icon becomes shorthand instead of a
+         puzzle. It goes away with the launch, same as the chip. */
+      if (D.meta.freeLaunch && D.spots.some(s => s.free === false)) {
+        const key = el("p", "vp-key");
+        key.innerHTML = `<span class="chip chip-freenow chip-icon">🔓</span>
+          <span>marks the ${D.spots.filter(s => s.free === false).length} places that become
+          part of the paid guide. They're open to everyone while it launches.</span>`;
+        head.appendChild(key);
+      }
       // The scoreboard belongs where the ✓ buttons are, and nowhere else.
       // Silent until they have ticked something, and it scrolls away.
       const strip = rankStrip();
@@ -2699,11 +2714,14 @@
     view.appendChild(head);
 
     if (m.freeLaunch) {
+      /* One October, and it belongs to the Full Kit badge, not here. This
+         banner used to name the month too, which put it back to two
+         mentions: every extra one is another line telling a reader who is
+         interested right now to come back later instead. */
       view.appendChild(el("div", "shop-free",
-        `<strong>🎁 Right now, all of it is free.</strong> Every spot, every plan, the
-         Planner, nothing to pay and nothing to enter. These are the prices from
-         ${esc(prem.opens || "October")}. Leave your dates below and you keep the
-         founding price when they start.`));
+        `<strong>🎁 Right now, all of it is free.</strong> Every spot, every plan and
+         the Planner, nothing to pay and nothing to enter. The prices below are what
+         they become. Leave your dates and you keep the founding price when they do.`));
     }
 
     /* ---- 1. the Guide, $9.99, live ------------------------------------- */
@@ -2721,8 +2739,11 @@
         `<b>Every future update.</b> New spots and re-checked prices monthly. No subscription, nothing to renew.`,
         `<b>Works with no signal.</b> Install it once and the whole guide, photos included, opens in a wadi with no bars.`
       ],
+      // Name EVERY route to the thing being withheld. This used to offer two
+      // ways in and there are three, so it quietly hid the cheapest one.
       nots: paidPlans.filter(p => inBasic.indexOf(p.id) === -1)
-        .map(p => `Not included: <b>${esc(p.name.replace(/^The\s+/i, ""))}</b>, ${esc(m.itineraryPrice)} on its own or in the Full Kit.`),
+        .map(p => `Not included: <b>${esc(p.name.replace(/^The\s+/i, ""))}</b>. ` +
+                  `${esc(m.itineraryPrice)} on its own, ${esc(m.plansBundlePrice)} with the other two, or in the Full Kit.`),
       url: buyUrl("basic") || buyUrl("bundle"),
       cta: (buyUrl("basic") || buyUrl("bundle")) ? `Get the Guide, ${basic.price}`
            : m.freeLaunch ? "Lock my founding price" : "Tell me when it opens",
@@ -2888,7 +2909,8 @@
     view.appendChild(kb);
 
     const out = el("div", "shop-exit");
-    out.innerHTML = `<p>Not today? Nothing here expires, and 58 places stay free either way.</p>`;
+    out.innerHTML = `<p>Not today? Nothing here expires, and
+      ${D.spots.filter(s => s.free).length} places stay free either way.</p>`;
     const back = el("button", "btn-full", "← Take me back to the places");
     back.onclick = () => (location.hash = "#/explore");
     out.appendChild(back);
@@ -4146,8 +4168,13 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5.5L18.5 12 12 18.5"/></svg>
           </button>
           <button type="button" class="wc-alt">Just show me the ${D.spots.length} places</button>
-          <p class="wc-fine">1M+ views on the wadi reels · 58 places free to read
-             · updated every month</p>
+          <!-- COUNTED, never typed. This line said "58 places free to read"
+               for a while after the free/paid split moved to 70, which is a
+               wrong number in the first nine words a stranger ever reads.
+               Any figure that can drift out of step with the data has to be
+               derived from the data. -->
+          <p class="wc-fine">1M+ views on the wadi reels · ${D.spots.filter(s => s.free).length}
+             places free to read · updated every month</p>
         </div>
       </div>`;
 

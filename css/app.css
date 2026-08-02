@@ -3033,6 +3033,13 @@ body{
   padding:4px 8px;font-size:12px;line-height:1.15;letter-spacing:0;
 }
 
+/* The legend under the Explore intro that explains the padlock chip. */
+.vp-key{
+  display:flex;align-items:flex-start;gap:9px;
+  margin:10px 0 0;font-size:12.5px;line-height:1.5;color:var(--muted);
+}
+.vp-key .chip{flex:0 0 auto;margin-top:1px}
+
 /* THE CROWDING FIX. The chip row is bottom-anchored inside the overlay and
    the ♥ / ✓ column is top-anchored at right:10px, 40px wide, running down to
    98px. On a short card those two meet, and the last chip slides underneath
