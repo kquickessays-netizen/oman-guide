@@ -310,6 +310,7 @@
     if (item.free) return true;
     if (Unlock.hasBundle()) return true;               // "*" or free launch
     if ((item.cat || "") === "itineraries") {
+      if (Unlock.hasGrant("itin:*")) return true;      // the $7 plans bundle
       if (Unlock.hasGrant("itin:" + item.id)) return true;
       return Unlock.hasGrant("basic") &&
              (D.meta.basicItineraries || []).indexOf(item.id) !== -1;
@@ -936,13 +937,26 @@
        reason to want the thing you are about to start selling.
 
        So a spot that WILL be paid says so, and says it as a gift rather
-       than a wall. The reader gets the whole spot; they also learn, at the
-       moment they enjoy it, that it is one of the 80. That is the same
-       desire a lock creates, banked for the day the lock comes back, and
-       it costs the reader nothing. It disappears the instant freeLaunch
-       goes false, because then the real lock is doing the job. */
-    if (D.meta.freeLaunch && item.free === false)
-      kick.appendChild(el("span", "chip chip-freenow", "🔓 Free right now"));
+       than a wall. It disappears the instant freeLaunch goes false, because
+       then the real lock is doing the job.
+
+       SPOTS GET THE ICON ONLY. On a photo card the kicker already carries a
+       type, a region and often a reel badge; a fourth chip reading "Free
+       right now" pushed the row into the ♥ and ✓ buttons and turned the
+       card into a bag of labels. An open padlock says the same thing in a
+       tenth of the width, and the sheet spells it out for anyone curious.
+
+       PLANS GET THE WORDS. There are four of them, not a hundred, they sit
+       in a roomier grid, and a plan is the thing most likely to be bought
+       on its own, so the one place worth spending the width is there. */
+    if (D.meta.freeLaunch && item.free === false) {
+      const isPlan = (item.cat || "") === "itineraries";
+      const c = el("span", "chip chip-freenow" + (isPlan ? "" : " chip-icon"),
+        isPlan ? "🔓 Free right now" : "🔓");
+      c.title = "Part of the paid guide, open to everyone during launch";
+      c.setAttribute("aria-label", "Part of the paid guide, free right now");
+      kick.appendChild(c);
+    }
     if (photoCard) {
       media.classList.add("card-media-photo");
       const ov = el("div", "card-overlay");
@@ -2624,7 +2638,7 @@
         if (!box.children.length) {
           box.appendChild(tripCapture({
             lead: o.captureLead || "Tell me when you're coming and I'll email you the moment it opens, at the founding price.",
-            cta: "Give me the Full Kit first",
+            cta: o.captureCta || "Give me the Full Kit first",
             source: o.track || "shop"
           }));
         }
@@ -2647,10 +2661,11 @@
     const b = T.basic || {}, p = T.premium || {};
     const w = el("div", "shopteaser");
     w.innerHTML = `
-      <h3>Three ways to get it</h3>
+      <h3>Four ways to get it</h3>
       <div class="st-rows">
         <div class="st-row"><b>${esc(m.itineraryPrice)}</b><span>One plan on its own</span></div>
-        <div class="st-row"><b>${esc(b.price || m.bundlePrice)}</b><span>${esc(b.name || "The Guide")}, every locked spot</span></div>
+        <div class="st-row"><b>${esc(m.plansBundlePrice)}</b><span>All three plans, cheaper than two</span></div>
+        <div class="st-row"><b>${esc(b.price || m.bundlePrice)}</b><span>${esc(b.name || "The Guide")}, every locked spot and Salalah</span></div>
         <div class="st-row"><b>${esc(p.price || "$19.99")}</b><span>${esc(p.name || "The Full Kit")}, the big routes and the Planner</span></div>
         <div class="st-row st-svc"><b>You</b><span>I plan the whole trip with you, on WhatsApp</span></div>
       </div>
@@ -2673,7 +2688,7 @@
 
     const head = el("div", "cat-head shop-head");
     head.innerHTML = `<h1>Get the guide</h1>
-      <p class="shop-sub">Three ways to use this, from three rials to a route I write for you by hand.</p>`;
+      <p class="shop-sub">Four ways to use this, from one day plan to a route I write for you by hand.</p>`;
     view.appendChild(head);
 
     if (m.freeLaunch) {
@@ -2694,6 +2709,7 @@
       lead: "The whole country, unlocked. The one to buy if you're coming once and want to get it right.",
       items: [
         `<b>All ${locked} locked spots.</b> The remote wadis, the empty beaches, the mountain villages. ${freeSpots} more stay free either way.`,
+        `<b>Salalah and Dhofar included.</b> The khareef coast, Wadi Darbat, the frankincense trail and the empty beaches west, the day the tab opens. No second purchase.`,
         `<b>${esc(nameOf("escape-3day"))}</b>, hour by hour, with the costs receipt.`,
         `<b>Every future update.</b> New spots and re-checked prices monthly. No subscription, nothing to renew.`,
         `<b>Works with no signal.</b> Install it once and the whole guide, photos included, opens in a wadi with no bars.`
@@ -2717,11 +2733,11 @@
       track: "premium",
       lead: "Everything in the Guide, plus the two big routes and the machine that builds your own.",
       items: [
-        `<b>Everything in ${esc(basic.name || "the Guide")}.</b>`,
+        `<b>Everything in ${esc(basic.name || "the Guide")}</b>, Salalah included.`,
         ...paidPlans.filter(p => inBasic.indexOf(p.id) === -1)
           .map(p => `<b>${esc(p.name.replace(/^The\s+/i, ""))}</b>, ${esc(p.tagline || "")}`),
         `<b>The trip Planner.</b> Answer four questions and it builds your route: days clustered by region so you never backtrack, real drive times, heat-smart starts, every stop pinned.`,
-        `<b>Salalah and Dhofar</b> the day it lands, as a free update.`
+        `<b>Every future update</b>, same as the Guide. One payment, nothing to renew.`
       ],
       url: buyUrl("premium"),
       cta: buyUrl("premium") ? `Get the Full Kit, ${prem.price}` : `Give me the Full Kit first`,
@@ -2729,15 +2745,50 @@
       fine: "One payment, no subscription. Every update after it is free."
     }));
 
-    /* ---- 3. single plans, $2.99 ---------------------------------------- */
+    /* ---- 3. the plans: all three for $7, or one for $2.99 ---------------
+       Two singles cost $5.98 and three cost $8.97, so the bundle at $7 is
+       priced under the second purchase on purpose: anyone who wants a second
+       plan is better off taking all three, and that is the entire job of
+       this rung. It is also the cheapest door into the ladder for someone
+       who wants the routes and does not care about the other 68 spots. */
     {
       const box = el("div", "prod prod-singles");
+      const bundleUrl = buyUrl("itin-all");
+      const ownsAll = !m.freeLaunch && paidPlans.every(p => isUnlocked(p));
       box.innerHTML = `
         <div class="prod-head">
-          <div class="prod-name"><h3>One plan on its own</h3></div>
-          <div class="prod-price"><b>${esc(m.itineraryPrice)}</b><small>each</small></div>
+          <div class="prod-name">
+            <h3>${esc((T.plans && T.plans.name) || "All three plans")}</h3>
+            <span class="prod-badge best">Cheaper than two</span>
+          </div>
+          <div class="prod-price"><b>${esc(m.plansBundlePrice)}</b><small>all three</small></div>
         </div>
-        <p class="prod-lead">Know exactly how long you've got? Buy that day and nothing else.</p>`;
+        <p class="prod-lead">Every paid route: the 3-day, the 5-day and the 7-day, hour by hour,
+           each with its costs receipt. Under the price of buying two.</p>
+        <div class="prod-action" id="plansAct"></div>`;
+
+      const act = box.querySelector("#plansAct");
+      if (ownsAll) {
+        act.appendChild(el("p", "prod-fine", "✓ You already have all three."));
+      } else if (bundleUrl) {
+        const a = el("a", "btn-buy gold", `Give me all three, ${m.plansBundlePrice}`);
+        a.href = bundleUrl; a.target = "_blank"; a.rel = "noopener";
+        act.appendChild(a);
+      } else {
+        const b = el("button", "btn-buy gold", `Give me all three, ${m.plansBundlePrice}`);
+        b.onclick = () => {
+          if (window.Analytics) Analytics.track("product_click", { product: "itin-all" });
+          openCapture(null, {
+            title: "All three plans, " + m.plansBundlePrice,
+            lead: "Checkout is being switched on. Tell me when you're coming and I'll send the three routes before you fly, at the founding price.",
+            cta: "Send me all three",
+            source: "plans-bundle"
+          });
+        };
+        act.appendChild(b);
+      }
+
+      box.appendChild(el("div", "shop-or", `or one on its own, ${m.itineraryPrice}`));
       const row = el("div", "single-row");
       /* "Yours" means BOUGHT, not "open because everything is open this
          month". During the free launch every plan is readable, and tagging

@@ -140,10 +140,14 @@ window.OMAN_DATA = {
        (#/shop). Change a price here and it changes on every card, every lock
        row, the sticky bar and the shop, in one edit.
 
-         basic    $9.99   the 57 locked spots + the 3-day plan. LIVE NOW.
+         basic    $9.99   the 68 locked spots, Salalah and Dhofar included,
+                          plus the 3-day plan. LIVE NOW.
          premium  $19.99  all of basic + the 5 and 7-day plans + the Planner
-                          + Salalah when it lands + every update. OCTOBER.
+                          + every update.
          plans    $2.99   any single itinerary, bought on its own.
+         allPlans $7      all three paid plans together, which is a rial
+                          under buying two. The rung for someone who wants
+                          the routes and not the country.
                           The 1-day stays free forever, it is the sample.
          service  ---     "plan my trip for me", priced by group size,
                           answered personally on WhatsApp. See planService.
@@ -166,6 +170,15 @@ window.OMAN_DATA = {
         live: false,
         opens: "October",
         note: "Everything, including the Planner."
+      },
+      // Not a tier of its own, it buys nothing but the plans. Kept here so
+      // the shop can render all four boxes from one place.
+      plans: {
+        name: "All three plans",
+        price: "$7",
+        priceNum: 7,
+        live: true,
+        note: "The routes, without the country."
       }
     },
 
@@ -173,6 +186,14 @@ window.OMAN_DATA = {
     // sold; it is the sample that proves the paid ones are worth it.
     itineraryPrice: "$2.99",
     itineraryPriceNum: 2.99,
+
+    // All three paid plans together. Priced UNDER two singles on purpose:
+    // at $7 against $5.98 for two, nobody sensible buys the second one
+    // separately, which is the whole job of this rung. It is also the
+    // cheapest way into the ladder for someone who wants the routes and
+    // does not care about the other 68 spots.
+    plansBundlePrice: "$7",
+    plansBundlePriceNum: 7,
 
     // Which itineraries the $9.99 Guide includes. Everything not listed here
     // (and not `free: true`) needs either the Full Kit or its own $2.99.
@@ -288,6 +309,7 @@ window.OMAN_DATA = {
       bundle:  "https://gumroad.com/l/YOUR-BUNDLE",     // legacy "everything" key
       basic:   "https://gumroad.com/l/YOUR-GUIDE",      // $9.99 The Guide
       premium: "https://gumroad.com/l/YOUR-FULL-KIT",   // $19.99 The Full Kit
+      "itin-all": "https://gumroad.com/l/YOUR-PLANS",   // $7   all three plans
       // one product per paid itinerary, $2.99 each
       "itin-escape-3day": "https://gumroad.com/l/YOUR-3DAY",
       "itin-classic-5day": "https://gumroad.com/l/YOUR-5DAY",
@@ -920,7 +942,7 @@ window.OMAN_DATA = {
       needsFirstHand: true
     },
     {
-      id: "wadi-al-hoqain", cat: "wadis", free: false, type: "Wadi",
+      id: "wadi-al-hoqain", cat: "wadis", free: true, type: "Wadi",
       name: "Wadi Al Hoqain, the trenches",
       tagline: "Sulfur-blue water in carved rock channels, and it's easy.",
       blurb: "Long, straight rock trenches filled with pale-blue, sulfur-rich water, south of Rustaq. No serious hike, no scramble, you walk in, float down the channels, and wonder why nobody told you about it sooner. From my wadi series: one of the easiest wins in the north.",
@@ -1113,7 +1135,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "sidab", cat: "beaches", free: false, type: "Snorkel",
+      id: "sidab", cat: "beaches", free: true, type: "Snorkel",
       name: "Sidab & its hidden coves",
       tagline: "The 100/10 coves. My favourite corner of the Muscat coast.",
       blurb: "Behind the fishing village of Sidab, a short rough hike drops you into coves you'd swear were photoshopped, clear turquoise water, empty sand, snorkelling straight off the beach. The two reels everyone asks about were filmed here.",
@@ -1162,7 +1184,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "qantab-beaches", cat: "beaches", free: false, type: "Boat trip",
+      id: "qantab-beaches", cat: "beaches", free: true, type: "Boat trip",
       name: "Qantab & its ten beaches",
       tagline: "One fishing village, ten beaches, three rials.",
       blurb: "Qantab looks like one small beach until a local boat takes you around the corner: coves and beaches strung along the cliffs, most reachable only by sea. A short ride costs a few rials and skips every hike.",
@@ -1457,7 +1479,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "marjan-beach", cat: "beaches", free: false, type: "Snorkel",
+      id: "marjan-beach", cat: "beaches", free: true, type: "Snorkel",
       name: "Marjan Beach (Ras Al Hamra)",
       tagline: "Turtles grazing metres from the sand, inside the city, for free.",
       blurb: "The PDO beach at Ras Al Hamra, 'Al Marjan' on the maps. Swim out over the seagrass and you're snorkelling with green turtles, no boat and no tour required; the brave take the jump rock at the far end. Public access until 7pm.",
@@ -1564,7 +1586,7 @@ window.OMAN_DATA = {
     /* ── Camping (added Jul 2026), wild camping is legal, free and one of
        Oman's superpowers. Every camp spot carries the safety rules. ──────── */
     {
-      id: "white-beach-fins", cat: "beaches", free: false, type: "Camping",
+      id: "white-beach-fins", cat: "beaches", free: true, type: "Camping",
       name: "White Beach (Fins)",
       tagline: "The classic first camp, white pebbles, clear water, fire on the beach.",
       blurb: "The little white cove past Fins is where half of Muscat learned to beach-camp: sheltered, swimmable, and close enough to bail out if the kids mutiny. Pitch above the tide line, cook on the sand, wake up and swim before breakfast. Wild camping in Oman is legal and free, this is the place to start.",
@@ -2609,7 +2631,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "ain-al-kasfah", cat: "experiences", free: false, type: "Spring",
+      id: "ain-al-kasfah", cat: "experiences", free: true, type: "Spring",
       name: "Ain Al Kasfah hot springs",
       tagline: "Rustaq's natural hot bath, and your post-wadi recovery plan.",
       blurb: "A genuinely hot mineral spring bubbling out at Rustaq, feeding bath houses and a falaj that's watered these palms for centuries. Locals have used it for aches and skin for generations. An hour from Muscat and criminally uncombined with the wadis next door.",
@@ -3643,7 +3665,7 @@ window.OMAN_DATA = {
        (Jabal Shams, Jabal Akhdar, Misfat and Al Hoota moved here from
        Experiences when this tab was created, their ids are unchanged.)      */
     {
-      id: "wakan-village", cat: "mountains", free: false, type: "Village",
+      id: "wakan-village", cat: "mountains", free: true, type: "Village",
       name: "Wakan Village",
       tagline: "700 steps up through the orchards, and the blossoms in spring.",
       blurb: "A tiny terraced village hanging 2,000m up the wall of Wadi Mistal, stone steps climbing through apricot and pomegranate gardens to a viewpoint over the whole valley. In late February the orchards blossom white and pink, and half of Oman drives up to see it.",
@@ -3785,7 +3807,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "muscat-ridge-treks", cat: "mountains", free: false, type: "Hike",
+      id: "muscat-ridge-treks", cat: "mountains", free: true, type: "Hike",
       name: "The Mutrah ridge treks",
       tagline: "Real mountain trails that start where the city parking ends.",
       blurb: "Muscat is one of the few capitals where marked treks leave from the corniche: the C38 climbs from Riyam to the ridgeline above Mutrah harbour, and its sister paths (Sidab coastal, the Geotrek) thread the same bare hills. Two hours, city shoes optional, views you'd fly for.",
@@ -4884,7 +4906,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "cafe-la-miel", cat: "food", sub: "Coffee", free: false, type: "Coffee",
+      id: "cafe-la-miel", cat: "food", sub: "Coffee", free: true, type: "Coffee",
       name: "La Miel Specialty Coffee",
       tagline: "The pre-wadi flat white.",
       blurb: "Al Ghubrah. Properly sourced beans, properly pulled shots, and a room that doesn't feel like a hotel lobby. This is where I start a driving day.",
@@ -4932,7 +4954,7 @@ window.OMAN_DATA = {
       tips: ["Portions are big. Two mains between three people is usually enough."]
     },
     {
-      id: "cafe-qaha", cat: "food", sub: "Coffee", free: false, type: "Coffee",
+      id: "cafe-qaha", cat: "food", sub: "Coffee", free: true, type: "Coffee",
       name: "Qaha Specialty Coffee",
       tagline: "Omani coffee culture, modernised.",
       blurb: "Specialty coffee on Al Maha St. Walk-in, cheap, and quiet enough to sit for an hour before an early drive.",
@@ -5097,7 +5119,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "shop-seeb-souq", cat: "shopping", sub: "Traditional souq", free: false, type: "Souq",
+      id: "shop-seeb-souq", cat: "shopping", sub: "Traditional souq", free: true, type: "Souq",
       name: "Seeb Souq",
       tagline: "Where Muscat actually shops, fish, dates and zero tourists.",
       blurb: "A working local souq on the Seeb waterfront: the morning fish auction, dates by the kilo, abayas and kummas. Nothing here is staged for visitors, that's the point.",
@@ -5198,7 +5220,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "shop-avenues-mall", cat: "shopping", sub: "Mall", free: false, type: "Mall",
+      id: "shop-avenues-mall", cat: "shopping", sub: "Mall", free: true, type: "Mall",
       name: "Oman Avenues Mall",
       tagline: "Central, calm and easy.",
       blurb: "Big, central and rarely overwhelming, Carrefour for road-trip supplies, plus the usual brands and cafés. The practical stop, not the destination.",

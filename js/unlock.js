@@ -22,8 +22,10 @@ const Unlock = (() => {
      grant string stored on the device.
 
        "*"                 everything, forever: every spot, every plan, the
-                           Planner, Salalah when it lands
-       "basic"             the locked spots + the plans in meta.basicItineraries
+                           Planner
+       "basic"             every locked spot, Salalah and Dhofar included,
+                           plus the plans in meta.basicItineraries
+       "itin:*"            all three paid plans, and no spots
        "itin:<id>"         that one itinerary and nothing else
 
      `bundle` is the original single product and still grants "*", so every
@@ -32,6 +34,7 @@ const Unlock = (() => {
     bundle:  "*",
     premium: "*",
     basic:   "basic",
+    "itin-all":          "itin:*",
     "itin-escape-3day":  "itin:escape-3day",
     "itin-classic-5day": "itin:classic-5day",
     "itin-loop-7day":    "itin:loop-7day"
@@ -109,6 +112,7 @@ const Unlock = (() => {
   function tierName() {
     if (state.grants.includes("*")) return "The Full Kit";
     if (state.grants.includes("basic")) return "The Guide";
+    if (state.grants.includes("itin:*")) return "All three plans";
     const n = state.grants.filter(g => g.indexOf("itin:") === 0).length;
     if (n) return n + (n === 1 ? " plan" : " plans");
     return "";
