@@ -837,19 +837,18 @@ region: "muscat", coords: [23.08509, 58.84815],
       img: "assets/wadis/wadi-dayqah-3.jpg",
       imgCredit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons",
       gallery: [
-        { src: "assets/wadis/wadi-dayqah.jpg", credit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons" },
-        { src: "assets/wadis/wadi-dayqah-2.jpg", credit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-dayqah.jpg", credit: "Photo: Paasikivi · CC BY-SA 3.0 · Wikimedia Commons" }
       ],
       mapUrl: "https://maps.app.goo.gl/E1Q3CXQP44NY7FCA6",
       tips: [
-        "The dam itself is the highlight; the park and the water activities make it a full stop when they're running.",
+        "The dam itself is the highlight; the park and the water activities make it a full stop when they're running."
       ],
       whatYoullDo: [
         "This is the chill one: picnic at the viewpoint over the dam, photos of the lake and the mountains around it.",
-        "Whichever of the activities are running that day, kayaks to the zipline, add them on.",
+        "Whichever of the activities are running that day, kayaks to the zipline, add them on."
       ],
       gettingThere: [
-        "About 1.5 hrs from Muscat, any car, with viewpoint stops worth making on the way.",
+        "About 1.5 hrs from Muscat, any car, with viewpoint stops worth making on the way."
       ],
       verify: true
     },
@@ -5372,7 +5371,6 @@ region: "muscat", coords: [23.56816, 58.41489],
       img: "assets/shopping/shop-seeb-souq.jpg",
       imgCredit: "Photo: 'dronepicr' · CC BY 2.0 · Wikimedia Commons",
       gallery: [
-        { src: "assets/shopping/shop-seeb-souq-2.jpg", credit: "Photo: JK Werner from London, England · CC BY 2.0 · Wikimedia Commons" },
         { src: "assets/shopping/shop-seeb-souq-3.jpg", credit: "Photo: JK Werner from London, England · CC BY 2.0 · Wikimedia Commons" }
       ], region: "muscat", coords: [23.670, 58.189],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
@@ -5388,7 +5386,7 @@ region: "muscat", coords: [23.56816, 58.41489],
         "Start at the fish market early, the auction is loud, fast and completely real.",
         "Then the covered lanes: dates by the kilo at half the tourist-shop price.",
         "Kummas, abayas, household stalls.",
-        "This is shopping the way Muscat actually does it. Halwa from the halwa shops, dates and tahini from Al Sharaa.",
+        "This is shopping the way Muscat actually does it. Halwa from the halwa shops, dates and tahini from Al Sharaa."
       ],
       tips: [
         "Early morning, or you miss the fish auction entirely.",
@@ -5542,6 +5540,14 @@ region: "muscat", coords: [23.607, 58.256],
          These are references, not copies. Change a photo on either spot and
          it changes here, because both point at the same files. The two Tiwi
          credits are blank on purpose, see the warning on pebble-beach-tiwi. */
+      img: "assets/wadis/wadi-shab.jpg",
+      imgCredit: "Photo: dronepicr · CC BY 2.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/wadis/wadi-shab-2.jpg", credit: "Photo: dronepicr · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-shab-3.jpg", credit: "Photo: dronepicr · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/beaches/pebble-beach-tiwi.jpg", credit: "" },
+        { src: "assets/beaches/pebble-beach-tiwi-2.jpg", credit: "" },
+      ],
       stats: { "Best for": "Day-trippers from Muscat", "Base": "Muscat, back by dinner", "Car": "Any car", "Days": "1" },
       insta: "https://www.instagram.com/hussain_explores/reel/DUbTJINDJ6B/", // the costs & timing reel this plan is built from
       route: [

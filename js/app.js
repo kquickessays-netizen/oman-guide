@@ -1020,13 +1020,18 @@
     /* Photo-forward card: the name, tagline and chips sit ON the image over
        a dark scrim, so the feed reads like a travel app, not a document.
 
-       EVERY OPEN CARD IS ONE, photo or not. It used to depend on item.img,
-       which gave the feed two open formats: photo cards, and a white
-       document panel for the three spots with no usable photo. Once locked
-       cards started wearing a white panel of their own, that second format
-       read as "locked" on a spot that is open. One format for open, one for
-       locked, and the difference means exactly what it looks like. */
-    const photoCard = unlocked;
+       EVERY SPOT CARD IS ONE NOW, open or locked. A locked SPOT used to
+       carry a white panel under its blurred photo holding the same name and
+       tagline the open cards write on the image, which made the feed two
+       different shapes for no reason a reader could name. The lock is
+       already said by the blur and the pill; it does not also need a
+       different silhouette.
+
+       PLANS KEEP THE PANEL. A route is bought as a route: its card has to
+       carry the "full route, hour by hour" line and, for the free one, what
+       it costs. That is a different job to a place, so it keeps its body. */
+    const isPlanCard = (item.cat || "") === "itineraries";
+    const photoCard = unlocked || (isHeld(item) && !isPlanCard);
 
     // CARD chips: identification only, what it is, where it is, reel or not.
     // Everything else (difficulty, 4×4, guide, season, sub-label) lives in
@@ -1075,11 +1080,27 @@
       ov.appendChild(kick);
       ov.appendChild(el("h3", "ov-title", esc(item.name)));
       ov.appendChild(el("p", "ov-tag", esc(item.tagline)));
-      const sl = statLine(item, true);
+      // A held spot's stat line would advertise a difficulty and a duration
+      // for something nobody can open yet, so it waits with the rest.
+      const sl = unlocked ? statLine(item, true) : "";
       if (sl) ov.insertAdjacentHTML("beforeend", sl);
       media.appendChild(ov);
       // Photo cards are IMAGE + overlay only, short and scannable. All the
       // stats and text live in the detail sheet, one tap away.
+
+      /* THE FREE PLAN EARNS A PANEL. Every other open card is photo-only,
+         but the one free route has something to say that a photo cannot:
+         that it costs nothing, and that it is the whole plan rather than a
+         teaser. It is the first card on the Plan tab and the only one a
+         reader can open, so this is the line that has to land. */
+      if (isPlanCard && unlocked) {
+        const f = el("div", "freeplan");
+        f.innerHTML =
+          `<span class="fp-tag">Free, in full</span>` +
+          `<span class="fp-txt">Hour by hour, with every cost in rials and ` +
+          `the whole route on one map.</span>`;
+        body.appendChild(f);
+      }
     } else {
       body.appendChild(kick);
       if (unlocked) {
@@ -1111,29 +1132,20 @@
         }
 
         row.appendChild(el("span", "lock-row-txt",
-          held ? (isPlan ? `Full route, hour by hour` : `Opening in the guide soon`) :
+          held ? `Full route, hour by hour` :
           isPlan ? `Full plan, hour by hour` :
           `Hidden ${singularOf(item)}${lockNum ? " #" + lockNum : ""} · in the paid guide`));
 
-        /* No price and no date on a held item: during the trial there is
-           nothing to buy, and "soon" is the only promise being made. The
-           button's ask is an email, so they hear the moment it opens. */
-        const go = el("button", "lock-row-btn",
-          held ? `🔔 Get it first` : `Unlock ${priceFor(item)}`);
-        go.onclick = e => {
-          e.stopPropagation();
-          if (held) {
-            if (window.Analytics) Analytics.track("held_click", { id: item.id });
-            openCapture(item.name, {
-              title: item.name,
-              lead: `<b>${esc(item.name)}</b> opens in the guide soon. ` +
-                    `Tell me when you're travelling and I'll send it to you the day it does.`,
-              cta: "Send it to me when it opens",
-              source: "held:" + item.id
-            });
-          } else location.hash = "#/shop";
-        };
-        row.appendChild(go);
+        /* NO BUTTON ON A HELD CARD. The whole card already opens the date
+           capture, so a button next to it was a second control for the one
+           action, competing with the card it sat inside. The post-trial
+           paywall card keeps its button, because that one goes somewhere
+           else: the shop. */
+        if (!held) {
+          const go = el("button", "lock-row-btn", `Unlock ${priceFor(item)}`);
+          go.onclick = e => { e.stopPropagation(); location.hash = "#/shop"; };
+          row.appendChild(go);
+        }
         body.appendChild(row);
       }
     }

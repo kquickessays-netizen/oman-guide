@@ -2619,6 +2619,31 @@ body{
 }
 .card-media-locked .lock-pill{position:relative;z-index:2}
 
+/* A HELD SPOT is a photo card now, so its overlay text has to read over a
+   blurred photo instead of a white panel. The scrim below the pill does
+   that work; the pill itself moves to the TOP so it never collides with
+   the name sitting at the foot. */
+.card-media-tease .lock-pill{
+  position:absolute;top:12px;left:12px;z-index:3;
+}
+.card.locked .card-media-photo .card-overlay{
+  background:linear-gradient(180deg,rgba(10,25,22,0) 0%,rgba(10,25,22,.5) 45%,rgba(10,25,22,.86) 100%);
+}
+
+/* THE FREE PLAN'S PANEL. The one open route says the thing a photo cannot:
+   it costs nothing and it is the whole plan. Gold, because it is the only
+   giveaway on a tab where everything else is coming soon. */
+.freeplan{
+  display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
+  padding:11px 15px 13px;
+}
+.freeplan .fp-tag{
+  flex:0 0 auto;font-size:11px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;color:#7a4a08;background:var(--gold-soft);
+  border-radius:999px;padding:4px 10px;
+}
+.freeplan .fp-txt{flex:1 1 140px;font-size:13px;line-height:1.45;color:var(--muted)}
+
 /* THE TEASE (trial lock). The anonymous lock above hides; this one SELLS.
    The spot's own photo at full height and full colour, blurred just enough
    that it reads "not yet" while every colour and shape still lands. The
