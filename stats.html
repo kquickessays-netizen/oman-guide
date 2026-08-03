@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#0b1f22">
+<title>Exploring Oman — Stats</title>
+
+<!--
+  ===========================================================================
+  THE STATS DESK.  exploresoman.com/stats.html
+  ---------------------------------------------------------------------------
+  WHO CAN SEE THIS DATA
+  Nobody, until they sign in. The publishable key below is the same one the
+  public app already ships, and on its own it can only INSERT (see
+  delivery/backend-schema.sql). Reading needs a Supabase Auth session, which
+  needs an email and password you created by hand.
+
+  SETUP, ONCE (5 minutes):
+    1. Open delivery/dashboard-access.sql, put YOUR TWO EMAILS in step 1 of
+       it, then run the whole file in Supabase -> SQL Editor.
+       Reading is allow-listed to those addresses, because this project had
+       public sign-ups switched on and the key below is public: without the
+       allow-list, a stranger could sign up and read the email list.
+    2. Authentication -> Sign In / Providers -> Email -> turn OFF "Allow new
+       users to sign up". (Belt and braces, do it anyway.)
+    3. Authentication -> Users -> "Add user" -> one for each of you, using
+       the same two addresses, tick "Auto Confirm User".
+    4. Open exploresoman.com/stats.html and sign in.
+
+  WHY NO LIBRARY: the whole project has no build step and no dependencies.
+  Supabase Auth and PostgREST are both plain HTTP, so this page is one file
+  of vanilla JS that will still run in five years.
+
+  WHAT IT CANNOT DO: there is no UPDATE or DELETE policy for a signed-in
+  user, so nothing on this page can change or destroy a row. It reads.
+  ===========================================================================
+-->
+
+<style>
+:root{
+  --bg:#0b1f22; --panel:#122c30; --panel-2:#173539; --line:#22474d;
+  --ink:#eaf4f2; --muted:#8fb0ad; --teal:#3fb0a8; --gold:#e0a63c;
+  --pink:#e4739f; --good:#54c08a; --bad:#e2695f;
+  --radius:14px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--teal)}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:0 18px 70px}
+
+/* ---------------------------------------------------------------- sign in */
+.gate{min-height:100vh;display:grid;place-items:center;padding:20px}
+.gate form{
+  width:100%;max-width:360px;background:var(--panel);border:1px solid var(--line);
+  border-radius:18px;padding:26px 24px;
+}
+.gate h1{margin:0 0 4px;font-size:21px;letter-spacing:-.02em}
+.gate p{margin:0 0 20px;color:var(--muted);font-size:13.5px}
+.gate label{display:block;font-size:12px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px}
+.gate input{
+  width:100%;margin:0 0 14px;padding:11px 13px;border-radius:10px;
+  background:var(--bg);border:1px solid var(--line);color:var(--ink);font:inherit;
+}
+.gate input:focus{outline:2px solid var(--teal);outline-offset:1px}
+.btn{
+  width:100%;padding:12px;border:0;border-radius:10px;
+  background:var(--teal);color:#04201d;font-weight:800;
+}
+.btn:disabled{opacity:.55;cursor:default}
+.err{margin:12px 0 0;color:var(--bad);font-size:13px;min-height:1.2em}
+
+/* ------------------------------------------------------------------- head */
+header{
+  position:sticky;top:0;z-index:20;background:rgba(11,31,34,.93);
+  backdrop-filter:blur(9px);border-bottom:1px solid var(--line);
+}
+.hrow{max-width:1180px;margin:0 auto;padding:12px 18px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{font-weight:800;letter-spacing:-.01em;margin-right:auto;font-size:15.5px}
+.brand small{display:block;font-weight:500;color:var(--muted);font-size:11.5px;letter-spacing:0}
+.range{display:flex;gap:4px;background:var(--panel);padding:3px;border-radius:999px;
+  border:1px solid var(--line)}
+.range button{
+  border:0;background:transparent;color:var(--muted);font-size:12.5px;font-weight:700;
+  padding:6px 12px;border-radius:999px;
+}
+.range button.on{background:var(--teal);color:#04201d}
+.ghost{
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700;
+}
+nav.tabs{max-width:1180px;margin:0 auto;padding:0 18px 10px;display:flex;gap:6px;
+  overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{
+  flex:0 0 auto;border:1px solid transparent;background:transparent;color:var(--muted);
+  padding:7px 13px;border-radius:999px;font-size:13px;font-weight:700;
+}
+nav.tabs button.on{background:var(--panel-2);color:var(--ink);border-color:var(--line)}
+nav.tabs .n{font-size:11px;color:var(--muted);margin-left:5px}
+
+/* ------------------------------------------------------------------ cards */
+h2.sec{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);
+  margin:26px 0 11px;font-weight:800}
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:15px 16px}
+.tile .k{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  font-weight:800}
+.tile .v{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:6px 0 2px;
+  font-variant-numeric:tabular-nums}
+.tile .s{font-size:12px;color:var(--muted)}
+.tile.gold .v{color:var(--gold)}
+.tile.teal .v{color:var(--teal)}
+.tile.pink .v{color:var(--pink)}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;overflow:hidden}
+
+/* ------------------------------------------------------------------ chart */
+.bars{display:flex;align-items:flex-end;gap:3px;height:130px;margin-top:6px}
+.bars .b{flex:1 1 0;min-width:3px;background:var(--teal);border-radius:3px 3px 0 0;
+  opacity:.85;position:relative}
+.bars .b:hover{opacity:1}
+.bars .b span{position:absolute;inset:auto 0 100% 0;text-align:center;font-size:10px;
+  color:var(--muted);opacity:0;transition:opacity .1s}
+.bars .b:hover span{opacity:1}
+.axis{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;
+  margin-top:7px}
+
+/* ------------------------------------------------------------------ table */
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);
+  vertical-align:top;white-space:nowrap}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  font-weight:800;position:sticky;top:0;background:var(--panel)}
+td.wrap{white-space:normal;min-width:240px}
+tbody tr:hover{background:var(--panel-2)}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.bar-cell{position:relative}
+.bar-cell i{position:absolute;left:0;top:0;bottom:0;background:rgba(63,176,168,.16);
+  border-radius:0 3px 3px 0}
+.bar-cell span{position:relative}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11.5px;
+  font-weight:700;background:var(--panel-2);color:var(--muted)}
+.pill.up{background:rgba(84,192,138,.16);color:var(--good)}
+.pill.down{background:rgba(226,105,95,.16);color:var(--bad)}
+.stars{color:var(--gold);letter-spacing:1px}
+.empty{color:var(--muted);padding:26px 4px;text-align:center;font-size:13.5px}
+.note{color:var(--muted);font-size:12.5px;margin:10px 2px 0}
+.hide{display:none !important}
+@media(max-width:640px){
+  .tile .v{font-size:23px}
+  .hrow{gap:9px}
+  .brand{width:100%;margin-right:0}
+}
+</style>
+</head>
+<body>
+
+<!-- ------------------------------------------------------------- sign in -->
+<div class="gate" id="gate">
+  <form id="loginForm" autocomplete="on">
+    <h1>Exploring Oman</h1>
+    <p>Stats desk. Sign in with the account made for you in Supabase.</p>
+    <label for="em">Email</label>
+    <input id="em" type="email" autocomplete="username" required>
+    <label for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password" required>
+    <button class="btn" id="loginBtn" type="submit">Sign in</button>
+    <p class="err" id="loginErr"></p>
+  </form>
+</div>
+
+<!-- ------------------------------------------------------------ dashboard -->
+<div id="app" class="hide">
+  <header>
+    <div class="hrow">
+      <div class="brand">Exploring Oman <small id="who">stats desk</small></div>
+      <div class="range" id="range">
+        <button data-d="7">7d</button>
+        <button data-d="30" class="on">30d</button>
+        <button data-d="90">90d</button>
+        <button data-d="0">All</button>
+      </div>
+      <button class="ghost" id="refresh">Refresh</button>
+      <button class="ghost" id="out">Sign out</button>
+    </div>
+    <nav class="tabs" id="tabs"></nav>
+  </header>
+  <div class="wrap" id="view"></div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  /* The same publishable key the public app ships. On its own it can only
+     INSERT; every read below rides on the signed-in user's token. */
+  const URL_ = "https://bfneutpsjyfqferkublh.supabase.co";
+  const KEY  = "sb_publishable_kHrIcnawDTYNmumFholkYQ_F8k7Z24d";
+  const SESSION_KEY = "oman_stats_session";
+
+  const $ = s => document.querySelector(s);
+  const el = (t, c, h) => { const n = document.createElement(t);
+    if (c) n.className = c; if (h != null) n.innerHTML = h; return n; };
+  const esc = s => String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+  const nf = n => (n == null ? "0" : Number(n).toLocaleString("en-GB"));
+
+  let session = null, DATA = null, days = 30, tab = "overview";
+  try { session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); } catch {}
+
+  /* ------------------------------------------------------------------ auth */
+  async function signIn(email, password) {
+    const r = await fetch(URL_ + "/auth/v1/token?grant_type=password", {
+      method: "POST",
+      headers: { apikey: KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error_description || j.msg || j.message || ("Sign-in failed (" + r.status + ")"));
+    return j;
+  }
+
+  async function refreshToken() {
+    if (!session || !session.refresh_token) return false;
+    const r = await fetch(URL_ + "/auth/v1/token?grant_type=refresh_token", {
+      method: "POST",
+      headers: { apikey: KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh_token: session.refresh_token })
+    });
+    if (!r.ok) return false;
+    session = await r.json();
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    return true;
+  }
+
+  function signOut() {
+    session = null;
+    localStorage.removeItem(SESSION_KEY);
+    $("#app").classList.add("hide");
+    $("#gate").classList.remove("hide");
+  }
+
+  /* ------------------------------------------------------------------ read
+     One helper for every table. PostgREST caps a response at 1000 rows, so
+     this pages until it has everything and says so if it stops. */
+  async function readAll(table, query, cap) {
+    cap = cap || 20000;
+    const out = [];
+    let from = 0;
+    const PAGE = 1000;
+    for (;;) {
+      const r = await fetch(URL_ + "/rest/v1/" + table + "?" + query, {
+        headers: {
+          apikey: KEY,
+          Authorization: "Bearer " + session.access_token,
+          Range: from + "-" + (from + PAGE - 1),
+          "Range-Unit": "items"
+        }
+      });
+      if (r.status === 401) {
+        if (await refreshToken()) continue;
+        throw Object.assign(new Error("Session expired."), { auth: true });
+      }
+      if (!r.ok) {
+        const t = await r.text().catch(() => "");
+        // A missing table or a missing SELECT policy both land here.
+        throw new Error(table + ": " + r.status + " " + t.slice(0, 160));
+      }
+      const rows = await r.json();
+      out.push.apply(out, rows);
+      if (rows.length < PAGE || out.length >= cap) break;
+      from += PAGE;
+    }
+    return out;
+  }
+
+  const sinceISO = () => days
+    ? new Date(Date.now() - days * 864e5).toISOString()
+    : "1970-01-01T00:00:00Z";
+
+  async function loadAll() {
+    const since = "created_at=gte." + sinceISO();
+    const [events, subs, bookings, reviews] = await Promise.all([
+      readAll("events", since + "&select=created_at,event,props,device_id,email&order=created_at.desc"),
+      readAll("subscribers", "select=*&order=created_at.desc"),
+      readAll("bookings", "select=*&order=created_at.desc"),
+      readAll("reviews", "select=*&order=created_at.desc")
+    ]);
+    return { events, subs, bookings, reviews };
+  }
+
+  /* ------------------------------------------------------------- crunching */
+  const propOf = (e, k) => {
+    const p = e.props;
+    if (!p) return null;
+    if (typeof p === "string") { try { return JSON.parse(p)[k]; } catch { return null; } }
+    return p[k];
+  };
+  const dayOf = iso => String(iso).slice(0, 10);
+
+  function tally(list, keyFn) {
+    const m = new Map();
+    list.forEach(x => {
+      const k = keyFn(x);
+      if (k == null || k === "") return;
+      m.set(k, (m.get(k) || 0) + 1);
+    });
+    return [...m.entries()].sort((a, b) => b[1] - a[1]);
+  }
+
+  function uniq(list, keyFn) {
+    const s = new Set();
+    list.forEach(x => { const k = keyFn(x); if (k) s.add(k); });
+    return s.size;
+  }
+
+  /* Everything the dashboard shows, derived once per load. */
+  function crunch(d) {
+    const ev = d.events;
+    const inRange = rows => days
+      ? rows.filter(r => new Date(r.created_at) >= new Date(sinceISO()))
+      : rows;
+    const subs = inRange(d.subs), bookings = inRange(d.bookings), reviews = inRange(d.reviews);
+
+    // daily unique devices
+    const byDay = new Map();
+    ev.forEach(e => {
+      const k = dayOf(e.created_at);
+      if (!byDay.has(k)) byDay.set(k, new Set());
+      if (e.device_id) byDay.get(k).add(e.device_id);
+    });
+    const span = days || Math.max(1, Math.ceil(
+      (Date.now() - new Date(ev.length ? ev[ev.length - 1].created_at : Date.now())) / 864e5));
+    const series = [];
+    for (let i = span - 1; i >= 0; i--) {
+      const k = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
+      series.push({ day: k, n: (byDay.get(k) || new Set()).size });
+    }
+
+    const spotEv = ev.filter(e => e.event === "spot");
+    const heldEv = ev.filter(e => e.event === "held_click" || e.event === "held_blocked");
+    return {
+      devices: uniq(ev, e => e.device_id),
+      events: ev.length,
+      views: ev.filter(e => e.event === "view").length,
+      spotOpens: spotEv.length,
+      subs, bookings, reviews,
+      series,
+      tabs: tally(ev.filter(e => e.event === "view"), e => propOf(e, "tab")),
+      spots: tally(spotEv, e => propOf(e, "id")),
+      held: tally(heldEv, e => propOf(e, "id")),
+      saves: tally(ev.filter(e => e.event === "save" && propOf(e, "on") === true), e => propOf(e, "id")),
+      names: tally(ev, e => e.event),
+      whatsapp: ev.filter(e => e.event === "whatsapp_click").length,
+      products: tally(ev.filter(e => e.event === "product_click"), e => propOf(e, "product")),
+      tripIntents: ev.filter(e => e.event === "trip_intent"),
+      sources: tally(ev.filter(e => e.event === "trip_intent"), e => propOf(e, "source")),
+      months: tally(ev.filter(e => e.event === "trip_intent"), e => propOf(e, "trip_month")),
+      raw: ev.slice(0, 300)
+    };
+  }
+
+  /* ------------------------------------------------------------- rendering */
+  function tile(k, v, s, cls) {
+    return `<div class="tile ${cls || ""}"><div class="k">${esc(k)}</div>
+      <div class="v">${esc(v)}</div><div class="s">${esc(s || "")}</div></div>`;
+  }
+
+  function barTable(rows, head, opts) {
+    opts = opts || {};
+    if (!rows.length) return `<div class="empty">Nothing yet.</div>`;
+    const max = rows[0][1] || 1;
+    const body = rows.slice(0, opts.limit || 25).map(([k, n]) => `
+      <tr><td class="bar-cell"><i style="width:${(n / max * 100).toFixed(1)}%"></i>
+        <span>${esc(opts.label ? opts.label(k) : k)}</span></td>
+      <td class="num">${nf(n)}</td></tr>`).join("");
+    return `<div class="tblwrap"><table><thead><tr>
+      <th>${esc(head[0])}</th><th class="num">${esc(head[1])}</th>
+      </tr></thead><tbody>${body}</tbody></table></div>`;
+  }
+
+  function dataTable(rows, cols) {
+    if (!rows.length) return `<div class="empty">Nothing yet.</div>`;
+    const head = cols.map(c => `<th>${esc(c.h)}</th>`).join("");
+    const body = rows.map(r => "<tr>" + cols.map(c =>
+      `<td class="${c.cls || ""}">${c.get(r)}</td>`).join("") + "</tr>").join("");
+    return `<div class="tblwrap"><table><thead><tr>${head}</tr></thead>
+      <tbody>${body}</tbody></table></div>`;
+  }
+
+  const fmtDate = iso => {
+    const d = new Date(iso);
+    return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short" })
+      + " " + d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  };
+
+  function chart(series) {
+    const max = Math.max(1, ...series.map(s => s.n));
+    const bars = series.map(s =>
+      `<div class="b" style="height:${Math.max(2, s.n / max * 100)}%">
+        <span>${s.n}</span></div>`).join("");
+    return `<div class="panel"><div class="k" style="font-size:11.5px;color:var(--muted);
+      text-transform:uppercase;letter-spacing:.07em;font-weight:800">People per day</div>
+      <div class="bars">${bars}</div>
+      <div class="axis"><span>${esc(series[0] ? series[0].day : "")}</span>
+      <span>peak ${max}</span>
+      <span>${esc(series.length ? series[series.length - 1].day : "")}</span></div></div>`;
+  }
+
+  const csv = (rows, cols, name) => {
+    const line = a => a.map(v => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`).join(",");
+    const body = [line(cols.map(c => c.h))]
+      .concat(rows.map(r => line(cols.map(c => c.raw(r))))).join("\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([body], { type: "text/csv;charset=utf-8" }));
+    a.download = name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  };
+
+  const TABS = [
+    ["overview", "Overview", d => ""],
+    ["places",   "Places",   d => d.spots.length],
+    ["locked",   "Locked interest", d => d.held.length],
+    ["emails",   "Emails",   d => d.subs.length],
+    ["leads",    "Leads",    d => d.bookings.length],
+    ["reviews",  "Reviews",  d => d.reviews.length],
+    ["events",   "Raw events", d => d.events]
+  ];
+
+  function renderTabs(c) {
+    $("#tabs").innerHTML = TABS.map(([id, label, n]) => {
+      const v = n(c);
+      return `<button data-t="${id}" class="${tab === id ? "on" : ""}">${esc(label)}
+        ${v ? `<span class="n">${nf(v)}</span>` : ""}</button>`;
+    }).join("");
+    [...$("#tabs").children].forEach(b => b.onclick = () => { tab = b.dataset.t; draw(); });
+  }
+
+  function draw() {
+    const c = DATA;
+    renderTabs(c);
+    const v = $("#view");
+    const rangeLabel = days ? "last " + days + " days" : "all time";
+
+    if (tab === "overview") {
+      v.innerHTML = `
+        <h2 class="sec">The numbers, ${esc(rangeLabel)}</h2>
+        <div class="tiles">
+          ${tile("People", nf(c.devices), "unique devices", "teal")}
+          ${tile("Screens opened", nf(c.views), "tab views")}
+          ${tile("Places opened", nf(c.spotOpens), "spot sheets")}
+          ${tile("Emails", nf(c.subs.length), "on the list", "gold")}
+          ${tile("Leads", nf(c.bookings.length), "plan-my-trip", "gold")}
+          ${tile("WhatsApp taps", nf(c.whatsapp), "opened a chat", "pink")}
+          ${tile("Locked taps", nf(c.held.reduce((a, b) => a + b[1], 0)), "wanted a locked spot")}
+          ${tile("Reviews", nf(c.reviews.length), "ratings + tips")}
+        </div>
+        <h2 class="sec">Traffic</h2>
+        ${chart(c.series)}
+        <h2 class="sec">Where they go</h2>
+        <div class="panel">${barTable(c.tabs, ["Tab", "Views"])}</div>
+        <h2 class="sec">Every tracked action</h2>
+        <div class="panel">${barTable(c.names, ["Event", "Times"], { limit: 40 })}</div>`;
+      return;
+    }
+
+    if (tab === "places") {
+      v.innerHTML = `
+        <h2 class="sec">Most opened places, ${esc(rangeLabel)}</h2>
+        <div class="panel">${barTable(c.spots, ["Place", "Opens"], { limit: 40 })}</div>
+        <h2 class="sec">Most saved (♥)</h2>
+        <div class="panel">${barTable(c.saves, ["Place", "Saves"], { limit: 25 })}</div>`;
+      return;
+    }
+
+    if (tab === "locked") {
+      v.innerHTML = `
+        <h2 class="sec">Locked spots people tried to open, ${esc(rangeLabel)}</h2>
+        <p class="note">This is the demand list. The spots at the top are the ones
+          to verify and release first, and the ones worth charging for.</p>
+        <div class="panel">${barTable(c.held, ["Locked place", "Taps"], { limit: 40 })}</div>
+        <h2 class="sec">Product interest</h2>
+        <div class="panel">${barTable(c.products, ["Product", "Clicks"])}</div>`;
+      return;
+    }
+
+    if (tab === "emails") {
+      const cols = [
+        { h: "When", get: r => esc(fmtDate(r.created_at)), raw: r => r.created_at },
+        { h: "Email", get: r => `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>`, raw: r => r.email },
+        { h: "Travelling", get: r => esc(r.trip_month || "—"), raw: r => r.trip_month },
+        { h: "Days", get: r => esc(r.trip_days || "—"), raw: r => r.trip_days },
+        { h: "From", get: r => `<span class="pill">${esc(r.source || "—")}</span>`, raw: r => r.source }
+      ];
+      const noCols = c.subs.length && c.subs.every(s => s.trip_month === undefined);
+      v.innerHTML = `
+        <h2 class="sec">The email list — ${nf(c.subs.length)} ${days ? "in the " + esc(rangeLabel) : "total"}</h2>
+        <p class="note">
+          <button class="ghost" id="csvSubs">Download CSV</button>
+          ${noCols ? " &nbsp; Trip dates are blank because the trip columns are not in the database yet: run <code>delivery/dashboard-access.sql</code> once. The dates are safe in Raw events meanwhile." : ""}
+        </p>
+        <div class="panel">${dataTable(c.subs, cols)}</div>
+        <h2 class="sec">When they say they're coming</h2>
+        <div class="panel">${barTable(c.months, ["Month", "People"])}</div>
+        <h2 class="sec">Which box they filled in</h2>
+        <div class="panel">${barTable(c.sources, ["Where on the site", "Signups"])}</div>`;
+      const b = $("#csvSubs");
+      if (b) b.onclick = () => csv(c.subs, cols, "exploring-oman-emails.csv");
+      return;
+    }
+
+    if (tab === "leads") {
+      const cols = [
+        { h: "When", get: r => esc(fmtDate(r.created_at)), raw: r => r.created_at },
+        { h: "Name", get: r => esc(r.name || "—"), raw: r => r.name },
+        { h: "Contact", get: r => esc(r.contact || "—"), raw: r => r.contact },
+        { h: "Dates", get: r => esc(r.dates || "—"), raw: r => r.dates },
+        { h: "Group", get: r => esc(r.group_size || "—"), raw: r => r.group_size },
+        { h: "What they want", cls: "wrap", get: r => esc(r.note || "—"), raw: r => r.note }
+      ];
+      v.innerHTML = `
+        <h2 class="sec">Plan-my-trip leads — ${nf(c.bookings.length)}</h2>
+        <p class="note">Reply within 48 hours, that is what the site promises them.
+          <button class="ghost" id="csvLeads">Download CSV</button></p>
+        <div class="panel">${dataTable(c.bookings, cols)}</div>`;
+      const b = $("#csvLeads");
+      if (b) b.onclick = () => csv(c.bookings, cols, "exploring-oman-leads.csv");
+      return;
+    }
+
+    if (tab === "reviews") {
+      const stars = n => n ? `<span class="stars">${"★".repeat(n)}${"☆".repeat(5 - n)}</span>` : "—";
+      const cols = [
+        { h: "When", get: r => esc(fmtDate(r.created_at)), raw: r => r.created_at },
+        { h: "Place", get: r => esc(r.spot || "general"), raw: r => r.spot },
+        { h: "Stars", get: r => stars(r.stars), raw: r => r.stars },
+        { h: "Verdict", get: r => r.verdict
+            ? `<span class="pill ${r.verdict === "up" ? "up" : "down"}">${esc(r.verdict)}</span>` : "—",
+          raw: r => r.verdict },
+        { h: "Name", get: r => esc(r.name || "—"), raw: r => r.name },
+        { h: "What they wrote", cls: "wrap", get: r => esc(r.tip || "—"), raw: r => r.tip }
+      ];
+      v.innerHTML = `
+        <h2 class="sec">Reviews and tips — ${nf(c.reviews.length)}</h2>
+        <p class="note">Nothing here reaches the app on its own. Paste the good ones
+          into <code>content.js</code> by hand.</p>
+        <div class="panel">${dataTable(c.reviews, cols)}</div>`;
+      return;
+    }
+
+    if (tab === "events") {
+      const cols = [
+        { h: "When", get: r => esc(fmtDate(r.created_at)), raw: r => r.created_at },
+        { h: "Event", get: r => `<span class="pill">${esc(r.event)}</span>`, raw: r => r.event },
+        { h: "Details", cls: "wrap", get: r => esc(typeof r.props === "string"
+            ? r.props : JSON.stringify(r.props || {})), raw: r => JSON.stringify(r.props || {}) },
+        { h: "Device", get: r => esc(String(r.device_id || "").slice(0, 8)), raw: r => r.device_id }
+      ];
+      v.innerHTML = `
+        <h2 class="sec">Latest ${nf(c.raw.length)} of ${nf(c.events)} events</h2>
+        <div class="panel">${dataTable(c.raw, cols)}</div>`;
+      return;
+    }
+  }
+
+  /* --------------------------------------------------------------- booting */
+  async function boot() {
+    $("#gate").classList.add("hide");
+    $("#app").classList.remove("hide");
+    $("#view").innerHTML = `<div class="empty">Loading…</div>`;
+    try {
+      const raw = await loadAll();
+      DATA = crunch(raw);
+      draw();
+      const who = (session && session.user && session.user.email) || "signed in";
+      $("#who").textContent = who;
+    } catch (e) {
+      if (e.auth) { signOut(); return; }
+      $("#view").innerHTML = `<h2 class="sec">Could not load</h2>
+        <div class="panel"><p style="margin:0 0 8px">${esc(e.message)}</p>
+        <p class="note" style="margin:0">If this says <b>401</b> or the tables come back
+        empty, the read policies are not in place yet: run
+        <code>delivery/dashboard-access.sql</code> in the Supabase SQL editor, once.</p></div>`;
+    }
+  }
+
+  $("#loginForm").onsubmit = async e => {
+    e.preventDefault();
+    const btn = $("#loginBtn"), err = $("#loginErr");
+    btn.disabled = true; btn.textContent = "Signing in…"; err.textContent = "";
+    try {
+      session = await signIn($("#em").value.trim(), $("#pw").value);
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      $("#pw").value = "";
+      await boot();
+    } catch (ex) {
+      err.textContent = ex.message;
+    } finally {
+      btn.disabled = false; btn.textContent = "Sign in";
+    }
+  };
+
+  $("#out").onclick = signOut;
+  $("#refresh").onclick = boot;
+  [...$("#range").children].forEach(b => b.onclick = () => {
+    [...$("#range").children].forEach(x => x.classList.toggle("on", x === b));
+    days = +b.dataset.d;
+    boot();
+  });
+
+  if (session && session.access_token) boot();
+})();
+</script>
+</body>
+</html>
