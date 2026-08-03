@@ -489,16 +489,27 @@ window.OMAN_DATA = {
       name: "Wadi Shab",
       tagline: "The famous one, and for once the hype is real.",
       blurb: "A flat 45–60 min walk from the boat drop past a string of pools. The last 200m is swim-only: through a narrow gap into a cave with a waterfall inside it.",
-      /* Photo set replaced 3 Aug 2026. All three are Wikimedia Commons files
-         from the Wadi Shab category, each with its own licence, so each
-         carries its own credit line: 2.0, 3.0 and 2.5 are NOT interchangeable
-         and must not be collapsed into one. All three are portrait; the card
-         and the slider are object-fit:cover, so they centre-crop cleanly. */
+      /* WATER, NOT ROCK (3 Aug 2026, second pass).
+
+         The first replacement set was three tall canyon shots. They were
+         good photographs and the wrong ones: the card crops a ~215px band
+         out of the MIDDLE of an image, and the middle of a canyon photo is
+         cliff, so the feed showed dry rock for the one place in the country
+         people come to swim. The pools never reached the card.
+
+         These three are water-subject shots, and the two tall ones were
+         CROPPED to the water before import rather than left to a centre crop
+         to find it: 30% off the top of the waterfall frame, 36% off the pool
+         frame. The hero is a panorama, so it is turquoise edge to edge at
+         any crop the card asks for.
+
+         All three are the same photographer and the same licence this time,
+         which is why one credit string repeats. */
       img: "assets/wadis/wadi-shab.jpg",
-      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons",
+      imgCredit: "Photo: dronepicr · CC BY 2.0 · Wikimedia Commons",
       gallery: [
-        { src: "assets/wadis/wadi-shab-2.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" },
-        { src: "assets/wadis/wadi-shab-3.jpg", credit: "Photo: Ian Sewell · CC BY 2.5 · Wikimedia Commons" }
+        { src: "assets/wadis/wadi-shab-2.jpg", credit: "Photo: dronepicr · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-shab-3.jpg", credit: "Photo: dronepicr · CC BY 2.0 · Wikimedia Commons" }
       ], region: "coast-east", coords: [22.83896, 59.24598],
       hours: 5, fitness: 3, needs4x4: false, swim: true, kidOk: false,
       months: [10,11,12,1,2,3,4],
@@ -5344,10 +5355,10 @@ window.OMAN_DATA = {
          it changes here, because both point at the same files. The two Tiwi
          credits are blank on purpose, see the warning on pebble-beach-tiwi. */
       img: "assets/wadis/wadi-shab.jpg",
-      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons",
+      imgCredit: "Photo: dronepicr · CC BY 2.0 · Wikimedia Commons",
       gallery: [
-        { src: "assets/wadis/wadi-shab-2.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" },
-        { src: "assets/wadis/wadi-shab-3.jpg", credit: "Photo: Ian Sewell · CC BY 2.5 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-shab-2.jpg", credit: "Photo: dronepicr · CC BY 2.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-shab-3.jpg", credit: "Photo: dronepicr · CC BY 2.0 · Wikimedia Commons" },
         { src: "assets/beaches/pebble-beach-tiwi.jpg", credit: "" },
         { src: "assets/beaches/pebble-beach-tiwi-2.jpg", credit: "" }
       ],
