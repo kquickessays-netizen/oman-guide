@@ -997,22 +997,41 @@
          blurred. The reader is meant to see exactly what's coming and want
          it, which is the opposite job to the old anonymous card. */
       const held = isHeld(item);
-      const bg = new Image();
+      if (held) {
+        // Full height, same as every open card. Set before the branch so a
+        // held spot with no photo is still a full-size card, not the 54px
+        // strip the anonymous lock uses (three of them rendered like that).
+        media.classList.add("card-media-tease");
+      }
       if (held && item.img) {
+        const bg = new Image();
         bg.src = item.img;
         bg.loading = "lazy";
-        media.classList.add("card-media-tease");   // light blur, full colour
+        bg.alt = "";
+        bg.setAttribute("aria-hidden", "true");
+        bg.decoding = "async";
+        bg.className = "lock-blur";
+        // Same fallback as an open card: a missing file must not leave a
+        // blank frame where a teaser should be.
+        bg.onerror = () => { bg.remove(); media.classList.add("card-media-nophoto"); };
+        media.appendChild(bg);
+      } else if (held) {
+        /* Held, but no photo exists for it yet. The designed placeholder,
+           not the banner: the banner blurred at 3px reads as "here is a
+           photo of somewhere else", which is worse than an honest gradient. */
+        media.classList.add("card-media-nophoto");
       } else {
         /* The POST-TRIAL anonymous lock keeps the old rules: banner, not
            item.img. Using item.img would put "assets/wadis/wadi-mibam.jpg"
            in the DOM, handing over the name that card exists to withhold. */
+        const bg = new Image();
         bg.src = "assets/banner.jpg";
+        bg.alt = "";
+        bg.setAttribute("aria-hidden", "true");
+        bg.decoding = "async";
+        bg.className = "lock-blur";
+        media.appendChild(bg);
       }
-      bg.alt = "";
-      bg.setAttribute("aria-hidden", "true");
-      bg.decoding = "async";
-      bg.className = "lock-blur";
-      media.appendChild(bg);
       media.insertAdjacentHTML("beforeend", held
         ? `<span class="lock-pill">🔒 Coming soon</span>`
         : `<span class="lock-pill">🔒 In the guide</span>`);

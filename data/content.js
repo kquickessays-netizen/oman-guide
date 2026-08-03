@@ -761,7 +761,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "wadi-tiwi", cat: "wadis", free: false, type: "Wadi",
+      id: "wadi-tiwi", cat: "wadis", top: true, free: false, type: "Wadi",
       name: "Wadi Tiwi",
       tagline: "Wadi Shab's quieter, prettier neighbour.",
       blurb: "Right next to Wadi Shab but with a fraction of the crowds. Terraced date plantations, blue pools, and tiny villages clinging to the cliffs as you drive deeper in.",
@@ -1613,7 +1613,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "ras-al-jinz", cat: "beaches", free: false, type: "Wildlife",
+      id: "ras-al-jinz", cat: "beaches", top: true, free: false, type: "Wildlife",
       name: "Ras Al Jinz",
       tagline: "One of the rarest turtle experiences on Earth.",
       blurb: "Oman's famous turtle nesting beach at the easternmost tip of Arabia. On a guided night or dawn visit you watch green turtles haul ashore to lay eggs, and hatchlings scramble for the sea.",
@@ -3174,7 +3174,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "daymaniyat", cat: "experiences", free: false, type: "Snorkel",
+      id: "daymaniyat", cat: "experiences", top: true, free: false, type: "Snorkel",
       name: "Daymaniyat Islands",
       tagline: "Oman's best reef, a boat ride from the city.",
       blurb: "A protected marine reserve 18km off Seeb, turtles, rays, reef, and a real chance of something bigger. Half a day, and the best snorkelling in the country.",
@@ -3216,7 +3216,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "wahiba-sands", cat: "experiences", free: false, type: "Desert",
+      id: "wahiba-sands", cat: "experiences", top: true, free: false, type: "Desert",
       name: "Wahiba Sands",
       tagline: "A night in the dunes you won't get back home.",
       blurb: "Tarmac to Al Wasil, then 4×4 into the dunes: dune bashing, camels, sunset on a ridge, then stars. Book the camp ahead and bring a warm layer, it gets cold at night.",
@@ -3256,7 +3256,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "jabal-shams", cat: "mountains", free: false, type: "Hike",
+      id: "jabal-shams", cat: "mountains", top: true, free: false, type: "Hike",
       name: "Jabal Shams, the Balcony Walk",
       tagline: "Oman's Grand Canyon, and the hike along its rim.",
       blurb: "8.7km out-and-back along the rim of the canyon to an abandoned village. Exposed edges, huge views, and cold air at 2,000m, bring a jacket, even here.",
@@ -3307,7 +3307,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "nizwa", cat: "experiences", free: false, type: "Fort",
+      id: "nizwa", cat: "experiences", top: true, free: false, type: "Fort",
       name: "Nizwa Fort & Souq",
       tagline: "Old Oman, still very much alive.",
       blurb: "The fort tower, the souq stalls, silver, dates, pottery, spices, and, if you time it for a Friday morning, the livestock souq, which is a genuine spectacle.",
@@ -5196,10 +5196,7 @@ window.OMAN_DATA = {
       blurb: "Al Ghubrah. Properly sourced beans, properly pulled shots, and a room that doesn't feel like a hotel lobby. This is where I start a driving day.",
       img: "assets/food/cafe-la-miel.jpg",
       imgCredit: "Photo: Irvan Ary Maulana · CC BY-SA 4.0 · Wikimedia Commons",
-      gallery: [
-        { src: "assets/food/cafe-la-miel-2.jpg", credit: "Photo: Kgbo · CC BY-SA 4.0 · Wikimedia Commons" },
-        { src: "assets/food/cafe-la-miel-3.jpg", credit: "Photo: Kim Sanso · CC0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.588, 58.408],
+      region: "muscat", coords: [23.588, 58.408],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"], guide: "",
@@ -5220,10 +5217,7 @@ window.OMAN_DATA = {
       blurb: "In a restored khan across from the Mutrah fish market. Traditional Omani done properly, shuwa (meat buried and slow-cooked for a day), mashuai, harees, and portions two people can share.",
       img: "assets/food/food-bait-al-luban.jpg",
       imgCredit: "Photo: Erkan Pinar · CC BY 2.0 · Wikimedia Commons",
-      gallery: [
-        { src: "assets/food/food-bait-al-luban-2.jpg", credit: "Photo: Vyacheslav Argenberg · CC BY 4.0 · Wikimedia Commons" },
-        { src: "assets/food/food-bait-al-luban-3.jpg", credit: "Photo: Andy Mitchell from Glasgow, UK · CC BY-SA 2.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.617, 58.564],
+      region: "muscat", coords: [23.617, 58.564],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
@@ -5269,10 +5263,7 @@ window.OMAN_DATA = {
       blurb: "Specialty café and roastery, and the one the coffee people in Muscat send you to. Take beans home.",
       img: "assets/food/cafe-azura.jpg",
       imgCredit: "Photo: Ioacc1234red · CC BY-SA 4.0 · Wikimedia Commons",
-      gallery: [
-        { src: "assets/food/cafe-azura-2.jpg", credit: "Photo: Ioacc1234red · CC BY-SA 4.0 · Wikimedia Commons" },
-        { src: "assets/food/cafe-azura-3.jpg", credit: "Photo: Ioacc1234red · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.588, 58.408],
+      region: "muscat", coords: [23.588, 58.408],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food"], guide: "",
@@ -5287,10 +5278,7 @@ window.OMAN_DATA = {
       blurb: "Right on Azaiba Beach. Come for the view as much as the cup, this is the sunset coffee, not the 7am one.",
       img: "assets/food/cafe-farah.jpg",
       imgCredit: "Photo: Andy Li · CC0 · Wikimedia Commons",
-      gallery: [
-        { src: "assets/food/cafe-farah-2.jpg", credit: "Photo: Andy Li · CC0 · Wikimedia Commons" },
-        { src: "assets/food/cafe-farah-3.jpg", credit: "Photo: Goldberry23 · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.60493, 58.35346],
+      region: "muscat", coords: [23.60493, 58.35346],
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","sunset"], guide: "",
@@ -5305,10 +5293,7 @@ window.OMAN_DATA = {
       blurb: "The one everyone ends up at, and deservedly. Eat outside under the lanterns; order the mashuai (grilled kingfish with rice) and the Omani bread with dips.",
       img: "assets/food/food-kargeen.jpg",
       imgCredit: "Photo: Dingli35 · CC BY-SA 3.0 · Wikimedia Commons",
-      gallery: [
-        { src: "assets/food/food-kargeen-2.jpg", credit: "Photo: Majalam · CC BY 4.0 · Wikimedia Commons" },
-        { src: "assets/food/food-kargeen-3.jpg", credit: "Photo: Majalam · CC BY 4.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.60055, 58.455],
+      region: "muscat", coords: [23.60055, 58.455],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
@@ -5354,10 +5339,7 @@ window.OMAN_DATA = {
       blurb: "Family-run, private curtained rooms, cushions on the floor. Unfussy, unbranded, and about as close as a restaurant gets to eating in an Omani home.",
       img: "assets/food/food-bin-ateeq.jpg",
       imgCredit: "Photo: Sammy Six · CC BY 2.0 · Wikimedia Commons",
-      gallery: [
-        { src: "assets/food/food-bin-ateeq-2.jpg", credit: "Photo: Vengolis · CC BY-SA 3.0 · Wikimedia Commons" },
-        { src: "assets/food/food-bin-ateeq-3.jpg", credit: "Photo: منال شحادة · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.588, 58.408],
+      region: "muscat", coords: [23.588, 58.408],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
@@ -5481,10 +5463,7 @@ window.OMAN_DATA = {
       blurb: "One of the most valuable perfume brands on earth is Omani. The factory visitor centre sells the full range, with tester bars and a tour of the production floor.",
       img: "assets/shopping/shop-amouage.jpg",
       imgCredit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons",
-      gallery: [
-        { src: "assets/shopping/shop-amouage-2.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" },
-        { src: "assets/shopping/shop-amouage-3.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.541, 58.183],
+      region: "muscat", coords: [23.541, 58.183],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","culture"], guide: "",
@@ -5523,10 +5502,7 @@ window.OMAN_DATA = {
       blurb: "Big, central and rarely overwhelming, Carrefour for road-trip supplies, plus the usual brands and cafés. The practical stop, not the destination.",
       img: "assets/shopping/shop-avenues-mall.jpg",
       imgCredit: "Photo: Taha Al-Hayali · CC BY-SA 4.0 · Wikimedia Commons",
-      gallery: [
-        { src: "assets/shopping/shop-avenues-mall-2.jpg", credit: "Photo: Andrey Filippov 安德烈 from Moscow, Russia · CC BY 2.0 · Wikimedia Commons" },
-        { src: "assets/shopping/shop-avenues-mall-3.jpg", credit: "Photo: Andrey Filippov 安德烈 from Moscow, Russia · CC BY 2.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.590, 58.427],
+      region: "muscat", coords: [23.590, 58.427],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping"], guide: "",

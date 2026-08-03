@@ -1476,8 +1476,14 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
 .mapbtn,.instabtn,.affbtn,.btn-full,.rate-send{border-radius:999px}
 .card{border-radius:18px}
 
-/* --- short cards ----------------------------------------------------------- */
-.card-media-photo{height:176px}
+/* --- short cards -----------------------------------------------------------
+   ONE image height for the whole feed, named once. An open card is exactly
+   this tall; a locked card's photo is exactly this tall too and then carries
+   its tab underneath. Anything that shows a card photo reads this variable,
+   so the two can never drift apart again (they had: 176 open vs 170/150
+   locked, which is why the feed looked uneven). */
+:root{--card-photo-h:176px}
+.card-media-photo{height:var(--card-photo-h)}
 .card.locked .card-media{height:54px;filter:none;background:linear-gradient(135deg,var(--sand-2),var(--gold-soft))}
 .lock-pill{padding:5px 12px;font-size:11.5px}
 .lock-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
@@ -2637,15 +2643,22 @@ body{
    so the pill stays legible without dimming the photo. The 54px collapsed
    strip and the desaturate rules for classic locked cards are all
    overridden here, four classes beat their three everywhere. */
-.card.locked .card-media.card-media-tease{height:170px;filter:none}
+.card.locked .card-media.card-media-tease{height:var(--card-photo-h);filter:none}
 .card-media-tease .lock-blur{
   filter:blur(3px) saturate(1.08);transform:scale(1.07);
 }
 .card-media-tease::after{
   background:linear-gradient(180deg,rgba(27,35,32,0) 45%,rgba(27,35,32,.34));
 }
-@media(max-width:640px){
-  .card.locked .card-media.card-media-tease{height:150px}
+/* No phone-specific tease height: it used to shrink to 150 while open photos
+   stayed 176, which is exactly the unevenness this variable exists to stop. */
+
+/* One height for every locked card too. The photo is fixed, so the only
+   thing that moved was the tagline wrapping to a second or third line
+   (328px vs 351px cards in the same row). Two lines, hard stop. */
+.card.locked .card-body .tagline{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;min-height:2.9em;
 }
 
 /* ── Desktop: use the screen instead of two columns in a sea of sand ─────── */
@@ -2658,21 +2671,21 @@ body{
    which was the actual complaint: two columns adrift in a sea of sand. */
 .grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr))}
 
-/* THE WHITE TAB UNDER SHORT CARDS (fixed 3 Aug 2026).
-   A grid row stretches every card to the height of the tallest one. Locked
-   cards are tall (photo + name + tagline + row); an open photo card is just
-   its photo at a FIXED height. So the stretch landed as 145px of bare white
-   card background under the photo of every open spot sharing a row with a
-   locked one, which read as a broken empty panel, and appeared the moment
-   locked cards started interleaving with open ones.
+/* THE WHITE TAB UNDER SHORT CARDS (3 Aug 2026), and the rule that replaced it.
 
-   Fix the cause, not the symptom: let the PHOTO absorb the stretch. The card
-   becomes a flex column and its media grows, so a short card in a tall row
-   just gets a bigger photo. No white anywhere, and the white body panel
-   stays what it always was: the locked card's, and only the locked card's. */
-.grid > .card{display:flex;flex-direction:column}
-.grid > .card > .card-media{flex:1 1 auto}
-.grid > .card > .card-body{flex:0 0 auto}
+   A grid row stretches every card to the height of the tallest. Locked cards
+   are taller (photo + name + tagline + row), so every open card sharing a row
+   with one grew ~145px of bare white card background under its photo.
+
+   The first fix let the PHOTO absorb that stretch. It removed the white, and
+   it was wrong: the same spot's photo was then 176px in one row and 322px in
+   the next, so the feed had no consistent image size at all.
+
+   The right rule is simpler. Cards DO NOT STRETCH. Every card is its natural
+   height, so every open card is exactly one photo tall, always the same, and
+   a locked card is that same photo plus its tab underneath. Rows end ragged
+   at the bottom, which is what a feed of two card types honestly looks like. */
+.grid{align-items:start}
 
 /* NO PHOTO YET, on an OPEN card. Not a grey error box: a deliberate warm
    dusk gradient with a soft light in the corner, so a spot whose photo
