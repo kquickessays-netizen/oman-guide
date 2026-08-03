@@ -92,10 +92,7 @@
     wadis:       { label: "Wadis", icon: "💧" },
     beaches:     { label: "Beaches", icon: "🏖️" },
     mountains:   { label: "Mountains", icon: "⛰️" },
-    // Not a star: Top spots is the star chip and sits three places to its
-    // left in the same row. Two different stars in one control read as the
-    // same thing twice.
-    experiences: { label: "Experiences", icon: "🎟️" },
+    experiences: { label: "Experiences", icon: "⭐" },
     food:        { label: "Food", icon: "🍽️" },
     shopping:    { label: "Shopping", icon: "🛍️" },
     salalah:     { label: "Salalah", icon: "🌴" },
@@ -160,70 +157,20 @@
      a filtered list with no visible reason why is how you lose people. */
   let filterOpen = false;
 
-  /* The keys the PANEL owns, and therefore the only ones its badge may count.
-     `top` and the type chips are not here on purpose: they live in the
-     visible row above, so counting them would put a "2" on a button whose
-     panel shows nothing switched on, and a reader would open it hunting for
-     a filter that was never in there. */
-  const PANEL_KEYS = ["todo", "been", "saved", "open", "locked",
+  // Every smart key, so the count on the button and "Clear N filters" are
+  // never quietly wrong. Missing keys here is how a filter stays on with
+  // nothing on screen admitting it.
+  const SMART_KEYS = ["todo", "been", "saved", "open", "locked",
                       "season", "no4x4", "kids"];
-  const activeFilterCount = () => PANEL_KEYS.filter(k => smart[k]).length;
-  // Anything at all, row included: what "Clear" has to answer for.
-  const anyFilterOn = () => activeFilterCount() > 0 || !!typeFilter || !!smart.top;
+  function activeFilterCount() {
+    return (typeFilter ? 1 : 0) + SMART_KEYS.filter(k => smart[k]).length;
+  }
 
   function filterControls(items, onChange) {
     const types = typesIn(items);
     const nActive = activeFilterCount();
 
     const wrap = el("div", "filterwrap");
-
-    /* --- THE CHIP ROW: one horizontal scroller, Top spots first -------------
-       Nothing here is behind a click-to-open control. A first-time visitor
-       looking at 138 cards is asking "which of these are the ones", and an
-       answer folded inside a Filter button is an answer they never find.
-
-       Top spots leads because it is the question people arrive with, then
-       the row keeps going with the groups (All, Wadis, Beaches...) and
-       scrolls sideways rather than stacking. The Filter button below still
-       owns the refinements, which ARE the things worth hiding until asked. */
-    const nTop = items.filter(i => i.top).length;
-    if (nTop || types.length > 1) {
-      const row = el("div", "chiprow");
-      row.setAttribute("role", "group");
-      row.setAttribute("aria-label", "Filter the list");
-
-      if (nTop) {
-        const t = el("button", "fchip fchip-top" + (smart.top ? " on" : ""),
-          `<span class="fchip-star" aria-hidden="true">★</span>` +
-          `<span>Top spots</span><span class="fchip-n">${nTop}</span>`);
-        t.type = "button";
-        t.setAttribute("aria-pressed", smart.top ? "true" : "false");
-        t.onclick = () => {
-          smart.top = !smart.top;
-          if (window.Analytics) Analytics.track("top_filter", { on: smart.top });
-          onChange();
-        };
-        row.appendChild(t);
-      }
-
-      if (types.length > 1) {
-        const mk = (label, value, count) => {
-          const b = el("button", "fchip" + (typeFilter === value ? " on" : ""),
-            `<span>${esc(label)}</span><span class="fchip-n">${count}</span>`);
-          b.type = "button";
-          b.setAttribute("aria-pressed", typeFilter === value ? "true" : "false");
-          b.onclick = () => {
-            typeFilter = (typeFilter === value) ? null : value;   // tap again = clear
-            if (window.Analytics && value) Analytics.track("type_filter", { group: value || "all" });
-            onChange();
-          };
-          return b;
-        };
-        row.appendChild(mk("All", null, items.length));
-        types.forEach(t => row.appendChild(mk(groupLabel(t.type), t.type, t.n)));
-      }
-      wrap.appendChild(row);
-    }
 
     /* --- the row: one filter button + the list/map switch ------------------ */
     const bar = el("div", "filterbar");
@@ -259,10 +206,25 @@
       return s;
     };
 
-    /* "What kind of place" is NOT in this panel any more: those chips are the
-       visible row above, so repeating them here gave two controls for one
-       state, sitting inches apart, disagreeing about which was authoritative.
-       The panel keeps only what is genuinely secondary. */
+    // What kind of place. "All" is a chip like any other so there's always
+    // exactly one lit, no ambiguous empty state.
+    if (types.length > 1) {
+      const mk = (label, value, count) => {
+        const b = el("button", "fchip" + (typeFilter === value ? " on" : ""),
+          `<span>${esc(label)}</span><span class="fchip-n">${count}</span>`);
+        b.type = "button";
+        b.setAttribute("aria-pressed", typeFilter === value ? "true" : "false");
+        b.onclick = () => {
+          typeFilter = (typeFilter === value) ? null : value;   // tap again = clear
+          if (window.Analytics && value) Analytics.track("type_filter", { group: value || "all" });
+          onChange();
+        };
+        return b;
+      };
+      const chips = [mk("All", null, items.length)];
+      types.forEach(t => chips.push(mk(groupLabel(t.type), t.type, t.n)));
+      panel.appendChild(section("What kind of place", chips));
+    }
 
     // Refinements. Each one is hidden when it would filter nothing on this tab
     //, a "No 4×4" toggle on a tab where nothing needs a 4×4 is a dead control.
@@ -306,13 +268,8 @@
       panel.appendChild(section("Refine", toggles));
     }
 
-    /* Clear answers for EVERYTHING, the row chips included, so it appears
-       whenever anything is filtering and never leaves a lit chip behind
-       after a reader has just been told the filters are cleared. It carries
-       no number for that reason: the badge above counts this panel, this
-       button empties the whole tab. */
-    if (anyFilterOn()) {
-      const clear = el("button", "fp-clear", "Clear all filters");
+    if (nActive) {
+      const clear = el("button", "fp-clear", `Clear ${nActive} filter${nActive > 1 ? "s" : ""}`);
       clear.type = "button";
       clear.onclick = () => {
         typeFilter = null;
@@ -432,13 +389,11 @@
   // the explorer rank ("done 4 of 101" after ticking four plans).
   const beenSpotCount = () => Store.been().filter(id => D.spots.some(s => s.id === id)).length;
 
-  // Smart filters (session state): top / season / no-4×4 / kids / saved / lock.
-  const smart = { top: false, season: false, no4x4: false, kids: false,
-                  saved: false, todo: false, been: false,
-                  open: false, locked: false };
+  // Smart filters (session state): season / no-4×4 / kids / saved / lock state.
+  const smart = { season: false, no4x4: false, kids: false, saved: false,
+                  todo: false, been: false, open: false, locked: false };
   const inSeason = i => !i.months || i.months.includes(new Date().getMonth() + 1);
   const smartPass = i =>
-    (!smart.top || i.top === true) &&
     (!smart.season || inSeason(i)) &&
     (!smart.no4x4 || !i.needs4x4) &&
     // Strict === true, not !== false: a spot added later without the flag
@@ -2460,7 +2415,9 @@
     }
     view.appendChild(filterControls(items, () => renderCategory(cat)));
 
-    const shown = (typeFilter ? items.filter(i => groupOf(i) === typeFilter) : items).filter(smartPass);
+    // `let`, not const: the Top spots section below removes what it renders
+    // so nothing is drawn twice.
+    let shown = (typeFilter ? items.filter(i => groupOf(i) === typeFilter) : items).filter(smartPass);
 
     if (!shown.length) {
       // An empty list is usually a filter, not a gap in the guide, say which.
@@ -2513,6 +2470,28 @@
     const REGION_ORDER = ["muscat", "coast-east", "rustaq", "dakhiliyah",
                           "sharqiyah", "batinah", "musandam", "dhofar"];
     if (!typeFilter && !query && shown.length > 12) {
+      /* TOP SPOTS FIRST, as its own section above the regions.
+
+         Not a filter and not a control: the point is that someone landing
+         on 138 cards SEES the shortlist without doing anything. It reads
+         exactly like a region section, because it is the same question in
+         a different axis, "where do I start" instead of "where am I".
+
+         These spots are then EXCLUDED from the region sections below, so
+         every card on the page appears exactly once. Showing Wadi Shab
+         here and again under the east coast reads as a rendering bug, and
+         the shortlist is right at the top where nobody can miss it. */
+      const tops = shown.filter(i => i.top);
+      if (tops.length >= 3) {
+        const th = el("div", "group-head gh-top");
+        th.innerHTML = `<h2>Top spots in Oman</h2><span class="group-n">${tops.length}</span>`;
+        view.appendChild(th);
+        const tg = el("div", "grid");
+        addCards(tops, tg);
+        view.appendChild(tg);
+        shown = shown.filter(i => !i.top);
+      }
+
       /* A heading over one card is a heading that costs more than it earns,
          so a region only gets its own section once it has THREE. Thin ones,
          plus anything with no region at all, fall into one honest bucket at
