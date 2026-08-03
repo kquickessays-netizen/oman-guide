@@ -135,6 +135,28 @@ window.OMAN_DATA = {
     salalahComingSoon: true,
     plannerLocked: true,
 
+    /* plansLocked: the three PAID itineraries (3, 5 and 7-day) stay shut for
+       EVERYONE during the free trial, including anyone holding a key. The
+       free 1-day plan is untouched, it is still the sample.
+
+       Set 3 Aug 2026. The trial gives away the places; the routes are the
+       thing being sold, so they are the one thing held back. Unlike a normal
+       lock, these cards keep their TITLE AND TAGLINE and blur only the photo:
+       a reader is meant to see exactly which three routes are coming and
+       when, not to be teased by an anonymous grey box.
+
+       plansOpen is the date printed on every one of those cards and in the
+       date capture. Change it in one place and it changes everywhere. Flip
+       plansLocked to false on the day and all three open, no other edit.
+
+       ⚠️ THIS IS A UI LOCK, not a server one. The day-by-day content of all
+       four plans ships inside this file, so anyone who opens devtools can
+       still read it. Nothing in the app will show it, which is what "locked"
+       means here. A real lock needs the serverless key-check in
+       delivery/BACKEND-SETUP.md. */
+    plansLocked: true,
+    plansOpen: "October 1st",
+
     /* ======================= THE THREE PRODUCTS =============================
        Everything the app sells lives in this block and on the Shop screen
        (#/shop). Change a price here and it changes on every card, every lock
@@ -221,28 +243,30 @@ window.OMAN_DATA = {
        The one thing on this site that cannot be copied: you. A lead form
        plus a one-tap WhatsApp with their dates and group already typed in.
 
-       PRICED IN USD, because almost everyone reading this is paying from
-       abroad and the rial is the one currency that makes a number look four
-       times smaller than it is. The anchor is 25 OMR for a couple; the other
-       two scale with the work, since a route for eight is not a route for
-       two with more names on it.
+       NO PRICES DURING THE FREE TRIAL (set 3 Aug 2026). Every `price` ships
+       empty on purpose. A trial that says "everything is free" and then puts
+       "from $65" on the one thing a person actually talks to you about is
+       arguing with itself, and the reader believes the number, not the
+       banner. So the size chips stay (they tell you the job, and they write
+       the WhatsApp message), and the money comes out entirely: no dollars,
+       no "from", no "I'll quote you" placeholder either. They pick a size,
+       they message, you agree it with them like a person.
 
-         from $65   ≈ 25 OMR    1–2 people
-         from $105  ≈ 40 OMR    3–5 people
-         from $155  ≈ 60 OMR    6 or more
+       app.js hides the price chip and the whole "Your price" line whenever
+       NO tier carries a price, so an empty string here is a complete state,
+       not a gap with a hole where a number used to be.
 
-       "from" on purpose: it opens the conversation instead of closing it,
-       and it means a two-day question and a two-week itinerary don't have
-       to cost the same. Set a `price` to "" and that tier goes back to
-       "I'll quote you on WhatsApp" with nothing else to change. <<<          */
+       The group sizes were 25 / 40 / 60 OMR (≈ $65 / $105 / $155) before the
+       trial. Kept here in the comment so the anchor isn't lost: put those
+       strings back in `price` and the numbers reappear everywhere at once. */
     planService: {
       whatsapp: "96879218186",          // international format, no + and no spaces
       whatsappLabel: "+968 7921 8186",
       replyTime: "usually within 48 hours",
       tiers: [
-        { id: "solo",   label: "Solo or a couple",  sub: "1–2 people",  price: "from $65" },
-        { id: "family", label: "Family or friends", sub: "3–5 people",  price: "from $105" },
-        { id: "group",  label: "A group",           sub: "6 or more",   price: "from $155" }
+        { id: "solo",   label: "Solo or a couple",  sub: "1–2 people",  price: "" },
+        { id: "family", label: "Family or friends", sub: "3–5 people",  price: "" },
+        { id: "group",  label: "A group",           sub: "6 or more",   price: "" }
       ]
     },
 

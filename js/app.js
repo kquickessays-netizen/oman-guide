@@ -306,8 +306,22 @@
 
      Order matters: the cheap, specific grants are checked last, so a Full Kit
      holder never falls through to a per-plan check. */
+  /* Is this one of the three paid routes being held back for the trial?
+     The free 1-day plan is never caught by this: item.free short-circuits
+     above it in isUnlocked, and the check below is belt and braces. */
+  const isHeldPlan = item =>
+    !!D.meta.plansLocked && (item.cat || "") === "itineraries" && item.free !== true;
+
+  // The date those plans open, for every line of copy that names it.
+  const plansOpenDate = () => D.meta.plansOpen || "October";
+
   function isUnlocked(item) {
     if (item.free) return true;
+    /* HARD LOCK, and it is deliberately ABOVE the bundle check so that
+       freeLaunch, a Full Kit key and a per-plan key all fail to open it.
+       "Locked for everyone until the date" has to mean everyone, or the
+       date means nothing. One flag in content.js reopens all three. */
+    if (isHeldPlan(item)) return false;
     if (Unlock.hasBundle()) return true;               // "*" or free launch
     if ((item.cat || "") === "itineraries") {
       if (Unlock.hasGrant("itin:*")) return true;      // the $7 plans bundle
@@ -569,8 +583,9 @@
         <button class="pill" id="capBtn">${esc(opts.cta || "Send it to me")}</button>
       </div>
       <div id="capMsg"></div>
-      <p class="cap-fine">No spam, no list swapping. One email when it lands, and the
-         founding price when it does.</p>`;
+      <p class="cap-fine">${opts.fine || (D.meta.freeLaunch
+        ? `No spam, no list swapping. One email when the routes open, timed to your trip.`
+        : `No spam, no list swapping. One email when it lands, and the founding price when it does.`)}</p>`;
 
     let days = "5";
     const chips = w.querySelectorAll(".cap-chip");
@@ -614,17 +629,23 @@
      While meta.freeLaunch is true the guide is fully open. Instead of buy
      buttons, the ask is an EMAIL AND A DATE: join the founding-explorer list
      before the paywall lands in October. One box, reused everywhere. */
+  /* This copy has to match what the app actually does, because a reader
+     checks it against the very next screen. It used to promise "every
+     itinerary and the trip Planner", both of which are held back now: one
+     sentence of overclaim costs more trust than the plans were ever going
+     to earn. Places free, routes dated, Planner named as later. */
   function launchBox() {
     const w = el("div", "launchbox");
     w.innerHTML = `
-      <div class="launch-badge">🎁 Launch season, the whole guide is free</div>
-      <p>Every spot, every itinerary and the trip Planner, free through the khareef.
-         <strong>In October it becomes a paid guide</strong> for the winter season.</p>`;
+      <div class="launch-badge">🎁 Free trial, every place in the guide</div>
+      <p>All ${D.spots.length} places, free, with the maps, the costs and the logistics.
+         <strong>The full routes open on ${esc(plansOpenDate())}</strong>, and the trip
+         Planner with them.</p>`;
     w.appendChild(tripCapture({
-      lead: "Tell me when you're coming and you're a <strong>founding explorer</strong>: " +
-            "the best price when it goes paid, and I'll time it to your trip.",
-      cta: "Save my founding price",
-      done: "You're in, founding explorer. 🇴🇲",
+      lead: "Tell me when you're coming and I'll send you the routes the day they open, " +
+            "timed to your trip.",
+      cta: "Send it to me",
+      done: "You're on the list. 🇴🇲",
       source: "launch"
     }));
     return w;
@@ -658,6 +679,15 @@
     const w = el("div", "bookbox");
     let tier = tiers[0] || null;
 
+    /* MONEY IS ALL-OR-NOTHING HERE. If not one tier carries a price, the
+       price chip and the whole "Your price" line come out of the DOM rather
+       than degrading to "quote" / "I'll quote you". A row of chips reading
+       quote · quote · quote still frames the next tap as a transaction, and
+       during the free trial it is not one: they pick a size, they message,
+       it gets agreed like people do. Put any price back in content.js and
+       every piece of this returns on its own. */
+    const anyPrice = tiers.some(t => t && t.price);
+
     const priceLine = t =>
       t && t.price ? `<b class="bk-price">${esc(t.price)}</b>`
                    : `<b class="bk-price bk-quote">I'll quote you</b>`;
@@ -675,7 +705,7 @@
           <button type="button" class="bk-tier" data-i="${i}" aria-pressed="${i === 0}">
             <span class="bk-t-label">${esc(t.label)}</span>
             <span class="bk-t-sub">${esc(t.sub || "")}</span>
-            <span class="bk-t-price">${t.price ? esc(t.price) : "quote"}</span>
+            ${anyPrice ? `<span class="bk-t-price">${t.price ? esc(t.price) : "quote"}</span>` : ""}
           </button>`).join("")}
       </div>` : ""}
 
@@ -696,8 +726,8 @@
       </div>
       <p class="book-fine">I reply personally, ${esc(svc.replyTime || "usually within 48 hours")}.
          ${svc.whatsappLabel ? esc(svc.whatsappLabel) : ""}</p>
-      <div class="bk-priceline">${tiers.length ? `Your price: ${priceLine(tier)}
-        <small id="bkPriceSub">${esc(tier && tier.sub || "")}</small>` : ""}</div>
+      ${anyPrice && tiers.length ? `<div class="bk-priceline">Your price: ${priceLine(tier)}
+        <small id="bkPriceSub">${esc(tier && tier.sub || "")}</small></div>` : ""}
       <div id="bkMsg"></div>`;
 
     const val = id => { const n = w.querySelector(id); return n ? n.value.trim() : ""; };
@@ -896,20 +926,34 @@
          is decorative (aria-hidden) and the name is never exposed, so nothing
          leaks; the blur is heavy enough that no detail survives it. */
       media.classList.add("card-media-locked");
-      /* Deliberately the BANNER, not this spot's own photo. Using item.img
-         would put "assets/wadis/wadi-mibam.jpg" in the DOM, handing over the
-         name that the locked card exists to withhold. The banner is already
-         preloaded and cached, so this costs no bytes, and blurred behind a
-         scrim it reads as "there is something here" rather than as a broken
-         image, which is the whole point. */
+      /* A HELD PLAN IS A DIFFERENT KIND OF LOCKED, so it gets a different
+         picture. A locked SPOT hides its name, so it must also hide its
+         photo (see below). A held plan announces its name on purpose, so
+         there is nothing left for the filename to leak and it can blur its
+         OWN photo: the reader sees the actual route they're waiting for,
+         out of focus, with the date it clears. */
+      const held = isHeldPlan(item);
       const bg = new Image();
-      bg.src = "assets/banner.jpg";
+      if (held && item.img) {
+        bg.src = item.img;
+        bg.loading = "lazy";
+      } else {
+        /* Deliberately the BANNER, not this spot's own photo. Using item.img
+           would put "assets/wadis/wadi-mibam.jpg" in the DOM, handing over the
+           name that the locked card exists to withhold. The banner is already
+           preloaded and cached, so this costs no bytes, and blurred behind a
+           scrim it reads as "there is something here" rather than as a broken
+           image, which is the whole point. */
+        bg.src = "assets/banner.jpg";
+      }
       bg.alt = "";
       bg.setAttribute("aria-hidden", "true");
       bg.decoding = "async";
       bg.className = "lock-blur";
       media.appendChild(bg);
-      media.insertAdjacentHTML("beforeend", `<span class="lock-pill">🔒 In the guide</span>`);
+      media.insertAdjacentHTML("beforeend", held
+        ? `<span class="lock-pill">🔒 Opens ${esc(plansOpenDate())}</span>`
+        : `<span class="lock-pill">🔒 In the guide</span>`);
     }
     c.appendChild(media);
 
@@ -949,7 +993,11 @@
        PLANS GET THE WORDS. There are four of them, not a hundred, they sit
        in a roomier grid, and a plan is the thing most likely to be bought
        on its own, so the one place worth spending the width is there. */
-    if (D.meta.freeLaunch && item.free === false) {
+    /* `unlocked` is part of the test now. Without it a held plan wore BOTH
+       "🔓 Free right now" and "🔒 Opens October 1st" on the same card, which
+       is the app calling itself a liar in two chips an inch apart. Free
+       right now can only be said about something that is, in fact, open. */
+    if (D.meta.freeLaunch && item.free === false && unlocked) {
       const isPlan = (item.cat || "") === "itineraries";
       const c = el("span", "chip chip-freenow" + (isPlan ? "" : " chip-icon"),
         isPlan ? "🔓 Free right now" : "🔓");
@@ -986,11 +1034,41 @@
            plan is the difference between an impulse and a decision. */
         const row = el("div", "lock-row");
         const isPlan = (item.cat || "") === "itineraries";
+        const held = isHeldPlan(item);
+
+        /* A HELD PLAN KEEPS ITS NAME AND ITS LINE. Everywhere else a lock
+           withholds the identity, because the identity is the product. Here
+           the identity is the ANNOUNCEMENT: three named routes, visibly
+           coming, on a date. An anonymous "hidden itinerary #2" would hide
+           the only part worth waiting for. */
+        if (held) {
+          body.appendChild(el("h3", null, esc(item.name)));
+          body.appendChild(el("p", "tagline", esc(item.tagline)));
+        }
+
         row.appendChild(el("span", "lock-row-txt",
+          held ? `Full route, hour by hour` :
           isPlan ? `Full plan, hour by hour` :
           `Hidden ${singularOf(item)}${lockNum ? " #" + lockNum : ""} · in the paid guide`));
-        const go = el("button", "lock-row-btn", `Unlock ${priceFor(item)}`);
-        go.onclick = e => { e.stopPropagation(); location.hash = "#/shop"; };
+
+        /* No price on a held plan: during the trial there is nothing to buy
+           and no checkout to send anyone to. The ask is the date, and only
+           the date. */
+        const go = el("button", "lock-row-btn",
+          held ? `Opens ${plansOpenDate()}` : `Unlock ${priceFor(item)}`);
+        go.onclick = e => {
+          e.stopPropagation();
+          if (held) {
+            if (window.Analytics) Analytics.track("held_plan_click", { id: item.id });
+            openCapture(item.name, {
+              title: item.name,
+              lead: `<b>${esc(item.name)}</b> opens on <b>${esc(plansOpenDate())}</b>. ` +
+                    `Tell me when you're travelling and I'll send it to you the day it does.`,
+              cta: "Send it to me when it opens",
+              source: "held-plan:" + item.id
+            });
+          } else location.hash = "#/shop";
+        };
         row.appendChild(go);
         body.appendChild(row);
       }
@@ -1043,16 +1121,32 @@
       else if (item.img && item.months && item.months.length < 12 && inSeason(item))
         media.appendChild(el("span", "season-badge", "🌡️ In season"));
     } else {
+      /* A held plan must not open the KEY modal. There is no key that opens
+         it, by design, so "paste your licence" is a door onto a wall, and
+         its label quotes a price at a reader during a trial where nothing
+         is for sale. Same destination as its own button: the date. */
+      const held = isHeldPlan(item);
+      const act = held
+        ? () => openCapture(item.name, {
+            title: item.name,
+            lead: `<b>${esc(item.name)}</b> opens on <b>${esc(plansOpenDate())}</b>. ` +
+                  `Tell me when you're travelling and I'll send it to you the day it does.`,
+            cta: "Send it to me when it opens",
+            source: "held-plan:" + item.id
+          })
+        : () => openUnlock();
       c.style.cursor = "pointer";
-      c.onclick = () => openUnlock();
+      c.onclick = act;
       c.tabIndex = 0;
       c.setAttribute("role", "button");
-      c.setAttribute("aria-label", `Locked ${singularOf(item)}, unlock for ${D.meta.bundlePrice}`);
+      c.setAttribute("aria-label", held
+        ? `${item.name}. Opens ${plansOpenDate()}.`
+        : `Locked ${singularOf(item)}, unlock for ${D.meta.bundlePrice}`);
       c.onkeydown = e => {
         if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
         if (e.target !== c) return;
         e.preventDefault();
-        openUnlock();
+        act();
       };
     }
 
@@ -1086,6 +1180,22 @@
 
   /* ------------------------------------------------------------------ sheet */
   function openSheet(item) {
+    /* THE LAST GATE, and the one that makes "locked for everyone" true.
+       card() already refuses to open a held plan, but a sheet is reachable
+       from more than a card: search, the overview map, the shop's own plan
+       row, a shared #link and anything added later. Guarding the single
+       door they all pass through is worth more than guarding each caller. */
+    if (isHeldPlan(item)) {
+      if (window.Analytics) Analytics.track("held_plan_blocked", { id: item.id });
+      openCapture(item.name, {
+        title: item.name,
+        lead: `<b>${esc(item.name)}</b> opens on <b>${esc(plansOpenDate())}</b>. ` +
+              `Tell me when you're travelling and I'll send it to you the day it does.`,
+        cta: "Send it to me when it opens",
+        source: "held-plan:" + item.id
+      });
+      return;
+    }
     const b = $("#sheetBody");
     const prem = Unlock.detail(item.id) || {};
     const aff = D.meta.affiliates;
@@ -2600,10 +2710,18 @@
         ${heroes.length ? `<div class="soon-heroes">${heroes.map(s =>
           `<div class="sh"><b>${esc(s.name)}</b><small>${esc(s.tagline || "")}</small></div>`).join("")}</div>` : ""}
 
+        <!-- "Own either one" is a purchase instruction, and during the trial
+             there is nothing to own: no checkout, no prices on the site, and
+             the products it names are not explained anywhere any more. The
+             trial version states the two facts a reader on this tab actually
+             needs: the guide is free today, and the south is coming. -->
         <div class="soon-deliver">
-          <b>🔑 Inside ${esc((T.basic && T.basic.name) || "The Guide")} and
-             ${esc((T.premium && T.premium.name) || "The Full Kit")}.</b>
-          <span>Own either one and Dhofar appears, nothing to re-buy.</span>
+          ${D.meta.freeLaunch
+            ? `<b>🎁 The rest of the guide is free right now.</b>
+               <span>All ${D.spots.length - n} places outside Dhofar, open, nothing to enter.</span>`
+            : `<b>🔑 Inside ${esc((T.basic && T.basic.name) || "The Guide")} and
+               ${esc((T.premium && T.premium.name) || "The Full Kit")}.</b>
+               <span>Own either one and Dhofar appears, nothing to re-buy.</span>`}
         </div>
       </div>`;
     view.appendChild(w);
@@ -2707,6 +2825,25 @@
     const m = D.meta, T = m.tiers || {};
     const b = T.basic || {}, p = T.premium || {};
     const w = el("div", "shopteaser");
+
+    /* TRIAL: no numbers on the landing screen. This block exists to point at
+       the prices, and during the trial there are none to point at, so it
+       points at the only ask there is. Four dollar amounts under a banner
+       reading "everything is free" is the fastest way to make a reader stop
+       believing the banner. */
+    if (m.freeLaunch) {
+      w.innerHTML = `
+        <h3>Planning a trip?</h3>
+        <div class="st-rows">
+          <div class="st-row"><b>Free</b><span>All ${D.spots.length} places, the whole guide, right now</span></div>
+          <div class="st-row"><b>${esc(plansOpenDate())}</b><span>The full routes, hour by hour, open then</span></div>
+          <div class="st-row st-svc"><b>You</b><span>I plan the whole trip with you, on WhatsApp</span></div>
+        </div>
+        <button type="button" class="btn-full st-go">Tell me when you're coming →</button>`;
+      w.querySelector(".st-go").onclick = () => (location.hash = "#/shop");
+      return w;
+    }
+
     w.innerHTML = `
       <h3>Four ways to get it</h3>
       <div class="st-rows">
@@ -2740,21 +2877,73 @@
     const inBasic = m.basicItineraries || [];
     const nameOf = id => { const p = plans.find(x => x.id === id); return p ? p.name.replace(/^The\s+/i, "") : id; };
 
+    /* ===================================================== THE TRIAL SCREEN
+       During the free trial this screen is NOT a shop, and the button that
+       reaches it says "Planning a trip?", not "Buy". A price list is an
+       answer to a question nobody asked yet: there is no checkout to send
+       anyone to, every spot is already free, and the three routes that do
+       cost money are not on sale until they open. Four product cards in
+       that state are four ways to say "not yet" to someone who arrived
+       willing to say yes to something.
+
+       So the room holds exactly two things: the one question worth asking a
+       stranger (WHEN ARE YOU COMING?), and the one thing that is genuinely
+       available today (Hussain himself, on WhatsApp).
+
+       The whole shop is still below, untouched, and comes back the moment
+       meta.freeLaunch goes false. Nothing here is deleted, it is deferred. */
+    if (m.freeLaunch) {
+      const th = el("div", "cat-head shop-head");
+      th.innerHTML = `<h1>Planning a trip?</h1>
+        <p class="shop-sub">Tell me when you're coming and I'll make sure you have
+           everything you need before you fly.</p>`;
+      view.appendChild(th);
+
+      view.appendChild(el("div", "shop-free",
+        `<strong>🎁 The whole guide is free right now.</strong> All
+         ${D.spots.length} places, nothing to pay and nothing to enter.
+         The ${paidPlans.length} full routes open on
+         <strong>${esc(plansOpenDate())}</strong>.`));
+
+      view.appendChild(tripCapture({
+        lead: `Leave your dates and I'll send the ${paidPlans.length} routes the day they open, ` +
+              `and tell you anything that changes before your trip.`,
+        cta: "Send it to me",
+        done: "You're on the list. 🇴🇲",
+        source: "trial-ask"
+      }));
+
+      // The three routes, named, so the date has something attached to it.
+      if (paidPlans.length) {
+        const soon = el("div", "prod");
+        soon.innerHTML = `<div class="prod-head"><div class="prod-name">
+            <h3>Opening ${esc(plansOpenDate())}</h3></div></div>
+          <ul class="prod-list">${paidPlans.map(p =>
+            `<li><b>${esc(p.name.replace(/^The\s+/i, ""))}</b>, ${esc(p.tagline || "")}</li>`).join("")}</ul>`;
+        view.appendChild(soon);
+      }
+
+      view.appendChild(el("div", "shop-or", "or, the thing an app can't do"));
+      view.appendChild(bookBox({ source: "trial" }));
+
+      const tout = el("div", "shop-exit");
+      const tback = el("button", "btn-full", "← Take me back to the places");
+      tback.onclick = () => (location.hash = "#/explore");
+      tout.appendChild(tback);
+      const tplan = el("button", "pill pill-ghost", "Show me the free 1-day plan");
+      tplan.onclick = () => {
+        const f = plans.find(p => p.free);
+        if (f) openSheet(f); else location.hash = "#/plan";
+      };
+      tout.appendChild(tplan);
+      view.appendChild(tout);
+      return;
+    }
+
     const head = el("div", "cat-head shop-head");
     head.innerHTML = `<h1>Get the guide</h1>
       <p class="shop-sub">Four ways to use this, from one day plan to a route I write for you by hand.</p>`;
     view.appendChild(head);
-
-    if (m.freeLaunch) {
-      /* One October, and it belongs to the Full Kit badge, not here. This
-         banner used to name the month too, which put it back to two
-         mentions: every extra one is another line telling a reader who is
-         interested right now to come back later instead. */
-      view.appendChild(el("div", "shop-free",
-        `<strong>🎁 Right now, all of it is free.</strong> Every spot, every plan and
-         the Planner, nothing to pay and nothing to enter. The prices below are what
-         they become. Leave your dates and you keep the founding price when they do.`));
-    }
 
     /* ---- 1. the Guide, $9.99, live ------------------------------------- */
     view.appendChild(productCard({
@@ -3013,7 +3202,7 @@
           </span>
         </div>
         <h2>Build your own trip</h2>
-        <div class="lock-pill">Part of the full guide</div>
+        <div class="lock-pill">${D.meta.freeLaunch ? `Opens ${esc(plansOpenDate())}` : "Part of the full guide"}</div>
         <p class="lock-lead">Answer four questions and it builds your route:
            day by day, in driving order, around your pace.</p>
         <ul class="lock-feats">
@@ -3022,7 +3211,14 @@
           <li>Heat-smart starts: 06:30 in summer, hot spots in the cool hours</li>
           <li>Every stop pinned in Google Maps, the whole route on one map</li>
         </ul>
-        <p class="lock-when">Part of the Full Kit.</p>
+        <!-- "Part of the Full Kit" names a product that, during the trial,
+             is not on sale and is no longer explained anywhere: the shop is
+             a date capture now. An orphan product name is worse than a plain
+             date, so while the trial runs it says the date, same as the
+             three routes, and the product name returns with the shop. -->
+        <p class="lock-when">${D.meta.freeLaunch
+          ? `Opens ${esc(plansOpenDate())}, with the routes.`
+          : "Part of the Full Kit."}</p>
 
         <!-- A locked feature nobody can sample is just a promise. This is one
              real day of real output from the Planner, so the reader can judge
