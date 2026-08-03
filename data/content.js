@@ -489,11 +489,16 @@ window.OMAN_DATA = {
       name: "Wadi Shab",
       tagline: "The famous one, and for once the hype is real.",
       blurb: "A flat 45–60 min walk from the boat drop past a string of pools. The last 200m is swim-only: through a narrow gap into a cave with a waterfall inside it.",
+      /* Photo set replaced 3 Aug 2026. All three are Wikimedia Commons files
+         from the Wadi Shab category, each with its own licence, so each
+         carries its own credit line: 2.0, 3.0 and 2.5 are NOT interchangeable
+         and must not be collapsed into one. All three are portrait; the card
+         and the slider are object-fit:cover, so they centre-crop cleanly. */
       img: "assets/wadis/wadi-shab.jpg",
-      imgCredit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons",
+      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons",
       gallery: [
-        { src: "assets/wadis/wadi-shab-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
-        { src: "assets/wadis/wadi-shab-3.jpg", credit: "Photo: Uhooep · CC BY-SA 4.0 · Wikimedia Commons" }
+        { src: "assets/wadis/wadi-shab-2.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-shab-3.jpg", credit: "Photo: Ian Sewell · CC BY 2.5 · Wikimedia Commons" }
       ], region: "coast-east", coords: [22.83896, 59.24598],
       hours: 5, fitness: 3, needs4x4: false, swim: true, kidOk: false,
       months: [10,11,12,1,2,3,4],
@@ -1324,11 +1329,28 @@ window.OMAN_DATA = {
       name: "Pebble Beach, Tiwi",
       tagline: "The relaxed stop on the Tiwi coast everyone drives straight past.",
       blurb: "Smooth stones instead of sand, clear water, and the Sur coast's cliffs behind you. Minutes from Wadi Shab and Wadi Tiwi, it's the easy decompression stop after a wadi morning, and next door hides the Romantic Cave.",
+      /* ⚠️ PHOTOS REPLACED 3 Aug 2026 WITH TWO SUPPLIED FILES, AND THEIR
+         CREDITS ARE BLANK BECAUSE NOBODY KNOWS WHO TOOK THEM.
+
+         Every other photo in this file names a photographer and a licence.
+         These two arrived as "687951402485-1000x610.jpg" (a stock-CDN resize)
+         and "images (4).jpg" (a Google Images filename), and the second one
+         carries a photographer's signature in the bottom-right corner. That
+         is somebody's work. On a public site that is about to charge money,
+         an uncredited photo is the one asset that can generate a real bill.
+
+         A blank credit is deliberate: inventing one would be worse. Fill in
+         the two strings below, or swap the files, before this stops being a
+         free trial. The old Commons set is still in git and in versions/v36,
+         and pebble-beach-tiwi-3.jpg is still on disk, unreferenced.
+
+         Hero order is deliberate too: the 1000x610 cove shot leads because
+         the pebble close-up is only 399x501 and would look soft as the card
+         face. See the note in the app's photo standard: never upscale. */
       img: "assets/beaches/pebble-beach-tiwi.jpg",
-      imgCredit: "Photo: Nadeem Sait · CC0 · Wikimedia Commons",
+      imgCredit: "",
       gallery: [
-        { src: "assets/beaches/pebble-beach-tiwi-2.jpg", credit: "Photo: Harmer, T. (17..-18.. ; graveur). Graveur Grande-Bretagne. Hydrographic office. · Public domain · Wikimedia Commons" },
-        { src: "assets/beaches/pebble-beach-tiwi-3.jpg", credit: "Photo: Adhilaslam · CC BY-SA 4.0 · Wikimedia Commons" }
+        { src: "assets/beaches/pebble-beach-tiwi-2.jpg", credit: "" }
       ],
       region: "coast-east", coords: [22.8535, 59.2375], // right beside the Romantic Cave — confirmed area
       hours: 2, fitness: 1, needs4x4: false, swim: true, kidOk: true,
@@ -5311,11 +5333,23 @@ window.OMAN_DATA = {
       name: "The Perfect Oman Day",
       tagline: "One day, the famous swim, timed to the hour and costed to the rial.",
       blurb: "If you only have one day, this is it. The exact day from my reel: out of Muscat early, the boat, the canyon, the cave, then the Tiwi coast to wind down. Every rial it costs is on the receipt at the bottom.",
+      /* THE DAY'S PHOTOS ARE THE DAY'S STOPS, MERGED (3 Aug 2026).
+
+         This plan used to carry the Wadi Shab set and nothing else, which
+         showed a reader one of the four places the day actually visits. The
+         slider now runs the morning then the afternoon, in the order the day
+         happens: Wadi Shab (3), then the Tiwi pebble coast (2).
+
+         These are references, not copies. Change a photo on either spot and
+         it changes here, because both point at the same files. The two Tiwi
+         credits are blank on purpose, see the warning on pebble-beach-tiwi. */
       img: "assets/wadis/wadi-shab.jpg",
-      imgCredit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons",
+      imgCredit: "Photo: Andries Oudshoorn · CC BY-SA 2.0 · Wikimedia Commons",
       gallery: [
-        { src: "assets/wadis/wadi-shab-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
-        { src: "assets/wadis/wadi-shab-3.jpg", credit: "Photo: Uhooep · CC BY-SA 4.0 · Wikimedia Commons" }
+        { src: "assets/wadis/wadi-shab-2.jpg", credit: "Photo: Ji-Elle · CC BY-SA 3.0 · Wikimedia Commons" },
+        { src: "assets/wadis/wadi-shab-3.jpg", credit: "Photo: Ian Sewell · CC BY 2.5 · Wikimedia Commons" },
+        { src: "assets/beaches/pebble-beach-tiwi.jpg", credit: "" },
+        { src: "assets/beaches/pebble-beach-tiwi-2.jpg", credit: "" }
       ],
       stats: { "Best for": "Day-trippers from Muscat", "Base": "Muscat, back by dinner", "Car": "Any car", "Days": "1" },
       insta: "https://www.instagram.com/hussain_explores/reel/DUbTJINDJ6B/", // the costs & timing reel this plan is built from

@@ -1777,7 +1777,16 @@
           ix = i;
           dots.forEach((d, j) => d.classList.toggle("on", j === i));
           if (num) num.textContent = i + 1;
-          if (cred) cred.textContent = slides[i].credit || "";
+          /* An empty credit must HIDE the badge, not blank it. The span is
+             built from slide 0, so a set that mixes credited and uncredited
+             photos (the 1-day plan does: Commons wadi shots, then the Tiwi
+             pair) would otherwise slide an empty dark chip over the corner
+             of every uncredited photo. */
+          if (cred) {
+            const t = slides[i].credit || "";
+            cred.textContent = t;
+            cred.hidden = !t;
+          }
         };
         track.addEventListener("scroll", () => {
           const i = shown();
