@@ -244,28 +244,33 @@ img{max-width:100%;display:block}
 .filterwrap{margin:0 -16px 18px;padding:6px 16px 8px;background:var(--sand)}
 .filterbar{display:flex;align-items:center;gap:10px}
 
-/* TOP SPOTS: the one filter that is not hidden behind the Filter button.
-   Full width so it reads as an invitation rather than a chip in a row, gold
-   when lit so "I am filtered to the best twelve" is never a mystery. */
-.topchip{
-  display:flex;align-items:center;gap:9px;width:100%;margin:0 0 9px;
-  font:inherit;font-size:14px;font-weight:800;line-height:1;cursor:pointer;
-  background:#fff;color:var(--ink);border:1px solid var(--line);
-  border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);
-  transition:background .14s ease,color .14s ease,border-color .14s ease;
+/* THE CHIP ROW. One line that scrolls sideways, never stacks: Top spots
+   first, then the groups. Nothing here is behind a control you have to open,
+   which is the whole point of it being a row and not a panel.
+
+   The negative margins let it bleed to both screen edges so the last chip is
+   visibly cut off, which is what tells a thumb there is more to the right.
+   The scrollbar is hidden on every engine; scroll-snap keeps chips from
+   coming to rest half-visible. */
+.chiprow{
+  display:flex;flex-wrap:nowrap;gap:8px;
+  margin:0 -16px 9px;padding:2px 16px 6px;
+  overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none;-ms-overflow-style:none;
+  -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x proximity;overscroll-behavior-x:contain;
 }
-.topchip .tc-star{font-size:15px;color:var(--gold);line-height:1}
-.topchip .tc-n{
-  margin-left:auto;font-size:12px;font-weight:800;
-  background:var(--sand-2);color:var(--muted);
-  border-radius:999px;padding:3px 9px;
-}
-.topchip.on{
-  background:linear-gradient(135deg,var(--gold),#d9a047);
-  color:#fff;border-color:transparent;
-}
-.topchip.on .tc-star{color:#fff}
-.topchip.on .tc-n{background:rgba(255,255,255,.24);color:#fff}
+.chiprow::-webkit-scrollbar{display:none}
+.chiprow > .fchip{flex:0 0 auto;scroll-snap-align:start}
+
+/* Top spots is the same chip, in gold, so the row reads as one control while
+   still saying "this one is not a category, it is the shortlist". */
+.fchip-top{background:var(--gold-soft);color:#7a4a08;font-weight:800}
+.fchip-top .fchip-star{color:var(--gold);font-size:12px;line-height:1}
+.fchip-top .fchip-n{color:#7a4a08}
+.fchip-top.on{background:linear-gradient(135deg,var(--gold),#d9a047);color:#fff}
+.fchip-top.on .fchip-star{color:#fff}
+.fchip-top.on .fchip-n{background:rgba(255,255,255,.26);color:#fff}
 .filterbtn{
   display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;
   font:inherit;font-size:13.5px;font-weight:700;line-height:1;cursor:pointer;
