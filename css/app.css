@@ -243,6 +243,29 @@ img{max-width:100%;display:block}
    screen, so navigation is always reachable regardless. */
 .filterwrap{margin:0 -16px 18px;padding:6px 16px 8px;background:var(--sand)}
 .filterbar{display:flex;align-items:center;gap:10px}
+
+/* TOP SPOTS: the one filter that is not hidden behind the Filter button.
+   Full width so it reads as an invitation rather than a chip in a row, gold
+   when lit so "I am filtered to the best twelve" is never a mystery. */
+.topchip{
+  display:flex;align-items:center;gap:9px;width:100%;margin:0 0 9px;
+  font:inherit;font-size:14px;font-weight:800;line-height:1;cursor:pointer;
+  background:#fff;color:var(--ink);border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);
+  transition:background .14s ease,color .14s ease,border-color .14s ease;
+}
+.topchip .tc-star{font-size:15px;color:var(--gold);line-height:1}
+.topchip .tc-n{
+  margin-left:auto;font-size:12px;font-weight:800;
+  background:var(--sand-2);color:var(--muted);
+  border-radius:999px;padding:3px 9px;
+}
+.topchip.on{
+  background:linear-gradient(135deg,var(--gold),#d9a047);
+  color:#fff;border-color:transparent;
+}
+.topchip.on .tc-star{color:#fff}
+.topchip.on .tc-n{background:rgba(255,255,255,.24);color:#fff}
 .filterbtn{
   display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;
   font:inherit;font-size:13.5px;font-weight:700;line-height:1;cursor:pointer;
@@ -2634,6 +2657,37 @@ body{
    container on big screens so the extra columns have somewhere to live,
    which was the actual complaint: two columns adrift in a sea of sand. */
 .grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr))}
+
+/* THE WHITE TAB UNDER SHORT CARDS (fixed 3 Aug 2026).
+   A grid row stretches every card to the height of the tallest one. Locked
+   cards are tall (photo + name + tagline + row); an open photo card is just
+   its photo at a FIXED height. So the stretch landed as 145px of bare white
+   card background under the photo of every open spot sharing a row with a
+   locked one, which read as a broken empty panel, and appeared the moment
+   locked cards started interleaving with open ones.
+
+   Fix the cause, not the symptom: let the PHOTO absorb the stretch. The card
+   becomes a flex column and its media grows, so a short card in a tall row
+   just gets a bigger photo. No white anywhere, and the white body panel
+   stays what it always was: the locked card's, and only the locked card's. */
+.grid > .card{display:flex;flex-direction:column}
+.grid > .card > .card-media{flex:1 1 auto}
+.grid > .card > .card-body{flex:0 0 auto}
+
+/* NO PHOTO YET, on an OPEN card. Not a grey error box: a deliberate warm
+   dusk gradient with a soft light in the corner, so a spot whose photo
+   hasn't been shot yet still sits in the feed as a real card. The overlay
+   scrim already darkens the foot, so the white title reads over it. */
+.card-media-nophoto{
+  background:
+    radial-gradient(120% 90% at 78% 12%, rgba(255,214,150,.55), transparent 62%),
+    linear-gradient(155deg, #14524f 0%, #1c6a63 42%, #b8862f 140%);
+}
+.card-media-nophoto::before{
+  content:"";position:absolute;inset:0;opacity:.16;
+  background-image:radial-gradient(rgba(255,255,255,.9) 1px, transparent 1.4px);
+  background-size:15px 15px;
+}
 @media (min-width:1200px){
   #view{max-width:1240px}
 }

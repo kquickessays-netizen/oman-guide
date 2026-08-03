@@ -157,7 +157,11 @@
      a filtered list with no visible reason why is how you lose people. */
   let filterOpen = false;
 
-  const SMART_KEYS = ["todo", "been", "saved", "season", "no4x4", "kids"];
+  // Every smart key, so the count on the button and "Clear N filters" are
+  // never quietly wrong. Missing keys here is how a filter stays on with
+  // nothing on screen admitting it.
+  const SMART_KEYS = ["top", "todo", "been", "saved", "open", "locked",
+                      "season", "no4x4", "kids"];
   function activeFilterCount() {
     return (typeFilter ? 1 : 0) + SMART_KEYS.filter(k => smart[k]).length;
   }
@@ -167,6 +171,27 @@
     const nActive = activeFilterCount();
 
     const wrap = el("div", "filterwrap");
+
+    /* --- TOP SPOTS, above everything ---------------------------------------
+       This one does NOT live inside the filter panel. A first-time visitor
+       looking at 138 cards is asking one question, "which of these are the
+       ones", and an answer folded inside a Filter button is an answer they
+       never find. So it sits on the toolbar, lit, permanently visible, and
+       it is the first thing on the tab after the heading. */
+    if (items.some(i => i.top)) {
+      const t = el("button", "topchip" + (smart.top ? " on" : ""),
+        `<span class="tc-star" aria-hidden="true">★</span>` +
+        `<span>Top spots in Oman</span>` +
+        `<span class="tc-n">${items.filter(i => i.top).length}</span>`);
+      t.type = "button";
+      t.setAttribute("aria-pressed", smart.top ? "true" : "false");
+      t.onclick = () => {
+        smart.top = !smart.top;
+        if (window.Analytics) Analytics.track("top_filter", { on: smart.top });
+        onChange();
+      };
+      wrap.appendChild(t);
+    }
 
     /* --- the row: one filter button + the list/map switch ------------------ */
     const bar = el("div", "filterbar");
@@ -385,11 +410,13 @@
   // the explorer rank ("done 4 of 101" after ticking four plans).
   const beenSpotCount = () => Store.been().filter(id => D.spots.some(s => s.id === id)).length;
 
-  // Smart filters (session state): season / no-4×4 / kids / saved / lock state.
-  const smart = { season: false, no4x4: false, kids: false, saved: false,
-                  todo: false, been: false, open: false, locked: false };
+  // Smart filters (session state): top / season / no-4×4 / kids / saved / lock.
+  const smart = { top: false, season: false, no4x4: false, kids: false,
+                  saved: false, todo: false, been: false,
+                  open: false, locked: false };
   const inSeason = i => !i.months || i.months.includes(new Date().getMonth() + 1);
   const smartPass = i =>
+    (!smart.top || i.top === true) &&
     (!smart.season || inSeason(i)) &&
     (!smart.no4x4 || !i.needs4x4) &&
     // Strict === true, not !== false: a spot added later without the flag
@@ -943,8 +970,20 @@
         im.src = item.img; im.alt = item.name;
         im.loading = "lazy"; im.decoding = "async";
         im.className = "card-img";
+        /* A DECLARED photo whose file is missing must not leave a broken
+           frame in the feed. Two spots shipped like that (cafe-batch,
+           food-rozna). Drop the img and take the same designed placeholder
+           a photo-less spot gets, so a missing file is never a broken card. */
+        im.onerror = () => { im.remove(); media.classList.add("card-media-nophoto"); };
         media.appendChild(im);
-      } else media.textContent = "📷 " + item.name;
+      } else {
+        /* NO PHOTO YET, STILL A PHOTO CARD. This used to fall out of the
+           photo layout entirely and render the classic white body panel,
+           which now reads as "locked" because the locked card is the only
+           other thing wearing one. A designed gradient keeps one open-card
+           format across the whole feed. */
+        media.classList.add("card-media-nophoto");
+      }
     } else {
       /* A locked card used to be an empty grey box, which reads as a broken
          image rather than as withheld treasure. Blur the real photo instead:
@@ -982,10 +1021,16 @@
 
     const body = el("div", "card-body");
 
-    // Photo-forward card: when there's a real photo, the name, tagline and
-    // chips sit ON the image over a dark scrim, the feed reads like a
-    // travel app, not a document. No photo (or locked) = classic layout.
-    const photoCard = unlocked && !!item.img;
+    /* Photo-forward card: the name, tagline and chips sit ON the image over
+       a dark scrim, so the feed reads like a travel app, not a document.
+
+       EVERY OPEN CARD IS ONE, photo or not. It used to depend on item.img,
+       which gave the feed two open formats: photo cards, and a white
+       document panel for the three spots with no usable photo. Once locked
+       cards started wearing a white panel of their own, that second format
+       read as "locked" on a spot that is open. One format for open, one for
+       locked, and the difference means exactly what it looks like. */
+    const photoCard = unlocked;
 
     // CARD chips: identification only, what it is, where it is, reel or not.
     // Everything else (difficulty, 4×4, guide, season, sub-label) lives in

@@ -497,7 +497,7 @@ window.OMAN_DATA = {
 
     /* ═══════════════════════════════════════════════════════════════ WADIS */
     {
-      id: "wadi-shab", cat: "wadis", free: true, type: "Wadi",
+      id: "wadi-shab", cat: "wadis", top: true, free: true, type: "Wadi",
       name: "Wadi Shab",
       tagline: "The famous one, and for once the hype is real.",
       blurb: "A flat 45–60 min walk from the boat drop past a string of pools. The last 20 minutes is swim-only: through a narrow gap into a cave with a waterfall inside it.",
@@ -565,7 +565,7 @@ window.OMAN_DATA = {
       ],
     },
     {
-      id: "wadi-bani-khalid", cat: "wadis", free: true, type: "Wadi",
+      id: "wadi-bani-khalid", cat: "wadis", top: true, free: true, type: "Wadi",
       name: "Wadi Bani Khalid",
       tagline: "The face of wadis in Oman.",
       blurb: "The pools start minutes' walk from the car park: no hike, any car, 2.5 hrs from Muscat on Route 23. Walk 15–20 min upstream and the crowds are gone.",
@@ -1232,7 +1232,7 @@ window.OMAN_DATA = {
 
     /* ═════════════════════════════════════════════════════════════ BEACHES */
     {
-      id: "qurum-beach", cat: "beaches", free: true, type: "Beach",
+      id: "qurum-beach", cat: "beaches", top: true, free: true, type: "Beach",
       name: "Qurum Beach",
       tagline: "The city's beach, and better than a city beach has any right to be.",
       blurb: "Kilometres of flat golden sand along Shatti Al Qurum, minutes from wherever you're staying. Morning walks, casual swims, and cafés when you're done. The easiest sea time in Oman.",
@@ -1317,7 +1317,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "sidab", cat: "beaches", free: true, type: "Snorkel",
+      id: "sidab", cat: "beaches", top: true, free: true, type: "Snorkel",
       name: "Sidab & its hidden coves",
       tagline: "The 100/10 coves. My favourite hike in Muscat, with some of the best views on the coast.",
       blurb: "Behind the fishing village of Sidab, a short rough hike drops you into coves you'd swear were photoshopped, clear turquoise water, empty sand, snorkelling straight off the beach. The two reels everyone asks about were filmed here.",
@@ -1698,7 +1698,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "marjan-beach", cat: "beaches", free: true, type: "Snorkel",
+      id: "marjan-beach", cat: "beaches", top: true, free: true, type: "Snorkel",
       name: "Marjan Beach (Ras Al Hamra)",
       tagline: "Turtles grazing metres from the sand, inside the city, for free.",
       blurb: "The PDO beach at Ras Al Hamra, 'PDO Al Marjan beach' on the maps. A short walk from parking, then swim out over the seagrass and you're snorkelling with fish and, some days, turtles, no boat and no tour required; the brave take the jump rock at the far end. Public access until 7pm.",
@@ -2738,7 +2738,7 @@ window.OMAN_DATA = {
       ],
     },
     {
-      id: "bioluminescence-qantab", cat: "experiences", free: false, type: "Night glow",
+      id: "bioluminescence-qantab", cat: "experiences", free: true, type: "Night glow",
       name: "Bioluminescence at Qantab",
       tagline: "The night the sea glows blue. Sometimes.",
       blurb: "On the right winter night, the water around Qantab lights up electric blue wherever it's disturbed, every wave, every splash, every kick of your feet. It's plankton, it's real, and it's never guaranteed, which is exactly why it feels like magic when you catch it.",
@@ -3030,7 +3030,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "grand-mosque", cat: "experiences", free: true, type: "Mosque",
+      id: "grand-mosque", cat: "experiences", top: true, free: true, type: "Mosque",
       name: "Sultan Qaboos Grand Mosque",
       tagline: "The one thing every visitor should do in Muscat.",
       blurb: "The mosque that changes how people see the whole country, the scale, the light, the second-largest hand-woven carpet on earth. Free to enter, and an hour well spent.",
@@ -3082,7 +3082,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "mutrah", cat: "experiences", free: true, type: "Souq",
+      id: "mutrah", cat: "experiences", top: true, free: true, type: "Souq",
       name: "Mutrah Souq & Corniche",
       tagline: "Old Muscat, best at dusk.",
       blurb: "The corniche at golden hour, then straight into the souq, frankincense, silver, textiles, and the smell of oud in every alley. It's touristy and it's still good; you just have to haggle.",
@@ -3127,7 +3127,7 @@ window.OMAN_DATA = {
       ],
     },
     {
-      id: "bimmah-sinkhole", cat: "experiences", free: true, type: "Swim spot",
+      id: "bimmah-sinkhole", cat: "experiences", top: true, free: true, type: "Swim spot",
       name: "Bimmah Sinkhole",
       tagline: "A natural blue swimming hole right off the coast road.",
       blurb: "A surreal limestone sinkhole filled with blue-green water, sitting in a tidy park just off the coastal highway. Steps lead right down to the water. Not a beach, a one-hour experience you stop for on the way to Wadi Shab.",
@@ -3352,7 +3352,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "misfat-al-abriyeen", cat: "mountains", free: true, type: "Village",
+      id: "misfat-al-abriyeen", cat: "mountains", top: true, free: true, type: "Village",
       name: "Misfat Al Abriyeen",
       tagline: "A mud-brick village in the mountains that time forgot to ruin.",
       blurb: "Terraced gardens, falaj channels running through the alleys, and old stone houses stacked into the hillside. Walk it slowly, and stay the night in a village guesthouse if you can.",
@@ -3447,7 +3447,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "jabal-akhdar", cat: "mountains", free: true, type: "Mountain",
+      id: "jabal-akhdar", cat: "mountains", top: true, free: true, type: "Mountain",
       name: "Jabal Akhdar",
       tagline: "Rose terraces, cold air, and villages hanging off a cliff.",
       blurb: "The Green Mountain, cool enough to grow roses and pomegranates, high enough that you'll want a jacket in the evening. The terraced village walk is one of the best easy hikes in Oman.",
@@ -3783,7 +3783,7 @@ window.OMAN_DATA = {
       ]
     },
     {
-      id: "royal-opera-house", cat: "experiences", free: true, type: "Landmark",
+      id: "royal-opera-house", cat: "experiences", top: true, free: true, type: "Landmark",
       name: "Royal Opera House Muscat",
       tagline: "Arabia's opera house, worth seeing even with no ticket.",
       blurb: "Omani marble, teak and craftsmanship at a scale nothing else in the Gulf matches. Catch a performance if the season is on; otherwise the daytime tour and the arcades around it still justify the stop on any Muscat day.",
@@ -3918,7 +3918,7 @@ window.OMAN_DATA = {
        (Jabal Shams, Jabal Akhdar, Misfat and Al Hoota moved here from
        Experiences when this tab was created, their ids are unchanged.)      */
     {
-      id: "wakan-village", cat: "mountains", free: true, type: "Village",
+      id: "wakan-village", cat: "mountains", top: true, free: true, type: "Village",
       name: "Wakan Village",
       tagline: "700 steps up through the orchards, and the blossoms in spring.",
       blurb: "A tiny terraced village hanging 2,000m up the wall of Wadi Mistal, stone steps climbing through apricot and pomegranate gardens to a viewpoint over the whole valley. In late February the orchards blossom white and pink, and half of Oman drives up to see it.",
@@ -5134,7 +5134,10 @@ window.OMAN_DATA = {
       name: "Batch",
       tagline: "Al Khoud's cute one, with a branch in Mall of Oman.",
       blurb: "Aesthetic little specialty café in Al Khoud with some of the friendliest staff in Muscat and bakes worth the drive, the maritozzo has fans.",
-      img: "assets/food/cafe-batch.jpg",
+      // No photo yet. The field is REMOVED rather than left pointing at a
+      // file that 404s: a declared-but-missing photo rendered an empty frame
+      // in the feed, while no field at all renders the designed placeholder.
+      // Drop a cafe-batch.jpg into assets/food and restore this line.
       region: "muscat", coords: [23.6207, 58.2122], // Batch — pin confirmed by Hussain
       hours: 1, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
@@ -5162,7 +5165,8 @@ window.OMAN_DATA = {
       name: "Rozna",
       tagline: "Dinner inside a fort. The design does half the hosting.",
       blurb: "Traditional Omani food served in a building styled like a fort, majlis seating, carved doors, the works. The most designed restaurant in Muscat, and the food holds its end up.",
-      img: "assets/food/food-rozna.jpg",
+      // No photo yet, same as Batch above: drop a food-rozna.jpg into
+      // assets/food and restore this line.
       region: "muscat", coords: [23.5888, 58.3221], // Rozna Restaurant — pin confirmed by Hussain
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
@@ -5186,7 +5190,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "cafe-la-miel", cat: "food", sub: "Coffee", free: false, type: "Coffee",
+      id: "cafe-la-miel", cat: "food", sub: "Coffee", free: true, type: "Coffee",
       name: "La Miel Specialty Coffee",
       tagline: "The pre-wadi flat white.",
       blurb: "Al Ghubrah. Properly sourced beans, properly pulled shots, and a room that doesn't feel like a hotel lobby. This is where I start a driving day.",
@@ -5210,7 +5214,7 @@ window.OMAN_DATA = {
       tips: ["Be out the door by 9am on a wadi day, you want to be past Quriyat by 10."]
     },
     {
-      id: "food-bait-al-luban", cat: "food", sub: "Traditional", free: false, type: "Omani food",
+      id: "food-bait-al-luban", cat: "food", sub: "Traditional", free: true, type: "Omani food",
       name: "Bait Al Luban",
       tagline: "Shuwa, with a view of the harbour.",
       blurb: "In a restored khan across from the Mutrah fish market. Traditional Omani done properly, shuwa (meat buried and slow-cooked for a day), mashuai, harees, and portions two people can share.",
@@ -5259,7 +5263,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "cafe-azura", cat: "food", sub: "Coffee", free: false, type: "Coffee",
+      id: "cafe-azura", cat: "food", sub: "Coffee", free: true, type: "Coffee",
       name: "Azura, The Coffee Company",
       tagline: "The roastery. For people who care about the bean.",
       blurb: "Specialty café and roastery, and the one the coffee people in Muscat send you to. Take beans home.",
@@ -5277,7 +5281,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "cafe-farah", cat: "food", sub: "Coffee", free: false, type: "Coffee",
+      id: "cafe-farah", cat: "food", sub: "Coffee", free: true, type: "Coffee",
       name: "Café Farah",
       tagline: "Coffee on the sand at Azaiba.",
       blurb: "Right on Azaiba Beach. Come for the view as much as the cup, this is the sunset coffee, not the 7am one.",
@@ -5295,7 +5299,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "food-kargeen", cat: "food", sub: "Dinner", free: false, type: "Dinner",
+      id: "food-kargeen", cat: "food", sub: "Dinner", free: true, type: "Dinner",
       name: "Kargeen",
       tagline: "Lantern-lit courtyards and grilled kingfish.",
       blurb: "The one everyone ends up at, and deservedly. Eat outside under the lanterns; order the mashuai (grilled kingfish with rice) and the Omani bread with dips.",
@@ -5344,7 +5348,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "food-bin-ateeq", cat: "food", sub: "Traditional", free: false, type: "Omani food",
+      id: "food-bin-ateeq", cat: "food", sub: "Traditional", free: true, type: "Omani food",
       name: "Bin Ateeq",
       tagline: "Eat on the floor, like you're meant to.",
       blurb: "Family-run, private curtained rooms, cushions on the floor. Unfussy, unbranded, and about as close as a restaurant gets to eating in an Omani home.",
@@ -5471,7 +5475,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "shop-amouage", cat: "shopping", sub: "Speciality", free: false, type: "Shop",
+      id: "shop-amouage", cat: "shopping", sub: "Speciality", free: true, type: "Shop",
       name: "Amouage Visitor Centre",
       tagline: "Oman's world-famous perfume house, at the source.",
       blurb: "One of the most valuable perfume brands on earth is Omani. The factory visitor centre sells the full range, with tester bars and a tour of the production floor.",
@@ -5513,7 +5517,7 @@ window.OMAN_DATA = {
       verify: true
     },
     {
-      id: "shop-avenues-mall", cat: "shopping", sub: "Mall", free: false, type: "Mall",
+      id: "shop-avenues-mall", cat: "shopping", sub: "Mall", free: true, type: "Mall",
       name: "Oman Avenues Mall",
       tagline: "Central, calm and easy.",
       blurb: "Big, central and rarely overwhelming, Carrefour for road-trip supplies, plus the usual brands and cafés. The practical stop, not the destination.",
