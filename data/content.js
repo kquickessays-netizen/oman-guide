@@ -5114,7 +5114,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
        Researched, well-known spots, SWAP THESE FOR THE ONES YOU ACTUALLY EAT
        AT. Your real picks are worth more than any list off the internet.      */
     {
-      id: "cafe-batch", cat: "food", sub: "Coffee", free: true, type: "Coffee",
+      id: "cafe-batch", cat: "food", sub: "Coffee", free: false, type: "Coffee",
       name: "Batch",
       tagline: "Al Khoud's cute one, with a branch in Mall of Oman.",
       blurb: "Aesthetic little specialty café in Al Khoud with some of the friendliest staff in Muscat and bakes worth the drive, the maritozzo has fans.",
@@ -5149,8 +5149,12 @@ region: "rustaq", coords: [23.14337, 57.73537],
       name: "Rozna",
       tagline: "Dinner inside a fort. The design does half the hosting.",
       blurb: "Traditional Omani food served in a building styled like a fort, majlis seating, carved doors, the works. The most designed restaurant in Muscat, and the food holds its end up.",
-      // No photo yet, same as Batch above: drop a food-rozna.jpg into
-      // assets/food and restore this line.
+      img: "assets/food/food-rozna.jpg",
+      imgCredit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons",
+      gallery: [
+        { src: "assets/food/food-rozna-2.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
+        { src: "assets/food/food-rozna-3.jpg", credit: "Photo: Francesco Bini · CC BY-SA 4.0 · Wikimedia Commons" },
+      ],
       region: "muscat", coords: [23.5888, 58.3221], // Rozna Restaurant — pin confirmed by Hussain
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
@@ -5268,7 +5272,7 @@ region: "muscat", coords: [23.56816, 58.41489],
       verify: true
     },
     {
-      id: "food-kargeen", cat: "food", sub: "Dinner", free: true, type: "Dinner",
+      id: "food-kargeen", cat: "food", sub: "Dinner", free: false, type: "Dinner",
       name: "Kargeen",
       tagline: "Lantern-lit courtyards and grilled kingfish.",
       blurb: "The one everyone ends up at, and deservedly. Eat outside under the lanterns; order the mashuai (grilled kingfish with rice) and the Omani bread with dips.",
@@ -5281,7 +5285,7 @@ region: "muscat", coords: [23.56816, 58.41489],
       verify: true
     },
     {
-      id: "food-najmat-sur", cat: "food", sub: "Traditional", free: true, type: "Omani food",
+      id: "food-najmat-sur", cat: "food", sub: "Traditional", free: false, type: "Omani food",
       name: "Najmat Sur",
       tagline: "The 2-rial lunch of the Wadi Shab day.",
       blurb: "Roadside Omani grill on the coast road just north of Wadi Shab, on the way to Bimmah. Local lunch about 1.8, tea 0.3, no menu theatre, full plates. Where I actually eat after the canyon.",

@@ -1331,7 +1331,11 @@
         <span class="gal-n"><b>1</b>/${slides.length}</span>
         <button type="button" class="gal-arw gal-prev" aria-label="Previous photo">‹</button>
         <button type="button" class="gal-arw gal-next" aria-label="Next photo">›</button>` : ""}
-      ${slides.length && slides[0].credit ? `<span class="imgcredit gal-credit">${esc(slides[0].credit)}</span>` : ""}
+      ${/* NO CREDIT ON THE PHOTO. It sat over the corner of every hero and
+            was the only furniture on an otherwise clean image. Attribution
+            is still given, in full, in the photo-credits fold on About:
+            that lists EVERY photo now, gallery frames included, which is
+            what makes taking it off the image safe as well as tidy. */ ""}
       <div class="poster-txt">
         ${chips ? `<div class="card-kicker on-photo">${chips}</div>` : ""}
         <h2>${esc(item.name)}</h2>
@@ -1838,8 +1842,8 @@
     /* ---- the photo slider -------------------------------------------------
        Swipe moves it natively (scroll-snap). A TAP on the photo advances to
        the next one, wrapping at the end, with a guard so the tap that ends a
-       swipe doesn't also advance it. Dots, the counter and the credit follow
-       whichever slide is in view. */
+       swipe doesn't also advance it. Dots and the counter follow whichever
+       slide is in view; the credit no longer does, it lives on About. */
     {
       const hero = b.querySelector(".sheet-hero.gal");
       const track = b.querySelector(".gal-track");
@@ -2758,15 +2762,34 @@
     // satisfied by it being present and reachable, not by it being loud.
     // Locked spots' photos aren't displayed, so they aren't credited either, 
     // crediting them would leak the names.
-    const credited = [...D.spots, ...(D.itineraries || [])].filter(s => s.img && s.imgCredit && isUnlocked(s));
+    /* EVERY photo, not just the hero. The credit used to sit on the image
+       itself, so a gallery frame was attributed where it was shown. It has
+       been taken off the image, which means this list is now the ONLY place
+       attribution is given, and CC BY / BY-SA both require it. So it walks
+       the gallery too, and one line names all the photos of a place.
+
+       Locked spots are still skipped: their photos aren't displayed, and
+       crediting them would leak the names the lock exists to withhold. */
+    const credited = [];
+    [...D.spots, ...(D.itineraries || [])].forEach(s => {
+      if (!isUnlocked(s)) return;
+      const seen = [];
+      if (s.img && s.imgCredit) seen.push(s.imgCredit);
+      (s.gallery || []).forEach(g => { if (g && g.credit) seen.push(g.credit); });
+      const uniq = [...new Set(seen)].map(c => c.replace(/^Photo:\s*/, ""));
+      if (uniq.length) credited.push({ name: s.name, who: uniq });
+    });
     if (credited.length) {
+      const nPhotos = credited.reduce((a, c) => a + c.who.length, 0);
       const cr = el("div", "about-credits");
       cr.innerHTML = `
         <details class="fold fold-quiet">
           <summary>📷 Photo credits (${credited.length})</summary>
           <div class="fold-body">
-            <p class="credits-note">Photos from Wikimedia Commons under free licences.</p>
-            <ul>${credited.map(s => `<li><strong>${esc(s.name)}</strong>, ${esc(s.imgCredit.replace(/^Photo: /, ""))}</li>`).join("")}</ul>
+            <p class="credits-note">Photos from Wikimedia Commons under free licences.
+               ${nPhotos} credits across ${credited.length} places, listed in full.</p>
+            <ul>${credited.map(c =>
+              `<li><strong>${esc(c.name)}</strong>, ${esc(c.who.join("; "))}</li>`).join("")}</ul>
           </div>
         </details>`;
       foot.appendChild(cr);
