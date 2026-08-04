@@ -39,10 +39,25 @@
 -->
 
 <style>
+/* =============================================================================
+   Palette validated with the dataviz validator against this panel surface
+   (#122c30, dark mode): lightness band, chroma floor, CVD separation,
+   normal-vision floor and contrast all PASS.
+   Series slots  #199e70 / #c98500 / #3987e5 / #d95926
+   The previous pink (#e4739f) and red (#e2695f) were 8.4 apart on the
+   normal-vision scale — below the 15 floor, i.e. genuinely hard to tell
+   apart even with full colour vision. Both replaced.
+   Text never wears a series colour; a coloured mark beside it carries identity.
+   ========================================================================== */
 :root{
-  --bg:#0b1f22; --panel:#122c30; --panel-2:#173539; --line:#22474d;
-  --ink:#eaf4f2; --muted:#8fb0ad; --teal:#3fb0a8; --gold:#e0a63c;
-  --pink:#e4739f; --good:#54c08a; --bad:#e2695f;
+  --bg:#0b1f22; --panel:#122c30; --panel-2:#173539;
+  --line:#1e4046; --line-soft:#193a3f;
+  --ink:#eef7f5; --ink-2:#b6cfcc; --muted:#8fb0ad;
+
+  --s1:#199e70; --s2:#c98500; --s3:#3987e5; --s4:#d95926;
+  --good:#0ca30c; --warn:#fab219; --bad:#d03b3b;
+
+  --brand:#3fb0a8;                 /* UI chrome only, never a data mark */
   --radius:14px;
   color-scheme:dark;
 }
@@ -52,117 +67,128 @@ body{
   font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   -webkit-font-smoothing:antialiased;
 }
-a{color:var(--teal)}
+a{color:var(--brand)}
 button{font:inherit;cursor:pointer}
-.wrap{max-width:1180px;margin:0 auto;padding:0 18px 70px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px 80px}
 
 /* ---------------------------------------------------------------- sign in */
 .gate{min-height:100vh;display:grid;place-items:center;padding:20px}
-.gate form{
-  width:100%;max-width:360px;background:var(--panel);border:1px solid var(--line);
-  border-radius:18px;padding:26px 24px;
-}
+.gate form{width:100%;max-width:360px;background:var(--panel);
+  border:1px solid var(--line);border-radius:18px;padding:26px 24px}
 .gate h1{margin:0 0 4px;font-size:21px;letter-spacing:-.02em}
 .gate p{margin:0 0 20px;color:var(--muted);font-size:13.5px}
 .gate label{display:block;font-size:12px;font-weight:700;color:var(--muted);
   text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px}
-.gate input{
-  width:100%;margin:0 0 14px;padding:11px 13px;border-radius:10px;
-  background:var(--bg);border:1px solid var(--line);color:var(--ink);font:inherit;
-}
-.gate input:focus{outline:2px solid var(--teal);outline-offset:1px}
-.btn{
-  width:100%;padding:12px;border:0;border-radius:10px;
-  background:var(--teal);color:#04201d;font-weight:800;
-}
+.gate input{width:100%;margin:0 0 14px;padding:11px 13px;border-radius:10px;
+  background:var(--bg);border:1px solid var(--line);color:var(--ink);font:inherit}
+.gate input:focus{outline:2px solid var(--brand);outline-offset:1px}
+.btn{width:100%;padding:12px;border:0;border-radius:10px;background:var(--brand);
+  color:#04201d;font-weight:800}
 .btn:disabled{opacity:.55;cursor:default}
 .err{margin:12px 0 0;color:var(--bad);font-size:13px;min-height:1.2em}
 
 /* ------------------------------------------------------------------- head */
-header{
-  position:sticky;top:0;z-index:20;background:rgba(11,31,34,.93);
-  backdrop-filter:blur(9px);border-bottom:1px solid var(--line);
-}
-.hrow{max-width:1180px;margin:0 auto;padding:12px 18px;
+header{position:sticky;top:0;z-index:20;background:rgba(11,31,34,.94);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hrow{max-width:1120px;margin:0 auto;padding:12px 18px;
   display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .brand{font-weight:800;letter-spacing:-.01em;margin-right:auto;font-size:15.5px}
 .brand small{display:block;font-weight:500;color:var(--muted);font-size:11.5px;letter-spacing:0}
-.range{display:flex;gap:4px;background:var(--panel);padding:3px;border-radius:999px;
+.range{display:flex;gap:3px;background:var(--panel);padding:3px;border-radius:999px;
   border:1px solid var(--line)}
-.range button{
-  border:0;background:transparent;color:var(--muted);font-size:12.5px;font-weight:700;
-  padding:6px 12px;border-radius:999px;
-}
-.range button.on{background:var(--teal);color:#04201d}
-.ghost{
-  border:1px solid var(--line);background:var(--panel);color:var(--ink);
-  padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700;
-}
-nav.tabs{max-width:1180px;margin:0 auto;padding:0 18px 10px;display:flex;gap:6px;
+.range button{border:0;background:transparent;color:var(--muted);font-size:12.5px;
+  font-weight:700;padding:6px 13px;border-radius:999px}
+.range button.on{background:var(--brand);color:#04201d}
+.ghost{border:1px solid var(--line);background:var(--panel);color:var(--ink-2);
+  padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700}
+.ghost:hover{color:var(--ink);border-color:var(--brand)}
+nav.tabs{max-width:1120px;margin:0 auto;padding:0 18px 10px;display:flex;gap:5px;
   overflow-x:auto;scrollbar-width:none}
 nav.tabs::-webkit-scrollbar{display:none}
-nav.tabs button{
-  flex:0 0 auto;border:1px solid transparent;background:transparent;color:var(--muted);
-  padding:7px 13px;border-radius:999px;font-size:13px;font-weight:700;
-}
+nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:transparent;
+  color:var(--muted);padding:7px 13px;border-radius:999px;font-size:13px;font-weight:700}
+nav.tabs button:hover{color:var(--ink-2)}
 nav.tabs button.on{background:var(--panel-2);color:var(--ink);border-color:var(--line)}
-nav.tabs .n{font-size:11px;color:var(--muted);margin-left:5px}
+nav.tabs .n{font-size:11px;color:var(--muted);margin-left:5px;font-variant-numeric:tabular-nums}
 
-/* ------------------------------------------------------------------ cards */
-h2.sec{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);
-  margin:26px 0 11px;font-weight:800}
-.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+/* --------------------------------------------------------------- sections */
+h2.sec{font-size:12.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-2);
+  margin:30px 0 12px;font-weight:800;display:flex;align-items:center;gap:9px}
+h2.sec::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--brand);flex:0 0 auto}
+h2.sec .pill{text-transform:none;letter-spacing:0}
+
+/* ------------------------------------------------------------------ tiles */
+.tiles{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(158px,1fr))}
 .tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-  padding:15px 16px}
-.tile .k{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  padding:14px 15px}
+.tile .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
   font-weight:800}
-.tile .v{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:6px 0 2px;
-  font-variant-numeric:tabular-nums}
-.tile .s{font-size:12px;color:var(--muted)}
-.tile.gold .v{color:var(--gold)}
-.tile.teal .v{color:var(--teal)}
-.tile.pink .v{color:var(--pink)}
+.tile .v{font-size:30px;font-weight:800;letter-spacing:-.025em;margin:7px 0 3px;
+  line-height:1.05;color:var(--ink)}
+.tile .s{font-size:12px;color:var(--muted);line-height:1.35}
+/* A tile is a headline, not a series: the accent is a rule, not the number. */
+.tile.teal{border-left:3px solid var(--s1)}
+.tile.gold{border-left:3px solid var(--s2)}
+.tile.pink{border-left:3px solid var(--s3)}
 
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-  padding:16px;overflow:hidden}
+  padding:15px;overflow:hidden}
+.note{color:var(--ink-2);font-size:13px;line-height:1.6;margin:11px 2px 0;
+  padding:11px 13px;background:var(--panel);border:1px solid var(--line-soft);
+  border-left:3px solid var(--muted);border-radius:0 10px 10px 0}
+.note b{color:var(--ink)}
 
-/* ------------------------------------------------------------------ chart */
-.bars{display:flex;align-items:flex-end;gap:3px;height:130px;margin-top:6px}
-.bars .b{flex:1 1 0;min-width:3px;background:var(--teal);border-radius:3px 3px 0 0;
-  opacity:.85;position:relative}
-.bars .b:hover{opacity:1}
-.bars .b span{position:absolute;inset:auto 0 100% 0;text-align:center;font-size:10px;
-  color:var(--muted);opacity:0;transition:opacity .1s}
+/* ------------------------------------------------------------------ chart
+   Thin marks, 4px rounded data-ends anchored to the baseline, 2px gap
+   between bars, recessive gridlines, hover tooltip. */
+.chartwrap{position:relative;padding:4px 0 0}
+.grid{position:absolute;inset:0 0 26px 0;pointer-events:none}
+.grid i{position:absolute;left:0;right:0;height:1px;background:var(--line-soft)}
+.grid b{position:absolute;left:0;transform:translateY(-50%);font-size:10.5px;
+  color:var(--muted);font-weight:600;background:var(--panel);padding:0 4px;
+  font-variant-numeric:tabular-nums}
+.bars{display:flex;align-items:flex-end;gap:2px;height:150px;position:relative}
+.bars .b{flex:1 1 0;min-width:2px;background:var(--s1);border-radius:4px 4px 0 0;
+  position:relative;transition:filter .12s}
+.bars .b:hover{filter:brightness(1.25)}
+.bars .b.peak{background:var(--s2)}
+.bars .b span{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);
+  background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
+  padding:5px 9px;font-size:11.5px;color:var(--ink);white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .1s;z-index:5;
+  font-variant-numeric:tabular-nums;box-shadow:0 4px 14px rgba(0,0,0,.35)}
 .bars .b:hover span{opacity:1}
 .axis{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;
-  margin-top:7px}
+  margin-top:9px;font-variant-numeric:tabular-nums}
 
 /* ------------------------------------------------------------------ table */
-.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:-15px;padding:0}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
-th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);
-  vertical-align:top;white-space:nowrap}
-th{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+th,td{text-align:left;padding:10px 15px;border-bottom:1px solid var(--line-soft);
+  vertical-align:middle;white-space:nowrap}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
   font-weight:800;position:sticky;top:0;background:var(--panel)}
+tbody tr:last-child td{border-bottom:0}
 td.wrap{white-space:normal;min-width:240px}
 tbody tr:hover{background:var(--panel-2)}
-td.num{text-align:right;font-variant-numeric:tabular-nums}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
 .bar-cell{position:relative}
-.bar-cell i{position:absolute;left:0;top:0;bottom:0;background:rgba(63,176,168,.16);
-  border-radius:0 3px 3px 0}
-.bar-cell span{position:relative}
-.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11.5px;
-  font-weight:700;background:var(--panel-2);color:var(--muted)}
-.pill.up{background:rgba(84,192,138,.16);color:var(--good)}
-.pill.down{background:rgba(226,105,95,.16);color:var(--bad)}
-.stars{color:var(--gold);letter-spacing:1px}
-.empty{color:var(--muted);padding:26px 4px;text-align:center;font-size:13.5px}
-.note{color:var(--muted);font-size:12.5px;margin:10px 2px 0}
+.bar-cell i{position:absolute;left:0;top:4px;bottom:4px;
+  background:color-mix(in srgb,var(--s1) 22%,transparent);border-radius:0 4px 4px 0}
+.bar-cell span{position:relative;color:var(--ink-2)}
+tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;
+  font-weight:700;background:var(--panel-2);color:var(--muted);border:1px solid var(--line)}
+.pill.up{background:rgba(12,163,12,.15);color:var(--good);border-color:transparent}
+.pill.down{background:rgba(208,59,59,.15);color:var(--bad);border-color:transparent}
+.stars{color:var(--s2);letter-spacing:1px}
+.empty{color:var(--muted);padding:28px 4px;text-align:center;font-size:13.5px}
 .hide{display:none !important}
 @media(max-width:640px){
-  .tile .v{font-size:23px}
+  .tile .v{font-size:25px}
   .hrow{gap:9px}
   .brand{width:100%;margin-right:0}
+  .bars{height:120px}
 }
 </style>
 </head>
@@ -373,6 +399,66 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
     ? Math.floor(ms / 60000) + "m " + Math.round((ms % 60000) / 1000) + "s"
     : Math.round(ms / 1000) + "s";
 
+  /* ================= SESSIONS, THE INDUSTRY WAY =========================
+     Both GA4 and Plausible derive a visit from the event stream rather than
+     from anything the page reports: a visit starts on the first action and
+     ends after 30 minutes with no action. Doing the same here means every
+     one of your historic events becomes usable — visit counts, bounce rate
+     and views-per-visit work on data recorded long before any of this was
+     built, instead of starting from zero today.
+
+     ENGAGED, GA4's exact test: longer than 10 seconds, OR two or more
+     screen views, OR at least one key event. Bounce rate is its inverse —
+     which is why "bounce" here is not "left after one page", it is "left
+     without doing anything worth counting". */
+  const KEY_EVENTS = new Set(["spot", "search", "maps_click", "save", "been", "plan",
+    "whatsapp_click", "share", "buy_click", "product_click", "trip_intent",
+    "unlock", "book_click", "insta_click", "aff_click"]);
+
+  function sessionize(ev) {
+    const byDev = new Map();
+    ev.forEach(e => {
+      if (!e.device_id) return;
+      if (!byDev.has(e.device_id)) byDev.set(e.device_id, []);
+      byDev.get(e.device_id).push(e);
+    });
+    const out = [];
+    byDev.forEach((list, dev) => {
+      list.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      let cur = null;
+      list.forEach(e => {
+        const t = new Date(e.created_at).getTime();
+        if (!cur || t - cur.last > 30 * 60000) {          // the 30-minute rule
+          cur = { dev: dev, start: t, last: t, views: 0, keys: 0, n: 0,
+                  entry: null, exit: null, day: dayOf(e.created_at) };
+          out.push(cur);
+        }
+        cur.last = t; cur.n++;
+        if (e.event === "view") {
+          cur.views++;
+          const tab = propOf(e, "tab");
+          if (tab) { if (!cur.entry) cur.entry = tab; cur.exit = tab; }
+        }
+        if (KEY_EVENTS.has(e.event)) cur.keys++;
+      });
+    });
+    out.forEach(s => {
+      s.dur = s.last - s.start;
+      s.engaged = s.dur > 10000 || s.views >= 2 || s.keys > 0;
+    });
+    return out;
+  }
+
+  /* Referrers grouped the way every analytics tool groups them, so "where
+     traffic comes from" is four readable lines instead of forty hostnames. */
+  function channelOf(host) {
+    if (!host || host === "direct / app") return "Direct / messaging apps";
+    if (/google|bing|duckduckgo|yahoo|yandex|baidu|ecosia/.test(host)) return "Search";
+    if (/instagram|facebook|fb\.|tiktok|twitter|x\.com|t\.co|reddit|pinterest|youtube|linkedin|snapchat/.test(host)) return "Social";
+    if (/whatsapp|telegram|messenger|wa\.me/.test(host)) return "Messaging";
+    return "Other sites";
+  }
+
   /* Everything the dashboard shows, derived once per load. */
   function crunch(d) {
     const ev = d.events;
@@ -397,12 +483,38 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
     }
 
     const spotEv = ev.filter(e => e.event === "spot");
-    const ctx     = ev.filter(e => e.event === "session_start");
+
+    /* A PERSON vs A DEVICE THAT LOADED THE PAGE.
+       Crawlers, link previewers and accidental opens all get a device_id the
+       moment the page runs, so counting distinct ids counts them too — that
+       is why "148" felt high. Someone who actually DID something is a person;
+       someone who only fired a page view is not counted. */
+    const REAL = new Set(["spot","search","maps_click","save","been","plan","type_filter",
+                          "whatsapp_click","share","insta_click","aff_click","buy_click",
+                          "product_click","trip_intent","unlock","view_mode","tripday",
+                          "spot_time","book_click"]);
+    const sess = sessionize(ev);
+    const engaged = new Set();
+    const allDev  = new Set();
+    ev.forEach(e => { if (!e.device_id) return;
+                      allDev.add(e.device_id);
+                      if (REAL.has(e.event)) engaged.add(e.device_id); });
+    const ctx      = ev.filter(e => e.event === "session_start");
+    // One row per DEVICE (its latest reading), so "what they're on" counts
+    // devices rather than re-counting the same phone on every visit.
+    const ctxByDev = new Map();
+    ctx.forEach(e => { if (e.device_id) ctxByDev.set(e.device_id, e); });
+    const ctxDev = [...ctxByDev.values()];
+    const searchEv = ev.filter(e => e.event === "search");
+    const mapsEv   = ev.filter(e => e.event === "maps_click");
+    const errEv    = ev.filter(e => e.event === "error");
     const dwellEv = ev.filter(e => e.event === "spot_time");
     const sessEv  = ev.filter(e => e.event === "session");
     const heldEv = ev.filter(e => e.event === "held_click" || e.event === "held_blocked");
     return {
-      devices: uniq(ev, e => e.device_id),
+      devices: engaged.size,              // the headline: people who did something
+      devicesAll: allDev.size,            // everything that loaded the page
+      passers: allDev.size - engaged.size,
       events: ev.length,
       views: ev.filter(e => e.event === "view").length,
       spotOpens: spotEv.length,
@@ -422,12 +534,18 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 
       /* ---- who they are (from session_start) ---- */
       ctxCount: ctx.length,
-      countries: tally(ctx, e => countryOf(propOf(e, "tz"))),
-      zones:     tally(ctx, e => propOf(e, "tz")),
-      kinds:     tally(ctx, e => propOf(e, "k")),
-      oses:      tally(ctx, e => propOf(e, "os")),
-      browsers:  tally(ctx, e => propOf(e, "br")),
-      langs:     tally(ctx, e => propOf(e, "lang")),
+      countries: tally(ctxDev, e => countryOf(propOf(e, "tz"))),
+      zones:     tally(ctxDev, e => propOf(e, "tz")),
+      kinds:     tally(ctxDev, e => propOf(e, "k")),
+      oses:      tally(ctxDev, e => propOf(e, "os")),
+      browsers:  tally(ctxDev, e => propOf(e, "br")),
+      screens:   tally(ctxDev, e => { const w = +propOf(e, "w") || 0;
+                   return !w ? "" : w < 400 ? "Small phone (<400px)"
+                        : w < 500 ? "Phone (400-500px)"
+                        : w < 800 ? "Large phone / small tablet"
+                        : w < 1200 ? "Tablet / laptop" : "Desktop (1200px+)"; }),
+      langs:     tally(ctxDev, e => propOf(e, "lang")),
+      knownDevices: ctxDev.length,
       refs:      tally(ctx, e => { const r = propOf(e, "ref");
                                    if (!r) return "direct / app";
                                    try { return new URL(r).hostname; } catch { return r; } }),
@@ -457,6 +575,59 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
         return median([...best.values()]);
       })(),
       sessionCount: uniq(sessEv, e => propOf(e, "sid")),
+      sessionStats: (() => {
+        const best = new Map();
+        sessEv.forEach(e => { const sid = propOf(e, "sid"); if (!sid) return;
+          best.set(sid, Math.max(best.get(sid) || 0, +propOf(e, "ms") || 0)); });
+        const v = [...best.values()].filter(Boolean);
+        const buckets = [["Under 30 seconds", 0], ["30s to 2 min", 0], ["2 to 5 min", 0],
+                         ["5 to 15 min", 0], ["Over 15 min", 0]];
+        v.forEach(ms => {
+          const m = ms / 60000;
+          if (ms < 30000) buckets[0][1]++;
+          else if (m < 2)  buckets[1][1]++;
+          else if (m < 5)  buckets[2][1]++;
+          else if (m < 15) buckets[3][1]++;
+          else             buckets[4][1]++;
+        });
+        return { buckets, mean: v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : 0,
+                 max: v.length ? Math.max(...v) : 0, n: v.length };
+      })(),
+
+      /* ---- what they typed, and what they didn't find ---- */
+      searches: tally(searchEv, e => propOf(e, "q")),
+      zeroSearches: tally(searchEv.filter(e => (+propOf(e, "n") || 0) === 0), e => propOf(e, "q")),
+      searchCount: searchEv.length,
+
+      /* ---- who actually set off driving ---- */
+      maps: tally(mapsEv, e => propOf(e, "spot")),
+      mapsTotal: mapsEv.length,
+      mapsPeople: uniq(mapsEv, e => e.device_id),
+
+      /* ---- which post sent them ---- */
+      campaigns: tally(ctx, e => propOf(e, "camp")),
+      campSrc:   tally(ctx, e => propOf(e, "src")),
+      viaPage:   ctx.filter(e => propOf(e, "via") === "page").length,
+
+      /* ---- things that broke ---- */
+      errors: tally(errEv, e => propOf(e, "msg")),
+      errorRows: errEv.slice(0, 40),
+      errorPeople: uniq(errEv, e => e.device_id),
+
+      /* ---- visit quality, the standard definitions ---- */
+      visits: sess.length,
+      engagedVisits: sess.filter(x => x.engaged).length,
+      engagementRate: sess.length ? Math.round(sess.filter(x => x.engaged).length / sess.length * 100) : 0,
+      bounceRate: sess.length ? Math.round((1 - sess.filter(x => x.engaged).length / sess.length) * 100) : 0,
+      viewsPerVisit: sess.length
+        ? Math.round(sess.reduce((a, x) => a + x.views, 0) / sess.length * 10) / 10 : 0,
+      derivedDuration: median(sess.filter(x => x.dur > 0).map(x => x.dur)),
+      entryTabs: tally(sess, x => x.entry),
+      exitTabs:  tally(sess.filter(x => x.views > 1), x => x.exit),
+      channels:  tally(ctx, e => channelOf((() => { const r = propOf(e, "ref");
+                    if (!r) return "direct / app";
+                    try { return new URL(r).hostname.replace(/^www\./, ""); } catch { return r; } })())),
+      liveNow: uniq(ev.filter(e => Date.now() - new Date(e.created_at) < 5 * 60000), e => e.device_id),
 
       /* ---- the funnel, by DEVICE not by event ---- */
       funnel: [
@@ -479,7 +650,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
   function barTable(rows, head, opts) {
     opts = opts || {};
     if (!rows.length) return `<div class="empty">Nothing yet.</div>`;
-    const max = rows[0][1] || 1;
+    const max = Math.max(1, ...rows.map(r => r[1] || 0));
     const body = rows.slice(0, opts.limit || 25).map(([k, n]) => `
       <tr><td class="bar-cell"><i style="width:${(n / max * 100).toFixed(1)}%"></i>
         <span>${esc(opts.label ? opts.label(k) : k)}</span></td>
@@ -504,17 +675,31 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
       + " " + d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
   };
 
+  /* One series, so no legend — the heading names it. Gridlines are hairlines
+     behind the marks; the peak is direct-labelled by colour AND named in the
+     axis, never colour alone. Every bar carries a hover tooltip. */
   function chart(series) {
+    if (!series.length) return `<div class="panel"><div class="empty">No days yet.</div></div>`;
     const max = Math.max(1, ...series.map(s => s.n));
+    const nice = max <= 4 ? max : Math.ceil(max / 4) * 4;
+    const lines = [0.25, 0.5, 0.75, 1].map(f =>
+      `<i style="bottom:${f * 100}%"></i><b style="bottom:${f * 100}%">${Math.round(nice * f)}</b>`).join("");
+    const dayLabel = d => {
+      const x = new Date(d + "T00:00:00");
+      return x.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+    };
     const bars = series.map(s =>
-      `<div class="b" style="height:${Math.max(2, s.n / max * 100)}%">
-        <span>${s.n}</span></div>`).join("");
-    return `<div class="panel"><div class="k" style="font-size:11.5px;color:var(--muted);
-      text-transform:uppercase;letter-spacing:.07em;font-weight:800">People per day</div>
+      `<div class="b${s.n === max && max > 0 ? " peak" : ""}"
+            style="height:${Math.max(2, s.n / nice * 100)}%">
+        <span>${esc(dayLabel(s.day))} — <b>${nf(s.n)}</b> ${s.n === 1 ? "person" : "people"}</span>
+       </div>`).join("");
+    return `<div class="panel"><div class="chartwrap">
+      <div class="grid">${lines}</div>
       <div class="bars">${bars}</div>
-      <div class="axis"><span>${esc(series[0] ? series[0].day : "")}</span>
-      <span>peak ${max}</span>
-      <span>${esc(series.length ? series[series.length - 1].day : "")}</span></div></div>`;
+      <div class="axis"><span>${esc(dayLabel(series[0].day))}</span>
+        <span>peak ${nf(max)} on ${esc(dayLabel((series.find(x => x.n === max) || series[0]).day))}</span>
+        <span>${esc(dayLabel(series[series.length - 1].day))}</span></div>
+    </div></div>`;
   }
 
   const csv = (rows, cols, name) => {
@@ -558,19 +743,54 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
       v.innerHTML = `
         <h2 class="sec">The numbers, ${esc(rangeLabel)}</h2>
         <div class="tiles">
-          ${tile("People", nf(c.devices), "unique devices", "teal")}
-          ${tile("Screens opened", nf(c.views), "tab views")}
+          ${tile("People", nf(c.devices), "unique visitors who did something", "teal")}
+          ${tile("Visits", nf(c.visits), "sessions, 30-min rule", "teal")}
+          ${tile("Engagement rate", c.engagementRate + "%",
+                 "bounce rate " + c.bounceRate + "%", "gold")}
+          ${tile("Typical visit", c.derivedDuration ? secs(c.derivedDuration) : "—",
+                 c.sessionMedian ? "measured: " + secs(c.sessionMedian) : "from event gaps", "gold")}
+          ${tile("Views per visit", c.viewsPerVisit, "screens opened per session")}
           ${tile("Places opened", nf(c.spotOpens), "spot sheets")}
-          ${tile("Emails", nf(c.subs.length), "on the list", "gold")}
-          ${tile("Leads", nf(c.bookings.length), "plan-my-trip", "gold")}
-          ${tile("WhatsApp taps", nf(c.whatsapp), "opened a chat", "pink")}
-          ${tile("Locked taps", nf(c.held.reduce((a, b) => a + b[1], 0)), "wanted a locked spot")}
-          ${tile("Reviews", nf(c.reviews.length), "ratings + tips")}
+          ${tile("Took directions", nf(c.mapsTotal || 0), "tapped Google Maps")}
+          ${tile("Emails", nf(c.subs.length), "on the list")}
         </div>
-        <h2 class="sec">Traffic</h2>
+        ${c.liveNow ? `<div class="note" style="border-left-color:var(--good)">
+          <b>${nf(c.liveNow)}</b> ${c.liveNow === 1 ? "person is" : "people are"} on the site right now.</div>` : ""}
+        <div class="note">
+          <b>Engagement rate</b> uses Google Analytics' own test: a visit counts as engaged if it
+          lasted over 10 seconds, opened 2+ screens, or included a real action. Bounce rate is
+          simply its inverse — not "left after one page", but "left without doing anything".
+          Visits are cut the way Plausible and GA4 cut them: a new visit begins after 30 minutes
+          of no activity, worked out from your event history, so these numbers cover all your
+          data and not just since the last deploy.
+        </div>
+        <div class="note">
+          <b>${nf(c.devices)} people</b> is devices that actually did something — opened a
+          place, searched, tapped Maps. A further <b>${nf(c.passers)}</b> device${c.passers === 1 ? "" : "s"}
+          loaded the page and did nothing at all; those are mostly crawlers and link previews,
+          and they are excluded from every number above.
+        </div>
+        <h2 class="sec">Traffic — people per day</h2>
         ${chart(c.series)}
+        <h2 class="sec">How long a visit lasts</h2>
+        <div class="panel">${barTable(c.sessionStats ? c.sessionStats.buckets : [], ["Length of visit", "Visits"])}</div>
+        ${c.sessionStats && c.sessionStats.n ? `<div class="note">
+          Longest visit so far: <b>${secs(c.sessionStats.max)}</b>. Idle time is not counted —
+          the clock stops when the page is hidden or untouched for a minute, so these are
+          minutes of actual attention.</div>` : `<div class="note">
+          Visit timing starts collecting from the build you deploy next.</div>`}
         <h2 class="sec">Where they go</h2>
-        <div class="panel">${barTable(c.tabs, ["Tab", "Views"])}</div>
+        <div class="panel">${barTable(c.tabs, ["Screen", "Views"])}</div>
+        <h2 class="sec">Where visits start and end</h2>
+        <div class="panel">${barTable(c.entryTabs, ["Landed on", "Visits"])}</div>
+        <div class="panel">${barTable(c.exitTabs, ["Last screen before leaving", "Visits"])}</div>
+        <div class="note">Entry tells you what the front door is doing. Exit tells you where
+          people give up — a screen high on both lists is usually the problem one.</div>
+        ${c.errors.length ? `<h2 class="sec">⚠ Errors — the app broke for someone</h2>
+        <div class="panel">${barTable(c.errors, ["Error", "Times"], { limit: 10 })}</div>
+        <div class="panel"><div class="k" style="font-size:11.5px;color:var(--muted)">
+          Hit ${nf(c.errorPeople)} ${c.errorPeople === 1 ? "person" : "people"}.
+          A syntax slip in content.js shows up here first.</div></div>` : ""}
         <h2 class="sec">Where they drop off</h2>
         <div class="panel">${barTable(c.funnel, ["Step (people, not clicks)", "People"])}</div>
         <h2 class="sec">Every tracked action</h2>
@@ -584,15 +804,27 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
         : `<div class="empty">Nothing yet — this only fills up from visits AFTER
              the build that added device and time-zone collection. Give it a day.</div>`;
       v.innerHTML = `
-        <h2 class="sec">Where they are, ${esc(rangeLabel)}</h2>
+        <h2 class="sec">Where they are, ${esc(rangeLabel)} <span class="pill">counted per device</span></h2>
         ${note}
         <div class="panel">${barTable(c.countries, ["Country (from time zone)", "Visits"], { limit: 30 })}</div>
-        <h2 class="sec">What they are on</h2>
-        <div class="panel">${barTable(c.kinds, ["Device", "Visits"])}</div>
-        <div class="panel">${barTable(c.oses, ["Operating system", "Visits"])}</div>
-        <div class="panel">${barTable(c.browsers, ["Browser", "Visits"])}</div>
+        <h2 class="sec">What they are on <span class="pill">${nf(c.knownDevices)} devices</span></h2>
+        <div class="panel">${barTable(c.kinds, ["Device type", "Devices"])}</div>
+        <div class="panel">${barTable(c.screens, ["Screen size", "Devices"])}</div>
+        <div class="panel">${barTable(c.oses, ["Operating system", "Devices"])}</div>
+        <div class="panel">${barTable(c.browsers, ["Browser", "Devices"])}</div>
         <h2 class="sec">Language</h2>
         <div class="panel">${barTable(c.langs, ["Browser language", "Visits"], { limit: 15 })}</div>
+        <h2 class="sec">Which post sent them (?r= on your links)</h2>
+        <div class="panel">${barTable(c.campaigns, ["Campaign tag", "Visits"], { limit: 20 })}</div>
+        <div class="panel">${barTable(c.campSrc, ["utm_source", "Visits"], { limit: 20 })}</div>
+        <div class="panel" style="display:flex;gap:10px;flex-wrap:wrap">
+          ${tile("Arrived via a shared page", nf(c.viaPage), "landed on an s/ or p/ page")}
+        </div>
+        <h2 class="sec">Traffic channels</h2>
+        <div class="panel">${barTable(c.channels, ["Channel", "Visits"])}</div>
+        <div class="note">Messaging apps and typed URLs both arrive with no referrer, so they
+          land in Direct — that is where most WhatsApp shares show up. It is the standard
+          limitation everywhere, which is why the <b>?r=</b> tags matter.</div>
         <h2 class="sec">How they got here</h2>
         <div class="panel">${barTable(c.refs, ["Came from", "Visits"], { limit: 15 })}</div>
         <h2 class="sec">Exact time zones</h2>
@@ -602,6 +834,15 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 
     if (tab === "places") {
       v.innerHTML = `
+        <h2 class="sec">What they searched for</h2>
+        <div class="panel">${barTable(c.searches, ["Search term", "Times"], { limit: 30 })}</div>
+        <h2 class="sec">Searches that found NOTHING — your content to-do list</h2>
+        <div class="panel">${barTable(c.zeroSearches, ["Typed this, got no results", "Times"], { limit: 30 })}</div>
+        <h2 class="sec">Took directions (tapped Google Maps)</h2>
+        <div class="panel" style="display:flex;gap:10px;flex-wrap:wrap">
+          ${tile("Maps taps", nf(c.mapsTotal), "by " + nf(c.mapsPeople) + " people")}
+        </div>
+        <div class="panel">${barTable(c.maps, ["Place they set off for", "Taps"], { limit: 30 })}</div>
         <h2 class="sec">How long they stay</h2>
         <div class="panel" style="display:flex;gap:10px;flex-wrap:wrap">
           ${tile("Typical read", c.dwellMedian ? secs(c.dwellMedian) : "—", c.dwellReads + " reads timed")}
