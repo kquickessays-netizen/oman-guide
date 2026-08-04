@@ -328,6 +328,51 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
     return s.size;
   }
 
+  /* Time zone -> country. The app records the zone the browser reports,
+     never an IP, so this map is where "Asia/Muscat" becomes "Oman". Adding
+     a zone here re-labels all the history at once, no data migration. */
+  const TZ = {
+    "Asia/Muscat":"Oman","Asia/Dubai":"UAE","Asia/Qatar":"Qatar","Asia/Bahrain":"Bahrain",
+    "Asia/Kuwait":"Kuwait","Asia/Riyadh":"Saudi Arabia","Asia/Aden":"Yemen","Asia/Baghdad":"Iraq",
+    "Asia/Tehran":"Iran","Asia/Amman":"Jordan","Asia/Beirut":"Lebanon","Asia/Jerusalem":"Israel",
+    "Asia/Karachi":"Pakistan","Asia/Kolkata":"India","Asia/Calcutta":"India","Asia/Colombo":"Sri Lanka",
+    "Asia/Dhaka":"Bangladesh","Asia/Kathmandu":"Nepal","Asia/Manila":"Philippines",
+    "Asia/Jakarta":"Indonesia","Asia/Kuala_Lumpur":"Malaysia","Asia/Singapore":"Singapore",
+    "Asia/Bangkok":"Thailand","Asia/Ho_Chi_Minh":"Vietnam","Asia/Hong_Kong":"Hong Kong",
+    "Asia/Shanghai":"China","Asia/Tokyo":"Japan","Asia/Seoul":"South Korea","Asia/Taipei":"Taiwan",
+    "Europe/London":"UK","Europe/Dublin":"Ireland","Europe/Paris":"France","Europe/Berlin":"Germany",
+    "Europe/Madrid":"Spain","Europe/Rome":"Italy","Europe/Amsterdam":"Netherlands",
+    "Europe/Brussels":"Belgium","Europe/Zurich":"Switzerland","Europe/Vienna":"Austria",
+    "Europe/Prague":"Czechia","Europe/Warsaw":"Poland","Europe/Budapest":"Hungary",
+    "Europe/Stockholm":"Sweden","Europe/Oslo":"Norway","Europe/Copenhagen":"Denmark",
+    "Europe/Helsinki":"Finland","Europe/Lisbon":"Portugal","Europe/Athens":"Greece",
+    "Europe/Bucharest":"Romania","Europe/Istanbul":"Turkey","Europe/Moscow":"Russia",
+    "Europe/Kyiv":"Ukraine","Europe/Kiev":"Ukraine",
+    "America/New_York":"USA (East)","America/Chicago":"USA (Central)","America/Denver":"USA (Mountain)",
+    "America/Los_Angeles":"USA (West)","America/Phoenix":"USA (Arizona)","America/Toronto":"Canada",
+    "America/Vancouver":"Canada","America/Sao_Paulo":"Brazil","America/Mexico_City":"Mexico",
+    "Australia/Sydney":"Australia","Australia/Melbourne":"Australia","Australia/Perth":"Australia",
+    "Australia/Brisbane":"Australia","Pacific/Auckland":"New Zealand",
+    "Africa/Cairo":"Egypt","Africa/Nairobi":"Kenya","Africa/Johannesburg":"South Africa",
+    "Africa/Lagos":"Nigeria","Africa/Casablanca":"Morocco","Africa/Tunis":"Tunisia",
+    "Africa/Algiers":"Algeria","Africa/Addis_Ababa":"Ethiopia","Asia/Yangon":"Myanmar",
+    "Asia/Almaty":"Kazakhstan","Asia/Tashkent":"Uzbekistan","Asia/Baku":"Azerbaijan",
+    "Asia/Tbilisi":"Georgia","Asia/Yerevan":"Armenia","Indian/Maldives":"Maldives",
+    "Asia/Phnom_Penh":"Cambodia","Asia/Vientiane":"Laos","Europe/Belgrade":"Serbia",
+    "Europe/Sofia":"Bulgaria","Europe/Zagreb":"Croatia","Atlantic/Reykjavik":"Iceland"
+  };
+  const countryOf = tz => TZ[tz] || (tz ? tz.split("/").pop().replace(/_/g, " ") : "unknown");
+
+  const median = arr => {
+    if (!arr.length) return 0;
+    const a = arr.slice().sort((x, y) => x - y);
+    const m = a.length >> 1;
+    return a.length % 2 ? a[m] : Math.round((a[m - 1] + a[m]) / 2);
+  };
+  const secs = ms => ms >= 60000
+    ? Math.floor(ms / 60000) + "m " + Math.round((ms % 60000) / 1000) + "s"
+    : Math.round(ms / 1000) + "s";
+
   /* Everything the dashboard shows, derived once per load. */
   function crunch(d) {
     const ev = d.events;
@@ -352,6 +397,9 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
     }
 
     const spotEv = ev.filter(e => e.event === "spot");
+    const ctx     = ev.filter(e => e.event === "session_start");
+    const dwellEv = ev.filter(e => e.event === "spot_time");
+    const sessEv  = ev.filter(e => e.event === "session");
     const heldEv = ev.filter(e => e.event === "held_click" || e.event === "held_blocked");
     return {
       devices: uniq(ev, e => e.device_id),
@@ -370,7 +418,55 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
       tripIntents: ev.filter(e => e.event === "trip_intent"),
       sources: tally(ev.filter(e => e.event === "trip_intent"), e => propOf(e, "source")),
       months: tally(ev.filter(e => e.event === "trip_intent"), e => propOf(e, "trip_month")),
-      raw: ev.slice(0, 300)
+      raw: ev.slice(0, 300),
+
+      /* ---- who they are (from session_start) ---- */
+      ctxCount: ctx.length,
+      countries: tally(ctx, e => countryOf(propOf(e, "tz"))),
+      zones:     tally(ctx, e => propOf(e, "tz")),
+      kinds:     tally(ctx, e => propOf(e, "k")),
+      oses:      tally(ctx, e => propOf(e, "os")),
+      browsers:  tally(ctx, e => propOf(e, "br")),
+      langs:     tally(ctx, e => propOf(e, "lang")),
+      refs:      tally(ctx, e => { const r = propOf(e, "ref");
+                                   if (!r) return "direct / app";
+                                   try { return new URL(r).hostname; } catch { return r; } }),
+
+      /* ---- how long they stayed ---- */
+      dwellMedian: median(dwellEv.map(e => +propOf(e, "ms") || 0).filter(Boolean)),
+      dwellReads: dwellEv.length,
+      dwellBySpot: (() => {
+        const m = new Map();
+        dwellEv.forEach(e => {
+          const id = propOf(e, "id"), ms = +propOf(e, "ms") || 0;
+          if (!id || !ms) return;
+          if (!m.has(id)) m.set(id, []);
+          m.get(id).push(ms);
+        });
+        return [...m.entries()]
+          .map(([id, list]) => [id + "  ·  " + list.length + " reads", median(list)])
+          .sort((a, b) => b[1] - a[1]);
+      })(),
+      sessionMedian: (() => {
+        const best = new Map();          // one reading per session id, the highest
+        sessEv.forEach(e => {
+          const sid = propOf(e, "sid"), ms = +propOf(e, "ms") || 0;
+          if (!sid) return;
+          best.set(sid, Math.max(best.get(sid) || 0, ms));
+        });
+        return median([...best.values()]);
+      })(),
+      sessionCount: uniq(sessEv, e => propOf(e, "sid")),
+
+      /* ---- the funnel, by DEVICE not by event ---- */
+      funnel: [
+        ["Opened the app",     uniq(ev, e => e.device_id)],
+        ["Opened a spot",      uniq(spotEv, e => e.device_id)],
+        ["Shared something",   uniq(ev.filter(e => e.event === "whatsapp_click" || e.event === "share"), e => e.device_id)],
+        ["Gave an email",      uniq(ev.filter(e => e.event === "trip_intent"), e => e.device_id)],
+        ["Clicked buy",        uniq(ev.filter(e => e.event === "buy_click" || e.event === "product_click"), e => e.device_id)],
+        ["Unlocked",           uniq(ev.filter(e => e.event === "unlock"), e => e.device_id)]
+      ]
     };
   }
 
@@ -434,6 +530,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 
   const TABS = [
     ["overview", "Overview", d => ""],
+    ["people",   "People",   d => d.ctxCount],
     ["places",   "Places",   d => d.spots.length],
     ["locked",   "Locked interest", d => d.held.length],
     ["emails",   "Emails",   d => d.subs.length],
@@ -474,13 +571,45 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
         ${chart(c.series)}
         <h2 class="sec">Where they go</h2>
         <div class="panel">${barTable(c.tabs, ["Tab", "Views"])}</div>
+        <h2 class="sec">Where they drop off</h2>
+        <div class="panel">${barTable(c.funnel, ["Step (people, not clicks)", "People"])}</div>
         <h2 class="sec">Every tracked action</h2>
         <div class="panel">${barTable(c.names, ["Event", "Times"], { limit: 40 })}</div>`;
       return;
     }
 
+    if (tab === "people") {
+      const note = c.ctxCount
+        ? ""
+        : `<div class="empty">Nothing yet — this only fills up from visits AFTER
+             the build that added device and time-zone collection. Give it a day.</div>`;
+      v.innerHTML = `
+        <h2 class="sec">Where they are, ${esc(rangeLabel)}</h2>
+        ${note}
+        <div class="panel">${barTable(c.countries, ["Country (from time zone)", "Visits"], { limit: 30 })}</div>
+        <h2 class="sec">What they are on</h2>
+        <div class="panel">${barTable(c.kinds, ["Device", "Visits"])}</div>
+        <div class="panel">${barTable(c.oses, ["Operating system", "Visits"])}</div>
+        <div class="panel">${barTable(c.browsers, ["Browser", "Visits"])}</div>
+        <h2 class="sec">Language</h2>
+        <div class="panel">${barTable(c.langs, ["Browser language", "Visits"], { limit: 15 })}</div>
+        <h2 class="sec">How they got here</h2>
+        <div class="panel">${barTable(c.refs, ["Came from", "Visits"], { limit: 15 })}</div>
+        <h2 class="sec">Exact time zones</h2>
+        <div class="panel">${barTable(c.zones, ["Time zone", "Visits"], { limit: 30 })}</div>`;
+      return;
+    }
+
     if (tab === "places") {
       v.innerHTML = `
+        <h2 class="sec">How long they stay</h2>
+        <div class="panel" style="display:flex;gap:10px;flex-wrap:wrap">
+          ${tile("Typical read", c.dwellMedian ? secs(c.dwellMedian) : "—", c.dwellReads + " reads timed")}
+          ${tile("Typical visit", c.sessionMedian ? secs(c.sessionMedian) : "—", c.sessionCount + " visits timed")}
+        </div>
+        <div class="panel">${barTable(
+            c.dwellBySpot.map(([k, ms]) => [k, Math.round(ms / 1000)]),
+            ["Place — median seconds spent reading", "Seconds"], { limit: 30 })}</div>
         <h2 class="sec">Most opened places, ${esc(rangeLabel)}</h2>
         <div class="panel">${barTable(c.spots, ["Place", "Opens"], { limit: 40 })}</div>
         <h2 class="sec">Most saved (♥)</h2>
