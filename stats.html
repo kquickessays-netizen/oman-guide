@@ -182,6 +182,26 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
 .pill.up{background:rgba(12,163,12,.15);color:var(--good);border-color:transparent}
 .pill.down{background:rgba(208,59,59,.15);color:var(--bad);border-color:transparent}
 .stars{color:var(--s2);letter-spacing:1px}
+/* ----------------------------------------------------------------- actions
+   Small, quiet, and never the loudest thing in a row: the data is what you
+   came to read. The one primary action per row gets the series colour; a
+   destructive one is text-red only, never a red slab. */
+.act{border:1px solid var(--line);background:var(--panel-2);color:var(--ink-2);
+  padding:5px 10px;border-radius:8px;font-size:12px;font-weight:700;
+  margin:0 5px 0 0;white-space:nowrap}
+.act:hover:not(:disabled){color:var(--ink);border-color:var(--brand)}
+.act.go{background:var(--s1);border-color:var(--s1);color:#04201d}
+.act.go:hover:not(:disabled){color:#04201d;filter:brightness(1.08)}
+.act.bad{color:var(--bad)}
+.act.bad:hover:not(:disabled){border-color:var(--bad);color:var(--bad)}
+.act:disabled{opacity:.45;cursor:default}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);
+  background:var(--panel-2);border:1px solid var(--line);color:var(--ink);
+  padding:11px 20px;border-radius:999px;font-size:13.5px;font-weight:600;
+  box-shadow:0 10px 30px rgba(0,0,0,.45);opacity:0;pointer-events:none;
+  transition:opacity .16s ease,transform .16s ease;z-index:60;max-width:92vw}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast.bad{border-color:var(--bad)}
 .empty{color:var(--muted);padding:28px 4px;text-align:center;font-size:13.5px}
 .hide{display:none !important}
 @media(max-width:640px){
@@ -283,6 +303,82 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
   /* ------------------------------------------------------------------ read
      One helper for every table. PostgREST caps a response at 1000 rows, so
      this pages until it has everything and says so if it stops. */
+  /* ================== WRITE ==================================
+     Reads ride on the signed-in user's token; so do writes. RLS decides what
+     is allowed, so this cannot do anything the database has not granted:
+     UPDATE on bookings and reviews, DELETE on reviews and subscribers, and
+     nothing at all on events. A lead can be archived but never deleted.
+
+     The row object is patched in memory and the tab redrawn, rather than
+     refetching 2,400 events for a one-field change. */
+  async function write(table, id, patch, method) {
+    const r = await fetch(URL_ + "/rest/v1/" + table + "?id=eq." + encodeURIComponent(id), {
+      method: method || "PATCH",
+      headers: {
+        apikey: KEY,
+        Authorization: "Bearer " + session.access_token,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal"
+      },
+      body: method === "DELETE" ? undefined : JSON.stringify(patch)
+    });
+    if (r.status === 401 && await refreshToken()) return write(table, id, patch, method);
+    if (!r.ok) throw new Error((await r.text().catch(() => "")) || ("HTTP " + r.status));
+  }
+
+  let toastT = null;
+  function toast(msg, bad) {
+    let t = $("#toast");
+    if (!t) { t = el("div", "toast"); t.id = "toast"; document.body.appendChild(t); }
+    t.textContent = msg;
+    t.className = "toast on" + (bad ? " bad" : "");
+    clearTimeout(toastT);
+    toastT = setTimeout(() => { t.className = "toast"; }, bad ? 6000 : 2200);
+  }
+
+  /* One handler for every action button, wired after each draw. */
+  async function act(btn) {
+    const { table, id, field, value, del } = btn.dataset;
+    const list = table === "bookings" ? DATA.bookings
+               : table === "reviews"  ? DATA.reviews
+               : DATA.subs;
+    const rowObj = list.find(x => String(x.id) === String(id));
+    btn.disabled = true;
+    try {
+      if (del === "1") {
+        if (!confirm("Delete this permanently? This cannot be undone.")) { btn.disabled = false; return; }
+        await write(table, id, null, "DELETE");
+        const i = list.indexOf(rowObj); if (i > -1) list.splice(i, 1);
+        toast("Deleted.");
+      } else {
+        const patch = { [field]: value, handled_at: new Date().toISOString() };
+        await write(table, id, patch);
+        if (rowObj) Object.assign(rowObj, patch);
+        toast(value === "new" ? "Reopened." : "Saved: " + value + ".");
+      }
+      draw();
+    } catch (e) {
+      btn.disabled = false;
+      toast("Could not save: " + String(e.message || e).slice(0, 120), true);
+    }
+  }
+
+  /* Buttons are rebuilt on every draw, so they are wired after each draw
+     rather than once at startup. "Copy tip" never touches the database. */
+  function wireActions(scope) {
+    scope.querySelectorAll("button.act").forEach(b => {
+      b.onclick = () => {
+        if (b.dataset.copy != null) {
+          navigator.clipboard.writeText(b.dataset.copy)
+            .then(() => toast("Tip copied — paste it into content.js"))
+            .catch(() => toast("Could not reach the clipboard", true));
+          return;
+        }
+        act(b);
+      };
+    });
+  }
+
   async function readAll(table, query, cap) {
     cap = cap || 20000;
     const out = [];
@@ -875,9 +971,13 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         { h: "Email", get: r => `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>`, raw: r => r.email },
         { h: "Travelling", get: r => esc(r.trip_month || "—"), raw: r => r.trip_month },
         { h: "Days", get: r => esc(r.trip_days || "—"), raw: r => r.trip_days },
-        { h: "From", get: r => `<span class="pill">${esc(r.source || "—")}</span>`, raw: r => r.source }
+        { h: "From", get: r => `<span class="pill">${esc(r.source || "—")}</span>`, raw: r => r.source },
+        { h: "Action", get: r =>
+            `<button class="act bad" data-table="subscribers" data-id="${esc(r.id)}"
+               data-del="1">Remove</button>`, raw: r => "" }
       ];
       const noCols = c.subs.length && c.subs.every(s => s.trip_month === undefined);
+      const csvCols = cols.filter(x => x.h !== "Action");
       v.innerHTML = `
         <h2 class="sec">The email list — ${nf(c.subs.length)} ${days ? "in the " + esc(rangeLabel) : "total"}</h2>
         <p class="note">
@@ -889,27 +989,58 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         <div class="panel">${barTable(c.months, ["Month", "People"])}</div>
         <h2 class="sec">Which box they filled in</h2>
         <div class="panel">${barTable(c.sources, ["Where on the site", "Signups"])}</div>`;
+      wireActions(v);
       const b = $("#csvSubs");
-      if (b) b.onclick = () => csv(c.subs, cols, "exploring-oman-emails.csv");
+      if (b) b.onclick = () => csv(c.subs, csvCols, "exploring-oman-emails.csv");
       return;
     }
 
     if (tab === "leads") {
+      /* Oldest UNANSWERED first. A leads list sorted by date alone buries the
+         one that has been waiting three days under the one that arrived an
+         hour ago; this puts the overdue at the top where it belongs. */
+      const rank = r => (r.status === "done" ? 2 : r.status === "contacted" ? 1 : 0);
+      const leads = c.bookings.slice().sort((a, b2) =>
+        rank(a) - rank(b2) || new Date(a.created_at) - new Date(b2.created_at));
+      const hrs = r => (Date.now() - new Date(r.created_at)) / 3.6e6;
+      const overdue = leads.filter(r => (r.status || "new") === "new" && hrs(r) > 48).length;
+
       const cols = [
+        { h: "Waiting", get: r => {
+            const h = hrs(r), st = r.status || "new";
+            if (st === "done") return `<span class="pill">done</span>`;
+            if (st === "contacted") return `<span class="pill up">contacted</span>`;
+            const lbl = h < 24 ? Math.round(h) + "h" : Math.round(h / 24) + "d";
+            return `<span class="pill ${h > 48 ? "down" : ""}">${esc(lbl)}</span>`;
+          }, raw: r => r.status || "new" },
         { h: "When", get: r => esc(fmtDate(r.created_at)), raw: r => r.created_at },
         { h: "Name", get: r => esc(r.name || "—"), raw: r => r.name },
         { h: "Contact", get: r => esc(r.contact || "—"), raw: r => r.contact },
         { h: "Dates", get: r => esc(r.dates || "—"), raw: r => r.dates },
         { h: "Group", get: r => esc(r.group_size || "—"), raw: r => r.group_size },
-        { h: "What they want", cls: "wrap", get: r => esc(r.note || "—"), raw: r => r.note }
+        { h: "What they want", cls: "wrap", get: r => esc(r.note || "—"), raw: r => r.note },
+        { h: "Action", get: r => {
+            const st = r.status || "new";
+            const btn = (f, val, label, cls) =>
+              `<button class="act ${cls || ""}" data-table="bookings" data-id="${esc(r.id)}"
+                 data-field="${f}" data-value="${val}">${label}</button>`;
+            if (st === "new")       return btn("status", "contacted", "Mark contacted", "go");
+            if (st === "contacted") return btn("status", "done", "Done") + btn("status", "new", "Reopen");
+            return btn("status", "new", "Reopen");
+          }, raw: r => "" }
       ];
       v.innerHTML = `
         <h2 class="sec">Plan-my-trip leads — ${nf(c.bookings.length)}</h2>
+        ${overdue ? `<div class="note" style="border-left-color:var(--bad)">
+          <b>${nf(overdue)}</b> lead${overdue === 1 ? " has" : "s have"} been waiting over 48 hours
+          with no reply. They are at the top.</div>` : ""}
         <p class="note">Reply within 48 hours, that is what the site promises them.
+          Leads can be archived but never deleted.
           <button class="ghost" id="csvLeads">Download CSV</button></p>
-        <div class="panel">${dataTable(c.bookings, cols)}</div>`;
+        <div class="panel">${dataTable(leads, cols)}</div>`;
       const b = $("#csvLeads");
-      if (b) b.onclick = () => csv(c.bookings, cols, "exploring-oman-leads.csv");
+      if (b) b.onclick = () => csv(leads, cols.filter(x => x.h !== "Action"), "exploring-oman-leads.csv");
+      wireActions(v);
       return;
     }
 
@@ -925,11 +1056,32 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         { h: "Name", get: r => esc(r.name || "—"), raw: r => r.name },
         { h: "What they wrote", cls: "wrap", get: r => esc(r.tip || "—"), raw: r => r.tip }
       ];
+      cols.push({ h: "Action", get: r => {
+        const st = r.status || "new";
+        const btn = (val, label, cls) =>
+          `<button class="act ${cls || ""}" data-table="reviews" data-id="${esc(r.id)}"
+             data-field="status" data-value="${val}">${label}</button>`;
+        const copy = r.tip
+          ? `<button class="act" data-copy="${esc(r.tip)}">Copy tip</button>` : "";
+        const del = `<button class="act bad" data-table="reviews" data-id="${esc(r.id)}"
+             data-del="1">Delete</button>`;
+        if (st === "published") return `<span class="pill up">published</span>` + btn("new", "Undo");
+        if (st === "hidden")    return `<span class="pill down">hidden</span>` + btn("new", "Undo");
+        return copy + btn("published", "Published it", "go") + btn("hidden", "Hide") + del;
+      }, raw: r => r.status || "new" });
+
+      const rank = r => ((r.status || "new") === "new" ? 0 : 1);
+      const revs = c.reviews.slice().sort((a, b2) =>
+        rank(a) - rank(b2) || new Date(b2.created_at) - new Date(a.created_at));
+
       v.innerHTML = `
         <h2 class="sec">Reviews and tips — ${nf(c.reviews.length)}</h2>
-        <p class="note">Nothing here reaches the app on its own. Paste the good ones
-          into <code>content.js</code> by hand.</p>
-        <div class="panel">${dataTable(c.reviews, cols)}</div>`;
+        <p class="note">Nothing here reaches the app on its own — that is the moderation.
+          <b>Copy tip</b> puts the text on your clipboard ready for that spot's
+          <code>travellerTips</code> in <code>content.js</code>; mark it
+          <b>Published</b> once you have pasted it, so you never do the same one twice.</p>
+        <div class="panel">${dataTable(revs, cols)}</div>`;
+      wireActions(v);
       return;
     }
 
