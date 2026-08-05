@@ -2295,6 +2295,70 @@ body.tier-flash{animation:ruFlash .7s ease-out}
   white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.14);
 }
 .irow.on .irow-pill{background:var(--water-dark)}
+/* The pill's chevron turns as the row opens: same language as .irow-c, so a
+   reader learns one cue for "this expands" and it holds everywhere. */
+.irow-pill .ip-c{
+  display:inline-block;margin-left:6px;font-style:normal;font-weight:700;
+  transition:transform .15s ease;
+}
+.irow.on .irow-pill .ip-c{transform:rotate(90deg)}
+
+/* An optional stop reads as an aside: quieter, dashed rail so the eye can
+   follow the day's spine straight past it, and a label that says so. */
+.ts.opt .ts-rail{border-left-style:dashed;opacity:.7}
+.ts.opt .ts-titlerow .ts-link,.ts.opt .ts-titlerow .ts-title{color:var(--muted)}
+/* A grouped block: one place, several things inside it. Framed rather than
+   indented, so the day still reads as a single vertical spine. */
+/* The drive between two stops. Deliberately quiet — it is connective
+   tissue, not a destination — but present, so a two-hour drive stops
+   looking like a single step down the page. */
+.ts-leg{
+  display:flex;align-items:center;gap:6px;
+  margin:2px 0 2px 46px;padding:2px 0;
+  font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:-.1px;
+}
+.ts-leg::after{content:"";flex:1;height:1px;background:var(--line);opacity:.8}
+.ts-leg.walk{color:#9aa79f;font-weight:600}
+.tsl-i{font-size:12px;filter:grayscale(.25)}
+.tsg-b .ts-leg{margin-left:36px}
+.ts-park{margin-left:2px;text-decoration:none;font-size:13px;opacity:.9}
+.ts-park:hover{opacity:1}
+.ts-group{
+  margin:6px 0;border:1px solid var(--line);border-radius:14px;
+  background:rgba(255,255,255,.55);overflow:hidden;
+}
+.tsg-h{
+  display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
+  padding:9px 13px;background:var(--sand-2);border-bottom:1px solid var(--line);
+}
+.tsg-t{font-size:11.5px;font-weight:800;color:var(--water);font-variant-numeric:tabular-nums}
+.tsg-n{
+  font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14px;font-weight:800;letter-spacing:-.15px;
+}
+.tsg-s{font-size:11.5px;color:var(--muted)}
+.tsg-b{padding:4px 0}
+.tsg-b .ts:last-child{padding-bottom:8px}
+.ts-opt{
+  display:inline-block;margin-left:7px;padding:1px 8px;border-radius:999px;
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--muted);background:var(--sand-2);border:1px dashed #d8cfc0;
+  vertical-align:middle;
+}
+
+/* THE WAY OUT. Full width, solid, destination named underneath. It is the
+   only element in an info panel that leaves the app, so it should be the
+   only one that looks like it does. */
+.extbtn{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin:12px 0 0;padding:12px 14px;border-radius:12px;
+  background:var(--water);color:#fff;text-decoration:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.16);
+}
+.extbtn:active{transform:translateY(1px)}
+.extbtn .eb-l{display:block;font-size:14px;font-weight:800;letter-spacing:-.1px}
+.extbtn .eb-h{display:block;font-size:11.5px;font-weight:600;opacity:.88;margin-top:2px}
+.extbtn .eb-i{flex:0 0 auto;font-size:17px;font-weight:700;opacity:.95}
 
 /* ========================================================= ABOUT HEADER
    Photo NEXT TO the hook, not stacked over it: a rounded square headshot on
@@ -2441,6 +2505,9 @@ body{
 .trip-day summary::after{content:"▸";color:var(--muted);font-size:13px}
 .trip-day[open] summary::after{content:"▾"}
 .trip-day[open] summary{border-bottom:1px dashed var(--line)}
+/* One-day plans: always open, no toggle affordance, nothing to click. */
+.trip-day.solo>summary{cursor:default;pointer-events:none}
+.trip-day.solo>summary::after{content:""}
 .td-n{width:34px;height:34px;display:grid;place-items:center;background:var(--clay-soft);color:var(--clay);
   font-weight:800;font-size:15px;border-radius:11px;flex:none}
 .td-t strong{display:block;font-size:14.5px;line-height:1.25}

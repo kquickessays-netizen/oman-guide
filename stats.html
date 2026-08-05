@@ -232,7 +232,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
 <div id="app" class="hide">
   <header>
     <div class="hrow">
-      <div class="brand">Exploring Oman <small id="who">stats desk</small></div>
+      <div class="brand">Exploring Oman <small id="who">dashboard</small></div>
       <div class="range" id="range">
         <button data-d="7">7d</button>
         <button data-d="30" class="on">30d</button>
@@ -1061,13 +1061,19 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         const btn = (val, label, cls) =>
           `<button class="act ${cls || ""}" data-table="reviews" data-id="${esc(r.id)}"
              data-field="status" data-value="${val}">${label}</button>`;
+        /* Copies the exact line content.js wants, not the bare sentence:
+           travellerTips is [{text, by}], so hand over something that can be
+           pasted straight in without retyping quotes. */
+        const snippet = r.tip
+          ? `{ text: ${JSON.stringify(r.tip)}, by: ${JSON.stringify(r.name || "A reader")} },`
+          : "";
         const copy = r.tip
-          ? `<button class="act" data-copy="${esc(r.tip)}">Copy tip</button>` : "";
+          ? `<button class="act go" data-copy="${esc(snippet)}">Copy for content.js</button>` : "";
         const del = `<button class="act bad" data-table="reviews" data-id="${esc(r.id)}"
              data-del="1">Delete</button>`;
-        if (st === "published") return `<span class="pill up">published</span>` + btn("new", "Undo");
+        if (st === "published") return `<span class="pill up">added to the guide</span>` + btn("new", "Undo");
         if (st === "hidden")    return `<span class="pill down">hidden</span>` + btn("new", "Undo");
-        return copy + btn("published", "Published it", "go") + btn("hidden", "Hide") + del;
+        return copy + btn("published", "Mark as added", "") + btn("hidden", "Hide") + del;
       }, raw: r => r.status || "new" });
 
       const rank = r => ((r.status || "new") === "new" ? 0 : 1);
@@ -1076,10 +1082,18 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
 
       v.innerHTML = `
         <h2 class="sec">Reviews and tips — ${nf(c.reviews.length)}</h2>
-        <p class="note">Nothing here reaches the app on its own — that is the moderation.
-          <b>Copy tip</b> puts the text on your clipboard ready for that spot's
-          <code>travellerTips</code> in <code>content.js</code>; mark it
-          <b>Published</b> once you have pasted it, so you never do the same one twice.</p>
+        <div class="note" style="border-left-color:var(--s2)">
+          <b>These buttons do not put anything on the website.</b> A reader's words only
+          ever reach the guide when you paste them into <code>content.js</code> yourself
+          and deploy — that is the moderation, and it is deliberate.
+          <br><br>
+          The workflow: <b>Copy for content.js</b> puts a ready-made
+          <code>{ text: …, by: … }</code> line on your clipboard → paste it into that
+          spot's <code>travellerTips</code> in <code>app/data/content.js</code> → bump
+          <code>CACHE</code> in <code>app/sw.js</code> → run <code>DEPLOY-NOW.bat</code>.
+          Then hit <b>Mark as added</b> here, which is only bookkeeping so you never
+          work the same tip twice.
+        </div>
         <div class="panel">${dataTable(revs, cols)}</div>`;
       wireActions(v);
       return;

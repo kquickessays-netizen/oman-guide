@@ -3075,7 +3075,7 @@ region: "muscat", coords: [23.568, 58.538],
       gallery: [
         { src: "assets/experiences/mutrah-2.jpg", credit: "Photo: see source · CC BY 2.0 · Wikimedia Commons" },
         { src: "assets/experiences/mutrah-3.jpg", credit: "Photo: Hafsa rk · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.61729, 58.59395],
+      ], region: "muscat", coords: [23.6204018, 58.5645],
       hours: 2.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","food","photography","sunset"],
@@ -3724,7 +3724,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
       ]
     },
     {
-      id: "old-muscat", cat: "experiences", free: false, type: "Heritage",
+      id: "old-muscat", cat: "experiences", free: true, type: "Heritage",
       name: "Old Muscat & Al Alam Palace",
       tagline: "The Sultan's palace, two Portuguese forts and the oldest quarter in the capital.",
       blurb: "The original walled Muscat: the blue-and-gold Al Alam Palace flanked by the 16th-century Portuguese forts of Mirani and Jalali, with the National Museum across the square. An easy, beautiful city walk, and it connects to Mutrah along the corniche.",
@@ -3734,7 +3734,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
         { src: "assets/experiences/old-muscat-2.jpg", credit: "Photo: Tristan · CC BY 2.0 · Wikimedia Commons" },
         { src: "assets/experiences/old-muscat-3.jpg", credit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.6159, 58.5925],
+      region: "muscat", coords: [23.6159086, 58.5946997],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -3749,7 +3749,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
         "Vehicle": "Any car, or walk from Mutrah",
         "Entry": "Palace viewed from outside; museum has a fee"
       },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.6159,58.5925",
+      mapUrl: "https://maps.app.goo.gl/aM6ieNCy7fPJBzrt8",
       verify: true,
       gettingThere: [
         "10 min beyond Mutrah along the corniche road.",
@@ -3777,7 +3777,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
         { src: "assets/experiences/royal-opera-house-2.jpg", credit: "Photo: Taha Al-Hayali · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/experiences/royal-opera-house-3.jpg", credit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons" }
       ],
-      region: "muscat", coords: [23.61258, 58.4657],
+      region: "muscat", coords: [23.613952, 58.4685124],
       hours: 1.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["culture","photography"],
@@ -5285,7 +5285,7 @@ region: "muscat", coords: [23.56816, 58.41489],
       verify: true
     },
     {
-      id: "food-najmat-sur", cat: "food", sub: "Traditional", free: false, type: "Omani food",
+      id: "food-najmat-sur", cat: "food", sub: "Traditional", free: true, type: "Omani food",
       name: "Najmat Sur",
       tagline: "The 2-rial lunch of the Wadi Shab day.",
       blurb: "Roadside Omani grill on the coast road just north of Wadi Shab, on the way to Bimmah. Local lunch about 1.8, tea 0.3, no menu theatre, full plates. Where I actually eat after the canyon.",
@@ -5331,7 +5331,7 @@ region: "muscat", coords: [23.56816, 58.41489],
       verify: true
     },
     {
-      id: "food-halwa", cat: "food", sub: "Sweets", free: false, type: "Sweets",
+      id: "food-halwa", cat: "food", sub: "Sweets", free: true, type: "Sweets",
       name: "Omani halwa, Mutrah Souq",
       tagline: "Watch them stir it in the copper pot.",
       blurb: "Rosewater, saffron, cardamom, nuts, and an arm-aching amount of stirring. Buy it where they make it, not where they box it.",
@@ -5339,7 +5339,7 @@ region: "muscat", coords: [23.56816, 58.41489],
       imgCredit: "Photo: Silpa11 · CC BY-SA 4.0 · Wikimedia Commons",
       gallery: [
         { src: "assets/food/food-halwa-2.jpg", credit: "Photo: Slywire · CC BY-SA 4.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.617, 58.594],
+      ], region: "muscat", coords: [23.6204018, 58.5645],
       hours: 0.5, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
@@ -5359,12 +5359,12 @@ region: "muscat", coords: [23.56816, 58.41489],
       gallery: [
         { src: "assets/shopping/shop-mutrah-souq-2.jpg", credit: "Photo: Dr. Thomas Liptak · CC BY-SA 4.0 · Wikimedia Commons" },
         { src: "assets/shopping/shop-mutrah-souq-3.jpg", credit: "Photo: Martin Dougiamas · CC BY 2.0 · Wikimedia Commons" }
-      ], region: "muscat", coords: [23.617, 58.592],
+      ], region: "muscat", coords: [23.6204018, 58.5645],
       hours: 2, fitness: 1, needs4x4: false, swim: false, kidOk: true,
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["shopping","culture","photography"], guide: "",
       stats: { "Type": "Traditional souq", "Best time": "5–9pm", "Haggling": "Expected, start around half", "Cards": "Bigger shops yes; carry cash", "Best buys": "Frankincense + burner, silver, halwa" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.617,58.592",
+      mapUrl: "https://maps.app.goo.gl/SWZYJ5swmi91RHNB7",
       verify: true
     },
     {
@@ -5531,7 +5531,7 @@ region: "muscat", coords: [23.607, 58.256],
   itineraries: [
     {
       id: "shab-1day", cat: "itineraries", free: true,
-      name: "The Perfect Oman Day",
+      name: "The Wadi Shab Day",
       tagline: "One day, the famous swim, timed to the hour and costed to the rial.",
       blurb: "If you only have one day, this is it. The exact day from my reel: out of Muscat early, the boat, the canyon, the cave, then the Tiwi coast to wind down. Every rial it costs is on the receipt at the bottom.",
       /* THE DAY'S PHOTOS ARE THE DAY'S STOPS, MERGED (3 Aug 2026).
@@ -5558,11 +5558,12 @@ region: "muscat", coords: [23.607, 58.256],
         { name: "Muscat → the coast → back by dinner", sub: "the country's best single day", chip: "🏞️", cost: "from OMR 16 pp", drive: "~4h",
           stops: [
             { t: "08:00", icon: "🚗", title: "Leave Muscat", note: "Route 17 east, the scenic coast road. Fuel for the whole loop is about OMR 10." },
-            { t: "10:00", icon: "🏞️", title: "Wadi Shab", note: "Boat across, hike the canyon 45–60 min, swim the last stretch into the waterfall cave. Give it 3 hours, it is the reason you came.", omr: "3.0", spot: "wadi-shab", hl: true },
-            { t: "13:05", icon: "🌊", title: "Pebble Beach + the Romantic Cave", note: "3 minutes down the road at Tiwi. Rest, photos, and the cave if the sea is flat calm.", spot: "pebble-beach-tiwi" },
-            { t: "13:50", icon: "🍽️", title: "Lunch at Najmat Sur", note: "On the coast road toward Bimmah. Local lunch 1.8, tea 0.3.", omr: "2.1", spot: "food-najmat-sur" },
-            { t: "15:00", icon: "💧", title: "Bimmah Sinkhole", note: "Swim the sinkhole, walk the park, wind down. An hour or two.", spot: "bimmah-sinkhole" },
-            { t: "17:00", icon: "🌇", title: "Drive home", note: "Back in Muscat around 19:00." }
+            { t: "10:00", icon: "🏞️", title: "Wadi Shab", note: "Boat across, hike the canyon 45–60 min, swim the last stretch into the waterfall cave. Give it 3 hours, it is the reason you came.", omr: "3.0", spot: "wadi-shab", hl: true , drive: "~2h"},
+            { t: "13:05", icon: "🌊", title: "Pebble Beach, Tiwi", note: "3 minutes down the road. Flat smooth stones, shade at the back, and the swim that resets you after the wadi.", spot: "pebble-beach-tiwi", opt: true, drive: "3 min", group: "Tiwi", groupNote: "park once, the cave is along the same beach"},
+            { t: "13:25", icon: "🤿", title: "The Romantic Cave", note: "Right beside the beach, and only worth it when the sea is flat calm — the entrance takes a swell badly. Skip it without guilt on a rough day; the plan works without it.", spot: "romantic-cave-tiwi", opt: true, group: "Tiwi" },
+            { t: "13:50", icon: "🍽️", title: "Lunch at Najmat Sur", note: "On the coast road toward Bimmah. Local lunch 1.8, tea 0.3.", omr: "2.1", spot: "food-najmat-sur", drive: "3 min" },
+            { t: "15:00", icon: "💧", title: "Bimmah Sinkhole", note: "Swim the sinkhole, walk the park, wind down. An hour or two.", spot: "bimmah-sinkhole", drive: "25 min" },
+            { t: "17:00", icon: "🌇", title: "Drive home", note: "Back in Muscat around 19:00." , drive: "~1h45" }
           ] }
       ],
       receipt: {
@@ -5575,6 +5576,51 @@ region: "muscat", coords: [23.607, 58.256],
         splits: [["solo", "OMR 35"], ["two people", "OMR 23 each"], ["four", "OMR 16 each"]],
         checked: "Aug 2026",
         note: "Posted prices. OMR 1 ≈ USD 2.60."
+      }
+    },
+    {
+      /* THE MUSCAT DAY (added 4 Aug 2026, from Hussain's own reel).
+         Times, drive times and the two prices below are his, not researched:
+         Bait Al Luban ~6 pp and Matrah Fort 5 pp + tax. The Royal Opera
+         House tour price is deliberately ABSENT rather than guessed — see
+         the receipt note. Add it and it appears everywhere automatically. */
+      id: "muscat-1day", cat: "itineraries", free: true,
+      name: "The Muscat Day",
+      tagline: "The capital done properly in one day. No 4x4, barely any driving, home for dinner.",
+      blurb: "Mosque at nine while it is still calm, the opera house, then Mutrah for the whole afternoon \u2014 fish market, lunch, halwa, souq, fort \u2014 finishing at the palace when the light goes gold. The exact day from my reel, with the drive between each stop and what it costs. Any car does it, and most of the afternoon is on foot.",
+      img: "assets/experiences/grand-mosque.jpg",
+      imgCredit: "Photo: Francesco Bini \u00b7 CC BY-SA 4.0 \u00b7 Wikimedia Commons",
+      gallery: [
+        { src: "assets/experiences/royal-opera-house.jpg", credit: "Photo: Taha Al-Hayali \u00b7 CC BY-SA 4.0 \u00b7 Wikimedia Commons" },
+        { src: "assets/experiences/mutrah.jpg", credit: "Photo: Diego Delso \u00b7 CC BY-SA 4.0 \u00b7 Wikimedia Commons" },
+        { src: "assets/experiences/matrah-fort-2.jpg", credit: "Photo: Safa.daneshvar \u00b7 CC BY-SA 4.0 \u00b7 Wikimedia Commons" },
+        { src: "assets/experiences/old-muscat.jpg", credit: "Photo: Dr. Ond\u0159ej Havelka (cestovatel) \u00b7 CC BY 4.0 \u00b7 Wikimedia Commons" },
+      ],
+      stats: { "Best for": "First days, layovers, no 4x4", "Base": "Muscat, all of it in the city", "Car": "Any car", "Days": "1" },
+      insta: "https://www.instagram.com/reel/DU_VsFNDC6p/",
+      route: [
+        { name: "Mosque \u2192 opera \u2192 Mutrah \u2192 palace", sub: "the capital, in the right order", chip: "\ud83d\udd4c", cost: "from OMR 14 pp", drive: "~1h",
+          stops: [
+            { t: "09:00", icon: "\ud83d\udd4c", title: "Sultan Qaboos Grand Mosque", note: "Start here, before the heat and the coaches. Take your time \u2014 the detail is the whole point, and the calm at this hour is half of why it works. Visitor hours end at 11:00; shoulders and knees covered, and there is robe hire at the gate if you need it.", spot: "grand-mosque", hl: true , parkUrl: "https://maps.app.goo.gl/stWMq2nHEBwF5cGF9"},
+            { t: "10:30", icon: "\ud83c\udfad", title: "Royal Opera House", note: "Twenty minutes across town. Elegance on another level, and the guided tour is the only way to see inside \u2014 do it, it is worth the hour. Visits run Saturday to Thursday, 08:30\u201317:30, so this is a weekday plan; entry is 3 excluding tax.", spot: "royal-opera-house", omr: "3.0", hl: true , drive: "20 min"},
+            { t: "12:30", icon: "\ud83d\udc1f", title: "Mutrah fish market", note: "Twenty-five minutes to the corniche. Aim for the free spots beside the fish market itself \u2014 they are the only free ones and they go early; everywhere else along the corniche is paid parking, by phone. The market is raw, local and completely unstaged, so walk through even if you buy nothing." , group: "Mutrah", groupNote: "park once, then all of it on foot", parkUrl: "https://maps.app.goo.gl/hDBzeYDV4mgbAB1D7", drive: "25 min"},
+            { t: "13:15", icon: "\ud83c\udf7d\ufe0f", title: "Lunch at Bait Al Luban", note: "Traditional Omani food with the harbour in the window. Worth booking, it fills at lunch.", spot: "food-bait-al-luban", omr: "6.0" , group: "Mutrah"},
+            { t: "14:15", icon: "\u2615", title: "Halwa and kahwa on the corniche", note: "Walk the water, then stop for Omani halwa and coffee \u2014 you are handed both to try before anyone mentions buying.", spot: "food-halwa" , group: "Mutrah"},
+            { t: "14:45", icon: "\ud83c\udfee", title: "Mutrah Souq", note: "Go in without a plan and get lost. Frankincense, silver, textiles. Haggle gently, expect kahwa, and keep an eye on the time.", spot: "shop-mutrah-souq" , group: "Mutrah"},
+            { t: "15:30", icon: "\ud83c\udfef", title: "Matrah Fort", note: "Climb it. One of the best views in Muscat \u2014 the corniche end to end, the harbour, and the dhows from above. Entry is 5 excluding tax.", spot: "matrah-fort", omr: "5.0" , group: "Mutrah", tEnd: "16:00"},
+            { t: "16:00", icon: "\ud83c\udff0", title: "Al Alam Palace", note: "A short drive round the headland to finish: the palace and the two Portuguese forts on the cliffs above it. Viewed from outside, and the reason it is last is the light.", spot: "old-muscat", hl: true, drive: "10 min" }
+          ] }
+      ],
+      receipt: {
+        rows: [
+          ["Royal Opera House tour (excluding tax)", "3.0"],
+          ["Lunch at Bait Al Luban", "6.0"],
+          ["Matrah Fort entry (excluding tax)", "5.0"],
+          ["Grand Mosque, fish market, souq entry", "free"],
+          ["Halwa and kahwa to try", "free"]
+        ],
+        checked: "Aug 2026",
+        note: "Posted prices, per person. OMR 1 \u2248 USD 2.60. Corniche parking is paid by phone unless you get one of the few free spots by the fish market."
       }
     },
     {
