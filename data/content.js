@@ -166,7 +166,7 @@ window.OMAN_DATA = {
        The locked card shows the spot's own photo, barely blurred, with its
        name and tagline: a shop window, not a wall. No dates are promised
        anywhere, the cards just say "Coming soon". */
-    spotsLocked: true,
+    spotsLocked: false, // off since 6 Aug: "coming soon" is per-spot now (held: true on the item),
     plansOpen: "soon",
 
     /* ======================= THE THREE PRODUCTS =============================
@@ -301,6 +301,7 @@ window.OMAN_DATA = {
     // history is kept without anyone having to scroll past it.
     changelog: [
       { date: "August 2026", items: [
+        "🔓 Everything reviewed so far is OPEN: Daymaniyat, Wahiba Sands, Ras Al Jinz, Snake Gorge, Wadi Mibam and more are out of 'coming soon'. Only the places I haven't finished verifying still wear the lock.",
         "📝 Full content review, pass one: 56 places checked line-by-line against my review sheet — wording tightened, facts corrected (Wadi Hawer is 2WD to the start), and locks set right.",
         "⭐ Reviews are live: rate a spot and your words appear on its page right away, with your name. Posting needs a (free) account, and I can take anything down that doesn't belong.",
         "👤 Your account page now shows your explorer rank with progress to the next one, and your saved and been-there places — tap any of them to jump straight to its sheet.",
@@ -766,7 +767,7 @@ region: "muscat", coords: [23.109, 58.802],
       verify: true
     },
     {
-      id: "wadi-tiwi", cat: "wadis", top: true, free: false, type: "Wadi",
+      id: "wadi-tiwi", held: true, cat: "wadis", top: true, free: false, type: "Wadi",
       name: "Wadi Tiwi",
       tagline: "Wadi Shab's quieter neighbour — the wadi you drive into.",
       blurb: "Right next to Wadi Shab but with a fraction of the crowds — and this one you experience from the car: a narrow village road winds deeper in past terraced date plantations, blue pools and hamlets clinging to the cliffs. Stop and swim wherever looks good. The pools at the very top of this same valley are Wadi Mibam — they have their own entry.",
@@ -906,7 +907,7 @@ region: "dakhiliyah", coords: [23.05246, 57.46948],
       verify: true
     },
     {
-      id: "wadi-ghul", cat: "wadis", free: false, type: "Canyon",
+      id: "wadi-ghul", held: true, cat: "wadis", free: false, type: "Canyon",
       name: "Wadi Ghul / Wadi Nakhar",
       tagline: "The floor of Oman's Grand Canyon.",
       blurb: "Everyone photographs this canyon from the rim at Jabal Shams. Far fewer people drive into the bottom of it, up the Ghul–Nakhar track with 1,000m walls closing in on either side. It reframes the whole mountain.",
@@ -1070,7 +1071,7 @@ region: "sharqiyah", coords: [22.650, 58.950],
       needsFirstHand: true
     },
     {
-      id: "wadi-naqab", cat: "wadis", free: false, type: "Canyon",
+      id: "wadi-naqab", held: true, cat: "wadis", free: false, type: "Canyon",
       name: "Wadi Naqab",
       tagline: "Serious mountain country, go prepared or don't go.",
       blurb: "A big, rugged wadi in the northern Hajar. Long approach, real exposure, and a route you should not be finding by yourself. The reward is scale you won't get anywhere near Muscat.",
@@ -1779,7 +1780,7 @@ region: "muscat", coords: [23.568, 58.538],
       verify: true
     },
     {
-      id: "al-sawadi", cat: "beaches", free: false, type: "Beach",
+      id: "al-sawadi", held: true, cat: "beaches", free: false, type: "Beach",
       name: "Al Sawadi",
       tagline: "Islands offshore, reef in between, palms behind.",
       blurb: "An hour and a half up the Batinah coast: clean sand, calm water, and a cluster of protected islands just offshore you can boat out to. The reef between the mainland and the islands is the reason to bother.",
@@ -1813,7 +1814,7 @@ region: "muscat", coords: [23.568, 58.538],
     /* ── Camping (added Jul 2026), wild camping is legal, free and one of
        Oman's superpowers. Every camp spot carries the safety rules. ──────── */
     {
-      id: "white-beach-fins", cat: "beaches", free: false, type: "Camping",
+      id: "white-beach-fins", held: true, cat: "beaches", free: false, type: "Camping",
       name: "White Beach (Fins)",
       tagline: "The classic first camp, white pebbles, clear water, fire on the beach.",
       blurb: "The little white cove past Fins is where half of Muscat learned to beach-camp: sheltered, swimmable, and close enough to bail out if the kids mutiny. Pitch above the tide line, cook on the sand, wake up and swim before breakfast. Wild camping in Oman is legal and free, this is the place to start.",
@@ -1892,7 +1893,7 @@ region: "muscat", coords: [23.568, 58.538],
       verify: true
     },
     {
-      id: "mughsail", cat: "salalah", free: false, group: "beaches", type: "Beach",
+      id: "mughsail", held: true, cat: "salalah", free: false, group: "beaches", type: "Beach",
       name: "Mughsail Beach",
       tagline: "Blowholes, cliffs and a beach that doesn't look like the rest of Oman.",
       blurb: "40 minutes west of Salalah on good tarmac, any car. The blowholes at the western end need a decent swell: flat sea and nothing happens. In khareef the cliffs behind turn green.",
@@ -1940,7 +1941,7 @@ region: "muscat", coords: [23.568, 58.538],
 
     /* ═════════════════════════════════════════════════════════ EXPERIENCES */
     {
-      id: "khasab", cat: "experiences", free: false, type: "Fort",
+      id: "khasab", held: true, cat: "experiences", free: false, type: "Fort",
       name: "Khasab & its castle",
       tagline: "Musandam's capital, guarded by a 17th-century Portuguese fort.",
       blurb: "The gateway town to the fjords. Khasab Castle is small, restored and genuinely good, and the town is where every dhow, ferry and mountain safari starts. Reaching it is the adventure: fly from Muscat, take the Shinas ferry, or drive through the UAE with your passport.",
@@ -1979,7 +1980,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "bukha-fort", cat: "experiences", free: false, type: "Fort",
+      id: "bukha-fort", held: true, cat: "experiences", free: false, type: "Fort",
       name: "Bukha Fort",
       tagline: "The fort on the coast road nobody stops for. Stop.",
       blurb: "Musandam's second fort sits right on the Khasab coastal road with the sea in front and mountains behind. Restored, photogenic and usually empty, a ten-minute stop that looks like a postcard.",
@@ -2013,7 +2014,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "khor-najd", cat: "experiences", free: false, type: "Viewpoint",
+      id: "khor-najd", held: true, cat: "experiences", free: false, type: "Viewpoint",
       name: "Khor Najd",
       tagline: "The fjord photo every Musandam ad uses, and you can drive to it.",
       blurb: "A steep graded track climbs from Khasab to the one place you can see a Musandam fjord from above without a boat. The hairpin viewpoint over the bay is the region's defining image.",
@@ -2128,7 +2129,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "majlis-al-jinn", cat: "experiences", free: false, type: "Cave",
+      id: "majlis-al-jinn", held: true, cat: "experiences", free: false, type: "Cave",
       name: "Majlis Al Jinn",
       tagline: "One of the largest cave chambers on Earth, under a plateau you can drive.",
       blurb: "Beneath the Selma Plateau hides a chamber big enough to swallow a cathedral, one of the world's largest underground rooms. Entry is a 120-metre free-hanging rope descent, professionals only, with a licensed caving operator. For everyone else, standing on the plateau above the sinkholes is its own trip.",
@@ -2166,7 +2167,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "wadi-bani-awf", cat: "experiences", free: false, type: "Canyon",
+      id: "wadi-bani-awf", held: true, cat: "experiences", free: false, type: "Canyon",
       name: "Wadi Bani Awf, the mountain road",
       tagline: "Oman's most famous off-road drive, village to village through the Hajar.",
       blurb: "The graded track over the mountains between Al Awabi and Balad Sayt is the country's benchmark 4×4 day: hairpins, cliff edges, Snake Gorge's slot far below, and Bilad Sayt's terraces at the end. You don't drive it for the destination, the road IS the destination.",
@@ -2206,7 +2207,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "nizwa-goat-market", cat: "experiences", free: false, type: "Souq",
+      id: "nizwa-goat-market", held: true, cat: "experiences", free: false, type: "Souq",
       name: "Nizwa Friday goat market",
       tagline: "Sunrise, one auction ring, and half the interior's livestock.",
       blurb: "Every Friday before the heat, herders circle goats and cattle around a ring of buyers at Nizwa's souq, bidding as they walk. It's loud, it's real, it's been happening for centuries, and visitors are welcome to stand in the middle of it. The best free cultural show in Oman.",
@@ -2244,7 +2245,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "harat-al-aqr", cat: "experiences", free: false, type: "Village",
+      id: "harat-al-aqr", held: true, cat: "experiences", free: false, type: "Village",
       name: "Harat Al Aqr, Nizwa's old quarter",
       tagline: "The mudbrick district behind the fort, quietly coming back to life.",
       blurb: "A restored quarter of lanes, carved doors and courtyard houses a few minutes from Nizwa Fort, now dotted with small cafés and craft rooms. The slow hour between the fort and the drive on.",
@@ -2281,7 +2282,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "national-museum", cat: "experiences", free: false, type: "Museum",
+      id: "national-museum", held: true, cat: "experiences", free: false, type: "Museum",
       name: "National Museum of Oman",
       tagline: "The country's story, told properly. Do it on day one.",
       blurb: "Opposite the Sultan's palace in Old Muscat, the National Museum lays out five thousand years, seafaring, forts, silver, dhows, Islamic art, in a building that's a pleasure to be in. An hour here makes every fort and souq afterwards make more sense.",
@@ -2386,7 +2387,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "masirah-island", cat: "experiences", free: false, type: "Wildlife",
+      id: "masirah-island", held: true, cat: "experiences", free: false, type: "Wildlife",
       name: "Masirah Island",
       tagline: "Oman's big wild island: ferries, empty coasts, four turtle species.",
       blurb: "A car-ferry ride off the east coast, Masirah is where Oman keeps its emptiest beaches, its kitesurf season and some of the world's densest turtle nesting. Take the vehicle ferry from Shannah, stay a night or three, do laps of the island.",
@@ -2426,7 +2427,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "bar-al-hikman", cat: "experiences", free: false, type: "Wildlife",
+      id: "bar-al-hikman", held: true, cat: "experiences", free: false, type: "Wildlife",
       name: "Bar Al Hikman",
       tagline: "The flamingo flats: Arabia's greatest birdwatching, and its trickiest ground.",
       blurb: "A vast tidal peninsula opposite Masirah where tens of thousands of flamingos and waders winter on the flats, and kitesurfers ride the shallows in summer. Also home to genuine quicksand and tide traps, this is licensed-operator territory, not a casual detour.",
@@ -2463,7 +2464,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "pink-lakes", cat: "experiences", free: false, type: "Nature",
+      id: "pink-lakes", held: true, cat: "experiences", free: false, type: "Nature",
       name: "The pink lakes",
       tagline: "Yes, actually pink. Algae-tinted salt lagoons on the empty coast.",
       blurb: "Salt lagoons at Al Suwih on the Sharqiyah coast turn shades of rose when the algae bloom, strongest on dry, bright days in the cool months. Remote, serviceless and surreal, a photo stop wrapped in a proper road trip.",
@@ -2500,7 +2501,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "empty-quarter", cat: "experiences", free: false, type: "Desert",
+      id: "empty-quarter", held: true, cat: "experiences", free: false, type: "Desert",
       name: "The Empty Quarter",
       tagline: "The biggest sand desert on Earth. Dunes the size of hills, silence the size of everything.",
       blurb: "Rub' al Khali, reached from Salalah with a licensed desert operator, dunes that dwarf Wahiba's, sunsets that shut everyone up, and the hardest solitude money can buy. This is a guided expedition, not a self-drive, and it's worth every rial.",
@@ -2539,7 +2540,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "wadi-dayqah-park", cat: "experiences", free: false, type: "Adrenaline",
+      id: "wadi-dayqah-park", held: true, cat: "experiences", free: false, type: "Adrenaline",
       name: "Wadi Dayqah Adventure Park",
       tagline: "Ziplines and via ferrata over the dam Oman built for postcards.",
       blurb: "At Wadi Dayqah Dam near Quriyat, an operator-run park strings ziplines, a via ferrata and hanging bridges over the water, with kayaks and pedal boats below. The easy adrenaline day, one hour from Muscat, kids welcome on most of it.",
@@ -2576,7 +2577,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "via-ferrata-akhdar", cat: "experiences", free: false, type: "Adrenaline",
+      id: "via-ferrata-akhdar", held: true, cat: "experiences", free: false, type: "Adrenaline",
       name: "Via ferrata on Jabal Akhdar",
       tagline: "Clip in, step off the edge of the Green Mountain.",
       blurb: "A guided cable-protected route across Jabal Akhdar's cliff faces, Oman's biggest managed adrenaline hit, run by professional outfits with all gear provided. Cold-season only, booked ahead, no experience needed beyond nerve.",
@@ -2613,7 +2614,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "ballooning-wahiba", cat: "experiences", free: false, type: "Adrenaline",
+      id: "ballooning-wahiba", held: true, cat: "experiences", free: false, type: "Adrenaline",
       name: "Hot-air balloon over the Wahiba",
       tagline: "Sunrise over a sea of dunes, from a basket.",
       blurb: "Balloon flights lift off at dawn over the Sharqiyah Sands, an hour of silent drifting while the dunes light up gold beneath you. Operators fly the cool months, book ahead, it's the splurge that photographs like nothing else in Oman.",
@@ -2649,7 +2650,7 @@ region: "muscat", coords: [23.568, 58.538],
       ]
     },
     {
-      id: "flamingo-lake-quriyat", cat: "experiences", free: false, type: "Wildlife",
+      id: "flamingo-lake-quriyat", held: true, cat: "experiences", free: false, type: "Wildlife",
       name: "Quriyat's flamingo lagoon",
       tagline: "Pink birds, twenty minutes off the Muscat–Sur road.",
       blurb: "The khor at Quriyat pulls in flamingos and migrating waders through the cool months, an easy add-on to the coast-road day everyone already drives. Binoculars, golden light, zero effort.",
@@ -3244,7 +3245,7 @@ region: "muscat", coords: [23.568, 58.538],
       verify: true
     },
     {
-      id: "jabal-shams", cat: "mountains", top: true, free: false, type: "Hike",
+      id: "jabal-shams", held: true, cat: "mountains", top: true, free: false, type: "Hike",
       name: "Jabal Shams, the Balcony Walk",
       tagline: "Oman's Grand Canyon, and the hike along its rim.",
       blurb: "8.7km out-and-back along the rim of the canyon to an abandoned village. Exposed edges, huge views, and cold air at 2,000m, bring a jacket, even here.",
@@ -3295,7 +3296,7 @@ region: "muscat", coords: [23.568, 58.538],
       verify: true
     },
     {
-      id: "nizwa", cat: "experiences", top: true, free: false, type: "Fort",
+      id: "nizwa", held: true, cat: "experiences", top: true, free: false, type: "Fort",
       name: "Nizwa Fort & Souq",
       tagline: "Old Oman, still very much alive.",
       blurb: "The fort tower, the souq stalls, silver, dates, pottery, spices, and, if you time it for a Friday morning, the livestock souq, which is a genuine spectacle.",
@@ -3389,7 +3390,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
       verify: true
     },
     {
-      id: "al-hoota-cave", cat: "mountains", free: false, type: "Cave",
+      id: "al-hoota-cave", held: true, cat: "mountains", free: false, type: "Cave",
       name: "Al Hoota Cave",
       tagline: "Two million years old, and the only show cave in Arabia.",
       blurb: "4.5km of cave under the foot of Jabal Shams, with 500m of it opened up and lit. A little train takes you in. It's the easy win on a mountain day, and blissfully cool.",
@@ -3485,7 +3486,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
       verify: true
     },
     {
-      id: "musandam-dhow", cat: "experiences", free: false, type: "Boat trip",
+      id: "musandam-dhow", held: true, cat: "experiences", free: false, type: "Boat trip",
       name: "Musandam dhow cruise",
       tagline: "Fly to Khasab. From there it's boat-only.",
       blurb: "Limestone walls falling hundreds of metres straight into dark blue water, dolphins riding the bow, and swimming stops you can't reach any other way.",
@@ -3518,7 +3519,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
 
     /* ── Forts & heritage (added Jul 2026, the castle circuit) ──────────── */
     {
-      id: "bahla-fort", cat: "experiences", free: false, type: "Fort",
+      id: "bahla-fort", held: true, cat: "experiences", free: false, type: "Fort",
       name: "Bahla Fort",
       tagline: "The UNESCO one, Oman's greatest mud-brick fortress.",
       blurb: "The only fort in Oman on the UNESCO World Heritage list, and it earns it: a vast mud-brick citadel rising over a 12km ring of ancient walls, restored over decades. Twenty minutes from Nizwa, do them in one day with Jabrin.",
@@ -3563,7 +3564,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
       ]
     },
     {
-      id: "jabrin-castle", cat: "experiences", free: false, type: "Fort",
+      id: "jabrin-castle", held: true, cat: "experiences", free: false, type: "Fort",
       name: "Jabrin Castle",
       tagline: "The most beautiful rooms in any Omani fort, painted ceilings and secret passages.",
       blurb: "Bahla is the fortress; Jabrin is the palace. Built as a scholars' retreat, it has the finest interiors of any castle in the country, painted ceilings, carved balconies, date stores, courts and hidden stairways. If castles usually bore you, this is the one that won't.",
@@ -3593,7 +3594,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
       verify: true
     },
     {
-      id: "nakhal-fort", cat: "experiences", free: false, type: "Fort",
+      id: "nakhal-fort", held: true, cat: "experiences", free: false, type: "Fort",
       name: "Nakhal Fort & the hot springs",
       tagline: "A fort wrapped around a rock, with a hot spring in the palms below.",
       blurb: "Under an hour from Muscat: a fort built straight onto a boulder outcrop with the Hajar wall behind it, and Ain A'Thawwarah hot spring flowing through the date plantation below. The classic half-day escape from the capital, and the gateway to the whole Rustaq loop.",
@@ -3623,7 +3624,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
       verify: true
     },
     {
-      id: "rustaq-fort", cat: "experiences", free: false, type: "Fort",
+      id: "rustaq-fort", held: true, cat: "experiences", free: false, type: "Fort",
       name: "Rustaq Fort & Ain Al Kasfah",
       tagline: "The old capital's fortress, and Oman's hottest spring.",
       blurb: "Rustaq was once the capital, and its four-towered fort shows it. Down the road, Ain Al Kasfah runs at about 45°C year-round, locals swear by the water. The middle stop of the Nakhal → Rustaq → Al Hazm castle loop.",
@@ -3653,7 +3654,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
       verify: true
     },
     {
-      id: "al-hazm-castle", cat: "experiences", free: false, type: "Fort",
+      id: "al-hazm-castle", held: true, cat: "experiences", free: false, type: "Fort",
       name: "Al Hazm Castle",
       tagline: "The engineering marvel, a falaj runs straight through the castle.",
       blurb: "The most sophisticated of the Batinah castles: cannon-proof walls, a falaj channelling spring water right through the building, escape tunnels and one of the best restorations in the country. Finishes the Nakhal → Rustaq → Al Hazm loop.",
@@ -3814,7 +3815,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
       ]
     },
     {
-      id: "bat-necropolis", cat: "experiences", free: false, type: "Ruins",
+      id: "bat-necropolis", held: true, cat: "experiences", free: false, type: "Ruins",
       name: "Bat & Al Ayn beehive tombs",
       tagline: "5,000-year-old tombs on a ridgeline, older than the pyramids.",
       blurb: "A UNESCO site almost nobody visits: Bronze Age beehive tombs strung along ridgetops near Ibri, at their best at Al Ayn where a row of them lines up against Jabal Misht at sunset. Pairs naturally with Wadi Damm, twenty minutes away.",
@@ -3846,7 +3847,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
       verify: true
     },
     {
-      id: "al-mudhaireb", cat: "experiences", free: false, type: "Village",
+      id: "al-mudhaireb", held: true, cat: "experiences", free: false, type: "Village",
       name: "Al Mudhaireb",
       tagline: "The Sharqiyah oasis town everyone drives past on the way to the sands.",
       blurb: "Watchtowers on every hilltop, restored merchant houses, falaj channels and date gardens, ten minutes off the Wahiba road and a century away from it. The perfect leg-stretch between Muscat and the desert camps.",
@@ -3875,7 +3876,7 @@ region: "dakhiliyah", coords: [23.12023, 57.27959],
       verify: true
     },
     {
-      id: "sugar-dunes", cat: "experiences", free: false, type: "Camping",
+      id: "sugar-dunes", held: true, cat: "experiences", free: false, type: "Camping",
       name: "The Sugar Dunes (Al Khaluf)",
       tagline: "Dunes so white they look like snow, falling straight into a turquoise sea.",
       blurb: "Four hours south of the tourist trail: white gypsum dunes meeting an empty turquoise coast, flamingos in the lagoons, nobody for kilometres. The camp in this guide that needs the most planning.",
@@ -3956,7 +3957,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       ]
     },
     {
-      id: "balad-sayt", cat: "mountains", free: false, type: "Village",
+      id: "balad-sayt", held: true, cat: "mountains", free: false, type: "Village",
       name: "Balad Sayt (Bilad Sayt)",
       tagline: "The postcard mountain village, earned the hard way.",
       blurb: "An amphitheatre of green terraces and mud-brick houses sealed off from the world by the Hajar, arguably the most photographed village in Oman, and still barely visited, because getting there means a proper 4×4 mountain road.",
@@ -3987,7 +3988,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "sharaf-al-alamayn", cat: "mountains", free: false, type: "Viewpoint",
+      id: "sharaf-al-alamayn", held: true, cat: "mountains", free: false, type: "Viewpoint",
       name: "Sharaf Al Alamayn",
       tagline: "The rim of the Hajar, the best view you can drive to.",
       blurb: "The high pass on the mountain road between Al Hamra and Wadi Bani Awf, at around 2,000m. Park, walk to the edge, and the entire western Hajar falls away beneath you. Sunset up here is the show.",
@@ -4016,7 +4017,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "salma-plateau", cat: "mountains", free: false, type: "Cave",
+      id: "salma-plateau", held: true, cat: "mountains", free: false, type: "Cave",
       name: "Salma Plateau, 7th Hole & Tahery Cave",
       tagline: "A hole in the plateau you could drop a tower block into.",
       blurb: "High above the Tiwi coast, the Salma Plateau hides some of the deepest cave shafts on earth, the 7th Hole drops sheer from flat ground, and Tahery Cave opens into a chamber the size of a stadium. The drive up is half the adventure: a serious 4×4 track with the Gulf of Oman falling away behind you.",
@@ -4098,7 +4099,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       ],
     },
     {
-      id: "fanja", cat: "mountains", free: false, type: "Hike",
+      id: "fanja", held: true, cat: "mountains", free: false, type: "Hike",
       name: "Fanja, the tabletop & old village",
       tagline: "The flat-topped mountain 30 minutes from Muscat that nobody climbs.",
       blurb: "Fanja's abandoned mud-brick village guards a mesa you can walk up, a short, sharp trek to a flat summit with date gardens and the wadi glittering below. Close enough for a post-work sunset mission from the capital.",
@@ -4130,7 +4131,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "jabal-shams-camp", cat: "mountains", free: false, type: "Camping",
+      id: "jabal-shams-camp", held: true, cat: "mountains", free: false, type: "Camping",
       name: "Jabal Shams rim camp",
       tagline: "Sleep on the edge of Arabia's Grand Canyon.",
       blurb: "Camp free on the rim of Wadi Ghul at ~2,000m; 4×4 for the upper tracks. It can approach freezing up here while Muscat sits at 35°, so bring a real sleeping bag and firewood from Al Hamra, there's none to gather on top.",
@@ -4162,7 +4163,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "jabal-akhdar-camp", cat: "mountains", free: false, type: "Camping",
+      id: "jabal-akhdar-camp", held: true, cat: "mountains", free: false, type: "Camping",
       name: "Jabal Akhdar plateau camp",
       tagline: "Juniper woods, cool air, and sunrise over the terraces.",
       blurb: "The Saiq plateau has quiet juniper clearings where you can camp in genuinely cool air all summer, Muscat bakes at 45° while you're in a sleeping bag at 20°. Wake to sunrise over the terraced villages with a flask of karak.",
@@ -4196,7 +4197,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
        Dhofar is a flight, not a day trip, the planner knows (region "dhofar"
        is fly:true) and only routes these on a Salalah-based plan.            */
     {
-      id: "wadi-darbat", cat: "salalah", free: false, group: "wadis", type: "Waterfall",
+      id: "wadi-darbat", held: true, cat: "salalah", free: false, group: "wadis", type: "Waterfall",
       name: "Wadi Darbat",
       tagline: "Waterfalls, green meadows and camels in the mist.",
       blurb: "In khareef season this valley turns into something that shouldn't exist in Arabia: waterfalls pouring off a travertine cliff, lakes, mist, and camels grazing on actual grass. The rest of the year it's a calm green valley with a lake and boat rides, still the first place I'd send anyone in Dhofar.",
@@ -4243,7 +4244,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       ]
     },
     {
-      id: "al-baleed", cat: "salalah", free: false, group: "experiences", type: "Museum",
+      id: "al-baleed", held: true, cat: "salalah", free: false, group: "experiences", type: "Museum",
       name: "Al Baleed & the Frankincense Museum",
       tagline: "The port that shipped frankincense to Rome, lit up at night.",
       blurb: "A UNESCO archaeological park on the Salalah waterfront: the ruins of the medieval trading port of Zafar, a lagoon full of birdlife, and the Museum of the Frankincense Land, which is the best hour of history in the south.",
@@ -4273,7 +4274,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "khor-rori", cat: "salalah", free: false, group: "experiences", type: "Ruins",
+      id: "khor-rori", held: true, cat: "salalah", free: false, group: "experiences", type: "Ruins",
       name: "Khor Rori & Sumhuram",
       tagline: "2,000-year-old ruins above a lagoon full of flamingos.",
       blurb: "The ancient port of Sumhuram, once the edge of the frankincense trade, now a hilltop ruin looking down on a blue lagoon where the wadi meets the sea. Flamingos in the water, camels on the beach, and almost nobody there on a weekday.",
@@ -4319,7 +4320,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "jabal-samhan", cat: "salalah", free: false, group: "mountains", type: "Mountain",
+      id: "jabal-samhan", held: true, cat: "salalah", free: false, group: "mountains", type: "Mountain",
       name: "Jabal Samhan viewpoint",
       tagline: "A kilometre of cliff, straight down to the coastal plain.",
       blurb: "The Dhofar mountains end in a sheer escarpment, and the Jabal Samhan viewpoint sits right on the lip of it, the coastal plain and the sea a vertical kilometre below. This is also Arabian leopard country; you won't see one, but it changes how the mountain feels.",
@@ -4349,7 +4350,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "fazayah-beach", cat: "salalah", free: false, group: "beaches", type: "Beach",
+      id: "fazayah-beach", held: true, cat: "salalah", free: false, group: "beaches", type: "Beach",
       name: "Fazayah Beach",
       tagline: "The empty white coves past the end of the road.",
       blurb: "Keep going west past Mughsail, over the mountain switchbacks, and drop down a steep track to a string of white-sand coves with cliffs behind and usually nobody on them but camels. The best beach in the south, and it makes you work for it.",
@@ -4380,7 +4381,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "wadi-dawkah", cat: "salalah", free: false, group: "experiences", type: "Nature",
+      id: "wadi-dawkah", held: true, cat: "salalah", free: false, group: "experiences", type: "Nature",
       name: "Wadi Dawkah frankincense park",
       tagline: "The trees that made Oman rich for 2,000 years.",
       blurb: "A protected valley of wild frankincense trees on the desert side of the mountains, the actual source of the trade that built the ports at Al Baleed and Sumhuram. Twenty minutes among the trees ties the whole frankincense story together.",
@@ -4410,7 +4411,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "ayn-razat", cat: "salalah", free: false, group: "wadis", type: "Spring",
+      id: "ayn-razat", held: true, cat: "salalah", free: false, group: "wadis", type: "Spring",
       name: "Ayn Razat",
       tagline: "Spring water, gardens and a cave, Salalah's easiest hour.",
       blurb: "A natural spring at the foot of the mountains feeding a strip of ornamental gardens, running water year-round, lush and loud with birds in khareef, and a small cave in the cliff above. The local picnic spot, and a gentle first stop after landing.",
@@ -4455,7 +4456,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "haffa-souq", cat: "salalah", free: false, group: "shopping", type: "Souq",
+      id: "haffa-souq", held: true, cat: "salalah", free: false, group: "shopping", type: "Souq",
       name: "Al Haffa Souq",
       tagline: "Frankincense by the scoop, a street back from the sea.",
       blurb: "The old frankincense souq near the corniche, sacks of resin graded by colour, bakhoor, Dhofari incense burners, and the smell that tells you you're in Salalah and nowhere else. Come at dusk when the town wakes up.",
@@ -4484,7 +4485,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "salalah-gardens-mall", cat: "salalah", free: false, group: "shopping", type: "Mall",
+      id: "salalah-gardens-mall", held: true, cat: "salalah", free: false, group: "shopping", type: "Mall",
       name: "Salalah Gardens Mall",
       tagline: "The AC hours, where Salalah goes at midday.",
       blurb: "The city's main mall: supermarket, food court, cafés and cinema. Not a sight, a tool. It's where you restock, cool down between the morning and the late afternoon, and where the kids forgive you for the long drive.",
@@ -4512,7 +4513,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "dahariz-beach", cat: "salalah", free: false, group: "beaches", type: "Beach",
+      id: "dahariz-beach", held: true, cat: "salalah", free: false, group: "beaches", type: "Beach",
       name: "Dahariz Beach",
       tagline: "Salalah's own beach, coconut palms to the sand.",
       blurb: "The long city beach on the east side of town, backed by coconut plantations. Outside khareef it's calm, warm and swimmable ten minutes from your hotel; in khareef the sea turns wild and you walk it instead.",
@@ -4542,7 +4543,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "taqah-castle", cat: "salalah", free: false, group: "experiences", type: "Fort",
+      id: "taqah-castle", held: true, cat: "salalah", free: false, group: "experiences", type: "Fort",
       name: "Taqah Castle",
       tagline: "A wali's house with the best small museum in the south.",
       blurb: "A restored 19th-century fortified residence in Taqah town, rooms set out as they were lived in, rifle slits over the bay, and a rooftop view along the coast. Twenty minutes from Khor Rori; do them together.",
@@ -4571,7 +4572,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "ayn-athum", cat: "salalah", free: false, group: "wadis", type: "Waterfall",
+      id: "ayn-athum", held: true, cat: "salalah", free: false, group: "wadis", type: "Waterfall",
       name: "Ayn Athum",
       tagline: "The khareef waterfall the tour buses haven't found yet.",
       blurb: "A spring at the foot of the mountains that turns into a proper waterfall in the monsoon, mist, green cliffs, and far fewer people than Wadi Darbat. Outside khareef it's a quiet pool under the trees.",
@@ -4603,7 +4604,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
 
     /* ── Salalah additions (Jul 2026): every chip now has ≥5 spots ────────── */
     {
-      id: "al-haffa-beach", cat: "salalah", free: false, group: "beaches", type: "Beach",
+      id: "al-haffa-beach", held: true, cat: "salalah", free: false, group: "beaches", type: "Beach",
       name: "Al Haffa Beach",
       tagline: "The city beach, coconuts on one side, the Arabian Sea on the other.",
       blurb: "Salalah's own beach: a long palm-backed strip right next to the Haffa souq, with coconut stands on the road behind it. Not a hidden cove, it's where the city comes to walk at sunset, and that's the point.",
@@ -4647,7 +4648,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       ]
     },
     {
-      id: "taqah-beach", cat: "salalah", free: false, group: "beaches", type: "Beach",
+      id: "taqah-beach", held: true, cat: "salalah", free: false, group: "beaches", type: "Beach",
       name: "Taqah Beach",
       tagline: "The quiet white-sand stretch the castle crowd drives straight past.",
       blurb: "Below Taqah town, twenty minutes east of Salalah: white sand, fishing boats, and hardly anyone on it even in season. You'll visit Taqah Castle and Khor Rori anyway, this is the swim in between.",
@@ -4678,7 +4679,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "ayn-garziz", cat: "salalah", free: false, group: "wadis", type: "Spring",
+      id: "ayn-garziz", held: true, cat: "salalah", free: false, group: "wadis", type: "Spring",
       name: "Ayn Garziz",
       tagline: "The spring under the cliff, ten minutes from town.",
       blurb: "A spring at the foot of the Ittin cliffs, close enough to the city for an evening visit. In khareef the whole cliff face drips green and the stream runs; the rest of the year it's a quiet picnic spot under the rock.",
@@ -4709,7 +4710,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "ayn-khor", cat: "salalah", free: false, group: "wadis", type: "Waterfall",
+      id: "ayn-khor", held: true, cat: "salalah", free: false, group: "wadis", type: "Waterfall",
       name: "Ayn Khor",
       tagline: "The khareef waterfall at the end of the rough road, which is why it's empty.",
       blurb: "West of Salalah in the monsoon hills: a seasonal waterfall off a green cliff, mist through the trees, and a fraction of Darbat's traffic because the last stretch takes commitment. Khareef only, outside the monsoon it's dry.",
@@ -4740,7 +4741,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "jabal-ittin", cat: "salalah", free: false, group: "mountains", type: "Viewpoint",
+      id: "jabal-ittin", held: true, cat: "salalah", free: false, group: "mountains", type: "Viewpoint",
       name: "Ateen Plateau & Prophet Ayoub's Tomb",
       tagline: "The city from above, and one of the oldest pilgrimage sites in the south.",
       blurb: "The plateau straight up behind Salalah. In khareef you drive into the fog line and the hills turn green around you; year-round, the tomb of Nabi Ayoub (Job) sits quietly at the top, and the viewpoints on the way down look over the whole city to the sea.",
@@ -4781,7 +4782,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       ]
     },
     {
-      id: "gravity-point", cat: "salalah", free: false, group: "mountains", type: "Viewpoint",
+      id: "gravity-point", held: true, cat: "salalah", free: false, group: "mountains", type: "Viewpoint",
       name: "Gravity Point (Anti-Gravity Road)",
       tagline: "Put the car in neutral. It rolls uphill. Argue about why on the drive back.",
       blurb: "A stretch of the Ittin road where a stopped car in neutral appears to roll up the slope. It's an optical illusion, the horizon lies to you, but nobody believes that until they've tried it. Twenty minutes of pure fun on the way to the plateau.",
@@ -4818,7 +4819,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       ]
     },
     {
-      id: "tawi-atair", cat: "salalah", free: false, group: "mountains", type: "Sinkhole",
+      id: "tawi-atair", held: true, cat: "salalah", free: false, group: "mountains", type: "Sinkhole",
       name: "Tawi Atair, the Well of Birds",
       tagline: "A hole in the plateau deep enough to swallow a skyscraper.",
       blurb: "One of the deepest sinkholes in the world, sunk into the green Taqah plateau, over 200m straight down, named for the birdsong that echoes off its walls. A short walk from the parking gets you to the rim viewpoints.",
@@ -4850,7 +4851,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "teeq-cave", cat: "salalah", free: false, group: "mountains", type: "Viewpoint",
+      id: "teeq-cave", held: true, cat: "salalah", free: false, group: "mountains", type: "Viewpoint",
       name: "Teeq Cave & the Darbat overlook",
       tagline: "The view down the valley the tour buses drive along the bottom of.",
       blurb: "Minutes from Tawi Atair: a cave mouth and a cliff-edge overlook down the length of Wadi Darbat, the waterfalls, the lake and the grazing camels, all from above. In khareef it's the best single view in Dhofar.",
@@ -4877,7 +4878,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "marneef-cave", cat: "salalah", free: false, group: "experiences", type: "Nature",
+      id: "marneef-cave", held: true, cat: "salalah", free: false, group: "experiences", type: "Nature",
       name: "Marneef Cave & the Mughsail blowholes",
       tagline: "The sea fires through the rock at your feet.",
       blurb: "At the west end of Mughsail beach: a big rock shelter over a paved walkway, and blowholes in the cliff shelf that jet seawater metres into the air when the swell is up. In khareef they go off like geysers.",
@@ -4921,7 +4922,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       ]
     },
     {
-      id: "haffa-coconut-stands", cat: "salalah", sub: "Street food", free: false, group: "food", type: "Street food",
+      id: "haffa-coconut-stands", held: true, cat: "salalah", sub: "Street food", free: false, group: "food", type: "Street food",
       name: "The Haffa coconut stands",
       tagline: "A machete, a straw, and the freshest thing you'll drink in Oman.",
       blurb: "The row of fruit stands along the plantation road behind Haffa beach: coconuts opened while you wait, tiny sweet Dhofari bananas, papaya and sugarcane straight from the plantations you're standing in. This is Salalah's whole southern-tropics act in one stop.",
@@ -4956,7 +4957,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       ]
     },
     {
-      id: "food-fish-grills-dahariz", cat: "salalah", sub: "Seafood", free: false, group: "food", type: "Seafood",
+      id: "food-fish-grills-dahariz", held: true, cat: "salalah", sub: "Seafood", free: false, group: "food", type: "Seafood",
       name: "Fresh fish, straight off the boats",
       tagline: "Pick your fish at the harbour. Eat it grilled twenty minutes later.",
       blurb: "The fishermen land the catch, the grill houses near the harbour cook it, kingfish, tuna and whatever came in that morning, priced by the kilo and served with rice. The locked page names the place I actually use and what to order.",
@@ -4982,7 +4983,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "food-shawarma-salalah", cat: "salalah", sub: "Late night", free: false, group: "food", type: "Dinner",
+      id: "food-shawarma-salalah", held: true, cat: "salalah", sub: "Late night", free: false, group: "food", type: "Dinner",
       name: "The late-night shawarma run",
       tagline: "Where Salalah actually eats after ten.",
       blurb: "Every Omani city has one street the shawarma queues point to, and Salalah is no exception. The locked page has my spot, what to order, and why you want it after an evening in the souq.",
@@ -5008,7 +5009,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "food-dhofari-halwa", cat: "salalah", sub: "Sweets", free: false, group: "food", type: "Sweets",
+      id: "food-dhofari-halwa", held: true, cat: "salalah", sub: "Sweets", free: false, group: "food", type: "Sweets",
       name: "Halwa from the south",
       tagline: "Dhofar's version of Oman's national sweet, and where to buy it warm.",
       blurb: "Omani halwa is the thing you take home; Dhofaris will tell you theirs is the best in the country. The locked page has the shop I buy from, what a fair price looks like, and how to get it through your flight home intact.",
@@ -5029,7 +5030,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "salalah-grand-mall", cat: "salalah", sub: "Mall", free: false, group: "shopping", type: "Mall",
+      id: "salalah-grand-mall", held: true, cat: "salalah", sub: "Mall", free: false, group: "shopping", type: "Mall",
       name: "Salalah Grand Mall",
       tagline: "The rainy-day option, khareef drizzle included free.",
       blurb: "The other big mall in town: hypermarket, food court, cinema, the usual brands. Nobody flies to Dhofar for a mall, but in a khareef downpour or a June afternoon you'll be glad it exists.",
@@ -5055,7 +5056,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "shop-frankincense-guide", cat: "salalah", sub: "Speciality", free: false, group: "shopping", type: "Shop",
+      id: "shop-frankincense-guide", held: true, cat: "salalah", sub: "Speciality", free: false, group: "shopping", type: "Shop",
       name: "Buying frankincense, without getting tourist-priced",
       tagline: "Hojari, Najdi, Shaabi, know the difference before you open your wallet.",
       blurb: "Frankincense is THE thing to bring home from Dhofar, and the quality range is enormous, so is the price range for the same resin. The locked page covers the grades, what each should cost, how to check what you're being sold, and the stalls I actually buy from in the Haffa souq.",
@@ -5080,7 +5081,7 @@ region: "rustaq", coords: [23.14337, 57.73537],
       verify: true
     },
     {
-      id: "salalah-central-market", cat: "salalah", sub: "Market", free: false, group: "shopping", type: "Market",
+      id: "salalah-central-market", held: true, cat: "salalah", sub: "Market", free: false, group: "shopping", type: "Market",
       name: "The fruit & vegetable market",
       tagline: "Dhofari bananas, coconuts and papaya, where the plantations sell wholesale.",
       blurb: "Salalah's central produce market: stalls piled with the plantation crops the south is famous for. Louder, cheaper and more local than the roadside stands, come in the morning when everything is fresh off the trucks.",
@@ -5276,7 +5277,7 @@ region: "muscat", coords: [23.56816, 58.41489],
       verify: true
     },
     {
-      id: "food-kargeen", cat: "food", sub: "Dinner", free: false, type: "Dinner",
+      id: "food-kargeen", held: true, cat: "food", sub: "Dinner", free: false, type: "Dinner",
       name: "Kargeen",
       tagline: "Lantern-lit courtyards and grilled kingfish.",
       blurb: "The one everyone ends up at, and deservedly. Eat outside under the lanterns; order the mashuai (grilled kingfish with rice) and the Omani bread with dips.",
@@ -5302,7 +5303,7 @@ region: "muscat", coords: [23.56816, 58.41489],
       verify: true
     },
     {
-      id: "food-bin-ateeq-salalah", cat: "salalah", sub: "Traditional", free: false, group: "food", type: "Omani food",
+      id: "food-bin-ateeq-salalah", held: true, cat: "salalah", sub: "Traditional", free: false, group: "food", type: "Omani food",
       name: "Bin Ateeq (Salalah)",
       tagline: "The Salalah branch of the floor-cushion classic.",
       blurb: "Same formula as the Muscat original: private majlis rooms, cushions on the floor, big plates of Omani rice and meat. The reliable lunch between a morning in the mountains and an afternoon on the coast.",
@@ -5404,7 +5405,7 @@ region: "muscat", coords: [23.56816, 58.41489],
       verify: true
     },
     {
-      id: "shop-nizwa-souq", cat: "shopping", sub: "Traditional souq", free: false, type: "Souq",
+      id: "shop-nizwa-souq", held: true, cat: "shopping", sub: "Traditional souq", free: false, type: "Souq",
       name: "Nizwa Souq",
       tagline: "Pottery, silver and the Friday goat market.",
       blurb: "The interior's great souq under the fort: dates, pottery, copper and the famous Friday-morning livestock auction, get there by 7am or you've missed the show.",
