@@ -116,6 +116,7 @@ h2.sec{font-size:12.5px;text-transform:uppercase;letter-spacing:.1em;color:var(-
   margin:30px 0 12px;font-weight:800;display:flex;align-items:center;gap:9px}
 h2.sec::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--brand);flex:0 0 auto}
 h2.sec .pill{text-transform:none;letter-spacing:0}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px}
 
 /* ------------------------------------------------------------------ tiles */
 .tiles{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(158px,1fr))}
@@ -414,6 +415,23 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     ? new Date(Date.now() - days * 864e5).toISOString()
     : "1970-01-01T00:00:00Z";
 
+  /* RPC — for reads that need SECURITY DEFINER server-side (the accounts
+     list joins auth.users, which PostgREST will not expose as a table). */
+  async function rpc(fn) {
+    const r = await fetch(URL_ + "/rest/v1/rpc/" + fn, {
+      method: "POST",
+      headers: {
+        apikey: KEY,
+        Authorization: "Bearer " + session.access_token,
+        "Content-Type": "application/json"
+      },
+      body: "{}"
+    });
+    if (r.status === 401 && await refreshToken()) return rpc(fn);
+    if (!r.ok) throw new Error(fn + ": " + r.status);
+    return r.json();
+  }
+
   async function loadAll() {
     const since = "created_at=gte." + sinceISO();
     const [events, subs, bookings, reviews] = await Promise.all([
@@ -422,7 +440,19 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
       readAll("bookings", "select=*&order=created_at.desc"),
       readAll("reviews", "select=*&order=created_at.desc")
     ]);
-    return { events, subs, bookings, reviews };
+    /* Accounts arrive separately and FAIL SOFT: until
+       delivery/stats-users-access.sql has been run, these three reads 404 /
+       403, and the Accounts tab shows the setup note instead of the
+       dashboard dying. */
+    let accounts = null, usaves = [], uvisits = [];
+    try {
+      [accounts, usaves, uvisits] = await Promise.all([
+        rpc("dashboard_users"),
+        readAll("user_saves", "select=spot_id,user_id,created_at&order=created_at.desc"),
+        readAll("user_visits", "select=spot_id,user_id,created_at&order=created_at.desc")
+      ]);
+    } catch (e) { accounts = null; usaves = []; uvisits = []; }
+    return { events, subs, bookings, reviews, accounts, usaves, uvisits };
   }
 
   /* ------------------------------------------------------------- crunching */
@@ -628,6 +658,11 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
       months: tally(ev.filter(e => e.event === "trip_intent"), e => propOf(e, "trip_month")),
       raw: ev.slice(0, 300),
 
+      /* ---- accounts (null until stats-users-access.sql has been run) ---- */
+      accounts: d.accounts,
+      usaves: d.usaves || [],
+      uvisits: d.uvisits || [],
+
       /* ---- who they are (from session_start) ---- */
       ctxCount: ctx.length,
       countries: tally(ctxDev, e => countryOf(propOf(e, "tz"))),
@@ -812,6 +847,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
   const TABS = [
     ["overview", "Overview", d => ""],
     ["people",   "People",   d => d.ctxCount],
+    ["users",    "Accounts", d => d.accounts ? d.accounts.length : ""],
     ["places",   "Places",   d => d.spots.length],
     ["locked",   "Locked interest", d => d.held.length],
     ["emails",   "Emails",   d => d.subs.length],
@@ -925,6 +961,76 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         <div class="panel">${barTable(c.refs, ["Came from", "Visits"], { limit: 15 })}</div>
         <h2 class="sec">Exact time zones</h2>
         <div class="panel">${barTable(c.zones, ["Time zone", "Visits"], { limit: 30 })}</div>`;
+      return;
+    }
+
+    if (tab === "users") {
+      /* -------------------------------------------------- registered users
+         Everything on this tab is ACCOUNTS, not devices: people who signed
+         up, what they hoard (♥) and what they've actually done (✓). */
+      if (!c.accounts) {
+        v.innerHTML = `
+          <h2 class="sec">Accounts</h2>
+          <div class="note"><b>One-time setup:</b> run
+          <code>delivery/stats-users-access.sql</code> in Supabase → SQL Editor
+          (after <code>accounts-schema.sql</code>), then reload this page.
+          Until then the dashboard has no permission to read the accounts.</div>`;
+        return;
+      }
+      const acc = c.accounts;
+      const accNew = days
+        ? acc.filter(a => new Date(a.created_at) >= new Date(sinceISO()))
+        : acc;
+      const confirmed = acc.filter(a => a.confirmed_at).length;
+      const active = days
+        ? acc.filter(a => a.last_sign_in && new Date(a.last_sign_in) >= new Date(sinceISO())).length
+        : acc.filter(a => a.last_sign_in).length;
+      // signups per day, same series shape the traffic chart eats
+      const sByDay = new Map();
+      acc.forEach(a => { const k = dayOf(a.created_at); sByDay.set(k, (sByDay.get(k) || 0) + 1); });
+      const span2 = days || 30;
+      const signupSeries = [];
+      for (let i = span2 - 1; i >= 0; i--) {
+        const k = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
+        signupSeries.push({ day: k, n: sByDay.get(k) || 0 });
+      }
+      const cols = [
+        { h: "Name",       get: r => esc(r.name || "—"), raw: r => r.name || "" },
+        { h: "Email",      get: r => `<span class="mono">${esc(r.email || "")}</span>`, raw: r => r.email || "" },
+        { h: "Joined",     get: r => fmtDate(r.created_at), raw: r => r.created_at },
+        { h: "Confirmed",  get: r => r.confirmed_at ? "✓" : `<span style="color:var(--warn)">not yet</span>`, raw: r => r.confirmed_at ? "yes" : "no" },
+        { h: "Last seen",  get: r => r.last_sign_in ? fmtDate(r.last_sign_in) : "—", raw: r => r.last_sign_in || "" },
+        { h: "♥",          get: r => nf(r.saves), cls: "num", raw: r => r.saves },
+        { h: "✓",          get: r => nf(r.visits), cls: "num", raw: r => r.visits },
+        { h: "Reviews",    get: r => nf(r.reviews), cls: "num", raw: r => r.reviews }
+      ];
+      v.innerHTML = `
+        <h2 class="sec">Accounts, ${esc(rangeLabel)}</h2>
+        <div class="tiles">
+          ${tile("Accounts", nf(acc.length), "registered, all time", "teal")}
+          ${tile("New", nf(accNew.length), rangeLabel, "teal")}
+          ${tile("Confirmed", acc.length ? Math.round(confirmed / acc.length * 100) + "%" : "—",
+                 nf(confirmed) + " confirmed the email", "gold")}
+          ${tile("Signed in", nf(active), rangeLabel)}
+          ${tile("Synced ♥", nf(c.usaves.length), "saves living on accounts")}
+          ${tile("Synced ✓", nf(c.uvisits.length), "been-theres on accounts")}
+        </div>
+        <h2 class="sec">Signups per day</h2>
+        ${chart(signupSeries)}
+        <h2 class="sec">Every account
+          <span class="pill">${nf(acc.length)}</span>
+          <button class="ghost" id="expUsers" style="margin-left:auto">Export CSV</button></h2>
+        <div class="panel">${dataTable(acc, cols)}</div>
+        <div class="note">An account that never confirms its email usually means the mail
+          went to spam — if you see a cluster of "not yet", check the Brevo log.
+          The ♥ / ✓ counts here are what's synced to the account; devices without
+          accounts still track anonymously under People.</div>
+        <h2 class="sec">Most saved by account holders (♥)</h2>
+        <div class="panel">${barTable(tally(c.usaves, r => r.spot_id), ["Place", "Saves"], { limit: 25 })}</div>
+        <h2 class="sec">Most been-there by account holders (✓)</h2>
+        <div class="panel">${barTable(tally(c.uvisits, r => r.spot_id), ["Place", "Been"], { limit: 25 })}</div>`;
+      const exp = $("#expUsers");
+      if (exp) exp.onclick = () => csv(acc, cols, "oman-accounts.csv");
       return;
     }
 
