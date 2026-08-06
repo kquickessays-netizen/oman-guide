@@ -352,7 +352,10 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         const i = list.indexOf(rowObj); if (i > -1) list.splice(i, 1);
         toast("Deleted.");
       } else {
-        const patch = { [field]: value, handled_at: new Date().toISOString() };
+        // "true"/"false" arrive as strings off the button dataset; the
+        // `published` column is a real boolean, so coerce before PATCHing.
+        const v2 = value === "true" ? true : value === "false" ? false : value;
+        const patch = { [field]: v2, handled_at: new Date().toISOString() };
         await write(table, id, patch);
         if (rowObj) Object.assign(rowObj, patch);
         toast(value === "new" ? "Reopened." : "Saved: " + value + ".");
@@ -417,7 +420,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
 
   /* RPC — for reads that need SECURITY DEFINER server-side (the accounts
      list joins auth.users, which PostgREST will not expose as a table). */
-  async function rpc(fn) {
+  async function rpc(fn, args) {
     const r = await fetch(URL_ + "/rest/v1/rpc/" + fn, {
       method: "POST",
       headers: {
@@ -425,11 +428,12 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         Authorization: "Bearer " + session.access_token,
         "Content-Type": "application/json"
       },
-      body: "{}"
+      body: JSON.stringify(args || {})
     });
-    if (r.status === 401 && await refreshToken()) return rpc(fn);
-    if (!r.ok) throw new Error(fn + ": " + r.status);
-    return r.json();
+    if (r.status === 401 && await refreshToken()) return rpc(fn, args);
+    if (!r.ok) throw new Error(fn + ": " + r.status + " " + (await r.text().catch(() => "")).slice(0, 120));
+    const t = await r.text();
+    return t ? JSON.parse(t) : null;
   }
 
   async function loadAll() {
@@ -994,6 +998,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         const k = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
         signupSeries.push({ day: k, n: sByDay.get(k) || 0 });
       }
+      const banned = r => r.banned_until && new Date(r.banned_until) > new Date();
       const cols = [
         { h: "Name",       get: r => esc(r.name || "—"), raw: r => r.name || "" },
         { h: "Email",      get: r => `<span class="mono">${esc(r.email || "")}</span>`, raw: r => r.email || "" },
@@ -1002,7 +1007,17 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         { h: "Last seen",  get: r => r.last_sign_in ? fmtDate(r.last_sign_in) : "—", raw: r => r.last_sign_in || "" },
         { h: "♥",          get: r => nf(r.saves), cls: "num", raw: r => r.saves },
         { h: "✓",          get: r => nf(r.visits), cls: "num", raw: r => r.visits },
-        { h: "Reviews",    get: r => nf(r.reviews), cls: "num", raw: r => r.reviews }
+        { h: "Reviews",    get: r => nf(r.reviews), cls: "num", raw: r => r.reviews },
+        { h: "Status",     get: r => banned(r)
+            ? `<span class="pill down">banned</span>` : `<span class="pill up">active</span>`,
+          raw: r => banned(r) ? "banned" : "active" },
+        { h: "Action",     get: r => {
+            const ban = banned(r)
+              ? `<button class="act" data-uop="unban" data-uid="${esc(r.id)}">Unban</button>`
+              : `<button class="act" data-uop="ban" data-uid="${esc(r.id)}">Ban</button>`;
+            return ban + `<button class="act bad" data-uop="del" data-uid="${esc(r.id)}"
+              data-uemail="${esc(r.email || "")}">Delete</button>`;
+          }, raw: r => "" }
       ];
       v.innerHTML = `
         <h2 class="sec">Accounts, ${esc(rangeLabel)}</h2>
@@ -1030,7 +1045,34 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         <h2 class="sec">Most been-there by account holders (✓)</h2>
         <div class="panel">${barTable(tally(c.uvisits, r => r.spot_id), ["Place", "Been"], { limit: 25 })}</div>`;
       const exp = $("#expUsers");
-      if (exp) exp.onclick = () => csv(acc, cols, "oman-accounts.csv");
+      if (exp) exp.onclick = () => csv(acc, cols.filter(x => x.h !== "Action"), "oman-accounts.csv");
+
+      /* Ban / unban / delete go through owner-gated RPCs (the SQL refuses
+         anyone else, and refuses your own account). The row is patched in
+         memory and redrawn — no refetch of everything for one click. */
+      v.querySelectorAll("button[data-uop]").forEach(btn => btn.onclick = async () => {
+        const { uop, uid, uemail } = btn.dataset;
+        if (uop === "del" &&
+            !confirm("Delete " + (uemail || "this user") + " permanently?\n\nTheir profile, saves and been-theres go too. Cannot be undone.")) return;
+        btn.disabled = true;
+        try {
+          if (uop === "del") {
+            await rpc("dashboard_delete_user", { uid });
+            const i = acc.findIndex(x => x.id === uid);
+            if (i > -1) acc.splice(i, 1);
+            toast("Account deleted.");
+          } else {
+            await rpc("dashboard_ban_user", { uid, ban: uop === "ban" });
+            const row = acc.find(x => x.id === uid);
+            if (row) row.banned_until = uop === "ban" ? "3000-01-01T00:00:00Z" : null;
+            toast(uop === "ban" ? "Banned — they can no longer sign in." : "Unbanned.");
+          }
+          draw();
+        } catch (e) {
+          btn.disabled = false;
+          toast("Could not do that: " + String(e.message || e).slice(0, 120), true);
+        }
+      });
       return;
     }
 
@@ -1160,16 +1202,24 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
             ? `<span class="pill ${r.verdict === "up" ? "up" : "down"}">${esc(r.verdict)}</span>` : "—",
           raw: r => r.verdict },
         { h: "Name", get: r => esc(r.name || "—"), raw: r => r.name },
-        { h: "What they wrote", cls: "wrap", get: r => esc(r.tip || "—"), raw: r => r.tip }
+        { h: "What they wrote", cls: "wrap", get: r => esc(r.tip || "—"), raw: r => r.tip },
+        { h: "Live", get: r => r.published
+            ? `<span class="pill up">live</span>`
+            : `<span class="pill down">hidden</span>`,
+          raw: r => r.published ? "live" : "hidden" }
       ];
       cols.push({ h: "Action", get: r => {
-        const st = r.status || "new";
-        const btn = (val, label, cls) =>
-          `<button class="act ${cls || ""}" data-table="reviews" data-id="${esc(r.id)}"
-             data-field="status" data-value="${val}">${label}</button>`;
-        /* Copies the exact line content.js wants, not the bare sentence:
-           travellerTips is [{text, by}], so hand over something that can be
-           pasted straight in without retyping quotes. */
+        /* LIVE-FIRST MODERATION. A signed-in review publishes itself the
+           moment it lands; these buttons take it down or put it back.
+           `published` is the switch the app's spot_reviews view reads, so
+           Hide/Publish changes the live site within seconds, no deploy. */
+        const live = r.published
+          ? `<button class="act" data-table="reviews" data-id="${esc(r.id)}"
+               data-field="published" data-value="false">Hide from site</button>`
+          : `<button class="act go" data-table="reviews" data-id="${esc(r.id)}"
+               data-field="published" data-value="true">Publish</button>`;
+        /* Still here: the copy button, for PROMOTING a great review into the
+           spot's curated travellerTips in content.js. */
         const snippet = r.tip
           ? `{ text: ${JSON.stringify(r.tip)}, by: ${JSON.stringify(r.name || "A reader")} },`
           : "";
@@ -1177,28 +1227,25 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
           ? `<button class="act go" data-copy="${esc(snippet)}">Copy for content.js</button>` : "";
         const del = `<button class="act bad" data-table="reviews" data-id="${esc(r.id)}"
              data-del="1">Delete</button>`;
-        if (st === "published") return `<span class="pill up">added to the guide</span>` + btn("new", "Undo");
-        if (st === "hidden")    return `<span class="pill down">hidden</span>` + btn("new", "Undo");
-        return copy + btn("published", "Mark as added", "") + btn("hidden", "Hide") + del;
-      }, raw: r => r.status || "new" });
+        return live + copy + del;
+      }, raw: r => "" });
 
-      const rank = r => ((r.status || "new") === "new" ? 0 : 1);
       const revs = c.reviews.slice().sort((a, b2) =>
-        rank(a) - rank(b2) || new Date(b2.created_at) - new Date(a.created_at));
+        new Date(b2.created_at) - new Date(a.created_at));
 
       v.innerHTML = `
-        <h2 class="sec">Reviews and tips — ${nf(c.reviews.length)}</h2>
+        <h2 class="sec">Reviews — ${nf(c.reviews.length)}</h2>
         <div class="note" style="border-left-color:var(--s2)">
-          <b>These buttons do not put anything on the website.</b> A reader's words only
-          ever reach the guide when you paste them into <code>content.js</code> yourself
-          and deploy — that is the moderation, and it is deliberate.
+          <b>Reviews are live-first now.</b> Posting needs an account, and a posted
+          review appears on its spot immediately. <b>Hide from site</b> takes one
+          off the live site within seconds (no deploy); <b>Publish</b> puts it back;
+          <b>Delete</b> is forever. Rows marked <span class="pill down">hidden</span>
+          include everything posted before the live system existed.
           <br><br>
-          The workflow: <b>Copy for content.js</b> puts a ready-made
-          <code>{ text: …, by: … }</code> line on your clipboard → paste it into that
-          spot's <code>travellerTips</code> in <code>app/data/content.js</code> → bump
-          <code>CACHE</code> in <code>app/sw.js</code> → run <code>DEPLOY-NOW.bat</code>.
-          Then hit <b>Mark as added</b> here, which is only bookkeeping so you never
-          work the same tip twice.
+          <b>Copy for content.js</b> is for promotion, not publication: it puts a
+          ready-made <code>{ text: …, by: … }</code> line on your clipboard for that
+          spot's curated <code>travellerTips</code> — the hand-picked list that shows
+          even offline.
         </div>
         <div class="panel">${dataTable(revs, cols)}</div>`;
       wireActions(v);

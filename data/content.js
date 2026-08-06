@@ -303,6 +303,7 @@ window.OMAN_DATA = {
       { date: "August 2026", items: [
         "👤 Accounts: sign in (Google, email, or a magic link) and your ♥ saves, ✓ been-theres and reviews follow you onto any phone. The guide works exactly the same without one.",
         "👤 Your account page now shows your explorer rank with progress to the next one, and your saved and been-there places — tap any of them to jump straight to its sheet.",
+        "⭐ Reviews are live: rate a spot and your words appear on its page right away, with your name. Posting needs a (free) account, and I can take anything down that doesn't belong.",
         "🎬 The reels audit: every place I've filmed is in the guide with its reel attached — Sidab's coves, Qantab's ten beaches, the Sifah shark shallows, Matrah Fort, Ain Al Kasfah, Hijrat Al Sheikh, Batch, Rozna.",
         "🌌 Seasonal experiences get their own entries: bioluminescence, rose season, whale-shark summer.",
         "🗓️ New one-day plan: The Perfect Wadi Shab Day, with real costs.",

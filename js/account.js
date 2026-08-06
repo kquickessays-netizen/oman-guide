@@ -35,6 +35,28 @@ window.Account = (() => {
   let me = null;          // the signed-in user (supabase user object) or null
   let libLoading = null;  // in-flight lib load, so two callers share one fetch
 
+  /* THE ROUTER EATS AUTH REDIRECTS — catch the fragment FIRST.
+     Confirmation, magic-link and password-reset emails land back here with
+     the session in the URL hash (#access_token=…&type=recovery). But this
+     app routes BY hash, and app.js rewrites it to "#/wadis" within
+     milliseconds of loading — long before the (CDN-loaded) auth library
+     gets to read it. So the tokens are grabbed HERE, at parse time, which
+     the script order guarantees runs before app.js exists. Stashed in
+     sessionStorage too, in case anything reloads the page mid-dance. */
+  const AUTH_FRAG = (() => {
+    const h = location.hash || "";
+    if (/access_token=|type=recovery|error_description=/.test(h)) {
+      try { sessionStorage.setItem("oman_auth_frag", h); } catch {}
+      return h;
+    }
+    try { return sessionStorage.getItem("oman_auth_frag") || ""; } catch { return ""; }
+  })();
+  const clearFrag = () => { try { sessionStorage.removeItem("oman_auth_frag"); } catch {} };
+  // Consumed exactly once. init() re-runs whenever the panel opens, and the
+  // recovery panel itself calls init() — processing the fragment on every
+  // pass made init→openModal→init chase its own tail forever.
+  let fragPending = AUTH_FRAG;
+
   const $id = id => document.getElementById(id);
   const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g,
     c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
@@ -100,7 +122,7 @@ window.Account = (() => {
         if (/^sb-.*-auth-token$/.test(k)) return true;
       }
     } catch {}
-    return /access_token=|refresh_token=|type=recovery|code=/.test(location.hash + location.search);
+    return !!AUTH_FRAG || /access_token=|refresh_token=|type=recovery|code=/.test(location.hash + location.search);
   }
 
   function init() {
@@ -108,6 +130,40 @@ window.Account = (() => {
       client();
       return sb.auth.getSession().then(({ data }) => {
         me = (data.session && data.session.user) || null;
+
+        /* The redirect leg: detectSessionInUrl usually misses because the
+           router has already rewritten the hash, so replay the stashed
+           fragment by hand. setSession() signs the person in with the
+           tokens the email carried; type=recovery additionally opens the
+           new-password panel — the step that used to silently never come. */
+        const frag = fragPending;
+        if (frag) {
+          fragPending = null;
+          const q = new URLSearchParams(frag.slice(frag.indexOf("access_token") >= 0
+            ? frag.indexOf("access_token") : 1));
+          const at = q.get("access_token"), rt = q.get("refresh_token");
+          const finish = () => {
+            paintButton();
+            if (/type=recovery/.test(frag)) openModal("recover");
+            const errd = q.get("error_description");
+            if (errd) { openModal(); setTimeout(() => msg("err",
+              errd.replace(/\+/g, " ") + " — request a fresh link."), 400); }
+            clearFrag();
+            // tidy the address bar if the tokens are still showing
+            if (/access_token=|error_description=/.test(location.hash))
+              history.replaceState(null, "", location.pathname + location.search);
+          };
+          if (!me && at && rt) {
+            return sb.auth.setSession({ access_token: at, refresh_token: rt })
+              .then(({ data: d2 }) => { me = (d2.session && d2.session.user) || me; })
+              .catch(() => {})
+              .then(finish);
+          }
+          finish();
+          if (me) afterLogin(true);
+          return;
+        }
+
         paintButton();
         if (me) afterLogin(true);
       });
@@ -215,6 +271,7 @@ window.Account = (() => {
     const stars = Math.min(5, Math.max(0, parseInt(data.stars, 10) || 0)) || null;
     return client().from("reviews").insert({
       spot: spot || null,
+      published: true,   // live immediately; Hussain hides/deletes from the stats desk
       stars: stars,
       verdict: stars ? (stars >= 4 ? "up" : stars <= 2 ? "down" : null) : null,
       name: String(data.name || "").trim().slice(0, 60) || null,
