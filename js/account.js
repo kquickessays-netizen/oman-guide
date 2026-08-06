@@ -134,9 +134,8 @@ window.Account = (() => {
 
   function ensureProfile() {
     if (!me) return;
-    let name = "";
-    try { name = localStorage.getItem("oman_reviewer_name") || ""; } catch {}
-    name = name || (me.user_metadata && (me.user_metadata.full_name || me.user_metadata.name)) || "";
+    let name = displayName();
+    if (!name) { try { name = localStorage.getItem("oman_reviewer_name") || ""; } catch {} }
     client().from("profiles")
       .upsert({ id: me.id, name: name || null }, { onConflict: "id" })
       .then(() => {}, () => {});
@@ -260,7 +259,39 @@ window.Account = (() => {
   .acct-stat b{display:block;font-size:19px}
   .acct-stat span{font-size:11.5px;color:var(--muted)}
   #accountBtn .acct-dot{display:inline-block;width:7px;height:7px;border-radius:50%;
-    background:#1e9e59;margin-left:5px;vertical-align:1px}`;
+    background:#1e9e59;margin-left:5px;vertical-align:1px}
+  .acct-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--sand-2);
+    border-radius:12px;padding:4px;margin-bottom:16px}
+  .acct-seg button{border:none;background:transparent;padding:9px 4px;border-radius:9px;
+    font-weight:650;font-size:13.5px;color:var(--muted);cursor:pointer;transition:all .18s ease}
+  .acct-seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 5px rgba(27,35,32,.12)}
+  .acct-hint{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5;text-align:center}
+  .acct-rank{border-radius:14px;padding:13px 14px;margin:0 0 14px;color:#fff;position:relative;overflow:hidden}
+  .acct-rank .rk-row{display:flex;align-items:baseline;gap:8px}
+  .acct-rank b{font-size:17px;letter-spacing:-.2px}
+  .acct-rank .rk-n{margin-left:auto;font-size:12px;opacity:.9}
+  .acct-rank .rk-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.28);margin-top:9px;overflow:hidden}
+  .acct-rank .rk-bar i{display:block;height:100%;width:0%;background:#fff;border-radius:99px;
+    transition:width .8s .15s cubic-bezier(.2,.8,.2,1)}
+  .acct-rank .rk-next{font-size:11.5px;opacity:.92;margin-top:7px}
+  .acct-sec{border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden;background:#fff}
+  .acct-sec>button{width:100%;display:flex;align-items:center;gap:9px;padding:12px 14px;border:none;
+    background:none;font:inherit;font-weight:650;font-size:14px;cursor:pointer;color:var(--ink)}
+  .acct-sec>button .n{margin-left:auto;font-size:12px;color:var(--muted);background:var(--sand);
+    padding:2px 9px;border-radius:99px}
+  .acct-sec>button .c{color:#c0b8a8;font-size:12px;transition:transform .25s ease;margin-left:2px}
+  .acct-sec.open>button .c{transform:rotate(90deg);color:var(--water)}
+  .acct-sec .lst{display:none;border-top:1px solid var(--sand-2)}
+  .acct-sec.open .lst{display:block;max-height:240px;overflow-y:auto}
+  .acct-row{width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px;border:none;
+    background:none;font:inherit;text-align:left;cursor:pointer;border-bottom:1px solid #f6f1e8}
+  .acct-row:last-child{border-bottom:none}
+  .acct-row:hover{background:#fbf8f2}
+  .acct-row .nm{font-size:13.5px;font-weight:600}
+  .acct-row .sub{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
+  .acct-row .go{margin-left:auto;color:#c0b8a8;font-size:13px}
+  .acct-row .e{flex:0 0 20px;text-align:center}
+  .acct-empty{padding:14px;font-size:12.5px;color:var(--muted);text-align:center}`;
 
   const GOOGLE_SVG = `<svg width="17" height="17" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.1 5.7l6.2 5.2C36.9 40.2 44 35 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>`;
 
@@ -283,14 +314,24 @@ window.Account = (() => {
     const b = $id("accountBtn");
     if (!b) return;
     if (me) {
-      b.innerHTML = "👤<span class=\"acct-dot\" aria-hidden=\"true\"></span>";
-      b.setAttribute("aria-label", "Account, signed in as " + (me.email || ""));
+      // First name if we have one — "👤 Hussain" reads as "this is my
+      // account", where a bare glyph read as "log in (again?)".
+      const nm = displayName();
+      const short = nm ? nm.split(/\s+/)[0].slice(0, 10) : "";
+      b.innerHTML = "👤 " + (short ? esc(short) : "") + "<span class=\"acct-dot\" aria-hidden=\"true\"></span>";
+      b.setAttribute("aria-label", "Your account, signed in as " + (me.email || ""));
       b.title = me.email || "Signed in";
     } else {
-      b.textContent = "👤";
-      b.setAttribute("aria-label", "Sign in");
+      b.textContent = "👤 Sign in";
+      b.setAttribute("aria-label", "Sign in or create an account");
       b.title = "Sign in";
     }
+  }
+
+  function displayName() {
+    if (!me) return "";
+    const m = me.user_metadata || {};
+    return (m.full_name || m.name || "").trim();
   }
 
   /* One backdrop of its own — the unlock modal keeps #modalBackdrop. */
@@ -332,25 +373,78 @@ window.Account = (() => {
     const body = $id("acctBody");
     if (!body) return;
 
-    /* ---- signed in ---- */
+    /* ---- signed in: profile, rank, and the two lists ---- */
     if (view === "me" && me) {
-      const saved = readList("oman_saved").length;
-      const been = readList("oman_been").length;
-      const letter = (me.email || "?").slice(0, 1).toUpperCase();
+      const D = window.OMAN_DATA || {};
+      const all = [...(D.spots || []), ...(D.itineraries || [])];
+      const find = id => all.find(x => x.id === id);
+      const savedIds = readList("oman_saved");
+      const beenIds = readList("oman_been");
+      const nm = displayName();
+      const letter = (nm || me.email || "?").slice(0, 1).toUpperCase();
+
+      // The same rank the HUD shows — app.js packages it (window.__omanRank).
+      const rk = (window.__omanRank && window.__omanRank()) || null;
+      let rankHtml = "";
+      if (rk) {
+        const span = rk.next ? (rk.next.at - rk.floor) : 1;
+        const into = rk.next ? (rk.count - rk.floor) : 1;
+        const pct = Math.max(4, Math.min(100, Math.round(into / span * 100)));
+        rankHtml = `
+        <div class="acct-rank" style="background:${esc(rk.color || "#0d5c63")}">
+          <div class="rk-row"><b>🧭 ${esc(rk.name)}</b>
+            <span class="rk-n">${rk.count} of ${rk.total} places</span></div>
+          <div class="rk-bar"><i data-pct="${pct}"></i></div>
+          <div class="rk-next">${rk.next
+            ? esc(`${rk.next.at - rk.count} more place${rk.next.at - rk.count === 1 ? "" : "s"} to ${rk.next.name}`)
+            : "Top of the ladder — you've done it all."}</div>
+        </div>`;
+      }
+
+      const rowsFor = ids => {
+        const rows = ids.map(find).filter(Boolean).map(s => `
+          <button class="acct-row" data-open="${esc(s.id)}">
+            <span class="e">${s.cat === "itineraries" ? "🗺️" : "📍"}</span>
+            <span><span class="nm">${esc(s.name)}</span>
+            <span class="sub">${esc(s.type || (s.cat === "itineraries" ? "Trip plan" : ""))}</span></span>
+            <span class="go">›</span>
+          </button>`).join("");
+        return rows || `<div class="acct-empty">Nothing here yet — go explore.</div>`;
+      };
+
       body.innerHTML = `
         <h2>Your account</h2>
         <div class="acct-me">
           <span class="acct-ava">${esc(letter)}</span>
-          <div><b>${esc(me.email || "Signed in")}</b>
-          <small>Saves and been-theres sync to this account.</small></div>
+          <div><b>${esc(nm || me.email || "Signed in")}</b>
+          <small>${nm ? esc(me.email || "") + " · " : ""}synced to this account</small></div>
         </div>
-        <div class="acct-stats">
-          <div class="acct-stat"><b>♥ ${saved}</b><span>saved</span></div>
-          <div class="acct-stat"><b>✓ ${been}</b><span>been there</span></div>
+        ${rankHtml}
+        <div class="acct-sec" id="secSaved">
+          <button>♥ Saved<span class="n">${savedIds.length}</span><span class="c">›</span></button>
+          <div class="lst">${rowsFor(savedIds)}</div>
         </div>
-        <button class="acct-btn ghost" id="acctOut">Sign out</button>
+        <div class="acct-sec" id="secBeen">
+          <button>✓ Been there<span class="n">${beenIds.length}</span><span class="c">›</span></button>
+          <div class="lst">${rowsFor(beenIds)}</div>
+        </div>
+        <button class="acct-btn ghost" id="acctOut" style="margin-top:6px">Sign out</button>
         <p style="font-size:12px;color:var(--muted);margin-top:12px">
           Signing out keeps everything on this phone; it just stops syncing.</p>`;
+
+      // animate the rank bar in
+      requestAnimationFrame(() => {
+        const bar = body.querySelector(".rk-bar i");
+        if (bar) bar.style.width = bar.dataset.pct + "%";
+      });
+      // fold the lists open/shut
+      body.querySelectorAll(".acct-sec > button").forEach(btn =>
+        btn.onclick = () => btn.parentElement.classList.toggle("open"));
+      // a place row opens its sheet, exactly like tapping its card
+      body.querySelectorAll(".acct-row").forEach(r => r.onclick = () => {
+        closeModal();
+        window.dispatchEvent(new CustomEvent("oman:openspot", { detail: r.dataset.open }));
+      });
       body.querySelector("#acctOut").onclick = () => {
         client().auth.signOut().then(() => { me = null; paintButton(); render("login"); });
       };
@@ -376,60 +470,93 @@ window.Account = (() => {
       return;
     }
 
-    /* ---- signed out: the login panel ---- */
+    /* ---- signed out: sign in / create account, one clear mode at a time ----
+       The old panel was a sign-in form with "create an account" hidden in a
+       small link; people read it as login-only. A segmented switch makes the
+       two jobs equal, and Create asks for a NAME, which the profile keeps
+       and reviews get prefilled with. */
+    const mode = view === "signup" ? "signup" : "signin";
     body.innerHTML = `
-      <h2>Sign in</h2>
-      <p>So your ♥ saves, ✓ been-theres and reviews follow you onto any
-         phone — free, and the guide works exactly the same without it.</p>
+      <h2>Your account</h2>
+      <p>Free. Your ♥ saves, ✓ been-theres, reviews and explorer rank follow
+         you onto any phone — and the guide works exactly the same without it.</p>
+      <div class="acct-seg" role="tablist">
+        <button id="segIn"${mode === "signin" ? ' class="on"' : ""}>Sign in</button>
+        <button id="segUp"${mode === "signup" ? ' class="on"' : ""}>Create account</button>
+      </div>
       <button class="acct-google" id="acctGoogle">${GOOGLE_SVG} Continue with Google</button>
       <div class="acct-div">or with email</div>
+      ${mode === "signup" ? `
+      <div class="field"><label for="acctName">Your name</label>
+        <input type="text" id="acctName" autocomplete="name" maxlength="60" placeholder="How should the guide greet you?"></div>` : ""}
       <div class="field"><label for="acctEmail">Email</label>
         <input type="email" id="acctEmail" autocomplete="email" placeholder="you@example.com"></div>
       <div class="field"><label for="acctPw">Password</label>
-        <input type="password" id="acctPw" autocomplete="current-password" placeholder="Your password"></div>
-      <button class="acct-btn" id="acctIn">Sign in</button>
-      <div class="acct-links">
-        <a id="acctUp">Create an account</a>
-        <a id="acctMagic">Email me a sign-in link</a>
-        <a id="acctForgot">Forgot?</a>
-      </div>
+        <input type="password" id="acctPw" autocomplete="${mode === "signup" ? "new-password" : "current-password"}"
+          placeholder="${mode === "signup" ? "At least 8 characters" : "Your password"}"></div>
+      ${mode === "signup"
+        ? `<button class="acct-btn" id="acctUp">Create my account</button>
+           <p class="acct-hint">We'll email you a confirmation link — one tap and you're in.</p>
+           <div class="acct-links"><span></span><a id="acctMagic">Or skip passwords: email me a sign-in link</a><span></span></div>`
+        : `<button class="acct-btn" id="acctIn">Sign in</button>
+           <div class="acct-links">
+             <a id="acctMagic">Email me a sign-in link</a>
+             <a id="acctForgot">Forgot password?</a>
+           </div>`}
       <div id="acctMsg"></div>`;
 
     const email = () => (body.querySelector("#acctEmail").value || "").trim().toLowerCase();
     const pw = () => body.querySelector("#acctPw").value || "";
+    const nameField = () => { const n = body.querySelector("#acctName"); return n ? n.value.trim().slice(0, 60) : ""; };
     const redirect = location.origin + location.pathname;
     const needEmail = () => {
       if (email().indexOf("@") > 0) return true;
       msg("err", "Enter your email first."); return false;
     };
 
+    body.querySelector("#segIn").onclick = () => render("signin");
+    body.querySelector("#segUp").onclick = () => render("signup");
+
     body.querySelector("#acctGoogle").onclick = () => {
       client().auth.signInWithOAuth({ provider: "google", options: { redirectTo: redirect } })
         .then(({ error }) => { if (error) msg("err", error.message); });
     };
-    body.querySelector("#acctIn").onclick = () => {
+
+    const inBtn = body.querySelector("#acctIn");
+    if (inBtn) inBtn.onclick = () => {
       if (!needEmail()) return;
-      if (!pw()) return msg("err", "Enter your password (or use the sign-in link).");
+      if (!pw()) return msg("err", "Enter your password (or use the sign-in link below).");
       client().auth.signInWithPassword({ email: email(), password: pw() })
         .then(({ error }) => {
           if (!error) return render("me");
           msg("err", /confirm/i.test(error.message)
             ? "Almost there — confirm your email first (check your inbox, the spam folder too)."
+            : /invalid/i.test(error.message)
+            ? "That email + password don't match. Mistyped? Or tap \"Email me a sign-in link\" below — no password needed."
             : error.message);
         });
     };
-    body.querySelector("#acctUp").onclick = () => {
+
+    const upBtn = body.querySelector("#acctUp");
+    if (upBtn) upBtn.onclick = () => {
+      if (!nameField()) return msg("err", "Tell us your name first — it's how the guide greets you, and how a published review gets credited.");
       if (!needEmail()) return;
-      if (pw().length < 8) return msg("err", "Pick a password of at least 8 characters, then tap Create again.");
+      if (pw().length < 8) return msg("err", "Pick a password of at least 8 characters.");
+      // The name rides along as user metadata (the profiles trigger copies
+      // it server-side) and prefills the review box on this phone.
+      try { localStorage.setItem("oman_reviewer_name", nameField()); } catch {}
       client().auth.signUp({ email: email(), password: pw(),
-                             options: { emailRedirectTo: redirect } })
+                             options: { emailRedirectTo: redirect,
+                                        data: { full_name: nameField() } } })
         .then(({ data, error }) => {
           if (error) return msg("err", error.message);
           // Supabase quietly succeeds for an address that already has an
           // account (no leaking who's registered) — same message either way.
-          msg("ok", "📬 Almost done — we've emailed <b>" + esc(email()) + "</b> a confirmation link. Tap it and you're in.");
+          msg("ok", "📬 Almost done, " + esc(nameField().split(/\s+/)[0]) +
+            " — we've emailed <b>" + esc(email()) + "</b> a confirmation link. Tap it and you're in.");
         });
     };
+
     body.querySelector("#acctMagic").onclick = () => {
       if (!needEmail()) return;
       client().auth.signInWithOtp({ email: email(), options: { emailRedirectTo: redirect } })
@@ -437,7 +564,8 @@ window.Account = (() => {
           ? msg("err", error.message)
           : msg("ok", "📬 Sign-in link sent to <b>" + esc(email()) + "</b> — open it on this device."));
     };
-    body.querySelector("#acctForgot").onclick = () => {
+    const forgot = body.querySelector("#acctForgot");
+    if (forgot) forgot.onclick = () => {
       if (!needEmail()) return;
       client().auth.resetPasswordForEmail(email(), { redirectTo: redirect })
         .then(({ error }) => error
