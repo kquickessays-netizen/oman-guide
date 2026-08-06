@@ -177,8 +177,28 @@ window.Account = (() => {
      pushed), so pull-and-replace — that is what carries saves from the old
      phone to the new one. The queue is flushed first so an offline toggle
      beats a stale server row. */
+  /* WHERE THEY SIGN IN FROM. One upsert per (account, device): type, OS,
+     browser and time zone — the same context object analytics already
+     collects, now tied to the account so the stats desk can answer "who is
+     this person and what are they on". Fire-and-forget, like everything
+     analytics-shaped. */
+  function recordDevice() {
+    if (!me || !sb || !window.Analytics) return;
+    try {
+      const c = (Analytics.context && Analytics.context()) || {};
+      client().from("user_devices").upsert({
+        user_id: me.id,
+        device_id: (Analytics.deviceId && Analytics.deviceId()) || "unknown",
+        tz: c.tz || null, os: c.os || null, browser: c.br || null,
+        kind: c.k || null, lang: c.lang || null,
+        last_seen: new Date().toISOString()
+      }, { onConflict: "user_id,device_id" }).then(() => {}, () => {});
+    } catch {}
+  }
+
   function afterLogin(quiet) {
     ensureProfile();
+    recordDevice();
     flushQueue()
       .then(() => syncLists())
       .then(changed => {

@@ -448,15 +448,19 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
        delivery/stats-users-access.sql has been run, these three reads 404 /
        403, and the Accounts tab shows the setup note instead of the
        dashboard dying. */
-    let accounts = null, usaves = [], uvisits = [];
+    let accounts = null, usaves = [], uvisits = [], udevices = [];
     try {
       [accounts, usaves, uvisits] = await Promise.all([
         rpc("dashboard_users"),
         readAll("user_saves", "select=spot_id,user_id,created_at&order=created_at.desc"),
         readAll("user_visits", "select=spot_id,user_id,created_at&order=created_at.desc")
       ]);
+      // Separate try: user_devices arrived later than the rest of the
+      // accounts setup, and its absence should not blank the whole tab.
+      try { udevices = await readAll("user_devices", "select=*&order=last_seen.desc"); }
+      catch (e2) { udevices = []; }
     } catch (e) { accounts = null; usaves = []; uvisits = []; }
-    return { events, subs, bookings, reviews, accounts, usaves, uvisits };
+    return { events, subs, bookings, reviews, accounts, usaves, uvisits, udevices };
   }
 
   /* ------------------------------------------------------------- crunching */
@@ -666,6 +670,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
       accounts: d.accounts,
       usaves: d.usaves || [],
       uvisits: d.uvisits || [],
+      udevices: d.udevices || [],
 
       /* ---- who they are (from session_start) ---- */
       ctxCount: ctx.length,
@@ -999,12 +1004,27 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         signupSeries.push({ day: k, n: sByDay.get(k) || 0 });
       }
       const banned = r => r.banned_until && new Date(r.banned_until) > new Date();
+      /* Where each account signs in from: newest device row per user for
+         the table column; every row for the aggregate panels below. */
+      const devByUser = new Map();
+      c.udevices.forEach(dv => {
+        const cur = devByUser.get(dv.user_id);
+        if (!cur || new Date(dv.last_seen) > new Date(cur.last_seen)) devByUser.set(dv.user_id, dv);
+      });
+      const whereOf = r => {
+        const dv = devByUser.get(r.id);
+        if (!dv) return "—";
+        const bits = [countryOf(dv.tz)];
+        if (dv.kind || dv.os) bits.push([dv.kind, dv.os].filter(Boolean).join(" · "));
+        return bits.filter(Boolean).join(" — ");
+      };
       const cols = [
         { h: "Name",       get: r => esc(r.name || "—"), raw: r => r.name || "" },
         { h: "Email",      get: r => `<span class="mono">${esc(r.email || "")}</span>`, raw: r => r.email || "" },
         { h: "Joined",     get: r => fmtDate(r.created_at), raw: r => r.created_at },
         { h: "Confirmed",  get: r => r.confirmed_at ? "✓" : `<span style="color:var(--warn)">not yet</span>`, raw: r => r.confirmed_at ? "yes" : "no" },
         { h: "Last seen",  get: r => r.last_sign_in ? fmtDate(r.last_sign_in) : "—", raw: r => r.last_sign_in || "" },
+        { h: "From",       get: r => esc(whereOf(r)), raw: r => whereOf(r) },
         { h: "♥",          get: r => nf(r.saves), cls: "num", raw: r => r.saves },
         { h: "✓",          get: r => nf(r.visits), cls: "num", raw: r => r.visits },
         { h: "Reviews",    get: r => nf(r.reviews), cls: "num", raw: r => r.reviews },
@@ -1040,6 +1060,19 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
           went to spam — if you see a cluster of "not yet", check the Brevo log.
           The ♥ / ✓ counts here are what's synced to the account; devices without
           accounts still track anonymously under People.</div>
+        <h2 class="sec">Where account holders are <span class="pill">one count per person per country</span></h2>
+        ${c.udevices.length ? `
+        <div class="panel">${barTable((() => {
+          const seen = new Map();
+          c.udevices.forEach(dv => seen.set(dv.user_id + "|" + countryOf(dv.tz), countryOf(dv.tz)));
+          return tally([...seen.values()], x => x);
+        })(), ["Country (from device time zone)", "People"], { limit: 20 })}</div>
+        <h2 class="sec">What account holders sign in on <span class="pill">${nf(c.udevices.length)} device${c.udevices.length === 1 ? "" : "s"}</span></h2>
+        <div class="panel">${barTable(tally(c.udevices, dv => [dv.kind, dv.os].filter(Boolean).join(" · ") || "unknown"), ["Device", "Count"])}</div>
+        <div class="panel">${barTable(tally(c.udevices, dv => dv.browser || "unknown"), ["Browser", "Count"])}</div>`
+        : `<div class="empty">Fills in as people open the app signed-in after this update —
+           each sign-in records that device's type, OS, browser and time zone
+           against the account (run <code>delivery/user-devices.sql</code> once).</div>`}
         <h2 class="sec">Most saved by account holders (♥)</h2>
         <div class="panel">${barTable(tally(c.usaves, r => r.spot_id), ["Place", "Saves"], { limit: 25 })}</div>
         <h2 class="sec">Most been-there by account holders (✓)</h2>
