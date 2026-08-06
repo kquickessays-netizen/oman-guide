@@ -1,7 +1,7 @@
 /* Service worker, makes the app installable and usable offline in a wadi
    with no signal. Bump CACHE when you change content, or users keep the old
    version until the cache expires. */
-const CACHE = "oman-v93";
+const CACHE = "oman-v94";
 
 const CORE = [
   "./",
@@ -11,6 +11,7 @@ const CORE = [
   "./js/planner.js",
   "./js/unlock.js",
   "./js/analytics.js",
+  "./js/account.js",
   "./data/content.js",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
