@@ -267,6 +267,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
   const nf = n => (n == null ? "0" : Number(n).toLocaleString("en-GB"));
 
   let session = null, DATA = null, days = 30, tab = "overview";
+  let userDetail = null;   // account id whose drill-down page is open (Accounts tab)
   try { session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); } catch {}
 
   /* ------------------------------------------------------------------ auth */
@@ -987,6 +988,101 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         return;
       }
       const acc = c.accounts;
+      const banned = r => r.banned_until && new Date(r.banned_until) > new Date();
+      const devByUser = new Map();
+      c.udevices.forEach(dv => {
+        const cur = devByUser.get(dv.user_id);
+        if (!cur || new Date(dv.last_seen) > new Date(cur.last_seen)) devByUser.set(dv.user_id, dv);
+      });
+      // "From": what they DECLARED at signup wins; the device time zone fills in.
+      const whereOf = r => {
+        if (r.country) return r.country;
+        const dv = devByUser.get(r.id);
+        return dv ? countryOf(dv.tz) : "—";
+      };
+      const wireUops = scope => scope.querySelectorAll("button[data-uop]").forEach(btn => btn.onclick = async () => {
+        const { uop, uid, uemail } = btn.dataset;
+        if (uop === "del" &&
+            !confirm("Delete " + (uemail || "this user") + " permanently?\n\nTheir profile, saves and been-theres go too. Cannot be undone.")) return;
+        btn.disabled = true;
+        try {
+          if (uop === "del") {
+            await rpc("dashboard_delete_user", { uid });
+            const i = acc.findIndex(x => x.id === uid);
+            if (i > -1) acc.splice(i, 1);
+            if (userDetail === uid) userDetail = null;
+            toast("Account deleted.");
+          } else {
+            await rpc("dashboard_ban_user", { uid, ban: uop === "ban" });
+            const row = acc.find(x => x.id === uid);
+            if (row) row.banned_until = uop === "ban" ? "3000-01-01T00:00:00Z" : null;
+            toast(uop === "ban" ? "Banned — they can no longer sign in." : "Unbanned.");
+          }
+          draw();
+        } catch (e) {
+          btn.disabled = false;
+          toast("Could not do that: " + String(e.message || e).slice(0, 120), true);
+        }
+      });
+
+      /* ================= one user's page ================= */
+      if (userDetail) {
+        const u = acc.find(x => x.id === userDetail);
+        if (!u) { userDetail = null; draw(); return; }
+        const devs = c.udevices.filter(d => d.user_id === u.id);
+        const saves = c.usaves.filter(x => x.user_id === u.id);
+        const visits = c.uvisits.filter(x => x.user_id === u.id);
+        const urevs = c.reviews.filter(r => r.user_id === u.id);
+        const stars = n => n ? "★".repeat(n) + "☆".repeat(5 - n) : "—";
+        const idList = rows => rows.length
+          ? `<div class="tblwrap"><table><tbody>` + rows.map(x =>
+              `<tr><td>${esc(x.spot_id)}</td><td class="num">${esc(fmtDate(x.created_at || ""))}</td></tr>`).join("") +
+            `</tbody></table></div>`
+          : `<div class="empty">Nothing yet.</div>`;
+        v.innerHTML = `
+          <p><button class="ghost" id="uBack">‹ All accounts</button></p>
+          <h2 class="sec">${esc(u.name || u.email || "Account")}
+            ${banned(u) ? `<span class="pill down">banned</span>` : `<span class="pill up">active</span>`}</h2>
+          <div class="tiles">
+            ${tile("Email", u.email || "—", "")}
+            ${tile("From", u.country || "—", devs.length ? "device says " + esc(countryOf((devByUser.get(u.id)||{}).tz)) : "no device seen yet")}
+            ${tile("Joined", fmtDate(u.created_at), u.confirmed_at ? "confirmed " + fmtDate(u.confirmed_at) : "NOT confirmed")}
+            ${tile("Last seen", u.last_sign_in ? fmtDate(u.last_sign_in) : "—", "")}
+            ${tile("♥ / ✓ / ⭐", nf(u.saves) + " / " + nf(u.visits) + " / " + nf(u.reviews), "saves / been / reviews")}
+          </div>
+          <p>
+            ${banned(u)
+              ? `<button class="act" data-uop="unban" data-uid="${esc(u.id)}">Unban</button>`
+              : `<button class="act" data-uop="ban" data-uid="${esc(u.id)}">Ban</button>`}
+            <button class="act bad" data-uop="del" data-uid="${esc(u.id)}" data-uemail="${esc(u.email || "")}">Delete account</button>
+          </p>
+          <h2 class="sec">Devices <span class="pill">${nf(devs.length)}</span></h2>
+          <div class="panel">${devs.length ? `<div class="tblwrap"><table><thead><tr>
+              <th>Where</th><th>Device</th><th>Browser</th><th class="num">Last seen</th></tr></thead><tbody>` +
+            devs.map(d => `<tr><td>${esc(countryOf(d.tz))}</td><td>${esc([d.kind, d.os].filter(Boolean).join(" · ") || "—")}</td>
+              <td>${esc(d.browser || "—")}</td><td class="num">${esc(fmtDate(d.last_seen))}</td></tr>`).join("") +
+            `</tbody></table></div>` : `<div class="empty">No signed-in visit recorded yet.</div>`}</div>
+          <h2 class="sec">♥ Saved <span class="pill">${nf(saves.length)}</span></h2>
+          <div class="panel">${idList(saves)}</div>
+          <h2 class="sec">✓ Been there <span class="pill">${nf(visits.length)}</span></h2>
+          <div class="panel">${idList(visits)}</div>
+          <h2 class="sec">⭐ Their reviews <span class="pill">${nf(urevs.length)}</span></h2>
+          <div class="panel">${urevs.length ? `<div class="tblwrap"><table><thead><tr>
+              <th>When</th><th>Place</th><th>Stars</th><th>What they wrote</th><th>Live</th><th>Action</th></tr></thead><tbody>` +
+            urevs.map(r => `<tr><td>${esc(fmtDate(r.created_at))}</td><td>${esc(r.spot || "—")}</td>
+              <td><span class="stars">${stars(r.stars)}</span></td><td class="wrap">${esc(r.tip || "—")}</td>
+              <td>${r.published ? `<span class="pill up">live</span>` : `<span class="pill down">hidden</span>`}</td>
+              <td>${r.published
+                  ? `<button class="act" data-table="reviews" data-id="${esc(r.id)}" data-field="published" data-value="false">Hide</button>`
+                  : `<button class="act go" data-table="reviews" data-id="${esc(r.id)}" data-field="published" data-value="true">Publish</button>`}
+                <button class="act bad" data-table="reviews" data-id="${esc(r.id)}" data-del="1">Delete</button></td></tr>`).join("") +
+            `</tbody></table></div>` : `<div class="empty">No reviews yet.</div>`}</div>`;
+        $("#uBack").onclick = () => { userDetail = null; draw(); };
+        wireUops(v);
+        wireActions(v);
+        return;
+      }
+
       const accNew = days
         ? acc.filter(a => new Date(a.created_at) >= new Date(sinceISO()))
         : acc;
@@ -1003,23 +1099,8 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         const k = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
         signupSeries.push({ day: k, n: sByDay.get(k) || 0 });
       }
-      const banned = r => r.banned_until && new Date(r.banned_until) > new Date();
-      /* Where each account signs in from: newest device row per user for
-         the table column; every row for the aggregate panels below. */
-      const devByUser = new Map();
-      c.udevices.forEach(dv => {
-        const cur = devByUser.get(dv.user_id);
-        if (!cur || new Date(dv.last_seen) > new Date(cur.last_seen)) devByUser.set(dv.user_id, dv);
-      });
-      const whereOf = r => {
-        const dv = devByUser.get(r.id);
-        if (!dv) return "—";
-        const bits = [countryOf(dv.tz)];
-        if (dv.kind || dv.os) bits.push([dv.kind, dv.os].filter(Boolean).join(" · "));
-        return bits.filter(Boolean).join(" — ");
-      };
       const cols = [
-        { h: "Name",       get: r => esc(r.name || "—"), raw: r => r.name || "" },
+        { h: "Name",       get: r => `<button class="act go" data-uview="${esc(r.id)}">${esc(r.name || r.email || "—")}</button>`, raw: r => r.name || "" },
         { h: "Email",      get: r => `<span class="mono">${esc(r.email || "")}</span>`, raw: r => r.email || "" },
         { h: "Joined",     get: r => fmtDate(r.created_at), raw: r => r.created_at },
         { h: "Confirmed",  get: r => r.confirmed_at ? "✓" : `<span style="color:var(--warn)">not yet</span>`, raw: r => r.confirmed_at ? "yes" : "no" },
@@ -1079,33 +1160,11 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         <div class="panel">${barTable(tally(c.uvisits, r => r.spot_id), ["Place", "Been"], { limit: 25 })}</div>`;
       const exp = $("#expUsers");
       if (exp) exp.onclick = () => csv(acc, cols.filter(x => x.h !== "Action"), "oman-accounts.csv");
-
-      /* Ban / unban / delete go through owner-gated RPCs (the SQL refuses
-         anyone else, and refuses your own account). The row is patched in
-         memory and redrawn — no refetch of everything for one click. */
-      v.querySelectorAll("button[data-uop]").forEach(btn => btn.onclick = async () => {
-        const { uop, uid, uemail } = btn.dataset;
-        if (uop === "del" &&
-            !confirm("Delete " + (uemail || "this user") + " permanently?\n\nTheir profile, saves and been-theres go too. Cannot be undone.")) return;
-        btn.disabled = true;
-        try {
-          if (uop === "del") {
-            await rpc("dashboard_delete_user", { uid });
-            const i = acc.findIndex(x => x.id === uid);
-            if (i > -1) acc.splice(i, 1);
-            toast("Account deleted.");
-          } else {
-            await rpc("dashboard_ban_user", { uid, ban: uop === "ban" });
-            const row = acc.find(x => x.id === uid);
-            if (row) row.banned_until = uop === "ban" ? "3000-01-01T00:00:00Z" : null;
-            toast(uop === "ban" ? "Banned — they can no longer sign in." : "Unbanned.");
-          }
-          draw();
-        } catch (e) {
-          btn.disabled = false;
-          toast("Could not do that: " + String(e.message || e).slice(0, 120), true);
-        }
-      });
+      // A name click opens that account's own page: everything they saved,
+      // ticked, reviewed and signed in on, plus the admin buttons.
+      v.querySelectorAll("button[data-uview]").forEach(b =>
+        b.onclick = () => { userDetail = b.dataset.uview; draw(); });
+      wireUops(v);
       return;
     }
 

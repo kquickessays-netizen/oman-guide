@@ -212,8 +212,9 @@ window.Account = (() => {
     if (!me) return;
     let name = displayName();
     if (!name) { try { name = localStorage.getItem("oman_reviewer_name") || ""; } catch {} }
+    const country = (me.user_metadata && me.user_metadata.country) || null;
     client().from("profiles")
-      .upsert({ id: me.id, name: name || null }, { onConflict: "id" })
+      .upsert({ id: me.id, name: name || null, country: country }, { onConflict: "id" })
       .then(() => {}, () => {});
   }
 
@@ -565,7 +566,11 @@ window.Account = (() => {
       <div class="acct-div">or with email</div>
       ${mode === "signup" ? `
       <div class="field"><label for="acctName">Your name</label>
-        <input type="text" id="acctName" autocomplete="name" maxlength="60" placeholder="How should the guide greet you?"></div>` : ""}
+        <input type="text" id="acctName" autocomplete="name" maxlength="60" placeholder="How should the guide greet you?"></div>
+      <div class="field"><label for="acctFrom">Where are you from?</label>
+        <input type="text" id="acctFrom" autocomplete="country-name" maxlength="56" list="acctCountries"
+          placeholder="Oman, Germany, UK…">
+        <datalist id="acctCountries">${["Oman","United Arab Emirates","Saudi Arabia","Qatar","Kuwait","Bahrain","India","Pakistan","Philippines","Egypt","Jordan","Germany","United Kingdom","France","Italy","Spain","Netherlands","Switzerland","Austria","Poland","Czechia","Sweden","Norway","Denmark","Finland","Belgium","Portugal","Ireland","Greece","Russia","Ukraine","Turkey","United States","Canada","Mexico","Brazil","Argentina","Australia","New Zealand","China","Japan","South Korea","Singapore","Malaysia","Indonesia","Thailand","Vietnam","South Africa","Kenya","Morocco","Tunisia"].map(c => `<option value="${c}">`).join("")}</datalist></div>` : ""}
       <div class="field"><label for="acctEmail">Email</label>
         <input type="email" id="acctEmail" autocomplete="email" placeholder="you@example.com"></div>
       <div class="field"><label for="acctPw">Password</label>
@@ -619,12 +624,15 @@ window.Account = (() => {
       if (!nameField()) return msg("err", "Tell us your name first — it's how the guide greets you, and how a published review gets credited.");
       if (!needEmail()) return;
       if (pw().length < 8) return msg("err", "Pick a password of at least 8 characters.");
-      // The name rides along as user metadata (the profiles trigger copies
-      // it server-side) and prefills the review box on this phone.
+      // The name and country ride along as user metadata (the profiles
+      // trigger copies them server-side); the name also prefills reviews.
+      const fromEl = body.querySelector("#acctFrom");
+      const country = fromEl ? fromEl.value.trim().slice(0, 56) : "";
       try { localStorage.setItem("oman_reviewer_name", nameField()); } catch {}
       client().auth.signUp({ email: email(), password: pw(),
                              options: { emailRedirectTo: redirect,
-                                        data: { full_name: nameField() } } })
+                                        data: { full_name: nameField(),
+                                                country: country || null } } })
         .then(({ data, error }) => {
           if (error) return msg("err", error.message);
           // Supabase quietly succeeds for an address that already has an
