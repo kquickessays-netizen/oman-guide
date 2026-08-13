@@ -5701,7 +5701,7 @@ region: "muscat", coords: [23.607, 58.256],
       id: "classic-5day", cat: "itineraries", free: false,
       name: "The 5-Day Grand Tour",
       tagline: "Forts, islands, wadis, Nizwa and the sands. One hotel, two speeds.",
-      blurb: "The 3-Day Escape plus the two days that finish the picture. Mibam and the turtle coast, the Daymaniyat reefs, Nizwa and the mountain village, then a wadi-and-dunes day that comes in two speeds, easy through Wadi Bani Khalid or, with a guide, the full Wadi Hawer challenge, and a last unhurried day at the flamingo lake, the big dam and the ziplines. Every night in the same Muscat bed, no repacking, and the receipt at the bottom is the whole trip.",
+      blurb: "The 3-Day Escape plus the two days that finish the picture. A wadi-and-dunes day that comes in two speeds: easy through Wadi Bani Khalid, or the full Wadi Hawer challenge with a guide. Then an unhurried last day at the flamingo lake, the big dam and the ziplines over the reservoir. Every night in the same Muscat bed, no repacking, and the receipt at the bottom is the whole trip.",
       img: "assets/experiences/wahiba-sands.jpg",
       imgCredit: "Photo: Diego Delso · CC BY-SA 4.0 · Wikimedia Commons",
       gallery: [
@@ -5779,8 +5779,13 @@ region: "muscat", coords: [23.607, 58.256],
     },
     {
       id: "loop-7day", cat: "itineraries", free: false,
-      name: "The 7-Day Ultimate Oman Loop",
-      tagline: "Mountains, wadis, desert and coast, the full circle.",
+      /* Renamed 13 Aug 2026: it was "The 7-Day Ultimate Oman Loop" while the
+         route really was a moving loop with six different beds. It now runs
+         out of one Muscat hotel every day, so "Loop" and "the full circle"
+         were both lies. The id stays loop-7day: it is in the deep links, the
+         /p/ page URL and anything already shared. */
+      name: "The 7-Day Ultimate Oman Week",
+      tagline: "Mountains, reefs, desert and coast, one bed all week.",
       blurb: "The 5-Day Grand Tour plus the mountain and the sea. A Jabal Akhdar day, Birkat Al Mouz and the UNESCO falaj, then the terraces and sunset at altitude, and a last slow day of Sidab coves, city turtles and a beachfront evening. Seven days from one Muscat bed, no repacking, and the receipt at the bottom is the whole week.",
       img: "assets/itineraries/loop-7day.jpg",
       imgCredit: "Photo: Juozas Šalna · CC BY 2.0 · Wikimedia Commons",
