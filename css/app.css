@@ -3264,3 +3264,25 @@ body{
   font-size:13.5px;font-weight:600;cursor:pointer;
 }
 .wc-alt:active{background:rgba(255,255,255,.12)}
+
+/* ---- "Take me there" card at the foot of every spot / plan sheet ---- */
+.tripcard{
+  display:flex;flex-direction:column;gap:12px;margin:18px 0 6px;padding:16px;
+  border-radius:16px;background:linear-gradient(135deg,#e9f8ef,#f6fbf7);
+  border:1px solid #cfead9;
+}
+.tripcard-txt{display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:1.45;color:#1c2a2a}
+.tripcard-txt b{font-size:16px}
+.tripcard-txt span{color:var(--muted)}
+.tripcard-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:13px 16px;border-radius:12px;background:#25d366;color:#fff;
+  font-weight:800;font-size:15px;text-decoration:none;
+  box-shadow:0 4px 14px rgba(37,211,102,.28);
+}
+.tripcard-btn svg{width:20px;height:20px;flex:0 0 auto}
+.tripcard-btn:active{transform:scale(.98)}
+@media (prefers-color-scheme: dark){
+  .tripcard{background:linear-gradient(135deg,#123326,#0f2a20);border-color:#1f5b3c}
+  .tripcard-txt{color:#eaf6ee}
+}
