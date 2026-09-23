@@ -218,8 +218,8 @@ window.OMAN_DATA = {
 
     // Any single itinerary, on its own. The 1-day plan is free and is not
     // sold; it is the sample that proves the paid ones are worth it.
-    itineraryPrice: "$2.99",
-    itineraryPriceNum: 2.99,
+    itineraryPrice: "3 OMR",     // singles are not sold; locked plan cards quote the set price
+    itineraryPriceNum: 7.8,
 
     /* All three paid plans together, sold as THE THIRD ONE FOR A DOLLAR.
 
@@ -245,7 +245,7 @@ window.OMAN_DATA = {
 
     // Which itineraries the $9.99 Guide includes. Everything not listed here
     // (and not `free: true`) needs either the Full Kit or its own $2.99.
-    basicItineraries: [],   // locations only since 23 Sep: the plans are their own OMR 2 product
+    basicItineraries: ["muscat-1day"],   // the city day comes with All the Locations; the 3/5/7-day routes are their own product
 
     // Kept as the alias the older price blocks read. It is the Guide's price.
     bundlePrice: "5 OMR",     // ≈ $13. Checkout is in OMR; foreign cards convert.
@@ -5613,7 +5613,7 @@ region: "muscat", coords: [23.607, 58.256],
          Bait Al Luban ~6 pp and Matrah Fort 5 pp + tax. The Royal Opera
          House tour price is deliberately ABSENT rather than guessed — see
          the receipt note. Add it and it appears everywhere automatically. */
-      id: "muscat-1day", cat: "itineraries", free: true,
+      id: "muscat-1day", cat: "itineraries", free: false,   // paid since 24 Sep; comes with any purchase
       name: "The Muscat Day",
       tagline: "The capital done properly in one day. No 4x4, barely any driving, home for dinner.",
       blurb: "Mosque at nine while it is still calm, the opera house, then Mutrah for the whole afternoon \u2014 fish market, lunch, halwa, souq, fort \u2014 finishing at the palace when the light goes gold. The exact day from my reel, with the drive between each stop and what it costs. Any car does it, and most of the afternoon is on foot.",
