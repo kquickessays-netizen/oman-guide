@@ -78,9 +78,9 @@ window.OMAN_DATA = {
   meta: {
     creator: "@hussain_explores",
     // Not rendered anywhere right now, the About byline is just name + handle,
-    // because this line only repeated the "Licensed Oman tour guide" badge
+    // because this line only repeated the "Licensed Omani tour guide" badge
     // sitting two centimetres below it. Kept in case you want it back.
-    creatorLine: "Omani content creator · Licensed Oman tour guide 🪪",
+    creatorLine: "Omani content creator · Licensed Omani tour guide 🪪",
     tagline: "90+ spots across Oman: where they are, how hard they are, what to bring.",
 
     // >>> THE HOOK, the first line on the About tab, and the hardest-working
