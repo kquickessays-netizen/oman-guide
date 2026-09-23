@@ -123,7 +123,7 @@ window.OMAN_DATA = {
        card ("🔓 Free right now"), so the shape of the paid guide stays
        visible even though nothing is withheld. That marker is drawn in
        card() in app.js and disappears with this flag. */
-    freeLaunch: true,
+    freeLaunch: false,   // paid launch 24 Sep 2026
 
     // >>> HARD LOCKS, these override freeLaunch. <<<
     // salalahComingSoon: the Salalah tab shows a "coming soon" panel instead
@@ -133,7 +133,7 @@ window.OMAN_DATA = {
     //   instead of the form, even during free launch. Flip to false when the
     //   Planner should open (e.g. with the October paid launch).
     salalahComingSoon: true,
-    plannerLocked: true,
+    plannerLocked: false,  // opened with the paid launch: the Full Kit sells it
 
     /* plansLocked: the three PAID itineraries (3, 5 and 7-day) stay shut for
        EVERYONE during the free trial, including anyone holding a key. The
@@ -154,7 +154,7 @@ window.OMAN_DATA = {
        still read it. Nothing in the app will show it, which is what "locked"
        means here. A real lock needs the serverless key-check in
        delivery/BACKEND-SETUP.md. */
-    plansLocked: true,
+    plansLocked: false,  // opened 24 Sep 2026 after the itinerary audit
 
     /* spotsLocked (3 Aug 2026): while true, every spot with free:false is
        locked for EVERYONE during the trial, exactly like the held plans.
@@ -463,7 +463,12 @@ window.OMAN_DATA = {
     { id: "explore", label: "Explore", icon: "🧭", blurb: "Everything in the north, wadis, beaches, mountains, food, souqs.",
       cats: ["wadis", "beaches", "mountains", "experiences", "food", "shopping"] },
 
+    /* hidden (24 Sep 2026): the Salalah tab is OFF the app entirely, no tab,
+       no "soon" badge, #/salalah falls back to home. Every Dhofar spot stays
+       in this file untouched (cat:"salalah", held:true); delete `hidden`
+       and flip salalahComingSoon to bring the tab back in one move. */
     { id: "salalah", label: "Salalah", icon: "🌴", blurb: "Dhofar, the monsoon-green south.",
+      hidden: true,
       cats: ["salalah"],
       intro: [
         "A separate trip, not a day out of Muscat, 1,000km south, so you fly.",
@@ -5368,7 +5373,7 @@ region: "muscat", coords: [23.56816, 58.41489],
       months: [1,2,3,4,5,6,7,8,9,10,11,12],
       tags: ["food","culture"], guide: "",
       stats: { "Type": "Sweets / halwa", "Must-order": "Omani halwa (black or saffron)", "Area": "Mutrah Souq", "Price": "$", "Best for": "Gifts", "Book?": "Walk-in" },
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=23.617,58.594",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=Mutrah+Souq+Muscat",
       verify: true
     },
 
@@ -5623,7 +5628,7 @@ region: "muscat", coords: [23.607, 58.256],
       stats: { "Best for": "First days, layovers, no 4x4", "Base": "Muscat, all of it in the city", "Car": "Any car", "Days": "1" },
       insta: "https://www.instagram.com/reel/DU_VsFNDC6p/",
       route: [
-        { name: "Mosque \u2192 opera \u2192 Mutrah \u2192 palace", sub: "the capital, in the right order", chip: "\ud83d\udd4c", cost: "from OMR 14 pp", drive: "~1h",
+        { name: "Mosque \u2192 opera \u2192 Mutrah \u2192 palace", sub: "the capital, in the right order", chip: "\ud83d\udd4c", cost: "from OMR 12 pp", drive: "~1h",
           stops: [
             { t: "09:00", icon: "\ud83d\udd4c", title: "Sultan Qaboos Grand Mosque", note: "Start here, before the heat and the coaches. Take your time \u2014 the detail is the whole point, and the calm at this hour is half of why it works. Visitor hours end at 11:00; shoulders and knees covered, and there is robe hire at the gate if you need it.", spot: "grand-mosque", hl: true , parkUrl: "https://maps.app.goo.gl/stWMq2nHEBwF5cGF9"},
             { t: "10:30", icon: "\ud83c\udfad", title: "Royal Opera House", note: "Twenty minutes across town. Elegance on another level, and the guided tour is the only way to see inside \u2014 do it, it is worth the hour. Visits run Saturday to Thursday, 08:30\u201317:30, so this is a weekday plan; entry is 3 excluding tax.", spot: "royal-opera-house", omr: "3.0", hl: true , drive: "20 min"},
@@ -5631,15 +5636,15 @@ region: "muscat", coords: [23.607, 58.256],
             { t: "13:15", icon: "\ud83c\udf7d\ufe0f", title: "Lunch at Bait Al Luban", note: "Traditional Omani food with the harbour in the window. Worth booking, it fills at lunch.", spot: "food-bait-al-luban", omr: "6.0" , group: "Mutrah"},
             { t: "14:15", icon: "\u2615", title: "Halwa and kahwa on the corniche", note: "Walk the water, then stop for Omani halwa and coffee \u2014 you are handed both to try before anyone mentions buying.", spot: "food-halwa" , group: "Mutrah"},
             { t: "14:45", icon: "\ud83c\udfee", title: "Mutrah Souq", note: "Go in without a plan and get lost. Frankincense, silver, textiles. Haggle gently, expect kahwa, and keep an eye on the time.", spot: "shop-mutrah-souq" , group: "Mutrah"},
-            { t: "15:30", icon: "\ud83c\udfef", title: "Matrah Fort", note: "Climb it. One of the best views in Muscat \u2014 the corniche end to end, the harbour, and the dhows from above. Entry is 5 excluding tax.", spot: "matrah-fort", omr: "5.0" , group: "Mutrah", tEnd: "16:00"},
-            { t: "16:00", icon: "\ud83c\udff0", title: "Al Alam Palace", note: "A short drive round the headland to finish: the palace and the two Portuguese forts on the cliffs above it. Viewed from outside, and the reason it is last is the light.", spot: "old-muscat", hl: true, drive: "10 min" }
+            { t: "15:30", icon: "\ud83c\udfef", title: "Matrah Fort", note: "Climb it. One of the best views in Muscat \u2014 the corniche end to end, the harbour, and the dhows from above. Entry is 3 excluding tax.", spot: "matrah-fort", omr: "3.0" , group: "Mutrah", tEnd: "16:00"},
+            { t: "16:15", icon: "\ud83c\udff0", title: "Al Alam Palace", note: "A short drive round the headland to finish: the palace and the two Portuguese forts on the cliffs above it. Viewed from outside, and the reason it is last is the light.", spot: "old-muscat", hl: true, drive: "10 min" }
           ] }
       ],
       receipt: {
         rows: [
           ["Royal Opera House tour (excluding tax)", "3.0"],
           ["Lunch at Bait Al Luban", "6.0"],
-          ["Matrah Fort entry (excluding tax)", "5.0"],
+          ["Matrah Fort entry (excluding tax)", "3.0"],
           ["Grand Mosque, fish market, souq entry", "free"],
           ["Halwa and kahwa to try", "free"]
         ],

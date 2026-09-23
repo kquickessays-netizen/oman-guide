@@ -3267,6 +3267,7 @@ body{
 
 /* ---- "Take me there" card at the foot of every spot / plan sheet ---- */
 .tripcard{
+  margin:14px 0 18px;
   display:flex;flex-direction:column;gap:12px;margin:18px 0 6px;padding:16px;
   border-radius:16px;background:linear-gradient(135deg,#e9f8ef,#f6fbf7);
   border:1px solid #cfead9;
@@ -3283,6 +3284,7 @@ body{
 .tripcard-btn svg{width:20px;height:20px;flex:0 0 auto}
 .tripcard-btn:active{transform:scale(.98)}
 @media (prefers-color-scheme: dark){
-  .tripcard{background:linear-gradient(135deg,#123326,#0f2a20);border-color:#1f5b3c}
+  .tripcard{
+  margin:14px 0 18px;background:linear-gradient(135deg,#123326,#0f2a20);border-color:#1f5b3c}
   .tripcard-txt{color:#eaf6ee}
 }
