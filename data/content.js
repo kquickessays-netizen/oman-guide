@@ -192,15 +192,15 @@ window.OMAN_DATA = {
     tiers: {
       basic: {
         name: "All the Locations",
-        price: "3 OMR",
-        priceNum: 7.8,
+        price: "$6.49",
+        priceNum: 6.49,
         live: true,
         note: "One payment. Yours forever."
       },
       premium: {
         name: "The Full Kit",
-        price: "5 OMR",
-        priceNum: 13,
+        price: "$9.99",
+        priceNum: 9.99,
         live: true,
         opens: "",
         note: "Everything, including the Planner."
@@ -209,8 +209,8 @@ window.OMAN_DATA = {
       // the shop can render all four boxes from one place.
       plans: {
         name: "All Three Itineraries",
-        price: "3 OMR",
-        priceNum: 7.8,
+        price: "$6.49",
+        priceNum: 6.49,
         live: true,
         note: "The routes, without the country."
       }
@@ -218,8 +218,8 @@ window.OMAN_DATA = {
 
     // Any single itinerary, on its own. The 1-day plan is free and is not
     // sold; it is the sample that proves the paid ones are worth it.
-    itineraryPrice: "3 OMR",     // singles are not sold; locked plan cards quote the set price
-    itineraryPriceNum: 7.8,
+    itineraryPrice: "$6.49",     // singles are not sold; locked plan cards quote the set price
+    itineraryPriceNum: 6.49,
 
     /* All three paid plans together, sold as THE THIRD ONE FOR A DOLLAR.
 
@@ -240,16 +240,16 @@ window.OMAN_DATA = {
 
        Never hand-write a claim about these two numbers anywhere. At $7 the
        shop said "Cheaper than two" while two cost $5.98. */
-    plansBundlePrice: "3 OMR",   // ≈ $7.80; checkout is in OMR
-    plansBundlePriceNum: 7.8,
+    plansBundlePrice: "$6.49",   // store currency is USD since 24 Sep
+    plansBundlePriceNum: 6.49,
 
     // Which itineraries the $9.99 Guide includes. Everything not listed here
     // (and not `free: true`) needs either the Full Kit or its own $2.99.
     basicItineraries: ["muscat-1day"],   // the city day comes with All the Locations; the 3/5/7-day routes are their own product
 
     // Kept as the alias the older price blocks read. It is the Guide's price.
-    bundlePrice: "5 OMR",     // ≈ $13. Checkout is in OMR; foreign cards convert.
-    bundlePriceNum: 13,
+    bundlePrice: "$9.99",     // the Full Kit; store currency is USD
+    bundlePriceNum: 9.99,
 
     /* ------------------------------------------------- plan my trip for me
        The one thing on this site that cannot be copied: you. A lead form
@@ -360,8 +360,8 @@ window.OMAN_DATA = {
 
        `bundle` is the old single-product key and is kept so any licence you
        have already sold or given out still unlocks everything.               */
-    /* THREE products (24 Sep 2026): All the Locations OMR 3 (basic),
-       All Three Itineraries OMR 3 (itin-all), The Full Kit OMR 5 (premium,
+    /* THREE products (24 Sep 2026, USD): All the Locations $6.49 (basic),
+       All Three Itineraries $6.49 (itin-all), The Full Kit $9.99 (premium,
        and the legacy bundle key). 3 + 3 = 6, the kit is 5 with the Planner
        in: every price block should make that comparison for the reader. */
     buyLinks: {
@@ -383,10 +383,10 @@ window.OMAN_DATA = {
     lemonsqueezy: {
       storeId: 481297,
       products: {
-        bundle:  1382180,   // The Full Kit, OMR 5
-        basic:   1383036,   // All the Locations, OMR 3
+        bundle:  1382180,   // The Full Kit, $9.99
+        basic:   1383036,   // All the Locations, $6.49
         premium: 1382180,
-        "itin-all": 1382204  // All Three Itineraries, OMR 3
+        "itin-all": 1382204  // All Three Itineraries, $6.49
       }
     },
 
