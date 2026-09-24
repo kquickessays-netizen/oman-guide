@@ -272,8 +272,8 @@ window.OMAN_DATA = {
        trial. Kept here in the comment so the anchor isn't lost: put those
        strings back in `price` and the numbers reappear everywhere at once. */
     planService: {
-      whatsapp: "96879218186",          // international format, no + and no spaces
-      whatsappLabel: "+968 7921 8186",
+      whatsapp: "96896698208",          // international format, no + and no spaces
+      whatsappLabel: "+968 9669 8208",
       replyTime: "usually within 48 hours",
       tiers: [
         { id: "solo",   label: "Solo or a couple",  sub: "1–2 people",  price: "" },
