@@ -411,7 +411,7 @@ window.OMAN_DATA = {
     //     See delivery/GUMROAD-SETUP.md for which programs fit each slot. <<<
     affiliates: {
       esim: "", // Airalo / Holafly
-      car: "", // car rental (DiscoverCars / Rentalcars)
+      car: "https://www.discovercars.com/oman/muscat/mct?a_aid=Explores_Oman", // Discover Cars, Muscat Airport pickup (affiliate ID Explores_Oman)
       hotel: "", // Booking.com
       gear: "", // gear list (Amazon Associates or a kit.co page)
       guide: "", // your tour-operator referral

@@ -1,7 +1,7 @@
 /* Service worker, makes the app installable and usable offline in a wadi
    with no signal. Bump CACHE when you change content, or users keep the old
    version until the cache expires. */
-const CACHE = "oman-v117";
+const CACHE = "oman-v120";
 
 const CORE = [
   "./",
