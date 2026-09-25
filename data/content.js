@@ -271,6 +271,23 @@ window.OMAN_DATA = {
        The group sizes were 25 / 40 / 60 OMR (≈ $65 / $105 / $155) before the
        trial. Kept here in the comment so the anchor isn't lost: put those
        strings back in `price` and the numbers reappear everywhere at once. */
+    /* LEGAL ENTITY (added 25 Sep 2026). The company that sells the guide and
+       runs the site. Shown in the site footer and the Terms panel. Keep the
+       CR number stable; update the licence line if MoCIIP issues a new one. */
+    legal: {
+      nameEn: "Mustakshif Marketing and Digital Content",
+      nameAr: "مستكشف للتسويق والمحتوى الرقمي",
+      cr: "1677902",
+      tin: "2325583",
+      licence: "MoCIIP licence L3848106",
+      city: "Muscat, Sultanate of Oman",
+      // The MHT-licensed operator that runs any guided trips. Leave name and
+      // licence "" until the partner agreement is signed; the trip cards then
+      // say "a licensed operator" instead of naming one.
+      operatorName: "",
+      operatorLicence: ""
+    },
+
     planService: {
       whatsapp: "96896698208",          // international format, no + and no spaces
       whatsappLabel: "+968 9669 8208",
