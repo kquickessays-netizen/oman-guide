@@ -1516,7 +1516,8 @@ h1,h2,h3,.brand-text strong,.ov-title,.price-name,.price-tag,.tab,.about-hero h1
   transition:transform .12s ease,color .12s ease,background .12s ease;
 }
 .been-check:active{transform:scale(1.25)}
-.been-check.on{background:#1e6b39;color:#fff}
+/* Same as the ♥ above it: the button stays, only the tick changes colour. */
+.been-check.on{color:#1e6b39}
 .been-badge{
   position:absolute;top:12px;left:10px;z-index:2;
   background:#e7f4ea;color:#1e6b39;font-size:11px;font-weight:700;
@@ -2656,7 +2657,9 @@ body{
 .tab .t-icon{display:inline-flex;align-items:center}
 @media (max-width:560px){ .tab .t-icon svg{width:21px;height:21px} }
 .dock-ico svg{width:21px;height:21px;display:block}
-.dock-ico.on svg{fill:currentColor;fill-opacity:.9}
+/* Only the heart fills when on. Filling the ✓ closed its open stroke into a
+   solid wedge, so ticking a place changed the icon instead of its colour. */
+#actSave.on svg{fill:currentColor;fill-opacity:.9}
 .dock-go svg{width:17px;height:17px;display:inline-block;vertical-align:-3px;margin-right:5px}
 .brand-mark svg{width:26px;height:26px;display:block}
 .brand-mark{display:inline-flex;align-items:center;color:var(--gold)}

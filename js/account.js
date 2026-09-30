@@ -110,6 +110,20 @@ window.Account = (() => {
     return sb;
   }
 
+  /* Is Google switched on in the Supabase dashboard? While it is off,
+     signInWithOAuth sends the reader to a bare JSON error page ("provider is
+     not enabled"), so the button stays hidden until the project says yes,
+     and appears by itself the day the provider is enabled. Asked once per
+     visit; a failed fetch (offline) is not cached, so it asks again. */
+  let googleOn = null;
+  function googleEnabled() {
+    return googleOn || (googleOn =
+      fetch(cfg.url + "/auth/v1/settings", { headers: { apikey: cfg.anonKey } })
+        .then(r => r.ok ? r.json() : {})
+        .then(s => !!(s.external && s.external.google))
+        .catch(() => { googleOn = null; return false; }));
+  }
+
   /* Supabase keeps its session under "sb-<ref>-auth-token". If one exists,
      the person signed in before: restore quietly on boot. If not, do
      nothing until they open the panel — no CDN fetch for the 95% who
@@ -562,8 +576,10 @@ window.Account = (() => {
         <button id="segIn"${mode === "signin" ? ' class="on"' : ""}>Sign in</button>
         <button id="segUp"${mode === "signup" ? ' class="on"' : ""}>Create account</button>
       </div>
-      <button class="acct-google" id="acctGoogle">${GOOGLE_SVG} Continue with Google</button>
-      <div class="acct-div">or with email</div>
+      <div id="acctGoogleWrap" hidden>
+        <button class="acct-google" id="acctGoogle">${GOOGLE_SVG} Continue with Google</button>
+        <div class="acct-div">or with email</div>
+      </div>
       ${mode === "signup" ? `
       <div class="field"><label for="acctName">Your name</label>
         <input type="text" id="acctName" autocomplete="name" maxlength="60" placeholder="How should the guide greet you?"></div>
@@ -603,6 +619,10 @@ window.Account = (() => {
       client().auth.signInWithOAuth({ provider: "google", options: { redirectTo: redirect } })
         .then(({ error }) => { if (error) msg("err", error.message); });
     };
+    googleEnabled().then(on => {
+      const g = body.querySelector("#acctGoogleWrap");
+      if (g && on) g.hidden = false;
+    });
 
     const inBtn = body.querySelector("#acctIn");
     if (inBtn) inBtn.onclick = () => {
