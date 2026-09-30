@@ -3295,3 +3295,42 @@ body{
 .planner-fold .beta{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--gold-soft,#fff1d6);color:#8a5a00}
 .beta-note{font-size:13.5px;color:var(--muted);margin:0 0 12px;line-height:1.45}
 .planner-fold .lockcard{margin-top:4px}
+
+/* ---- Free guide: the planning ask (30 Sep 2026) ----------------------------
+   .planpitch rides on .launchbox, the dark teal panel, so the one thing on
+   sale looks like the one strong box the app already had. */
+.planpitch .pp-h{margin:0 0 6px;font-size:18px;line-height:1.25;color:#fff}
+.planpitch p{margin:0 0 14px}
+.pp-actions{display:grid;gap:10px;align-items:center}
+@media(min-width:520px){.pp-actions{grid-template-columns:auto 1fr}}
+.planpitch .pp-wa{padding:13px 14px;gap:8px;font-size:14px}
+.planpitch .pp-wa span{text-align:center;text-wrap:balance}
+.pp-more{color:#ffd9a0;font-weight:700;font-size:14px;text-decoration:none;text-align:center}
+@media(min-width:520px){.pp-more{text-align:left}}
+.pp-more:hover{text-decoration:underline}
+.planpitch .affbtn{background:transparent;border-color:rgba(255,255,255,.3);color:#d9f5e3;margin-top:14px}
+.sheet .planpitch{margin:22px 0 10px}
+
+/* the quiet one-line version, on every place sheet */
+.pp-line{
+  display:block;margin:18px 0 4px;padding:12px 14px;border-radius:12px;
+  background:var(--water-soft);color:var(--water-dark);
+  font-weight:700;font-size:14px;line-height:1.4;text-decoration:none;
+}
+
+/* the booking box says which part is paid, and prices sit above the buttons */
+.bookbox .bk-paid{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:9px 12px;border-radius:0 10px 10px 0;color:#6b4a14;font-weight:600;
+}
+.bookbox .bk-priceline{margin:4px 0 12px}
+
+/* #/planmytrip */
+.pm-steps{margin:12px 0 0;padding-left:20px;display:grid;gap:10px;font-size:14px;line-height:1.55;color:var(--muted)}
+.pm-steps b{color:var(--ink)}
+.pm-diy-row{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.pm-diy-row a{
+  display:inline-block;padding:9px 14px;border-radius:999px;
+  background:var(--water-soft);color:var(--water-dark);
+  font-size:13.5px;font-weight:700;text-decoration:none;
+}

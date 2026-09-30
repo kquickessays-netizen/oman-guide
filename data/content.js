@@ -122,8 +122,21 @@ window.OMAN_DATA = {
        While it is true, the spots that WILL be paid still say so on the
        card ("🔓 Free right now"), so the shape of the paid guide stays
        visible even though nothing is withheld. That marker is drawn in
-       card() in app.js and disappears with this flag. */
-    freeLaunch: false,   // paid launch 24 Sep 2026
+       card() in app.js and disappears with this flag.
+
+       FREE GUIDE, 30 Sep 2026: true again, and this time it is the model,
+       not a trial. Every spot, every itinerary and the Planner are open to
+       everyone; the checkout is STORED (buyLinks and lemonsqueezy below are
+       kept intact, nothing in the app links to them). The money now comes
+       from two places:
+         referrals   the car-rental affiliate and the licensed-operator
+                     WhatsApp on every sheet (meta.affiliates, tripcard)
+         planning    "plan my trip for me", paid, priced by group size
+                     (meta.planService). Every ask in the app points here:
+                     the header button, the sticky bar, the one pop-up,
+                     the foot of every list and plan.
+       Flip back to false and the paid guide returns exactly as it was. */
+    freeLaunch: true,    // free guide since 30 Sep 2026; was the paid launch 24 Sep
 
     // >>> HARD LOCKS, these override freeLaunch. <<<
     // salalahComingSoon: the Salalah tab shows a "coming soon" panel instead
@@ -270,7 +283,13 @@ window.OMAN_DATA = {
 
        The group sizes were 25 / 40 / 60 OMR (≈ $65 / $105 / $155) before the
        trial. Kept here in the comment so the anchor isn't lost: put those
-       strings back in `price` and the numbers reappear everywhere at once. */
+       strings back in `price` and the numbers reappear everywhere at once.
+
+       PRICES BACK ON, 30 Sep 2026. The guide itself is free now, so the
+       argument above has flipped: planning is THE thing being sold, and a
+       paid service with no price reads as a favour. The 25 / 40 / 60 OMR
+       anchor is restored as it was. `from` is what the short asks quote
+       (sticky bar, pop-up, list footers); it follows the first tier. */
     /* LEGAL ENTITY (added 25 Sep 2026). The company that sells the guide and
        runs the site. Shown in the site footer and the Terms panel. Keep the
        CR number stable; update the licence line if MoCIIP issues a new one. */
@@ -293,9 +312,9 @@ window.OMAN_DATA = {
       whatsappLabel: "+968 9669 8208",
       replyTime: "usually within 48 hours",
       tiers: [
-        { id: "solo",   label: "Solo or a couple",  sub: "1–2 people",  price: "" },
-        { id: "family", label: "Family or friends", sub: "3–5 people",  price: "" },
-        { id: "group",  label: "A group",           sub: "6 or more",   price: "" }
+        { id: "solo",   label: "Solo or a couple",  sub: "1–2 people",  price: "OMR 25" },
+        { id: "family", label: "Family or friends", sub: "3–5 people",  price: "OMR 40" },
+        { id: "group",  label: "A group",           sub: "6 or more",   price: "OMR 60" }
       ]
     },
 
@@ -317,6 +336,11 @@ window.OMAN_DATA = {
     // Everything below the first entry renders inside a second fold, so the
     // history is kept without anyone having to scroll past it.
     changelog: [
+      { date: "September 2026", items: [
+        "🔓 The whole guide is free: every place, all five itineraries and the trip Planner. No key, no checkout.",
+        "🤝 Rather not plan it yourself? Send me your dates and I'll build your route personally, priced by group size."
+      ]},
+
       { date: "August 2026", items: [
         "🔓 Everything reviewed so far is OPEN: Daymaniyat, Wahiba Sands, Ras Al Jinz, Snake Gorge, Wadi Mibam and more are out of 'coming soon'. Only the places I haven't finished verifying still wear the lock.",
         "📝 Full content review, pass one: 56 places checked line-by-line against my review sheet — wording tightened, facts corrected (Wadi Hawer is 2WD to the start), and locks set right.",
@@ -377,7 +401,12 @@ window.OMAN_DATA = {
 
        `bundle` is the old single-product key and is kept so any licence you
        have already sold or given out still unlocks everything.               */
-    /* THREE products (24 Sep 2026, USD): All the Locations $6.49 (basic),
+    /* ⏸️ STORED since 30 Sep 2026 (meta.freeLaunch is true). Nothing in the
+       app links to these while the guide is free; they and the product ids
+       in `lemonsqueezy` below are kept exactly as they were so the shop can
+       come back with one flag. Keys already sold still verify.
+
+       THREE products (24 Sep 2026, USD): All the Locations $6.49 (basic),
        All Three Itineraries $6.49 (itin-all), The Full Kit $9.99 (premium,
        and the legacy bundle key). 3 + 3 = 6, the kit is 5 with the Planner
        in: every price block should make that comparison for the reader. */
