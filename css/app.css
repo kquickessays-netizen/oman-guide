@@ -1907,6 +1907,8 @@ html{scroll-behavior:smooth}
   background:none;padding:0 2px;margin:0 0 10px;
   font-size:11px;line-height:1.4;color:#98938a;
 }
+/* the fix-it line's "contact us": quiet text, but findable as a link */
+.fixlink{color:var(--water-dark);font-weight:700;text-decoration:underline;text-underline-offset:2px}
 
 /* --- 9 · the review: the stars ARE the control -------------------------- */
 .ratebox{
