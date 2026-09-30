@@ -289,7 +289,12 @@ window.OMAN_DATA = {
        argument above has flipped: planning is THE thing being sold, and a
        paid service with no price reads as a favour. The 25 / 40 / 60 OMR
        anchor is restored as it was. `from` is what the short asks quote
-       (sticky bar, pop-up, list footers); it follows the first tier. */
+       (sticky bar, pop-up, list footers); it follows the first tier.
+
+       PRICES OFF, QUOTE ON REQUEST (30 Sep 2026, later the same day). Hussain
+       would rather quote each trip than print a number, so every `price` is
+       empty again and the asks say "Request a quote". The 25 / 40 / 60 anchor
+       above still works: fill `price` back in and the numbers return. */
     /* LEGAL ENTITY (added 25 Sep 2026). The company that sells the guide and
        runs the site. Shown in the site footer and the Terms panel. Keep the
        CR number stable; update the licence line if MoCIIP issues a new one. */
@@ -312,9 +317,9 @@ window.OMAN_DATA = {
       whatsappLabel: "+968 9669 8208",
       replyTime: "usually within 48 hours",
       tiers: [
-        { id: "solo",   label: "Solo or a couple",  sub: "1–2 people",  price: "OMR 25" },
-        { id: "family", label: "Family or friends", sub: "3–5 people",  price: "OMR 40" },
-        { id: "group",  label: "A group",           sub: "6 or more",   price: "OMR 60" }
+        { id: "solo",   label: "Solo or a couple",  sub: "1–2 people",  price: "" },
+        { id: "family", label: "Family or friends", sub: "3–5 people",  price: "" },
+        { id: "group",  label: "A group",           sub: "6 or more",   price: "" }
       ]
     },
 
@@ -338,7 +343,7 @@ window.OMAN_DATA = {
     changelog: [
       { date: "September 2026", items: [
         "🔓 The whole guide is free: every place, all five itineraries and the trip Planner. No key, no checkout.",
-        "🤝 Rather not plan it yourself? Send me your dates and I'll build your route personally, priced by group size."
+        "🤝 Rather not plan it yourself? Send me your dates and who's coming, and I'll quote you for building your route personally."
       ]},
 
       { date: "August 2026", items: [

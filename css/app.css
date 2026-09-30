@@ -3312,6 +3312,14 @@ body{
 @media(min-width:520px){.pp-more{text-align:left}}
 .pp-more:hover{text-decoration:underline}
 .planpitch .affbtn{background:transparent;border-color:rgba(255,255,255,.3);color:#d9f5e3;margin-top:14px}
+/* what the planning gets you, as a strip where the price used to be */
+.pp-perks{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pp-perks li{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;
+  background:rgba(255,255,255,.08);font-size:13px;font-weight:700;line-height:1.25;color:#fff;
+}
+.pp-perk-ico{flex:none;display:inline-flex;color:#ffd9a0}
+.pp-perk-ico svg{width:20px;height:20px;display:block}
 .sheet .planpitch{margin:22px 0 10px}
 
 /* the quiet one-line version, on every place sheet */
@@ -3329,6 +3337,16 @@ body{
 .bookbox .bk-priceline{margin:4px 0 12px}
 
 /* #/planmytrip */
+.pm-perk-grid{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:16px 14px}
+@media(min-width:640px){.pm-perk-grid{grid-template-columns:repeat(3,1fr)}}
+.pm-perk-grid li{display:flex;flex-direction:column;gap:4px;font-size:13px;line-height:1.5;color:var(--muted)}
+.pm-perk-grid b{color:var(--ink);font-size:14.5px;line-height:1.3;margin-top:4px}
+.pm-perk-ico{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:12px;
+  background:var(--water-soft);color:var(--water);
+}
+.pm-perk-ico svg{width:26px;height:26px;display:block}
 .pm-steps{margin:12px 0 0;padding-left:20px;display:grid;gap:10px;font-size:14px;line-height:1.55;color:var(--muted)}
 .pm-steps b{color:var(--ink)}
 .pm-diy-row{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}

@@ -110,6 +110,40 @@ window.Account = (() => {
     return sb;
   }
 
+  /* "Where are you from?" on sign-up: every country, A to Z, as a real
+     dropdown. It was a free-text box with 51 suggestions, which let
+     anything through and made the profiles table hard to count by
+     country. Names match the old suggestions, so older profiles still
+     line up. */
+  const COUNTRIES = [
+    "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina",
+    "Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados",
+    "Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana",
+    "Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada",
+    "Cape Verde","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo",
+    "Costa Rica","Côte d'Ivoire","Croatia","Cuba","Cyprus","Czechia","Denmark","Djibouti",
+    "Dominica","Dominican Republic","DR Congo","Ecuador","Egypt","El Salvador",
+    "Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France",
+    "Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea",
+    "Guinea-Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India",
+    "Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan",
+    "Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho",
+    "Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia",
+    "Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia",
+    "Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia",
+    "Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea",
+    "North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea",
+    "Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda",
+    "Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa",
+    "San Marino","São Tomé and Príncipe","Saudi Arabia","Senegal","Serbia","Seychelles",
+    "Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa",
+    "South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland",
+    "Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga",
+    "Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine",
+    "United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu",
+    "Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"
+  ];
+
   /* Is Google switched on in the Supabase dashboard? While it is off,
      signInWithOAuth sends the reader to a bare JSON error page ("provider is
      not enabled"), so the button stays hidden until the project says yes,
@@ -584,9 +618,10 @@ window.Account = (() => {
       <div class="field"><label for="acctName">Your name</label>
         <input type="text" id="acctName" autocomplete="name" maxlength="60" placeholder="How should the guide greet you?"></div>
       <div class="field"><label for="acctFrom">Where are you from?</label>
-        <input type="text" id="acctFrom" autocomplete="country-name" maxlength="56" list="acctCountries"
-          placeholder="Oman, Germany, UK…">
-        <datalist id="acctCountries">${["Oman","United Arab Emirates","Saudi Arabia","Qatar","Kuwait","Bahrain","India","Pakistan","Philippines","Egypt","Jordan","Germany","United Kingdom","France","Italy","Spain","Netherlands","Switzerland","Austria","Poland","Czechia","Sweden","Norway","Denmark","Finland","Belgium","Portugal","Ireland","Greece","Russia","Ukraine","Turkey","United States","Canada","Mexico","Brazil","Argentina","Australia","New Zealand","China","Japan","South Korea","Singapore","Malaysia","Indonesia","Thailand","Vietnam","South Africa","Kenya","Morocco","Tunisia"].map(c => `<option value="${c}">`).join("")}</datalist></div>` : ""}
+        <select id="acctFrom" autocomplete="country-name">
+          <option value="">Choose your country</option>
+          ${COUNTRIES.map(c => `<option>${esc(c)}</option>`).join("")}
+        </select></div>` : ""}
       <div class="field"><label for="acctEmail">Email</label>
         <input type="email" id="acctEmail" autocomplete="email" placeholder="you@example.com"></div>
       <div class="field"><label for="acctPw">Password</label>
