@@ -1,7 +1,7 @@
 /* Service worker, makes the app installable and usable offline in a wadi
    with no signal. Bump CACHE when you change content, or users keep the old
    version until the cache expires. */
-const CACHE = "oman-v125";
+const CACHE = "oman-v126";
 
 const CORE = [
   "./",
@@ -14,8 +14,8 @@ const CORE = [
   "./js/account.js",
   "./data/content.js",
   "./manifest.webmanifest",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./icons/icon-192.png?v=2",
+  "./icons/icon-512.png?v=2"
 ];
 
 self.addEventListener("install", e => {
