@@ -1,7 +1,7 @@
 /* Service worker, makes the app installable and usable offline in a wadi
    with no signal. Bump CACHE when you change content, or users keep the old
    version until the cache expires. */
-const CACHE = "oman-v127";
+const CACHE = "oman-v128";
 
 const CORE = [
   "./",
@@ -49,8 +49,9 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET") return;
 
-  // Never cache the Gumroad licence check or analytics, straight to network.
-  if (req.url.includes("api.gumroad.com") || req.url.includes(".supabase.co")) return;
+  // Never cache the Gumroad licence check, analytics or Google sign-in, straight to network.
+  if (req.url.includes("api.gumroad.com") || req.url.includes(".supabase.co") ||
+      req.url.includes("accounts.google.com")) return;
 
   // Network-first for our own data so edits show up; cache as fallback.
   if (req.url.includes("/data/")) {

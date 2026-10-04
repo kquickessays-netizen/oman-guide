@@ -158,6 +158,51 @@ window.Account = (() => {
         .catch(() => { googleOn = null; return false; }));
   }
 
+  /* Google's OWN button (Google Identity Services), not the redirect.
+     The redirect goes through Supabase's callback, so Google's page said
+     "to continue to bfneutpsjyfqferkublh.supabase.co", which looks like a
+     stranger's site. GIS signs in through a popup over THIS page, so
+     Google names exploresoman.com, and hands back an ID token that
+     Supabase takes via signInWithIdToken. The script loads only when the
+     sign-in panel opens.
+     The token is tied to a nonce: Google gets its SHA-256, Supabase the raw
+     value and checks they match, so a token minted for another site can't
+     be replayed here. Fresh nonce after every sign-in. If the script can't
+     load, the panel falls back to the redirect button. */
+  const GIS = "https://accounts.google.com/gsi/client?hl=en";   // English, like the guide
+  let gisReady = null;   // load + initialize, shared by every panel render
+  function gisInit() {
+    if (gisReady) return gisReady;
+    gisReady = new Promise((res, rej) => {
+      if (window.google && google.accounts && google.accounts.id) return res();
+      const s = document.createElement("script");
+      s.src = GIS; s.async = true;
+      s.onload = () => res();
+      s.onerror = () => rej(new Error("offline"));
+      document.head.appendChild(s);
+    }).then(() => {
+      const raw = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(24))));
+      return crypto.subtle.digest("SHA-256", new TextEncoder().encode(raw)).then(buf => {
+        google.accounts.id.initialize({
+          client_id: cfg.googleClientId,
+          nonce: [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join(""),
+          callback: r => googleCredential(r.credential, raw)
+        });
+      });
+    });
+    gisReady.catch(() => { gisReady = null; });   // offline: try again next open
+    return gisReady;
+  }
+
+  function googleCredential(token, raw) {
+    gisReady = null;   // the next sign-in gets a fresh nonce
+    client().auth.signInWithIdToken({ provider: "google", token: token, nonce: raw })
+      .then(({ error }) => {
+        if (error) return msg("err", "Google sign-in didn't go through: " + error.message);
+        render("me");
+      });
+  }
+
   /* Supabase keeps its session under "sb-<ref>-auth-token". If one exists,
      the person signed in before: restore quietly on boot. If not, do
      nothing until they open the panel — no CDN fetch for the 95% who
@@ -362,6 +407,8 @@ window.Account = (() => {
     transition:transform .13s ease,box-shadow .13s ease}
   .acct-google:hover{box-shadow:0 4px 14px rgba(27,35,32,.1)}
   .acct-google:active{transform:scale(.97)}
+  .acct-gsi{display:flex;justify-content:center;min-height:44px}
+  .acct-gsi[hidden],.acct-google[hidden]{display:none}
   .acct-div{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--muted);font-size:12px}
   .acct-div::before,.acct-div::after{content:"";flex:1;height:1px;background:var(--line)}
   .acct-btn{width:100%;padding:12px;border:none;border-radius:12px;background:var(--water);
@@ -611,7 +658,8 @@ window.Account = (() => {
         <button id="segUp"${mode === "signup" ? ' class="on"' : ""}>Create account</button>
       </div>
       <div id="acctGoogleWrap" hidden>
-        <button class="acct-google" id="acctGoogle">${GOOGLE_SVG} Continue with Google</button>
+        <div class="acct-gsi" id="acctGsi"></div>
+        <button class="acct-google" id="acctGoogle" hidden>${GOOGLE_SVG} Continue with Google</button>
         <div class="acct-div">or with email</div>
       </div>
       ${mode === "signup" ? `
@@ -654,9 +702,25 @@ window.Account = (() => {
       client().auth.signInWithOAuth({ provider: "google", options: { redirectTo: redirect } })
         .then(({ error }) => { if (error) msg("err", error.message); });
     };
+    // Google's button when the client ID is set, the redirect one if not
+    // or if Google's script won't load. Elements are taken now: switching
+    // Sign in / Create account rebuilds the panel before this resolves.
+    const gWrap = body.querySelector("#acctGoogleWrap");
+    const gBox = body.querySelector("#acctGsi");
+    const classic = () => { gBox.hidden = true; body.querySelector("#acctGoogle").hidden = false; };
     googleEnabled().then(on => {
-      const g = body.querySelector("#acctGoogleWrap");
-      if (g && on) g.hidden = false;
+      if (!on || !gWrap.isConnected) return;
+      gWrap.hidden = false;
+      if (!cfg.googleClientId) return classic();
+      gisInit().then(() => {
+        if (!gBox.isConnected) return;
+        google.accounts.id.renderButton(gBox, {
+          type: "standard", theme: "outline", size: "large",
+          text: "continue_with", shape: "pill", logo_alignment: "center",
+          locale: "en",   // the guide is in English; Google would follow the browser
+          width: Math.max(200, Math.min(400, gBox.offsetWidth || 320))   // Google's limits
+        });
+      }).catch(() => { if (gBox.isConnected) classic(); });
     });
 
     const inBtn = body.querySelector("#acctIn");

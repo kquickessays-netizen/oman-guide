@@ -489,7 +489,12 @@ window.OMAN_DATA = {
     //     Setup steps: delivery/BACKEND-SETUP.md <<<
     backend: {
       url: "https://bfneutpsjyfqferkublh.supabase.co",
-      anonKey: "sb_publishable_kHrIcnawDTYNmumFholkYQ_F8k7Z24d" // publishable key (new-format anon), safe to ship
+      anonKey: "sb_publishable_kHrIcnawDTYNmumFholkYQ_F8k7Z24d", // publishable key (new-format anon), safe to ship
+      // Google OAuth web client ID ("Exploring Oman"), public by design. With it
+      // the sign-in panel shows Google's own button, whose popup names
+      // exploresoman.com. Needs https://exploresoman.com in the client's
+      // Authorized JavaScript origins. Empty = the old redirect button.
+      googleClientId: "346343419739-hll35l8da8p30q77uileina8mi1juk9m.apps.googleusercontent.com"
     }
   },
 

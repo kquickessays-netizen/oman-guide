@@ -99,6 +99,16 @@ header{position:sticky;top:0;z-index:20;background:rgba(11,31,34,.94);
 .range button{border:0;background:transparent;color:var(--muted);font-size:12.5px;
   font-weight:700;padding:6px 13px;border-radius:999px}
 .range button.on{background:var(--brand);color:#04201d}
+.daynav{display:flex;align-items:center;gap:4px}
+.daynav .ghost{padding:6px 11px;font-size:14px;line-height:1}
+.daynav .ghost:disabled{opacity:.35;cursor:default}
+.daynav input{background:var(--panel);border:1px solid var(--line);color:var(--muted);
+  border-radius:999px;padding:5px 10px;font:inherit;font-size:12.5px;font-weight:700;color-scheme:dark}
+.daynav input.on{border-color:var(--brand);color:var(--ink)}
+.daylink{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--ink);
+  cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.daylink:hover{color:var(--brand);text-decoration-color:var(--brand)}
+.zero{color:var(--muted);opacity:.55}
 .ghost{border:1px solid var(--line);background:var(--panel);color:var(--ink-2);
   padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700}
 .ghost:hover{color:var(--ink);border-color:var(--brand)}
@@ -235,10 +245,17 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     <div class="hrow">
       <div class="brand">Exploring Oman <small id="who">dashboard</small></div>
       <div class="range" id="range">
+        <button data-day="0">Today</button>
+        <button data-day="-1">Yesterday</button>
         <button data-d="7">7d</button>
         <button data-d="30" class="on">30d</button>
         <button data-d="90">90d</button>
         <button data-d="0">All</button>
+      </div>
+      <div class="daynav">
+        <button class="ghost" id="dayPrev" aria-label="Previous day" title="Previous day">‹</button>
+        <input type="date" id="dayPick" aria-label="Show one day" title="Show one day">
+        <button class="ghost" id="dayNext" aria-label="Next day" title="Next day">›</button>
       </div>
       <button class="ghost" id="refresh">Refresh</button>
       <button class="ghost" id="out">Sign out</button>
@@ -266,7 +283,9 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     .replace(/"/g, "&quot;");
   const nf = n => (n == null ? "0" : Number(n).toLocaleString("en-GB"));
 
-  let session = null, DATA = null, days = 30, tab = "overview";
+  /* The range: `days` back from now (0 = all time), or ONE local day when
+     `day` is set ("2026-09-30"), which then wins over `days`. */
+  let session = null, DATA = null, days = 30, day = null, tab = "overview";
   let userDetail = null;   // account id whose drill-down page is open (Accounts tab)
   try { session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); } catch {}
 
@@ -415,9 +434,34 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     return out;
   }
 
-  const sinceISO = () => days
-    ? new Date(Date.now() - days * 864e5).toISOString()
+  /* DAYS ARE LOCAL. The dashboard is read in Muscat, so a day runs midnight
+     to midnight on this computer's clock, not UTC's: 11pm in Muscat is still
+     today, not tomorrow. */
+  const pad = n => String(n).padStart(2, "0");
+  const localDay = d => { d = new Date(d);
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); };
+  const dayStart = k => new Date(k + "T00:00:00");
+  const addDays = (k, n) => { const d = dayStart(k); d.setDate(d.getDate() + n); return localDay(d); };
+  const today = () => localDay(new Date());
+  const dayLabelOf = k => dayStart(k).toLocaleDateString("en-GB",
+    { weekday: "short", day: "numeric", month: "short" });
+
+  const sinceISO = () => day ? dayStart(day).toISOString()
+    : days ? new Date(Date.now() - days * 864e5).toISOString()
     : "1970-01-01T00:00:00Z";
+  const untilISO = () => day ? dayStart(addDays(day, 1)).toISOString() : null;
+  const inWindow = iso => { const t = new Date(iso);
+    return t >= new Date(sinceISO()) && (!untilISO() || t < new Date(untilISO())); };
+
+  /* The chart's x-axis for the range: 24 hours when one day is picked,
+     otherwise one slot per local day, ending today. */
+  const slotOf = iso => day ? new Date(iso).getHours() : localDay(iso);
+  function slots(spanDays) {
+    if (day) return Array.from({ length: 24 }, (_, h) => ({ key: h, day, hour: h, label: pad(h) + ":00" }));
+    const out = [];
+    for (let i = spanDays - 1; i >= 0; i--) { const k = addDays(today(), -i); out.push({ key: k, day: k }); }
+    return out;
+  }
 
   /* RPC — for reads that need SECURITY DEFINER server-side (the accounts
      list joins auth.users, which PostgREST will not expose as a table). */
@@ -438,7 +482,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
   }
 
   async function loadAll() {
-    const since = "created_at=gte." + sinceISO();
+    const since = "created_at=gte." + sinceISO() + (untilISO() ? "&created_at=lt." + untilISO() : "");
     const [events, subs, bookings, reviews] = await Promise.all([
       readAll("events", since + "&select=created_at,event,props,device_id,email&order=created_at.desc"),
       readAll("subscribers", "select=*&order=created_at.desc"),
@@ -471,7 +515,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     if (typeof p === "string") { try { return JSON.parse(p)[k]; } catch { return null; } }
     return p[k];
   };
-  const dayOf = iso => String(iso).slice(0, 10);
+  const dayOf = iso => localDay(iso);
 
   function tally(list, keyFn) {
     const m = new Map();
@@ -597,25 +641,8 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
   /* Everything the dashboard shows, derived once per load. */
   function crunch(d) {
     const ev = d.events;
-    const inRange = rows => days
-      ? rows.filter(r => new Date(r.created_at) >= new Date(sinceISO()))
-      : rows;
+    const inRange = rows => rows.filter(r => inWindow(r.created_at));
     const subs = inRange(d.subs), bookings = inRange(d.bookings), reviews = inRange(d.reviews);
-
-    // daily unique devices
-    const byDay = new Map();
-    ev.forEach(e => {
-      const k = dayOf(e.created_at);
-      if (!byDay.has(k)) byDay.set(k, new Set());
-      if (e.device_id) byDay.get(k).add(e.device_id);
-    });
-    const span = days || Math.max(1, Math.ceil(
-      (Date.now() - new Date(ev.length ? ev[ev.length - 1].created_at : Date.now())) / 864e5));
-    const series = [];
-    for (let i = span - 1; i >= 0; i--) {
-      const k = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
-      series.push({ day: k, n: (byDay.get(k) || new Set()).size });
-    }
 
     const spotEv = ev.filter(e => e.event === "spot");
 
@@ -646,6 +673,41 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     const dwellEv = ev.filter(e => e.event === "spot_time");
     const sessEv  = ev.filter(e => e.event === "session");
     const heldEv = ev.filter(e => e.event === "held_click" || e.event === "held_blocked");
+
+    /* People per slot (local day, or hour of the picked day). Same test as
+       the People tile: a device that did something, not one that only loaded
+       the page, so the chart, the tile and the table below all agree. */
+    const bySlot = new Map();
+    ev.forEach(e => {
+      if (!e.device_id || !REAL.has(e.event)) return;
+      const k = slotOf(e.created_at);
+      if (!bySlot.has(k)) bySlot.set(k, new Set());
+      bySlot.get(k).add(e.device_id);
+    });
+    const oldest = ev.length ? ev[ev.length - 1].created_at : Date.now();
+    const span = days || Math.max(1, Math.round((dayStart(today()) - dayStart(dayOf(oldest))) / 864e5) + 1);
+    const series = slots(span).map(x => Object.assign(x, { n: (bySlot.get(x.key) || new Set()).size }));
+
+    /* DAY BY DAY: one row per local day in the range, newest first. A quiet
+       day stays a row of zeros, never smoothed over. Not built for a single
+       picked day, where the hourly chart does that job. */
+    const daily = day ? [] : series.map(x => ({ day: x.day, people: x.n, visits: 0, places: 0,
+      maps: 0, emails: 0, leads: 0, reviews: 0, accounts: 0 }));
+    if (daily.length) {
+      const row = new Map(daily.map(r => [r.day, r]));
+      const bump = (iso, f) => { const r = row.get(dayOf(iso)); if (r) r[f]++; };
+      ev.forEach(e => {
+        if (e.event === "spot") bump(e.created_at, "places");
+        else if (e.event === "maps_click") bump(e.created_at, "maps");
+      });
+      sess.forEach(x => { const r = row.get(x.day); if (r) r.visits++; });
+      subs.forEach(x => bump(x.created_at, "emails"));
+      bookings.forEach(x => bump(x.created_at, "leads"));
+      reviews.forEach(x => bump(x.created_at, "reviews"));
+      (d.accounts || []).forEach(a => bump(a.created_at, "accounts"));
+      daily.reverse();
+    }
+
     return {
       devices: engaged.size,              // the headline: people who did something
       devicesAll: allDev.size,            // everything that loaded the page
@@ -654,7 +716,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
       views: ev.filter(e => e.event === "view").length,
       spotOpens: spotEv.length,
       subs, bookings, reviews,
-      series,
+      series, daily,
       tabs: tally(ev.filter(e => e.event === "view"), e => propOf(e, "tab")),
       spots: tally(spotEv, e => propOf(e, "id")),
       held: tally(heldEv, e => propOf(e, "id")),
@@ -823,23 +885,23 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     if (!series.length) return `<div class="panel"><div class="empty">No days yet.</div></div>`;
     const max = Math.max(1, ...series.map(s => s.n));
     const nice = max <= 4 ? max : Math.ceil(max / 4) * 4;
-    const lines = [0.25, 0.5, 0.75, 1].map(f =>
+    // Small counts (an hour, a quiet day) get one line per whole number;
+    // quarters of 1 or 3 rounded to "0, 1, 1, 1".
+    const steps = nice < 4 ? Array.from({ length: nice }, (_, i) => (i + 1) / nice) : [0.25, 0.5, 0.75, 1];
+    const lines = steps.map(f =>
       `<i style="bottom:${f * 100}%"></i><b style="bottom:${f * 100}%">${Math.round(nice * f)}</b>`).join("");
-    const dayLabel = d => {
-      const x = new Date(d + "T00:00:00");
-      return x.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
-    };
+    const lab = s => s.label || dayLabelOf(s.day);
     const bars = series.map(s =>
       `<div class="b${s.n === max && max > 0 ? " peak" : ""}"
             style="height:${Math.max(2, s.n / nice * 100)}%">
-        <span>${esc(dayLabel(s.day))} — <b>${nf(s.n)}</b> ${s.n === 1 ? "person" : "people"}</span>
+        <span>${esc(lab(s))} — <b>${nf(s.n)}</b> ${s.n === 1 ? "person" : "people"}</span>
        </div>`).join("");
     return `<div class="panel"><div class="chartwrap">
       <div class="grid">${lines}</div>
       <div class="bars">${bars}</div>
-      <div class="axis"><span>${esc(dayLabel(series[0].day))}</span>
-        <span>peak ${nf(max)} on ${esc(dayLabel((series.find(x => x.n === max) || series[0]).day))}</span>
-        <span>${esc(dayLabel(series[series.length - 1].day))}</span></div>
+      <div class="axis"><span>${esc(lab(series[0]))}</span>
+        <span>peak ${nf(max)} ${series[0].hour != null ? "at" : "on"} ${esc(lab(series.find(x => x.n === max) || series[0]))}</span>
+        <span>${esc(lab(series[series.length - 1]))}</span></div>
     </div></div>`;
   }
 
@@ -853,6 +915,18 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   };
+
+  const z = n => n ? nf(n) : `<span class="zero">0</span>`;
+  function dailyCols(c) {
+    const col = (h, f) => ({ h, get: r => z(r[f]), cls: "num", raw: r => r[f] });
+    return [
+      { h: "Day", get: r => `<button class="daylink" data-day="${esc(r.day)}">${esc(dayLabelOf(r.day))}</button>`,
+        raw: r => r.day },
+      col("People", "people"), col("Visits", "visits"), col("Places opened", "places"),
+      col("Took directions", "maps"), col("Emails", "emails"), col("Leads", "leads"),
+      col("Reviews", "reviews")
+    ].concat(c.accounts ? [col("New accounts", "accounts")] : []);
+  }
 
   const TABS = [
     ["overview", "Overview", d => ""],
@@ -879,7 +953,9 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     const c = DATA;
     renderTabs(c);
     const v = $("#view");
-    const rangeLabel = days ? "last " + days + " days" : "all time";
+    const rangeLabel = day
+      ? (day === today() ? "today" : day === addDays(today(), -1) ? "yesterday" : dayLabelOf(day))
+      : days ? "last " + days + " days" : "all time";
 
     if (tab === "overview") {
       v.innerHTML = `
@@ -912,8 +988,14 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
           loaded the page and did nothing at all; those are mostly crawlers and link previews,
           and they are excluded from every number above.
         </div>
-        <h2 class="sec">Traffic — people per day</h2>
+        <h2 class="sec">Traffic — people per ${day ? "hour" : "day"}</h2>
         ${chart(c.series)}
+        ${c.daily.length ? `<h2 class="sec">Day by day
+          <button class="ghost" id="expDaily" style="margin-left:auto">Export CSV</button></h2>
+        <div class="panel">${dataTable(c.daily, dailyCols(c))}</div>
+        <div class="note">Tap a day to see the whole dashboard for just that day.
+          <b>People</b> uses the same test as the People tile, so someone who comes back on two
+          days counts once on each. Days run midnight to midnight on this computer's clock.</div>` : ""}
         <h2 class="sec">How long a visit lasts</h2>
         <div class="panel">${barTable(c.sessionStats ? c.sessionStats.buckets : [], ["Length of visit", "Visits"])}</div>
         ${c.sessionStats && c.sessionStats.n ? `<div class="note">
@@ -937,6 +1019,9 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         <div class="panel">${barTable(c.funnel, ["Step (people, not clicks)", "People"])}</div>
         <h2 class="sec">Every tracked action</h2>
         <div class="panel">${barTable(c.names, ["Event", "Times"], { limit: 40 })}</div>`;
+      v.querySelectorAll("[data-day]").forEach(b => b.onclick = () => setDay(b.dataset.day));
+      const exp = $("#expDaily");
+      if (exp) exp.onclick = () => csv(c.daily, dailyCols(c), "exploring-oman-by-day.csv");
       return;
     }
 
@@ -1083,22 +1168,14 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         return;
       }
 
-      const accNew = days
-        ? acc.filter(a => new Date(a.created_at) >= new Date(sinceISO()))
-        : acc;
+      const accNew = acc.filter(a => inWindow(a.created_at));
       const confirmed = acc.filter(a => a.confirmed_at).length;
-      const active = days
-        ? acc.filter(a => a.last_sign_in && new Date(a.last_sign_in) >= new Date(sinceISO())).length
-        : acc.filter(a => a.last_sign_in).length;
+      const active = acc.filter(a => a.last_sign_in && inWindow(a.last_sign_in)).length;
       // signups per day, same series shape the traffic chart eats
-      const sByDay = new Map();
-      acc.forEach(a => { const k = dayOf(a.created_at); sByDay.set(k, (sByDay.get(k) || 0) + 1); });
-      const span2 = days || 30;
-      const signupSeries = [];
-      for (let i = span2 - 1; i >= 0; i--) {
-        const k = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
-        signupSeries.push({ day: k, n: sByDay.get(k) || 0 });
-      }
+      const sBySlot = new Map();
+      acc.filter(a => !day || inWindow(a.created_at)).forEach(a => {
+        const k = slotOf(a.created_at); sBySlot.set(k, (sBySlot.get(k) || 0) + 1); });
+      const signupSeries = slots(days || 30).map(x => Object.assign(x, { n: sBySlot.get(x.key) || 0 }));
       const cols = [
         { h: "Name",       get: r => `<button class="act go" data-uview="${esc(r.id)}">${esc(r.name || r.email || "—")}</button>`, raw: r => r.name || "" },
         { h: "Email",      get: r => `<span class="mono">${esc(r.email || "")}</span>`, raw: r => r.email || "" },
@@ -1131,7 +1208,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
           ${tile("Synced ♥", nf(c.usaves.length), "saves living on accounts")}
           ${tile("Synced ✓", nf(c.uvisits.length), "been-theres on accounts")}
         </div>
-        <h2 class="sec">Signups per day</h2>
+        <h2 class="sec">Signups per ${day ? "hour" : "day"}</h2>
         ${chart(signupSeries)}
         <h2 class="sec">Every account
           <span class="pill">${nf(acc.length)}</span>
@@ -1219,7 +1296,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
       const noCols = c.subs.length && c.subs.every(s => s.trip_month === undefined);
       const csvCols = cols.filter(x => x.h !== "Action");
       v.innerHTML = `
-        <h2 class="sec">The email list — ${nf(c.subs.length)} ${days ? "in the " + esc(rangeLabel) : "total"}</h2>
+        <h2 class="sec">The email list — ${nf(c.subs.length)} ${day ? (day === today() || day === addDays(today(), -1) ? "" : "on ") + esc(rangeLabel) : days ? "in the " + esc(rangeLabel) : "total"}</h2>
         <p class="note">
           <button class="ghost" id="csvSubs">Download CSV</button>
           ${noCols ? " &nbsp; Trip dates are blank because the trip columns are not in the database yet: run <code>delivery/dashboard-access.sql</code> once. The dates are safe in Raw events meanwhile." : ""}
@@ -1398,11 +1475,36 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
 
   $("#out").onclick = signOut;
   $("#refresh").onclick = boot;
+  /* One place moves the range and lights the right control: a 7d/30d
+     button, Today/Yesterday, or the date box for any other day. */
+  function syncRange() {
+    const t = today();
+    [...$("#range").children].forEach(x => x.classList.toggle("on", x.dataset.day != null
+      ? day === addDays(t, +x.dataset.day)
+      : !day && days === +x.dataset.d));
+    const pick = $("#dayPick");
+    pick.max = t;
+    pick.value = day || "";
+    pick.classList.toggle("on", !!day && day !== t && day !== addDays(t, -1));
+    $("#dayNext").disabled = !!day && day >= t;
+  }
+  function setDay(k) {
+    if (!k) return;
+    day = k > today() ? today() : k;
+    syncRange();
+    boot();
+  }
   [...$("#range").children].forEach(b => b.onclick = () => {
-    [...$("#range").children].forEach(x => x.classList.toggle("on", x === b));
+    if (b.dataset.day != null) return setDay(addDays(today(), +b.dataset.day));
+    day = null;
     days = +b.dataset.d;
+    syncRange();
     boot();
   });
+  $("#dayPick").onchange = e => setDay(e.target.value);
+  $("#dayPrev").onclick = () => setDay(addDays(day || today(), -1));
+  $("#dayNext").onclick = () => setDay(addDays(day || addDays(today(), -1), 1));
+  syncRange();
 
   if (session && session.access_token) boot();
 })();
