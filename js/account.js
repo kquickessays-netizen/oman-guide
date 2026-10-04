@@ -57,6 +57,35 @@ window.Account = (() => {
   // pass made init→openModal→init chase its own tail forever.
   let fragPending = AUTH_FRAG;
 
+  /* EMAIL LINKS ON OUR OWN ADDRESS. Supabase's stock link is
+     bfneutpsjyfqferkublh.supabase.co/auth/v1/verify?…, a stranger's address
+     in a "confirm your email" mail. The dashboard templates now build
+     exploresoman.com/?token_hash=…&type=… instead (delivery/ACCOUNTS-SETUP.md
+     §4), and this page trades the hash for a session with verifyOtp().
+     Bonus: a mail scanner that pre-opens links no longer burns the token,
+     since only this script spends it. Taken at parse time like the
+     fragment, wiped from the address bar at once so a reload, bookmark or
+     shared URL never carries it, and stashed for a reload mid-way. */
+  const LINK_TYPES = ["email", "signup", "magiclink", "recovery", "invite", "email_change"];
+  const EMAIL_LINK = (() => {
+    try {
+      const q = new URLSearchParams(location.search);
+      const th = q.get("token_hash");
+      if (th) {
+        const t = q.get("type");
+        const link = { token_hash: th, type: LINK_TYPES.indexOf(t) >= 0 ? t : "email" };
+        q.delete("token_hash"); q.delete("type");
+        const rest = q.toString();
+        history.replaceState(history.state, "", location.pathname + (rest ? "?" + rest : "") + location.hash);
+        sessionStorage.setItem("oman_auth_link", JSON.stringify(link));
+        return link;
+      }
+      return JSON.parse(sessionStorage.getItem("oman_auth_link") || "null");
+    } catch { return null; }
+  })();
+  const clearLink = () => { try { sessionStorage.removeItem("oman_auth_link"); } catch {} };
+  let linkPending = EMAIL_LINK;   // spent once, like fragPending
+
   const $id = id => document.getElementById(id);
   const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g,
     c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
@@ -215,7 +244,7 @@ window.Account = (() => {
         if (/^sb-.*-auth-token$/.test(k)) return true;
       }
     } catch {}
-    return !!AUTH_FRAG || /access_token=|refresh_token=|type=recovery|code=/.test(location.hash + location.search);
+    return !!AUTH_FRAG || !!EMAIL_LINK || /access_token=|refresh_token=|type=recovery|code=/.test(location.hash + location.search);
   }
 
   function init() {
@@ -223,6 +252,24 @@ window.Account = (() => {
       client();
       return sb.auth.getSession().then(({ data }) => {
         me = (data.session && data.session.user) || null;
+
+        /* An email link on our own address (see EMAIL_LINK). verifyOtp
+           signs the person in, and the auth listener does the rest: the
+           "Signed in" toast, or the new-password panel for a reset link
+           (Supabase reports that one as PASSWORD_RECOVERY). */
+        const link = linkPending;
+        if (link) {
+          linkPending = null;
+          clearLink();
+          return sb.auth.verifyOtp(link)
+            .then(({ error }) => error && Promise.reject(error))
+            .catch(() => {
+              if (me) return;   // tapped twice: the first tap already signed them in
+              openModal();
+              setTimeout(() => msg("err", "That link has expired or was already used. Tap \"Email me a sign-in link\" for a fresh one."), 400);
+            })
+            .then(paintButton);
+        }
 
         /* The redirect leg: detectSessionInUrl usually misses because the
            router has already rewritten the hash, so replay the stashed
