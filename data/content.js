@@ -182,6 +182,52 @@ window.OMAN_DATA = {
     spotsLocked: false, // off since 6 Aug: "coming soon" is per-spot now (held: true on the item),
     plansOpen: "soon",
 
+    /* ===== THE PAID ROUTES, 12 Oct 2026 ====================================
+       The guide stays free. The three big routes are the one thing sold
+       inside the app, each on its own: plansPaid turns the lock on,
+       paidPlans says which cards it holds, planPrices is the price of each
+       (USD, one payment per route), and PayPal takes the money
+       (meta.paypal below). Change a price here and the card, the wall
+       and the Plan my trip screen all follow.
+
+       After a successful PayPal capture the app stores the grant
+       "itin:<id>" on the device (js/unlock.js). No keys, no key modal:
+       a buyer who loses the phone emails the receipt and Hussain decides.
+
+       UI lock, same trade-off as plansLocked above: the routes ship in this
+       file. Nothing in the app shows them without the grant.             */
+    plansPaid: true,
+    paidPlans: ["escape-3day", "classic-5day", "loop-7day"],
+    planPrices: { "escape-3day": 9.99, "classic-5day": 14.99, "loop-7day": 19.99 },
+    paypal: {
+      // LIVE client id: developer.paypal.com > Apps & Credentials > Live.
+      // A client id is public by design (it ships in the page); the SECRET
+      // never goes anywhere near this file. Empty = the wall says
+      // "checkout isn't switched on yet" instead of breaking.
+      clientId: "BAABGL68YuRfQKaAi811AN-fmWvOLNMAUMmldgtM8-Vi0DPp2igWo9XULqp-slsf2f8rzibmcmn-YXhYJ8",  // app "Explores Oman website", created 12 Oct 2026
+      // Used automatically on localhost so the flow can be tested with a
+      // sandbox buyer account without charging anyone.
+      sandboxClientId: "AQ8U4pcN6zZPXe0ymVMy9jVeETBUtWXdtYOEl1Wg-xYkKCYL9qKvRbSO97KWHrlSX5Ipxtv7x3nFiA7i",
+      currency: "USD"
+    },
+
+    /* ===== THE PLANNING CALL, booked inline, 12 Oct 2026 ===================
+       #/planmytrip embeds Calendly (calendly.com/<user>/<slug>). One widget,
+       the chips above it switch which call it shows. Order here = order on
+       screen, the first one is open by default. `price` is optional: fill
+       it in and it prints on the chip; leave it "" and the booking page
+       alone states the price. Keep slugs exactly as Calendly has them.    */
+    calendly: {
+      user: "exploree-oman",
+      events: [
+        // `plus` prints as a teal line under the sub (the WhatsApp promise); leave it out where it does not apply.
+        { slug: "full-plan-7",    label: "Full trip plan",   sub: "Up to 7 days · 30 min call",   plus: "+ WhatsApp support during your trip", price: "" },
+        { slug: "full-plan-14",   label: "8 to 14 days",     sub: "30 min call",                   plus: "+ WhatsApp support during your trip", price: "" },
+        { slug: "fix-my-plan",    label: "Check my plan",    sub: "30 min · I fix what's wrong",  plus: "+ WhatsApp support during your trip", price: "" },
+        { slug: "oman-questions", label: "Ask a tour guide", sub: "20 min · any question",        price: "" }
+      ]
+    },
+
     /* ======================= THE THREE PRODUCTS =============================
        Everything the app sells lives in this block and on the Shop screen
        (#/shop). Change a price here and it changes on every card, every lock
@@ -341,6 +387,11 @@ window.OMAN_DATA = {
     // Everything below the first entry renders inside a second fold, so the
     // history is kept without anyone having to scroll past it.
     changelog: [
+      { date: "October 2026", items: [
+        "📅 Plan my trip for me is a booked call now: pick a time on the Plan my trip screen, pay there, and the written plan follows the call.",
+        "🗺️ The 3, 5 and 7-day routes are the paid part of the guide: one payment through PayPal opens the route you pick, hour by hour. Every place and the 1-day plans stay free."
+      ]},
+
       { date: "September 2026", items: [
         "🔓 The whole guide is free: every place, all five itineraries and the trip Planner. No key, no checkout.",
         "🤝 Rather not plan it yourself? Send me your dates and who's coming, and I'll quote you for building your route personally."

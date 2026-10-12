@@ -3357,3 +3357,109 @@ body{
   background:var(--water-soft);color:var(--water-dark);
   font-size:13.5px;font-weight:700;text-decoration:none;
 }
+
+/* ---- Paid routes: the PayPal wall (12 Oct 2026) -----------------------------
+   The three big routes are the one paid thing in the app. The card wears
+   the tease look (own photo, light blur) with a gold pill; tapping it opens
+   the wall below in the modal, PayPal's buttons render into .pay-btns. */
+.lock-pill-pay{background:var(--gold);color:#fff;border-color:var(--gold)}
+.pay .pay-kicker{
+  display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;color:#7a4a08;background:var(--gold-soft);
+  border-radius:999px;padding:4px 10px;margin-bottom:10px;
+}
+.pay h2{font-size:22px;margin-bottom:6px;letter-spacing:-.3px}
+.pay .pay-lead{margin:0 0 12px;line-height:1.55}
+.pay .pay-lead b{color:var(--ink);font-size:17px}
+.pay-list{list-style:none;margin:0 0 16px;padding:0}
+.pay-list li{position:relative;padding:4px 0 4px 24px;font-size:14px;line-height:1.45}
+.pay-list li::before{content:"✓";position:absolute;left:2px;top:4px;color:var(--water);font-weight:800}
+.pay-btns{min-height:52px;margin:4px 0 6px}
+.pay-wait,.cal-wait{font-size:13.5px;color:var(--muted);padding:16px 0;text-align:center}
+.pay .pay-fine{font-size:12px;color:var(--muted);line-height:1.5;margin:10px 0 0}
+.pay .btn-key{margin-top:10px;width:100%}
+
+/* ---- Plan my trip: the Calendly booking, inline (12 Oct 2026) ---------------
+   One widget on #/planmytrip; the chips switch which call it shows.
+   Calendly sizes the iframe itself (resize:true), the min-height is only
+   so the card does not collapse while it loads. */
+.cal-pick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 12px}
+.cal-opt{
+  text-align:left;padding:10px 12px;border-radius:12px;display:grid;gap:2px;
+  border:1px solid var(--line);background:var(--sand-2);
+}
+.cal-opt b{font-size:14px;line-height:1.25}
+.cal-opt small{font-size:11.5px;color:var(--muted);line-height:1.35}
+.cal-opt i{font-style:normal;font-size:12.5px;font-weight:800;color:var(--gold)}
+.cal-opt[aria-selected="true"]{border-color:var(--water);background:var(--water-soft)}
+.cal-embed{min-height:660px;border-radius:14px;overflow:hidden;background:var(--sand)}
+.cal-embed iframe{display:block;width:100%;min-height:660px;border:0}
+.cal-fine{font-size:12.5px;color:var(--muted);margin:12px 0 0;line-height:1.5}
+.cal-fine .pp-waq{color:var(--water);font-weight:700}
+
+/* the pitch box's door: gold, the one strong button on the dark panel */
+.pp-book{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 16px;border-radius:999px;background:var(--gold);color:#fff;
+  font-weight:800;font-size:14.5px;text-decoration:none;text-align:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.18);
+}
+.pp-book:hover{filter:brightness(1.06)}
+.planpitch .pp-waq{color:#ffd9a0;font-weight:700;font-size:13.5px;text-align:center}
+@media(min-width:520px){.planpitch .pp-waq{text-align:left}}
+/* On a phone the card's own padding left Calendly 302px wide, under the
+   320px it is built for. Pull the card's side padding in and give the text
+   rows their own, so the widget gets the width and the copy keeps its gutter. */
+@media(max-width:480px){
+  .cal-card{padding:16px 6px 18px}
+  .cal-card .prod-head,.cal-card .cal-pick,.cal-card .cal-fine{padding-left:10px;padding-right:10px}
+}
+
+/* ---- Fewer CTAs on the sheet (12 Oct 2026) ---------------------------------
+   Above the text only the reel. The booking pitch and the rent-a-car line
+   sit at the foot. The dock keeps save, been, Google Maps and share. */
+
+/* ---- The booking lives inside the pitch box now (12 Oct 2026, later) ------
+   Chips are real choices: one per row on a phone, two across on wide
+   screens, big type, a tick on the chosen one. The widget mounts only when
+   the box scrolls near (calWatch in app.js), so list feet stay light. */
+.pp-pick-h{margin:16px 0 0;font-size:15px;font-weight:800;color:#fff}
+.cal-pick{display:grid;grid-template-columns:1fr;gap:10px;margin:12px 0 12px}
+@media(min-width:560px){.cal-pick{grid-template-columns:1fr 1fr}}
+.cal-opt{
+  position:relative;text-align:left;padding:14px 44px 14px 16px;border-radius:14px;
+  display:grid;gap:3px;border:1.5px solid var(--line);background:#fff;color:var(--ink);
+  min-height:64px;
+}
+.cal-opt b{font-size:16px;line-height:1.25;letter-spacing:-.1px}
+.cal-opt small{font-size:13px;color:var(--muted);line-height:1.4}
+.cal-opt i{font-style:normal;font-size:13px;font-weight:800;color:var(--gold)}
+.cal-opt::after{
+  content:"";position:absolute;right:14px;top:50%;width:22px;height:22px;margin-top:-11px;
+  border-radius:50%;border:1.5px solid var(--line);background:#fff;
+}
+.cal-opt[aria-selected="true"]{border-color:var(--water);background:var(--water-soft);box-shadow:0 0 0 3px rgba(13,92,99,.12)}
+.cal-opt[aria-selected="true"]::after{
+  content:"✓";color:#fff;background:var(--water);border-color:var(--water);
+  font-size:13px;font-weight:800;line-height:22px;text-align:center;
+}
+.planpitch .cal-opt[aria-selected="true"]{border-color:var(--gold);background:#fff;box-shadow:0 0 0 3px rgba(200,137,47,.28)}
+.planpitch .cal-opt[aria-selected="true"]::after{background:var(--gold);border-color:var(--gold)}
+.planpitch .cal-embed{margin:0 0 4px}
+.pp-waq-line{margin:12px 0 0;text-align:center;font-size:13px}
+.planpitch .pp-waq-line .pp-waq{color:#cfe3df;font-weight:600;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.pp-embed .pp-actions{display:none}
+.pp-embed .affbtn.pp-car{margin-top:12px}
+.sheet .planpitch .cal-embed{min-height:600px}
+
+/* the WhatsApp promise under a choice, and the compact door box */
+.cal-plus{font-style:normal;font-size:12.5px;font-weight:700;color:var(--water);line-height:1.35}
+.pp-compact p{margin:0 0 12px}
+.pp-compact .pp-actions{grid-template-columns:1fr}
+.pp-compact .pp-book{width:100%}
+
+/* under the card button: the trust line */
+.pay-powered{display:flex;align-items:center;justify-content:center;gap:6px;margin:10px 0 0;font-size:12.5px;color:var(--muted)}
+.pp-mark{font-size:15px;font-weight:800;font-style:italic;letter-spacing:-.4px;line-height:1}
+.pp-mark i{font-style:italic;color:#003087}
+.pp-mark i+i{color:#0070e0}
