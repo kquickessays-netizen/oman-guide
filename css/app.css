@@ -3463,3 +3463,59 @@ body{
 .pp-mark{font-size:15px;font-weight:800;font-style:italic;letter-spacing:-.4px;line-height:1}
 .pp-mark i{font-style:italic;color:#003087}
 .pp-mark i+i{color:#0070e0}
+
+/* ---- The 30-second form (14 Oct 2026) -----------------------------------
+   Two plans free for a few answers. Reuses the .pay modal shell; the
+   screens are tap chips (.lead-opt), one Next button, a Back link. */
+.lock-pill-free{background:#1e6b39;color:#fff;border-color:#1e6b39}
+.lead .lead-dots{display:flex;gap:6px;margin:0 0 14px}
+.lead .lead-dots i{flex:1;height:4px;border-radius:999px;background:var(--line)}
+.lead .lead-dots i.on{background:var(--gold)}
+.lead .field{margin-bottom:14px}
+.lead .lead-hint{display:block;font-size:12px;color:var(--muted);margin-top:5px}
+.lead .lead-alt{display:inline-block;margin-top:7px;font-size:12.5px;font-weight:700;color:var(--water);background:none;border:0;padding:0;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.lead .lead-q{margin:0 0 14px}
+.lead .lead-ql{font-size:14px;font-weight:700;color:var(--ink);margin:0 0 7px}
+.lead .lead-ql small{font-weight:600;color:var(--muted);font-size:12px}
+.lead .lead-opts{display:flex;flex-wrap:wrap;gap:7px}
+.lead .lead-opt{
+  padding:9px 13px;border-radius:999px;border:1.5px solid var(--line);
+  background:#fff;color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;
+  transition:background .12s,border-color .12s,color .12s;
+}
+.lead .lead-opt.on{background:var(--water);border-color:var(--water);color:#fff}
+.lead .lead-opt:active{transform:scale(.97)}
+.lead .btn-full{margin-top:8px}
+.lead .lead-back{display:block;width:100%;margin-top:8px;padding:8px;background:none;border:0;color:var(--muted);font-size:13.5px;font-weight:600;cursor:pointer}
+.lead .pay-fine a{color:var(--muted)}
+.lead #leadMsg .msg{margin-top:0;margin-bottom:10px}
+.lead .lead-phone{display:flex;gap:8px}
+.lead .lead-cc{position:relative;flex:0 0 auto;display:flex;align-items:center;padding:0 12px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:16px;font-weight:600;color:var(--ink);white-space:nowrap;margin:0}
+.lead .lead-cc:focus-within{border-color:var(--water)}
+.lead .lead-cc select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;cursor:pointer}
+.lead .lead-phone input{flex:1;min-width:0}
+.lead .lead-other{width:100%;margin-top:8px;padding:11px 13px;border-radius:11px;border:1px solid var(--line);background:#fff;font-size:16px;outline:none}
+.lead .lead-other:focus{border-color:var(--water)}
+.lead h2{padding-right:44px;line-height:1.15;margin-bottom:12px}
+
+/* ---- Value first on the PayPal wall (14 Oct 2026) ------------------------
+   Each day of the route listed, the first two stops readable, the rest
+   blurred. The price and the button sit under it. */
+.pay-days{margin:2px 0 14px;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+.pay-day{padding:11px 13px;border-top:1px solid var(--line)}
+.pay-day:first-child{border-top:0}
+.pay-day-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;margin-bottom:6px}
+.pay-day-n{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#7a4a08;background:var(--gold-soft);border-radius:999px;padding:3px 8px}
+.pay-day-h b{font-size:14.5px;color:var(--ink)}
+.pay-day-h small{flex-basis:100%;font-size:12px;color:var(--muted)}
+.pay-stops{list-style:none;margin:0;padding:0}
+.pay-stops li{font-size:13.5px;line-height:1.4;padding:2px 0;color:var(--ink);display:flex;gap:8px}
+.pay-stops li i{font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums;min-width:38px}
+.pay-stops li.pay-blur{filter:blur(4.5px);user-select:none;pointer-events:none;opacity:.8}
+.pay-more{display:block;margin-top:5px;font-size:12px;font-weight:700;color:var(--water)}
+.pay-day-rest{background:var(--gold-soft);padding:14px 13px 15px}
+.pay-day-rest b{display:block;font-size:17px;letter-spacing:-.2px;color:#7a4a08;margin-bottom:3px}
+.pay-day-rest span{display:block;font-size:13.5px;color:var(--ink);line-height:1.45}
+.pay-peek{display:inline-block;margin-top:9px;padding:0;background:none;border:0;font-size:13.5px;font-weight:700;color:var(--water);text-decoration:underline;text-underline-offset:3px;cursor:pointer;text-align:left}
+.pay-day-have{font-size:13.5px;color:var(--ink);background:#e7f4ea}
+.pay-day-have b{color:#1e6b39}
