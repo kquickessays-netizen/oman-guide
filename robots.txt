@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
 
+# Not pages. Raw data files and the private dashboard have no business in a
+# search index — /data/ is the whole content set as JavaScript, and stats.html
+# is the analytics console.
+Disallow: /data/
+Disallow: /stats.html
+
 Sitemap: https://exploresoman.com/sitemap.xml

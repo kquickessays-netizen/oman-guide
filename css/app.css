@@ -3519,17 +3519,3 @@ body{
 .pay-peek{display:inline-block;margin-top:9px;padding:0;background:none;border:0;font-size:13.5px;font-weight:700;color:var(--water);text-decoration:underline;text-underline-offset:3px;cursor:pointer;text-align:left}
 .pay-day-have{font-size:13.5px;color:var(--ink);background:#e7f4ea}
 .pay-day-have b{color:#1e6b39}
-
-/* --- popular places footer (static links in index.html) -------------------
-   Quiet on purpose: muted, small, no underline until hover. It sits after
-   the app content on every tab; on phones it clears the docked tab bar. */
-.site-foot{max-width:var(--maxw);margin:0 auto;padding:22px 16px 32px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;line-height:1.75}
-.site-foot p{margin:0 0 8px}
-.site-foot-h{font-weight:700;color:var(--ink);font-size:13px;letter-spacing:.2px}
-.site-foot a{color:var(--muted);text-decoration:none;white-space:nowrap}
-.site-foot a:hover,.site-foot a:focus-visible{color:var(--water);text-decoration:underline}
-.site-foot-cats a{font-weight:600}
-@media(max-width:640px){
-  .view + .site-foot{margin-top:-56px}
-  .site-foot{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
-}
