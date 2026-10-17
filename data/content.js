@@ -644,7 +644,7 @@ window.OMAN_DATA = {
         "Or scroll down for the hand-built routes: 3 days, 5 days, 7 days."
       ] },
 
-    { id: "about", label: "About", icon: "👋", blurb: "Who's behind this.", special: "about" }
+    { id: "routes", label: "Itineraries", icon: "🧭", blurb: "Hand-built routes, day by day.", special: "routes" }
   ],
 
   /* Region model, the planner clusters days by region and costs the drive
