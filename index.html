@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<!-- Relative paths resolve from the site root even when the address bar is a
+     place page (/s/<id>.html, see SPOT ADDRESSES below). At "/" it changes nothing. -->
+<base href="/">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d5c63">
 <title>Exploring Oman: wadis, beaches and itineraries from a local guide</title>
@@ -178,6 +181,57 @@
 <!-- ============================ TOAST ============================= -->
 <div class="toast" id="toast" hidden></div>
 
+<!-- ======================== SPOT ADDRESSES ========================
+     Every place has a real page at /s/<id>.html that opens this app on it
+     (tools/build_spot_shells.py). The app itself routes with '#/s/<id>', so
+     without this the address bar said '/#/s/wadi-shab' here, or
+     '/s/wadi-bani-khalid.html#/s/wadi-shab' after opening Wadi Shab from
+     another place's page. This keeps the address on the page of the place
+     on screen (and '/' for the tabs), so a copied or shared link is always
+     the real, indexable page. The list is written by build_spot_shells.py. -->
+<script>
+window.__SPOT_PAGES = [/*spot-pages*/"wadi-shab","wadi-bani-khalid","wadi-mibam","wadi-al-arbeieen","wadi-damm","wadi-dayqah","wadi-tanuf","wadi-hawer","snake-gorge","wadi-as-suwayh","wadi-al-hoqain","wadi-al-abyad","wadi-al-khoudh","qurum-beach","al-bustan-beach","sidab","qantab-beaches","sifah-hidden-beach","pebble-beach-tiwi","fins-beach","bandar-khayran","ras-al-jinz","yiti-qantab","marjan-beach","as-sifah","ras-al-hadd-camp","sur-old-town","sur-dhow-factory","oman-across-ages","frankincense-museum","matrah-fort","bioluminescence-qantab","dhow-bandar-rowdha","romantic-cave-tiwi","ain-al-kasfah","hijrat-al-sheikh","rose-season-jabal-akhdar","whale-sharks","grand-mosque","mutrah","bimmah-sinkhole","daymaniyat","wahiba-sands","misfat-al-abriyeen","jabal-akhdar","birkat-al-mouz","old-muscat","royal-opera-house","wakan-village","muscat-ridge-treks","cafe-batch","food-rozna","cafe-la-miel","food-bait-al-luban","cafe-qaha","cafe-azura","cafe-farah","food-najmat-sur","food-bin-ateeq","food-halwa","shop-mutrah-souq","shop-seeb-souq","shop-al-sharaa","shop-amouage","shop-mall-of-oman","shop-avenues-mall","shop-city-centre"];
+(function () {
+  var S = {};
+  window.__SPOT_PAGES.forEach(function (i) { S[i] = 1; });
+  function real(h) {
+    var m = /^#\/s\/([^\/?#]+)/.exec(h);
+    return (m && S[m[1]] ? '/s/' + m[1] + '.html' : '/') + location.search + h;
+  }
+  var last = location.hash;
+  ['pushState', 'replaceState'].forEach(function (k) {
+    var f = history[k].bind(history);
+    history[k] = function (s, t, u) {
+      if (typeof u === 'string' && u.charAt(0) === '#') u = real(u);
+      var r = f(s, t, u);
+      last = location.hash;
+      return r;
+    };
+  });
+  // The app routes on 'hashchange' alone. Back/Forward between two of these
+  // addresses changes the page part too, and then the browser fires only
+  // 'popstate', so the app would never hear about it (the sheet stayed open
+  // on Back). Pass it on as a hashchange when the browser didn't send one.
+  window.addEventListener('hashchange', function () { last = location.hash; });
+  window.addEventListener('popstate', function () {
+    setTimeout(function () {
+      if (location.hash === last) return;
+      var was = last;
+      last = location.hash;
+      window.dispatchEvent(new HashChangeEvent('hashchange', { oldURL: was, newURL: location.href }));
+    }, 0);
+  });
+  // In-app links like <a href="#/plan">: same page, then the matching address.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    var h = a.getAttribute('href');
+    e.preventDefault();
+    location.hash = h;
+    history.replaceState(null, '', h);
+  }, true);
+})();
+</script>
 <script src="data/content.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/account.js"></script>
