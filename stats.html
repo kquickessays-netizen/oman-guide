@@ -725,6 +725,23 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
       whatsapp: ev.filter(e => e.event === "whatsapp_click").length,
       products: tally(ev.filter(e => e.event === "product_click"), e => propOf(e, "product")),
       tripIntents: ev.filter(e => e.event === "trip_intent"),
+      /* THE WELCOME SCREEN (first visit to the homepage). "welcome" is sent
+         when someone leaves it, with the button; "welcome_shown" (js/
+         welcome-seen.js, 17 Oct 2026) when it appears. Devices that saw it and
+         never sent "welcome" left without tapping. Before 17 Oct only the taps
+         exist, so "saw it" undercounts until the range is all after that. */
+      welcome: (() => {
+        const shownEv = ev.filter(e => e.event === "welcome_shown");
+        const left = ev.filter(e => e.event === "welcome");
+        const shown = new Set(shownEv.map(e => e.device_id).filter(Boolean));
+        const tapped = new Set(left.map(e => e.device_id).filter(Boolean));
+        const by = a => uniq(left.filter(e => (propOf(e, "action") || "dismissed") === a), e => e.device_id);
+        const ofShown = a => uniq(left.filter(e => shown.has(e.device_id) && (propOf(e, "action") || "dismissed") === a), e => e.device_id);
+        return { shown: shown.size, plan: by("plan"), explore: by("explore"), closed: by("dismissed"),
+                 planOfShown: ofShown("plan"), exploreOfShown: ofShown("explore"),
+                 noTap: [...shown].filter(d => !tapped.has(d)).length,
+                 since: shownEv.length ? shownEv[shownEv.length - 1].created_at : null };
+      })(),
       sources: tally(ev.filter(e => e.event === "trip_intent"), e => propOf(e, "source")),
       months: tally(ev.filter(e => e.event === "trip_intent"), e => propOf(e, "trip_month")),
       raw: ev.slice(0, 300),
@@ -972,6 +989,18 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
           ${tile("Took directions", nf(c.mapsTotal || 0), "tapped Google Maps")}
           ${tile("Emails", nf(c.subs.length), "on the list")}
         </div>
+        ${(() => { const w = c.welcome, pc = n => w.shown ? " · " + Math.round(n / w.shown * 100) + "% of those who saw it" : "";
+          return `<h2 class="sec">Welcome screen (first visit to the homepage)</h2>
+        <div class="tiles">
+          ${tile("Saw it", w.shown ? nf(w.shown) : "—", w.since ? "counted since " + fmtDate(w.since) : "counting starts with the next visitor", "teal")}
+          ${tile("I'm planning a trip", nf(w.plan), "tapped it" + pc(w.planOfShown), "teal")}
+          ${tile("Just show me the places", nf(w.explore), "tapped it" + pc(w.exploreOfShown))}
+          ${tile("Left without tapping", w.shown ? nf(w.noTap) : "—", w.shown ? "saw it, never tapped" + pc(w.noTap) : "needs a few days of 'saw it'", "gold")}
+        </div>
+        <div class="note">People landing on a place or Info link never see this screen, and nor does anyone who has
+          seen it before. ${w.closed ? `<b>${nf(w.closed)}</b> closed it another way (not one of the two buttons).` : ""}
+          The button taps go back to launch; "saw it" only started on 17 Oct 2026, so read
+          "left without tapping" from then on.</div>`; })()}
         ${c.liveNow ? `<div class="note" style="border-left-color:var(--good)">
           <b>${nf(c.liveNow)}</b> ${c.liveNow === 1 ? "person is" : "people are"} on the site right now.</div>` : ""}
         <div class="note">
