@@ -443,7 +443,7 @@ window.OMAN_DATA = {
     // history is kept without anyone having to scroll past it.
     changelog: [
       { date: "October 2026", items: [
-        "📅 Plan my trip for me is a booked call now: pick a time on the Plan my trip screen, pay there, and the written plan follows the call.",
+        "💬 Plan my trip for me starts on WhatsApp again: send your dates from the Plan tab and I reply personally.",
         "🗺️ The 3, 5 and 7-day routes are the paid part of the guide: one payment through PayPal opens the route you pick, hour by hour. Every place and the 1-day plans stay free."
       ]},
 
