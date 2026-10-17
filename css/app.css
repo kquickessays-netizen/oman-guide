@@ -3533,3 +3533,7 @@ body{
   .view + .site-foot{margin-top:-56px}
   .site-foot{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 }
+
+/* header WhatsApp pill (17 Oct 2026) */
+#unlockBtn.pill-cta{display:inline-flex;align-items:center;gap:6px}
+#unlockBtn.pill-cta svg{width:16px;height:16px;flex:none}

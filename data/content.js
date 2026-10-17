@@ -638,7 +638,7 @@ window.OMAN_DATA = {
         "Any other month: empty beaches and the frankincense coast, warm and quiet."
       ] },
 
-    { id: "plan", label: "Plan", icon: "🗺️", blurb: "Build your own trip, or follow one of mine.", special: "planner",
+    { id: "plan", label: "Plan for me", icon: "🗺️", blurb: "Build your own trip, or follow one of mine.", special: "planner",
       intro: [
         "Answer five questions and the planner routes a trip around you, days, pace, interests, fitness, vehicle, heat.",
         "Or scroll down for the hand-built routes: 3 days, 5 days, 7 days."
