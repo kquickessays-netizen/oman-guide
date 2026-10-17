@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Relative paths resolve from the site root even when the address bar is a
+     place page (/s/<id>.html, see SPOT ADDRESSES below). At "/" it changes nothing. -->
+<base href="/">
+<!-- info-page: tools/build_info_pages.py -->
+<title>Wadi etiquette in Oman: take your rubbish out | Exploring Oman</title>
+<meta name="description" content="There are no bins at a wadi. Bring a bag, fill it, drive it home. Don&#x27;t touch the coral or the turtles.">
+<link rel="canonical" href="https://exploresoman.com/info/take-your-rubbish-out.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Take your rubbish out">
+<meta property="og:description" content="There are no bins at a wadi. Bring a bag, fill it, drive it home. Don&#x27;t touch the coral or the turtles.">
+<meta property="og:url" content="https://exploresoman.com/info/take-your-rubbish-out.html">
+<meta property="og:image" content="https://exploresoman.com/assets/wadis/wadi-shab.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Take your rubbish out">
+<meta name="twitter:description" content="There are no bins at a wadi. Bring a bag, fill it, drive it home. Don&#x27;t touch the coral or the turtles.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Exploring Oman","item":"https://exploresoman.com/"},{"@type":"ListItem","position":2,"name":"Travel info","item":"https://exploresoman.com/#/info"},{"@type":"ListItem","position":3,"name":"Take your rubbish out","item":"https://exploresoman.com/info/take-your-rubbish-out.html"}]}</script>
+<script>document.documentElement.classList.add('booting');setTimeout(function(){document.documentElement.classList.remove('booting')},3000);</script>
+<style>.seo-static{max-width:680px;margin:0 auto;padding:8px 4px 24px;transition:opacity .25s}html.booting .seo-static{opacity:0}.seo-static h1{font-size:28px;line-height:1.15;margin:6px 0 14px}.seo-static .xp{animation:none}.seo-static .back{margin:18px 2px 0;font-weight:700}.seo-static .back a{color:var(--water);text-decoration:none}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d5c63">
+
+
+
+<!-- The banner photo is the first thing anyone sees: fetch it FIRST, before
+     the browser discovers it late inside the stylesheet. Dedicated 91KB
+     asset, not the 267KB card photo it's cropped from. -->
+<link rel="preload" as="image" href="assets/banner.jpg" fetchpriority="high">
+
+<link rel="manifest" href="manifest.webmanifest">
+<!-- Browser-tab icon. ?v=2 is the redrawn icon (30 Sep 2026): browsers keep a
+     favicon by its URL, so a new picture needs a new URL to show up. Bump it
+     with every redraw (here, manifest.webmanifest, sw.js, build_seo.js).
+     Without it the tab (and Google's result row) falls back
+     to /favicon.ico, which doesn't exist, so the site showed no icon at all. -->
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2">
+<link rel="apple-touch-icon" href="icons/icon-192.png?v=2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Explore Oman">
+
+<!-- The planning call is booked through Calendly, inline. Opening the
+     connections early shaves the first seconds off its load. -->
+<link rel="preconnect" href="https://assets.calendly.com">
+<link rel="preconnect" href="https://calendly.com">
+<link rel="dns-prefetch" href="https://calendly.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+
+<!-- ============================ HEADER ============================ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <!-- Wordmark lockup. The mark was an emoji compass, which renders as a
+         different drawing on every phone and can't take the rank tint. This
+         is a drawn khanjar-and-sun mark: Omani, ownable, and it inherits
+         currentColor like the rest of the icon set. -->
+    <a class="brand" href="#/plan" aria-label="Exploring Oman, home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="20" cy="20" r="17" opacity=".28"/>
+          <path d="M20 6.5a13.5 13.5 0 0 1 0 27" opacity=".28"/>
+          <path d="M13 15.5c4.5-2.2 9.5-2.2 14 0-1.6 6.4-5.2 10.6-7 12.2-1.8-1.6-5.4-5.8-7-12.2z"
+                fill="currentColor" fill-opacity=".16"/>
+          <path d="M13 15.5c4.5-2.2 9.5-2.2 14 0-1.6 6.4-5.2 10.6-7 12.2-1.8-1.6-5.4-5.8-7-12.2z"/>
+          <path d="M20 15v12.7" opacity=".55"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <strong>Exploring Oman</strong>
+        <small id="brandSub">by @hussain_explores</small>
+      </span>
+    </a>
+    <div class="topbar-actions">
+      <button class="pill pill-ghost" id="unlockBtn">WhatsApp me</button>
+    </div>
+  </div>
+  <!-- the explorer's HUD: rank ring, rank name, progress. Filled by app.js on
+       every route, so it's on every tab rather than just Explore. -->
+  <div class="hud" id="topHud"></div>
+  <div class="livingline" id="livingLine"></div>
+  <nav class="tabs" id="tabs" role="tablist"></nav>
+</header>
+
+<!-- ============================ SEARCH ============================ -->
+<div class="searchbar" id="searchbar" hidden>
+  <input type="search" id="searchInput" placeholder="Search wadis, beaches, spots…" autocomplete="off">
+  <button class="icon-btn" id="searchClose" aria-label="Close search">✕</button>
+</div>
+
+<!-- ============================= MAIN ============================= -->
+<main id="view" class="view"><article class="seo-static"><h1>Take your rubbish out</h1><div class="xp"><strong>Take your rubbish out</strong><p>There are no bins at a wadi. Bring a bag, fill it, drive it home. Don't touch the coral or the turtles.</p></div><p class="back"><a href="/#/info">All travel info for Oman →</a></p></article></main>
+
+<!-- ======================== POPULAR PLACES ========================
+     Plain links in the page itself, so search engines reach the place pages
+     on their first read of the homepage (the app's cards are drawn by JS and
+     carry no links). Visible to everyone, under every tab. Edit the list as
+     Search Console shows which pages need a push. -->
+<footer class="site-foot" aria-label="Popular places in Oman">
+  <p class="site-foot-h">Popular in Oman</p>
+  <p class="site-foot-links">
+    <a href="/s/wadi-shab.html">Wadi Shab</a>&nbsp;· <a href="/s/wadi-bani-khalid.html">Wadi Bani Khalid</a>&nbsp;·
+    <a href="/s/bimmah-sinkhole.html">Bimmah Sinkhole</a>&nbsp;· <a href="/s/grand-mosque.html">Sultan Qaboos Grand Mosque</a>&nbsp;·
+    <a href="/s/mutrah.html">Mutrah Souq</a>&nbsp;· <a href="/s/wahiba-sands.html">Wahiba Sands</a>&nbsp;·
+    <a href="/s/jabal-akhdar.html">Jabal Akhdar</a>&nbsp;· <a href="/s/misfat-al-abriyeen.html">Misfat Al Abriyeen</a>&nbsp;·
+    <a href="/s/ras-al-jinz.html">Ras Al Jinz</a>&nbsp;· <a href="/s/daymaniyat.html">Daymaniyat Islands</a>&nbsp;·
+    <a href="/s/wadi-damm.html">Wadi Damm</a>&nbsp;· <a href="/s/wadi-al-hoqain.html">Wadi Al Hoqain</a>&nbsp;·
+    <a href="/s/snake-gorge.html">Snake Gorge</a>&nbsp;· <a href="/s/wadi-tanuf.html">Wadi Tanuf</a>&nbsp;·
+    <a href="/s/sur-old-town.html">Sur</a>&nbsp;· <a href="/s/old-muscat.html">Old Muscat</a>&nbsp;·
+    <a href="/s/bandar-khayran.html">Bandar Khayran</a>&nbsp;· <a href="/s/bioluminescence-qantab.html">Bioluminescence at Qantab</a>
+  </p>
+  <p class="site-foot-cats">
+    <a href="/places/wadis.html">Wadis</a>&nbsp;· <a href="/places/beaches.html">Beaches</a>&nbsp;·
+    <a href="/places/mountains.html">Mountains</a>&nbsp;· <a href="/places/experiences.html">Things to do</a>&nbsp;·
+    <a href="/places/food.html">Food</a>&nbsp;· <a href="/places/shopping.html">Shopping</a>&nbsp;·
+    <a href="/places/">All places</a>
+  </p>
+  <p class="site-foot-cats site-foot-info">
+    Travel info: <a href="/info/do-i-need-a-visa.html">Visa</a>&nbsp;·
+    <a href="/info/do-i-need-an-idp-to-drive.html">Driving permit</a>&nbsp;·
+    <a href="/info/driving-in-over-a-land-border.html">Border crossing</a>&nbsp;·
+    <a href="/info/a-physical-sim-at-the-airport.html">SIM card</a>&nbsp;·
+    <a href="/info/or-an-esim-before-you-fly.html">eSIM</a>&nbsp;·
+    <a href="/info/card-in-the-cities-cash-in-the-mountains.html">Cash</a>&nbsp;·
+    <a href="/info/tipping.html">Tipping</a>&nbsp;·
+    <a href="/info/alcohol-in-public.html">Alcohol</a>&nbsp;·
+    <a href="/info/drones.html">Drones</a>&nbsp;·
+    <a href="/info/dress-modestly.html">Dress code</a>&nbsp;·
+    <a href="/info/otaxi-inside-the-city.html">Taxis</a>&nbsp;·
+    <a href="/info/flash-floods.html">Flash floods</a>
+  </p>
+</footer>
+
+<!-- ========================= DETAIL SHEET ========================= -->
+<div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+<section class="sheet" id="sheet" hidden aria-modal="true" role="dialog">
+  <button class="sheet-close" id="sheetClose" aria-label="Close">✕</button>
+  <div class="sheet-body" id="sheetBody"></div>
+</section>
+
+<!-- ========================= UNLOCK MODAL ========================= -->
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="sheet-close" id="modalClose" aria-label="Close">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ============================ TOAST ============================= -->
+<div class="toast" id="toast" hidden></div>
+
+<!-- ======================== SPOT ADDRESSES ========================
+     Every place has a real page at /s/<id>.html that opens this app on it
+     (tools/build_spot_shells.py). The app itself routes with '#/s/<id>', so
+     without this the address bar said '/#/s/wadi-shab' here, or
+     '/s/wadi-bani-khalid.html#/s/wadi-shab' after opening Wadi Shab from
+     another place's page. This keeps the address on the page of the place
+     on screen (and '/' for the tabs), so a copied or shared link is always
+     the real, indexable page. The list is written by build_spot_shells.py. -->
+<script>
+window.__SPOT_PAGES = [/*spot-pages*/"wadi-shab","wadi-bani-khalid","wadi-mibam","wadi-al-arbeieen","wadi-damm","wadi-dayqah","wadi-tanuf","wadi-hawer","snake-gorge","wadi-as-suwayh","wadi-al-hoqain","wadi-al-abyad","wadi-al-khoudh","qurum-beach","al-bustan-beach","sidab","qantab-beaches","sifah-hidden-beach","pebble-beach-tiwi","fins-beach","bandar-khayran","ras-al-jinz","yiti-qantab","marjan-beach","as-sifah","ras-al-hadd-camp","sur-old-town","sur-dhow-factory","oman-across-ages","frankincense-museum","matrah-fort","bioluminescence-qantab","dhow-bandar-rowdha","romantic-cave-tiwi","ain-al-kasfah","hijrat-al-sheikh","rose-season-jabal-akhdar","whale-sharks","grand-mosque","mutrah","bimmah-sinkhole","daymaniyat","wahiba-sands","misfat-al-abriyeen","jabal-akhdar","birkat-al-mouz","old-muscat","royal-opera-house","wakan-village","muscat-ridge-treks","cafe-batch","food-rozna","cafe-la-miel","food-bait-al-luban","cafe-qaha","cafe-azura","cafe-farah","food-najmat-sur","food-bin-ateeq","food-halwa","shop-mutrah-souq","shop-seeb-souq","shop-al-sharaa","shop-amouage","shop-mall-of-oman","shop-avenues-mall","shop-city-centre"];
+(function () {
+  var S = {};
+  window.__SPOT_PAGES.forEach(function (i) { S[i] = 1; });
+  function real(h) {
+    var m = /^#\/s\/([^\/?#]+)/.exec(h);
+    return (m && S[m[1]] ? '/s/' + m[1] + '.html' : '/') + location.search + h;
+  }
+  var last = location.hash;
+  ['pushState', 'replaceState'].forEach(function (k) {
+    var f = history[k].bind(history);
+    history[k] = function (s, t, u) {
+      if (typeof u === 'string' && u.charAt(0) === '#') u = real(u);
+      var r = f(s, t, u);
+      last = location.hash;
+      return r;
+    };
+  });
+  // The app routes on 'hashchange' alone. Back/Forward between two of these
+  // addresses changes the page part too, and then the browser fires only
+  // 'popstate', so the app would never hear about it (the sheet stayed open
+  // on Back). Pass it on as a hashchange when the browser didn't send one.
+  window.addEventListener('hashchange', function () { last = location.hash; });
+  window.addEventListener('popstate', function () {
+    setTimeout(function () {
+      if (location.hash === last) return;
+      var was = last;
+      last = location.hash;
+      window.dispatchEvent(new HashChangeEvent('hashchange', { oldURL: was, newURL: location.href }));
+    }, 0);
+  });
+  // In-app links like <a href="#/plan">: same page, then the matching address.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    var h = a.getAttribute('href');
+    e.preventDefault();
+    location.hash = h;
+    history.replaceState(null, '', h);
+  }, true);
+})();
+</script>
+<script>try{if(localStorage.getItem('oman_welcomed')!=='1'){localStorage.setItem('oman_welcomed','1');window.__welcomeTemp=1}}catch(e){}if(!location.hash||location.hash==='#')history.replaceState(null,'',location.pathname+location.search+'#/info');new MutationObserver(function(m,o){if(!document.querySelector('.seo-static')){document.documentElement.classList.remove('booting');o.disconnect()}}).observe(document.getElementById('view'),{childList:true});</script>
+<script src="data/content.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/account.js"></script>
+<script src="js/unlock.js"></script>
+<script src="js/planner.js"></script>
+<script src="js/app.js"></script>
+<script src="js/info-popups.js"></script>
+<script>
+  // The service worker serves css/js stale-while-revalidate, which is right for
+  // a traveller in a wadi with no signal and WRONG on a laptop: every reload
+  // would show you the previous edit, forever. So it's off on localhost, and
+  // any worker left behind from an earlier session is torn down on sight.
+  var LOCAL = ['localhost', '127.0.0.1', '[::1]'].indexOf(location.hostname) !== -1;
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !LOCAL) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').then(function (reg) {
+        /* THE STALE-REFRESH PROBLEM.
+           stale-while-revalidate hands you the cached copy instantly and
+           fetches the new one behind your back, so the reload right after a
+           deploy still renders the OLD build and only the reload after that
+           shows the new one. That is correct for a traveller in a wadi and
+           maddening for everyone else: "I refreshed and nothing changed, I
+           had to open a different browser profile to see it."
+
+           So: when a new worker finishes installing, say so, and let the
+           reader take the update with one tap. No surprise reloads, because
+           yanking the page out from under someone mid-wadi is worse than
+           being one version behind for a minute. */
+        // Has the reader started reading? If they haven't, swapping the build
+        // under them costs nothing and they simply get the current version.
+        var touched = false;
+        ['scroll', 'pointerdown', 'keydown'].forEach(function (ev) {
+          addEventListener(ev, function () { touched = true; }, { once: true, passive: true });
+        });
+
+        function offer(worker) {
+          if (!worker) return;
+          worker.addEventListener('statechange', function () {
+            if (worker.state !== 'installed' || !navigator.serviceWorker.controller) return;
+            var take = function () { worker.postMessage({ type: 'SKIP_WAITING' }); };
+            if (!touched) { take(); return; }          // silent, they hadn't started
+            window.__omanUpdateReady = take;            // otherwise: their call
+            if (window.__omanShowUpdate) window.__omanShowUpdate();
+          });
+        }
+        offer(reg.installing);
+        reg.addEventListener('updatefound', function () { offer(reg.installing); });
+
+        // The new worker took over: reload once so the page matches its files.
+        var reloaded = false;
+        navigator.serviceWorker.addEventListener('controllerchange', function () {
+          if (reloaded) return;
+          reloaded = true;
+          location.reload();
+        });
+
+        // Check for a new build whenever the app is brought back to the front,
+        // otherwise an installed PWA can sit on one version for days.
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'visible') reg.update().catch(function () {});
+        });
+      }).catch(function () {});
+    });
+  } else if (LOCAL && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations()
+      .then(rs => Promise.all(rs.map(r => r.unregister())))
+      .then(() => caches.keys())
+      .then(ks => Promise.all(ks.map(k => caches.delete(k))))
+      .catch(()=>{});
+  }
+</script>
+</body>
+</html>
