@@ -768,7 +768,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
         const by = a => uniq(left.filter(e => (propOf(e, "action") || "dismissed") === a), e => e.device_id);
         const ofShown = a => uniq(left.filter(e => shown.has(e.device_id) && (propOf(e, "action") || "dismissed") === a), e => e.device_id);
         return { shown: shown.size, plan: by("plan"), explore: by("explore"), closed: by("dismissed"),
-                 planOfShown: ofShown("plan"), exploreOfShown: ofShown("explore"),
+                 planOfShown: ofShown("plan"), exploreOfShown: ofShown("explore"), closedOfShown: ofShown("dismissed"),
                  noTap: [...shown].filter(d => !tapped.has(d)).length,
                  since: shownEv.length ? shownEv[shownEv.length - 1].created_at : null };
       })(),
@@ -1023,14 +1023,15 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
           return `<h2 class="sec">Welcome screen (first visit to the homepage)</h2>
         <div class="tiles">
           ${tile("Saw it", w.shown ? nf(w.shown) : "—", w.since ? "counted since " + fmtDate(w.since) : "counting starts with the next visitor", "teal")}
-          ${tile("I'm planning a trip", nf(w.plan), "tapped it" + pc(w.planOfShown), "teal")}
-          ${tile("Just show me the places", nf(w.explore), "tapped it" + pc(w.exploreOfShown))}
+          ${tile("I'm planning a trip", w.shown ? nf(w.planOfShown) : "—", w.shown ? "tapped it" + pc(w.planOfShown) : "", "teal")}
+          ${tile("Just show me the places", w.shown ? nf(w.exploreOfShown) : "—", w.shown ? "tapped it" + pc(w.exploreOfShown) : "")}
           ${tile("Left without tapping", w.shown ? nf(w.noTap) : "—", w.shown ? "saw it, never tapped" + pc(w.noTap) : "needs a few days of 'saw it'", "gold")}
         </div>
-        <div class="note">People landing on a place or Info link never see this screen, and nor does anyone who has
-          seen it before. ${w.closed ? `<b>${nf(w.closed)}</b> closed it another way (not one of the two buttons).` : ""}
-          The button taps go back to launch; "saw it" only started on 17 Oct 2026, so read
-          "left without tapping" from then on.</div>`; })()}
+        <div class="note">All four boxes count the same people: everyone who saw the screen since it started being
+          counted${w.since ? " (" + fmtDate(w.since) + ")" : ""}, so they add up to "Saw it"${w.closedOfShown ? ` (${nf(w.closedOfShown)} closed it another way)` : ""}.
+          People landing on a place or Info link never see this screen, and nor does anyone who has seen it before.
+          ${(w.plan - w.planOfShown) || (w.explore - w.exploreOfShown) ? `<br>Older taps, from before "saw it" was counted (so no "left" number exists for them),
+          in this date range: <b>${nf(w.plan - w.planOfShown)}</b> "I'm planning a trip" · <b>${nf(w.explore - w.exploreOfShown)}</b> "Just show me the places".` : ""}</div>`; })()}
         ${c.dropped ? `<div class="note"><b>${nf(c.dropped)}</b> device${c.dropped === 1 ? "" : "s"} not counted anywhere on
           this page: Ali's laptop and the test browsers on it, devices marked with
           <code>?me=on</code> (open <b>exploresoman.com/?me=on</b> once on a phone to stop counting it), and crawlers.</div>` : ""}
