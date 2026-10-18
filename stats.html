@@ -505,7 +505,36 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
       try { udevices = await readAll("user_devices", "select=*&order=last_seen.desc"); }
       catch (e2) { udevices = []; }
     } catch (e) { accounts = null; usaves = []; uvisits = []; }
-    return { events, subs, bookings, reviews, accounts, usaves, uvisits, udevices };
+    let internalIds = [];
+    try { internalIds = (await readAll("events", "event=eq.internal&select=device_id")).map(r => r.device_id); } catch (e3) {}
+    const kept = notVisitors(events, internalIds);
+    return { events: kept.events, dropped: kept.dropped, subs, bookings, reviews, accounts, usaves, uvisits, udevices };
+  }
+
+  /* NOT VISITORS (18 Oct 2026). Dropped before anything is counted, history
+     included, so every tile and chart is real people only:
+     - devices marked as ours: opened the site once with ?me=on (Ali,
+       Hussain), which sends one "internal" event (js/analytics.js, top);
+     - Ali's laptop and the test browsers run on it: Windows, Oman time,
+       screen width 0 / 390 / 1280 / 1440 / 1536 (390 on Windows is never a
+       real phone; 1536 is that laptop's own screen);
+     - obvious crawlers: Linux at 800px, 1900px+ or no screen.
+     New test runs never reach the database at all (analytics.js skips any
+     browser driven by automation). */
+  function notVisitors(events, internalIds) {
+    const prop = (e, k) => { const p = e.props; if (!p) return null;
+      if (typeof p === "string") { try { return JSON.parse(p)[k]; } catch { return null; } } return p[k]; };
+    const drop = new Set(internalIds.filter(Boolean));
+    events.forEach(e => {
+      if (e.event === "internal" && e.device_id) { drop.add(e.device_id); return; }
+      if (e.event !== "session_start" || !e.device_id) return;
+      const os = prop(e, "os"), w = +prop(e, "w") || 0, tz = String(prop(e, "tz") || "");
+      const laptop = os === "Windows" && /^Asia\/(Muscat|Dubai)$/.test(tz) && [0, 390, 1280, 1440, 1536].includes(w);
+      const crawler = os === "Linux" && (w === 0 || w === 800 || w >= 1900);
+      if (laptop || crawler) drop.add(e.device_id);
+    });
+    const droppedHere = new Set(events.filter(e => drop.has(e.device_id)).map(e => e.device_id)).size;
+    return { events: events.filter(e => !drop.has(e.device_id)), dropped: droppedHere };
   }
 
   /* ------------------------------------------------------------- crunching */
@@ -709,6 +738,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     }
 
     return {
+      dropped: d.dropped || 0,            // ours + test browsers + crawlers, not counted anywhere
       devices: engaged.size,              // the headline: people who did something
       devicesAll: allDev.size,            // everything that loaded the page
       passers: allDev.size - engaged.size,
@@ -1001,6 +1031,9 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
           seen it before. ${w.closed ? `<b>${nf(w.closed)}</b> closed it another way (not one of the two buttons).` : ""}
           The button taps go back to launch; "saw it" only started on 17 Oct 2026, so read
           "left without tapping" from then on.</div>`; })()}
+        ${c.dropped ? `<div class="note"><b>${nf(c.dropped)}</b> device${c.dropped === 1 ? "" : "s"} not counted anywhere on
+          this page: Ali's laptop and the test browsers on it, devices marked with
+          <code>?me=on</code> (open <b>exploresoman.com/?me=on</b> once on a phone to stop counting it), and crawlers.</div>` : ""}
         ${c.liveNow ? `<div class="note" style="border-left-color:var(--good)">
           <b>${nf(c.liveNow)}</b> ${c.liveNow === 1 ? "person is" : "people are"} on the site right now.</div>` : ""}
         <div class="note">
