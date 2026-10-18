@@ -64,6 +64,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
+<!-- The header brand is the homepage's main heading (h1) for search engines;
+     this keeps it looking exactly like the plain bold text it wraps. Place and
+     Info pages drop the wrapper (they have their own h1): see the builders. -->
+<style>.brand-h1{display:contents;font:inherit;margin:0}</style>
 </head>
 <body>
 
@@ -72,7 +76,7 @@
      app replaces nothing here; this simply exists underneath it. -->
 <noscript>
   <div style="max-width:680px;margin:0 auto;padding:28px 20px;font:16px/1.6 system-ui,sans-serif;color:#1b2320">
-    <h1 style="font-size:28px;line-height:1.2">Exploring Oman</h1>
+    <h2 style="font-size:28px;line-height:1.2">Exploring Oman</h2>
     <p><strong>A guide to Oman by Hussain, a licensed Omani tour guide.</strong>
        Wadis, beaches, mountains, food and souqs. For each place: the drive from
        Muscat, the walk in, the entry fee, what to bring, the right month, and
@@ -113,7 +117,7 @@
         </svg>
       </span>
       <span class="brand-text">
-        <strong>Exploring Oman</strong>
+        <h1 class="brand-h1"><strong>Exploring Oman</strong></h1>
         <small id="brandSub">by @hussain_explores</small>
       </span>
     </a>
