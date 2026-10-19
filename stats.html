@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<meta name="theme-color" content="#0b1f22">
+<meta name="theme-color" content="#ffffff">
 <title>Exploring Oman — Stats</title>
 
 <!--
@@ -40,185 +40,282 @@
 
 <style>
 /* =============================================================================
-   Palette validated with the dataviz validator against this panel surface
-   (#122c30, dark mode): lightness band, chroma floor, CVD separation,
-   normal-vision floor and contrast all PASS.
-   Series slots  #199e70 / #c98500 / #3987e5 / #d95926
-   The previous pink (#e4739f) and red (#e2695f) were 8.4 apart on the
-   normal-vision scale — below the 15 floor, i.e. genuinely hard to tell
-   apart even with full colour vision. Both replaced.
-   Text never wears a series colour; a coloured mark beside it carries identity.
+   THE LOOK (19 Oct 2026): Google Search Console's. White panels on a light
+   grey page, one blue for the chrome, and four fixed series colours that
+   belong to the four numbers on Performance (People / Visits / Opened a
+   place / Reached out) and to nothing else.
    ========================================================================== */
 :root{
-  --bg:#0b1f22; --panel:#122c30; --panel-2:#173539;
-  --line:#1e4046; --line-soft:#193a3f;
-  --ink:#eef7f5; --ink-2:#b6cfcc; --muted:#8fb0ad;
+  --bg:#f8f9fa; --panel:#ffffff; --panel-2:#f1f3f4;
+  --line:#dadce0; --line-soft:#e8eaed;
+  --ink:#202124; --ink-2:#3c4043; --muted:#5f6368;
 
-  --s1:#199e70; --s2:#c98500; --s3:#3987e5; --s4:#d95926;
-  --good:#0ca30c; --warn:#fab219; --bad:#d03b3b;
+  --s1:#4285f4; --s2:#5e35b1; --s3:#00897b; --s4:#e8710a;
+  --good:#1e8e3e; --warn:#f29900; --bad:#d93025;
 
-  --brand:#3fb0a8;                 /* UI chrome only, never a data mark */
-  --radius:14px;
-  color-scheme:dark;
+  --brand:#1a73e8;                 /* UI chrome only, never a data mark */
+  --radius:8px;
+  color-scheme:light;
 }
 *{box-sizing:border-box}
 body{
   margin:0;background:var(--bg);color:var(--ink);
-  font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font:14px/1.5 Roboto,"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
   -webkit-font-smoothing:antialiased;
 }
 a{color:var(--brand)}
 button{font:inherit;cursor:pointer}
-.wrap{max-width:1120px;margin:0 auto;padding:0 18px 80px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
 
 /* ---------------------------------------------------------------- sign in */
 .gate{min-height:100vh;display:grid;place-items:center;padding:20px}
-.gate form{width:100%;max-width:360px;background:var(--panel);
-  border:1px solid var(--line);border-radius:18px;padding:26px 24px}
-.gate h1{margin:0 0 4px;font-size:21px;letter-spacing:-.02em}
+.gate form{width:100%;max-width:380px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;padding:30px 28px}
+.gate h1{margin:0 0 4px;font-size:22px;font-weight:500}
 .gate p{margin:0 0 20px;color:var(--muted);font-size:13.5px}
-.gate label{display:block;font-size:12px;font-weight:700;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px}
-.gate input{width:100%;margin:0 0 14px;padding:11px 13px;border-radius:10px;
-  background:var(--bg);border:1px solid var(--line);color:var(--ink);font:inherit}
-.gate input:focus{outline:2px solid var(--brand);outline-offset:1px}
-.btn{width:100%;padding:12px;border:0;border-radius:10px;background:var(--brand);
-  color:#04201d;font-weight:800}
+.gate label{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin:0 0 6px}
+.gate input{width:100%;margin:0 0 14px;padding:11px 13px;border-radius:4px;
+  background:var(--panel);border:1px solid var(--line);color:var(--ink);font:inherit}
+.gate input:focus{outline:2px solid var(--brand);outline-offset:-1px;border-color:transparent}
+.btn{width:100%;padding:11px;border:0;border-radius:4px;background:var(--brand);
+  color:#fff;font-weight:500}
 .btn:disabled{opacity:.55;cursor:default}
 .err{margin:12px 0 0;color:var(--bad);font-size:13px;min-height:1.2em}
 
 /* ------------------------------------------------------------------- head */
-header{position:sticky;top:0;z-index:20;background:rgba(11,31,34,.94);
-  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.hrow{max-width:1120px;margin:0 auto;padding:12px 18px;
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.brand{font-weight:800;letter-spacing:-.01em;margin-right:auto;font-size:15.5px}
-.brand small{display:block;font-weight:500;color:var(--muted);font-size:11.5px;letter-spacing:0}
-.range{display:flex;gap:3px;background:var(--panel);padding:3px;border-radius:999px;
-  border:1px solid var(--line)}
-.range button{border:0;background:transparent;color:var(--muted);font-size:12.5px;
-  font-weight:700;padding:6px 13px;border-radius:999px}
-.range button.on{background:var(--brand);color:#04201d}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.97);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.hrow{max-width:1180px;margin:0 auto;padding:10px 20px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:500;font-size:17px;margin-right:auto;color:var(--ink)}
+.brand small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.range{display:flex;gap:2px;background:var(--panel-2);padding:3px;border-radius:999px;
+  overflow-x:auto;scrollbar-width:none;max-width:100%}
+.range::-webkit-scrollbar{display:none}
+.range button{flex:0 0 auto;border:0;background:transparent;color:var(--ink-2);font-size:12.5px;
+  font-weight:500;padding:6px 12px;border-radius:999px;white-space:nowrap}
+.range button:hover{color:var(--ink)}
+.range button.on{background:var(--panel);color:var(--brand);box-shadow:0 1px 2px rgba(60,64,67,.3)}
 .daynav{display:flex;align-items:center;gap:4px}
 .daynav .ghost{padding:6px 11px;font-size:14px;line-height:1}
 .daynav .ghost:disabled{opacity:.35;cursor:default}
-.daynav input{background:var(--panel);border:1px solid var(--line);color:var(--muted);
-  border-radius:999px;padding:5px 10px;font:inherit;font-size:12.5px;font-weight:700;color-scheme:dark}
-.daynav input.on{border-color:var(--brand);color:var(--ink)}
-.daylink{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--ink);
+.daynav input{background:var(--panel);border:1px solid var(--line);color:var(--ink-2);
+  border-radius:999px;padding:5px 10px;font:inherit;font-size:12.5px;font-weight:500}
+.daynav input.on{border-color:var(--brand);color:var(--brand)}
+.daylink{border:0;background:none;padding:0;font:inherit;font-weight:500;color:var(--ink);
   cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 .daylink:hover{color:var(--brand);text-decoration-color:var(--brand)}
-.zero{color:var(--muted);opacity:.55}
+.zero{color:var(--muted);opacity:.6}
 .ghost{border:1px solid var(--line);background:var(--panel);color:var(--ink-2);
-  padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700}
-.ghost:hover{color:var(--ink);border-color:var(--brand)}
-nav.tabs{max-width:1120px;margin:0 auto;padding:0 18px 10px;display:flex;gap:5px;
+  padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:500}
+.ghost:hover{color:var(--brand);border-color:var(--brand);background:#f8fbff}
+nav.tabs{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;gap:4px;
   overflow-x:auto;scrollbar-width:none}
 nav.tabs::-webkit-scrollbar{display:none}
-nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:transparent;
-  color:var(--muted);padding:7px 13px;border-radius:999px;font-size:13px;font-weight:700}
-nav.tabs button:hover{color:var(--ink-2)}
-nav.tabs button.on{background:var(--panel-2);color:var(--ink);border-color:var(--line)}
-nav.tabs .n{font-size:11px;color:var(--muted);margin-left:5px;font-variant-numeric:tabular-nums}
+nav.tabs button{flex:0 0 auto;border:0;border-bottom:3px solid transparent;background:transparent;
+  color:var(--muted);padding:10px 14px 9px;font-size:13.5px;font-weight:500}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button.on{color:var(--brand);border-bottom-color:var(--brand)}
+nav.tabs .n{font-size:11.5px;color:var(--muted);margin-left:6px;font-variant-numeric:tabular-nums;
+  background:var(--panel-2);border-radius:999px;padding:1px 7px}
+nav.tabs button.on .n{background:#e8f0fe;color:var(--brand)}
 
 /* --------------------------------------------------------------- sections */
-h2.sec{font-size:12.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-2);
-  margin:30px 0 12px;font-weight:800;display:flex;align-items:center;gap:9px}
-h2.sec::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--brand);flex:0 0 auto}
+h2.sec{font-size:16px;color:var(--ink);margin:28px 0 12px;font-weight:500;
+  display:flex;align-items:center;gap:9px}
 h2.sec .pill{text-transform:none;letter-spacing:0}
 .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px}
 
 /* ------------------------------------------------------------------ tiles */
-.tiles{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(158px,1fr))}
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
 .tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-  padding:14px 15px}
-.tile .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
-  font-weight:800}
-.tile .v{font-size:30px;font-weight:800;letter-spacing:-.025em;margin:7px 0 3px;
-  line-height:1.05;color:var(--ink)}
+  padding:14px 16px}
+.tile .k{font-size:12.5px;color:var(--muted);font-weight:500}
+.tile .v{font-size:28px;font-weight:400;margin:6px 0 2px;line-height:1.1;color:var(--ink)}
 .tile .s{font-size:12px;color:var(--muted);line-height:1.35}
-/* A tile is a headline, not a series: the accent is a rule, not the number. */
-.tile.teal{border-left:3px solid var(--s1)}
-.tile.gold{border-left:3px solid var(--s2)}
-.tile.pink{border-left:3px solid var(--s3)}
+.tile.teal{border-top:3px solid var(--s1)}
+.tile.gold{border-top:3px solid var(--s4)}
+.tile.pink{border-top:3px solid var(--s3)}
 
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-  padding:15px;overflow:hidden}
-.note{color:var(--ink-2);font-size:13px;line-height:1.6;margin:11px 2px 0;
-  padding:11px 13px;background:var(--panel);border:1px solid var(--line-soft);
-  border-left:3px solid var(--muted);border-radius:0 10px 10px 0}
+  padding:16px;overflow:hidden}
+.note{color:var(--ink-2);font-size:13px;line-height:1.6;margin:12px 0 0;
+  padding:11px 14px;background:#f8fbff;border:1px solid #d2e3fc;border-radius:8px}
 .note b{color:var(--ink)}
 
-/* ------------------------------------------------------------------ chart
-   Thin marks, 4px rounded data-ends anchored to the baseline, 2px gap
-   between bars, recessive gridlines, hover tooltip. */
+/* ------------------------------------------------- bar chart (Accounts tab) */
 .chartwrap{position:relative;padding:4px 0 0}
 .grid{position:absolute;inset:0 0 26px 0;pointer-events:none}
 .grid i{position:absolute;left:0;right:0;height:1px;background:var(--line-soft)}
-.grid b{position:absolute;left:0;transform:translateY(-50%);font-size:10.5px;
-  color:var(--muted);font-weight:600;background:var(--panel);padding:0 4px;
+.grid b{position:absolute;left:0;transform:translateY(-50%);font-size:11px;
+  color:var(--muted);font-weight:400;background:var(--panel);padding:0 4px;
   font-variant-numeric:tabular-nums}
 .bars{display:flex;align-items:flex-end;gap:2px;height:150px;position:relative}
-.bars .b{flex:1 1 0;min-width:2px;background:var(--s1);border-radius:4px 4px 0 0;
+.bars .b{flex:1 1 0;min-width:2px;background:var(--s1);border-radius:3px 3px 0 0;
   position:relative;transition:filter .12s}
-.bars .b:hover{filter:brightness(1.25)}
+.bars .b:hover{filter:brightness(1.1)}
 .bars .b.peak{background:var(--s2)}
 .bars .b span{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);
-  background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
-  padding:5px 9px;font-size:11.5px;color:var(--ink);white-space:nowrap;
+  background:var(--panel);border:1px solid var(--line);border-radius:6px;
+  padding:5px 9px;font-size:12px;color:var(--ink);white-space:nowrap;
   opacity:0;pointer-events:none;transition:opacity .1s;z-index:5;
-  font-variant-numeric:tabular-nums;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+  font-variant-numeric:tabular-nums;box-shadow:0 2px 8px rgba(60,64,67,.2)}
 .bars .b:hover span{opacity:1}
-.axis{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;
+.axis{display:flex;justify-content:space-between;color:var(--muted);font-size:11.5px;
   margin-top:9px;font-variant-numeric:tabular-nums}
 
 /* ------------------------------------------------------------------ table */
-.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:-15px;padding:0}
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:-16px;padding:0}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
-th,td{text-align:left;padding:10px 15px;border-bottom:1px solid var(--line-soft);
+th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--line-soft);
   vertical-align:middle;white-space:nowrap}
-th{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
-  font-weight:800;position:sticky;top:0;background:var(--panel)}
+th{font-size:12.5px;color:var(--muted);font-weight:500;position:sticky;top:0;background:var(--panel)}
 tbody tr:last-child td{border-bottom:0}
 td.wrap{white-space:normal;min-width:240px}
-tbody tr:hover{background:var(--panel-2)}
-td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
+tbody tr:hover{background:#f8f9fa}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+td.num{color:var(--ink)}
 .bar-cell{position:relative}
-.bar-cell i{position:absolute;left:0;top:4px;bottom:4px;
-  background:color-mix(in srgb,var(--s1) 22%,transparent);border-radius:0 4px 4px 0}
+.bar-cell i{position:absolute;left:0;top:5px;bottom:5px;
+  background:#e8f0fe;border-radius:0 4px 4px 0}
 .bar-cell span{position:relative;color:var(--ink-2)}
-tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
 .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;
-  font-weight:700;background:var(--panel-2);color:var(--muted);border:1px solid var(--line)}
-.pill.up{background:rgba(12,163,12,.15);color:var(--good);border-color:transparent}
-.pill.down{background:rgba(208,59,59,.15);color:var(--bad);border-color:transparent}
-.stars{color:var(--s2);letter-spacing:1px}
-/* ----------------------------------------------------------------- actions
-   Small, quiet, and never the loudest thing in a row: the data is what you
-   came to read. The one primary action per row gets the series colour; a
-   destructive one is text-red only, never a red slab. */
-.act{border:1px solid var(--line);background:var(--panel-2);color:var(--ink-2);
-  padding:5px 10px;border-radius:8px;font-size:12px;font-weight:700;
+  font-weight:500;background:var(--panel-2);color:var(--muted);border:1px solid var(--line-soft)}
+.pill.up{background:#e6f4ea;color:#137333;border-color:transparent}
+.pill.down{background:#fce8e6;color:#c5221f;border-color:transparent}
+.stars{color:#f29900;letter-spacing:1px}
+/* ----------------------------------------------------------------- actions */
+.act{border:1px solid var(--line);background:var(--panel);color:var(--ink-2);
+  padding:5px 11px;border-radius:4px;font-size:12.5px;font-weight:500;
   margin:0 5px 0 0;white-space:nowrap}
-.act:hover:not(:disabled){color:var(--ink);border-color:var(--brand)}
-.act.go{background:var(--s1);border-color:var(--s1);color:#04201d}
-.act.go:hover:not(:disabled){color:#04201d;filter:brightness(1.08)}
+.act:hover:not(:disabled){color:var(--brand);border-color:var(--brand)}
+.act.go{background:var(--brand);border-color:var(--brand);color:#fff}
+.act.go:hover:not(:disabled){color:#fff;filter:brightness(1.08)}
 .act.bad{color:var(--bad)}
 .act.bad:hover:not(:disabled){border-color:var(--bad);color:var(--bad)}
 .act:disabled{opacity:.45;cursor:default}
 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);
-  background:var(--panel-2);border:1px solid var(--line);color:var(--ink);
-  padding:11px 20px;border-radius:999px;font-size:13.5px;font-weight:600;
-  box-shadow:0 10px 30px rgba(0,0,0,.45);opacity:0;pointer-events:none;
+  background:#323232;color:#fff;
+  padding:11px 20px;border-radius:4px;font-size:13.5px;font-weight:500;
+  box-shadow:0 3px 12px rgba(0,0,0,.3);opacity:0;pointer-events:none;
   transition:opacity .16s ease,transform .16s ease;z-index:60;max-width:92vw}
 .toast.on{opacity:1;transform:translate(-50%,0)}
-.toast.bad{border-color:var(--bad)}
+.toast.bad{background:var(--bad)}
 .empty{color:var(--muted);padding:28px 4px;text-align:center;font-size:13.5px}
 .hide{display:none !important}
-@media(max-width:640px){
-  .tile .v{font-size:25px}
-  .hrow{gap:9px}
+
+/* ============================================================ PERFORMANCE */
+.pf-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:24px 0 12px}
+.pf-top h1{font-size:24px;font-weight:400;margin:0;color:var(--ink)}
+.pf-top .upd{font-size:12.5px;color:var(--muted);margin-top:2px}
+.live{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);
+  background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 3px rgba(30,142,62,.18)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--panel);
+  border-radius:999px;padding:5px 6px 5px 12px;font-size:13px;color:var(--ink-2)}
+.chip b{font-weight:500;color:var(--ink)}
+.chip.date{padding-right:12px;border-color:#d2e3fc;background:#e8f0fe;color:#174ea6}
+.chip.date b{color:#174ea6}
+.chip button{border:0;background:none;color:var(--muted);width:24px;height:24px;border-radius:50%;
+  font-size:16px;line-height:1;display:grid;place-items:center}
+.chip button:hover{background:var(--panel-2);color:var(--ink)}
+.hint{font-size:12.5px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);
+  border-radius:8px 8px 0 0;overflow:hidden;background:var(--panel)}
+.card{appearance:none;border:0;border-right:1px solid var(--line);background:var(--panel);text-align:left;
+  padding:14px 16px 12px;min-width:0;color:var(--ink);transition:background .12s}
+.card:last-child{border-right:0}
+.card:hover{background:#f8f9fa}
+.card .lbl{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500}
+.card .ck{width:16px;height:16px;border:2px solid #80868b;border-radius:2px;flex:0 0 auto;
+  display:grid;place-items:center;font-size:11px;line-height:1;font-weight:900}
+.card .v{display:block;font-size:32px;font-weight:400;margin:8px 0 2px;font-variant-numeric:tabular-nums;line-height:1.1}
+.card .d{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.card .d.up{color:var(--good)}
+.card .d.down{color:var(--bad)}
+.card.on{background:var(--c)}
+.card.on:hover{background:var(--c);filter:brightness(1.04)}
+.card.on .lbl,.card.on .v,.card.on .d{color:#fff}
+.card.on .ck{border-color:#fff;background:#fff;color:var(--c)}
+.card.on .ck::after{content:"\2713"}
+.card:focus-visible{outline:2px solid var(--brand);outline-offset:-3px}
+.chartp{border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px;background:var(--panel);
+  padding:14px 8px 8px;position:relative;min-height:230px}
+.chartp svg{display:block;touch-action:pan-y}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);
+  box-shadow:0 2px 10px rgba(60,64,67,.22);border-radius:6px;padding:8px 11px;font-size:12.5px;
+  white-space:nowrap;z-index:5;display:none}
+.tip .t{font-weight:500;margin:0 0 4px;color:var(--ink)}
+.tip .r{display:flex;align-items:center;gap:7px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.tip .r i{width:9px;height:9px;border-radius:50%}
+.tip .r b{margin-left:auto;padding-left:14px;font-weight:500;color:var(--ink)}
+.dimp{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:var(--panel);overflow:hidden}
+.dtabs{display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line)}
+.dtabs::-webkit-scrollbar{display:none}
+.dtabs button{flex:0 0 auto;border:0;background:none;padding:15px 18px 12px;font-size:12.5px;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:3px solid transparent}
+.dtabs button:hover{color:var(--ink);background:#f8f9fa}
+.dtabs button.on{color:var(--brand);border-bottom-color:var(--brand)}
+.dtbl{overflow-x:auto}
+.dtbl th{cursor:pointer;user-select:none;padding:12px 16px}
+.dtbl th:hover{color:var(--ink)}
+.dtbl th.sorted{color:var(--ink)}
+.dtbl th .ar{font-size:11px;margin-left:3px}
+.dtbl td{padding:12px 16px}
+.dtbl td.nm{white-space:normal;min-width:150px;color:var(--ink)}
+.dtbl tbody tr{cursor:pointer}
+.dtbl tbody tr:hover td{background:#f1f3f4}
+.dtbl td.nm .sub{display:block;font-size:12px;color:var(--muted)}
+.pager{display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:8px 12px;font-size:12.5px;
+  color:var(--muted);border-top:1px solid var(--line-soft)}
+.pager button{border:0;background:none;width:32px;height:32px;border-radius:50%;font-size:17px;color:var(--ink-2)}
+.pager button:hover:not(:disabled){background:var(--panel-2)}
+.pager button:disabled{opacity:.3;cursor:default}
+.pager .ex{margin-right:auto;color:var(--brand);font-weight:500;font-size:12.5px;
+  width:auto;height:auto;border-radius:4px;padding:6px 8px;letter-spacing:.04em;text-transform:uppercase}
+.pager .ex:hover{background:#f8fbff}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.box{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:16px 18px;min-width:0}
+.box h3{margin:0 0 2px;font-size:15px;font-weight:500;color:var(--ink)}
+.box .bs{margin:0 0 14px;font-size:12.5px;color:var(--muted)}
+.box.warn{border-color:#f9dedc;background:#fffbfa}
+.hb{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 12px;align-items:baseline;font-size:13.5px;margin:0 0 11px}
+.hb .l{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb .n{font-variant-numeric:tabular-nums;font-weight:500;color:var(--ink)}
+.hb .n small{color:var(--muted);font-weight:400;margin-left:6px}
+.hb .bar{grid-column:1/-1;height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}
+.hb .bar i{display:block;height:100%;border-radius:3px;background:var(--c,var(--brand))}
+.hb .pill{margin-left:6px;font-size:11px;padding:0 7px}
+.wel{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.wel div{background:var(--bg);border-radius:6px;padding:10px 12px}
+.wel b{display:block;font-size:22px;font-weight:400;font-variant-numeric:tabular-nums}
+.wel span{font-size:12px;color:var(--muted);line-height:1.3;display:block}
+.card .d em{font-style:normal}
+.cmpnote{display:none;font-size:12px;color:var(--muted);padding:6px 2px 0}
+.dtbl th .sm{display:none}
+.howto{font-size:12.5px;color:var(--muted);line-height:1.65;margin:20px 2px 0;max-width:880px}
+.howto b{color:var(--ink-2);font-weight:500}
+@media(max-width:760px){
+  .wrap{padding:0 12px 60px}
+  .hrow{padding:8px 12px;gap:8px}
+  nav.tabs{padding:0 6px}
   .brand{width:100%;margin-right:0}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .card{border-bottom:1px solid var(--line);padding:12px 12px 10px}
+  .card:nth-child(2n){border-right:0}
+  .card:nth-child(n+3){border-bottom:0}
+  .card .v{font-size:26px}
+  .card .d em{display:none}
+  .cmpnote{display:block;order:2}
+  .dtbl th .lg{display:none}
+  .dtbl th .sm{display:inline}
+  .dtbl th,.dtbl td{padding:11px 8px}
+  .dtbl td.nm{min-width:96px}
+  .grid2{grid-template-columns:1fr}
+  .wel{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dtabs button{padding:13px 13px 11px}
+  .tile .v{font-size:24px}
   .bars{height:120px}
 }
 </style>
@@ -243,14 +340,15 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
 <div id="app" class="hide">
   <header>
     <div class="hrow">
-      <div class="brand">Exploring Oman <small id="who">dashboard</small></div>
+      <div class="brand">Exploring Oman · Stats <small id="who">dashboard</small></div>
       <div class="range" id="range">
         <button data-day="0">Today</button>
         <button data-day="-1">Yesterday</button>
-        <button data-d="7">7d</button>
-        <button data-d="30" class="on">30d</button>
-        <button data-d="90">90d</button>
-        <button data-d="0">All</button>
+        <button data-d="1">24 hours</button>
+        <button data-d="7">7 days</button>
+        <button data-d="28" class="on">28 days</button>
+        <button data-d="90">3 months</button>
+        <button data-d="0">All time</button>
       </div>
       <div class="daynav">
         <button class="ghost" id="dayPrev" aria-label="Previous day" title="Previous day">‹</button>
@@ -265,6 +363,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
   <div class="wrap" id="view"></div>
 </div>
 
+<script src="data/content.js"></script>
 <script>
 (() => {
   "use strict";
@@ -285,7 +384,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
 
   /* The range: `days` back from now (0 = all time), or ONE local day when
      `day` is set ("2026-09-30"), which then wins over `days`. */
-  let session = null, DATA = null, days = 30, day = null, tab = "overview";
+  let session = null, DATA = null, days = 28, day = null, tab = "performance";
   let userDetail = null;   // account id whose drill-down page is open (Accounts tab)
   try { session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); } catch {}
 
@@ -403,34 +502,54 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     });
   }
 
+  /* PostgREST hands out 1000 rows a request. The first request asks for the
+     total, then the rest are fetched 8 at a time instead of one after another:
+     28 days of events loads in a couple of seconds, not twenty. */
   async function readAll(table, query, cap) {
-    cap = cap || 20000;
-    const out = [];
-    let from = 0;
+    cap = cap || 400000;
     const PAGE = 1000;
-    for (;;) {
-      const r = await fetch(URL_ + "/rest/v1/" + table + "?" + query, {
-        headers: {
-          apikey: KEY,
-          Authorization: "Bearer " + session.access_token,
-          Range: from + "-" + (from + PAGE - 1),
-          "Range-Unit": "items"
+    const one = async (from, count) => {
+      for (;;) {
+        const r = await fetch(URL_ + "/rest/v1/" + table + "?" + query, {
+          headers: Object.assign({
+            apikey: KEY,
+            Authorization: "Bearer " + session.access_token,
+            Range: from + "-" + (from + PAGE - 1),
+            "Range-Unit": "items"
+          }, count ? { Prefer: "count=exact" } : {})
+        });
+        if (r.status === 401) {
+          if (await refreshToken()) continue;
+          throw Object.assign(new Error("Session expired."), { auth: true });
         }
-      });
-      if (r.status === 401) {
-        if (await refreshToken()) continue;
-        throw Object.assign(new Error("Session expired."), { auth: true });
+        if (!r.ok) {
+          const t = await r.text().catch(() => "");
+          // A missing table or a missing SELECT policy both land here.
+          throw new Error(table + ": " + r.status + " " + t.slice(0, 160));
+        }
+        const total = count ? parseInt(String(r.headers.get("content-range") || "").split("/")[1], 10) : NaN;
+        return { rows: await r.json(), total };
       }
-      if (!r.ok) {
-        const t = await r.text().catch(() => "");
-        // A missing table or a missing SELECT policy both land here.
-        throw new Error(table + ": " + r.status + " " + t.slice(0, 160));
+    };
+    const first = await one(0, true);
+    const out = first.rows.slice();
+    if (out.length < PAGE) return out;
+    if (!isFinite(first.total)) {                 // no total exposed: the old way, one page at a time
+      for (let from = PAGE; out.length < cap; from += PAGE) {
+        const r = await one(from, false);
+        out.push.apply(out, r.rows);
+        if (r.rows.length < PAGE) break;
       }
-      const rows = await r.json();
-      out.push.apply(out, rows);
-      if (rows.length < PAGE || out.length >= cap) break;
-      from += PAGE;
+      return out;
     }
+    const starts = [];
+    for (let f = PAGE; f < Math.min(first.total, cap); f += PAGE) starts.push(f);
+    const pages = new Array(starts.length);
+    let k = 0;
+    await Promise.all(Array.from({ length: Math.min(8, starts.length) }, async () => {
+      while (k < starts.length) { const j = k++; pages[j] = (await one(starts[j], false)).rows; }
+    }));
+    pages.forEach(rows => out.push.apply(out, rows));
     return out;
   }
 
@@ -482,7 +601,10 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
   }
 
   async function loadAll() {
-    const since = "created_at=gte." + sinceISO() + (untilISO() ? "&created_at=lt." + untilISO() : "");
+    const R = rangeNow();
+    const lo = R.ps != null ? R.ps : R.cs;
+    const since = "created_at=gte." + (lo > 0 ? new Date(lo).toISOString() : "1970-01-01T00:00:00Z")
+      + (day ? "&created_at=lt." + new Date(R.ce).toISOString() : "");
     const [events, subs, bookings, reviews] = await Promise.all([
       readAll("events", since + "&select=created_at,event,props,device_id,email&order=created_at.desc"),
       readAll("subscribers", "select=*&order=created_at.desc"),
@@ -507,34 +629,7 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     } catch (e) { accounts = null; usaves = []; uvisits = []; }
     let internalIds = [];
     try { internalIds = (await readAll("events", "event=eq.internal&select=device_id")).map(r => r.device_id); } catch (e3) {}
-    const kept = notVisitors(events, internalIds);
-    return { events: kept.events, dropped: kept.dropped, subs, bookings, reviews, accounts, usaves, uvisits, udevices };
-  }
-
-  /* NOT VISITORS (18 Oct 2026). Dropped before anything is counted, history
-     included, so every tile and chart is real people only:
-     - devices marked as ours: opened the site once with ?me=on (Ali,
-       Hussain), which sends one "internal" event (js/analytics.js, top);
-     - Ali's laptop and the test browsers run on it: Windows, Oman time,
-       screen width 0 / 390 / 1280 / 1440 / 1536 (390 on Windows is never a
-       real phone; 1536 is that laptop's own screen);
-     - obvious crawlers: Linux at 800px, 1900px+ or no screen.
-     New test runs never reach the database at all (analytics.js skips any
-     browser driven by automation). */
-  function notVisitors(events, internalIds) {
-    const prop = (e, k) => { const p = e.props; if (!p) return null;
-      if (typeof p === "string") { try { return JSON.parse(p)[k]; } catch { return null; } } return p[k]; };
-    const drop = new Set(internalIds.filter(Boolean));
-    events.forEach(e => {
-      if (e.event === "internal" && e.device_id) { drop.add(e.device_id); return; }
-      if (e.event !== "session_start" || !e.device_id) return;
-      const os = prop(e, "os"), w = +prop(e, "w") || 0, tz = String(prop(e, "tz") || "");
-      const laptop = os === "Windows" && /^Asia\/(Muscat|Dubai)$/.test(tz) && [0, 390, 1280, 1440, 1536].includes(w);
-      const crawler = os === "Linux" && (w === 0 || w === 800 || w >= 1900);
-      if (laptop || crawler) drop.add(e.device_id);
-    });
-    const droppedHere = new Set(events.filter(e => drop.has(e.device_id)).map(e => e.device_id)).size;
-    return { events: events.filter(e => !drop.has(e.device_id)), dropped: droppedHere };
+    return { events, R, internalIds, subs, bookings, reviews, accounts, usaves, uvisits, udevices };
   }
 
   /* ------------------------------------------------------------- crunching */
@@ -891,6 +986,616 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     };
   }
 
+  /* =====================================================================
+     PERFORMANCE, THE SEARCH CONSOLE WAY (19 Oct 2026)
+     ONE MODEL FOR EVERY NUMBER ON THE PAGE, so no two numbers can disagree:
+     - A PERSON is one human. Device ids that share a page-load id (sid) are
+       one person: Instagram's iPhone browser used to lose its storage a few
+       seconds into a visit, and the rest of that visit arrived under a new
+       id (js/analytics.js keeps one id per page load since 19 Oct; this
+       stitches the history back together). A new id on the same phone
+       (system, screen, clock, language) that starts within seconds of the
+       last one going quiet is the same person too: "Open in Safari".
+     - NOT COUNTED: devices marked with ?me=on, the test laptop, and bots
+       (a UTC clock, a 1x iPhone screen, an "Android" desktop, the headless
+       800px default, Meta's ad reviewers in Los Angeles).
+     - A VISIT is one person's activity with no gap over 30 minutes.
+     - Every card, chart line, table row and panel is counted from the same
+       visits, so a filter changes all of them at once.
+     ===================================================================== */
+  const MET = [
+    { id: "people",  label: "People",         c: "#4285f4" },
+    { id: "visits",  label: "Visits",         c: "#5e35b1" },
+    { id: "opened",  label: "Opened a place", c: "#00897b" },
+    { id: "reached", label: "Reached out",    c: "#e8710a" }
+  ];
+  let selM = { people: true, visits: true, opened: false, reached: false };
+  let dimTab = "source", filters = [], sortBy = null, sortDir = -1, pageNo = 0;
+  days = 28;
+  try {
+    const s = JSON.parse(localStorage.getItem("oman_stats_view") || "null");
+    if (s) {
+      if (s.selM && typeof s.selM === "object") selM = Object.assign(selM, s.selM);
+      if ([1, 7, 28, 90, 0].includes(s.days)) days = s.days;
+      if (typeof s.dimTab === "string") dimTab = s.dimTab;
+    }
+  } catch {}
+  const saveView = () => {
+    try { localStorage.setItem("oman_stats_view", JSON.stringify({ selM, days, dimTab })); } catch {}
+  };
+
+  const propsOf = e => {
+    if (e._p) return e._p;
+    let p = e.props;
+    if (typeof p === "string") { try { p = JSON.parse(p); } catch { p = {}; } }
+    return (e._p = p || {});
+  };
+  const tOf = e => e._t || (e._t = Date.parse(e.created_at));
+
+  /* Names: the guide's own content file, so a place reads "Daymaniyat
+     Islands", not "daymaniyat". */
+  const NAMES = (() => {
+    const m = new Map();
+    try {
+      ((window.OMAN_DATA && window.OMAN_DATA.spots) || []).forEach(s => {
+        if (s && s.id && s.name && !m.has(s.id)) m.set(s.id, s.name);
+      });
+    } catch {}
+    return m;
+  })();
+  const placeName = id => NAMES.get(id) || String(id || "unknown").replace(/-/g, " ");
+  const PAGE_NAMES = { wadis: "Front page", explore: "Explore", plan: "Plan", routes: "Routes",
+    info: "Info", about: "About", planmytrip: "Trip form", shop: "Shop", saved: "Saved" };
+  const normTab = t => String(t || "").replace(/^#?\/?/, "").replace(/\.html.*$/, "").replace(/[?#].*$/, "");
+  function pageName(t) {
+    t = normTab(t);
+    if (!t) return "Front page";
+    if (PAGE_NAMES[t]) return PAGE_NAMES[t];
+    let m = /^s\/([\w-]+)/.exec(t);
+    if (m) return "Place page: " + placeName(m[1]);
+    m = /^p\/([\w-]+)/.exec(t);
+    if (m) return "Route page: " + placeName(m[1]);
+    m = /^info\/([\w-]+)/.exec(t);
+    if (m) return "Info: " + m[1].replace(/-/g, " ");
+    return t;
+  }
+  /* The landing address js/analytics.js records ("/s/x.html#/s/x", "/#/plan", "/"). */
+  function landKey(land) {
+    land = String(land || "");
+    const h = land.split("#/")[1];
+    if (h) return normTab(h);
+    const m = /^\/(s|p|info)\/([\w-]+)\.html/.exec(land);
+    return m ? m[1] + "/" + m[2] : "wadis";
+  }
+  const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, "").toLowerCase(); } catch { return ""; } };
+  const cap1 = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+
+  /* WHERE A VISIT CAME FROM, read off the page load that started it:
+     a ?utm_source= / ?src= tag first (it survives Instagram's link wrapper
+     and "Open in Safari"), then the app's built-in browser, then the
+     referring site. No referrer at all = a typed address, a bookmark or a
+     link shared in WhatsApp or a text, which never pass one on. */
+  function sourceOf(c) {
+    if (!c) return { ch: "Unknown", sub: "" };
+    const host = hostOf(c.ref), src = String(c.src || "").toLowerCase(),
+          med = String(c.med || "").toLowerCase(), app = String(c.app || ""), camp = String(c.camp || "");
+    const t = src + " " + host;
+    let ch;
+    if (/^(ig|insta)/.test(src) || /instagram/.test(host) || app === "instagram") ch = "Instagram";
+    else if (/^(fb|facebook|meta)/.test(src) || /facebook|(^|\.)fb\.(com|me)$/.test(host) || app === "facebook") ch = "Facebook";
+    else if (/^(tt|tiktok)/.test(src) || /tiktok/.test(host) || app === "tiktok") ch = "TikTok";
+    else if (/^(yt|youtube)/.test(src) || /youtube|youtu\.be/.test(host)) ch = "YouTube";
+    else if (/^(wa|whatsapp)/.test(src) || /whatsapp|wa\.me/.test(host) || app === "whatsapp") ch = "WhatsApp";
+    else if (/reddit/.test(t)) ch = "Reddit";
+    else if (/pinterest/.test(t)) ch = "Pinterest";
+    else if (/snapchat/.test(t) || app === "snapchat") ch = "Snapchat";
+    else if (/linkedin/.test(t) || app === "linkedin") ch = "LinkedIn";
+    else if (/^(x|twitter)$/.test(src) || /^(t\.co|twitter\.com|x\.com)$/.test(host)) ch = "X (Twitter)";
+    else if (/chatgpt|openai|perplexity|claude\.ai|gemini\.google|copilot/.test(t)) ch = "AI assistants";
+    else if (/(^|\.)google\./.test(host) || /^google/.test(src) || app === "google-app") ch = "Google";
+    else if (/(^|\.)bing\.com$/.test(host) || /^bing/.test(src)) ch = "Bing";
+    else if (/duckduckgo|yahoo|ecosia|yandex|baidu|search\.brave/.test(host)) ch = "Other search";
+    else if (src) ch = cap1(src);
+    else if (!host || /(^|\.)exploresoman\.com$|localhost|127\.0\.0\.1/.test(host)) ch = "Direct or shared link";
+    else ch = host;
+    // the finer tag inside a source: ?src=ig_story, utm_medium=bio, ?r=post9
+    const variant = (src.match(/^[a-z]+[_\-.](.+)$/) || [])[1] || "";
+    const generic = /^(social|referral|cpc|paid|organic|link|)$/;
+    const sub = camp || variant || (generic.test(med) ? "" : med);
+    return { ch, sub };
+  }
+  const SUBNONE = "(no tag)";
+
+  /* Our own devices: marked with ?me=on, Ali's laptop (Windows, Oman time,
+     a screen of 0/390/1280/1440/1536 that no visitor's Windows PC reports
+     together with that clock), anything on a localhost preview. */
+  const isOurs = c => !!c && ((c.os === "Windows" && /^Asia\/(Muscat|Dubai)$/.test(String(c.tz || "")) &&
+    [0, 390, 1280, 1440, 1536].includes(+c.w || 0)) || /localhost|127\.0\.0\.1/.test(String(c.ref || "")));
+  function isBot(c, did) {
+    if (!c) return false;
+    const w = +c.w || 0, dpr = +c.dpr || 0, tz = String(c.tz || ""), os = c.os || "";
+    if (/^(UTC|Etc\/|GMT)/.test(tz)) return true;                              // servers keep UTC; phones never do
+    if (os === "other") return true;                                          // no real system string at all
+    if (os === "Linux" && (w === 0 || w === 800 || w >= 1900)) return true;   // headless renderers
+    if (os === "iOS" && dpr > 0 && dpr < 2) return true;                      // no iPhone this decade has a 1x screen
+    if (os === "Android" && dpr === 1 && (c.k === "desktop" || w >= 900)) return true;
+    if (w === 800 && dpr === 1 && os !== "iOS" && os !== "Android") return true;
+    if (tz === "America/Los_Angeles" && dpr === 1 && !did) return true;       // Meta's ad review fleet
+    return false;
+  }
+  const DID = new Set(["spot", "search", "maps_click", "save", "been", "plan", "type_filter", "whatsapp_click",
+    "share", "insta_click", "aff_click", "buy_click", "product_click", "trip_intent", "unlock", "view_mode",
+    "tripday", "spot_time", "book_click", "book_cta", "welcome", "lead", "lead_open"]);
+  const deviceOf = c => !c ? "Unknown"
+    : c.os === "iOS" ? ((+c.w || 0) >= 700 || c.k === "tablet" ? "iPad" : "iPhone")
+    : c.os === "Android" ? (c.k === "tablet" ? "Android tablet" : "Android phone")
+    : c.k === "tablet" ? "Tablet" : "Computer";
+
+  /* The range as numbers: current [cs, ce), previous [ps, cs) or none. */
+  let NOW = Date.now();
+  function rangeNow() {
+    NOW = Date.now();
+    if (day) return { cs: dayStart(day).getTime(), ce: dayStart(addDays(day, 1)).getTime(),
+                      ps: dayStart(addDays(day, -1)).getTime(), hourly: true };
+    if (!days) return { cs: 0, ce: NOW + 1, ps: null, hourly: false };
+    const cs = NOW - days * 864e5;
+    return { cs, ce: NOW + 1, ps: cs - days * 864e5, hourly: days === 1 };
+  }
+
+  function buildModel(all, internalIds, R) {
+    const ev = all.filter(e => e.device_id).sort((a, b) => tOf(a) - tOf(b));
+    /* 1. who is who: union-find over device ids */
+    const par = new Map();
+    const find = x => { let r = x; while (par.get(r) !== r) r = par.get(r);
+      while (par.get(x) !== r) { const n = par.get(x); par.set(x, r); x = n; } return r; };
+    const join = (a, b) => { a = find(a); b = find(b); if (a !== b) par.set(b, a); };
+    const internal = new Set(internalIds || []);
+    const dev = new Map(), sidStart = new Map(), sidOwner = new Map();
+    ev.forEach(e => {
+      const d = e.device_id, t = tOf(e), p = propsOf(e);
+      if (!par.has(d)) par.set(d, d);
+      let x = dev.get(d);
+      if (!x) dev.set(d, x = { id: d, first: t, last: t, ctx: null, did: false });
+      x.last = t;
+      if (e.event === "internal") internal.add(d);
+      if (e.event === "session_start") { if (!x.ctx) x.ctx = p; if (p.sid && !sidStart.has(p.sid)) sidStart.set(p.sid, p); }
+      if (DID.has(e.event)) x.did = true;
+      if (p.sid) { const o = sidOwner.get(p.sid); if (o) join(o, d); else sidOwner.set(p.sid, d); }
+    });
+    // same phone, new id within seconds of the old one going quiet
+    const groups = new Map();
+    dev.forEach(x => { if (!x.ctx) return;
+      const s = [x.ctx.os, x.ctx.w, x.ctx.dpr, x.ctx.tz, x.ctx.lang].join("|");
+      if (!groups.has(s)) groups.set(s, []); groups.get(s).push(x); });
+    groups.forEach(list => {
+      if (list.length < 2) return;
+      list.sort((a, b) => a.first - b.first);
+      for (let j = 1; j < list.length; j++) {
+        const b = list[j], bs = sourceOf(b.ctx).ch;
+        for (let i = j - 1; i >= 0; i--) {
+          const a = list[i];
+          if (b.first - a.first > 3 * 3600e3) break;
+          const gap = b.first - a.last;
+          if (gap < -30e3 || gap > 90e3 || find(a.id) === find(b.id)) continue;
+          const as = sourceOf(a.ctx).ch;
+          if (as === bs || as === "Direct or shared link" || bs === "Direct or shared link") { join(a.id, b.id); break; }
+        }
+      }
+    });
+    /* 2. people, and who is not counted */
+    const people = new Map();
+    dev.forEach(x => {
+      const r = find(x.id);
+      let p = people.get(r);
+      if (!p) people.set(r, p = { id: r, devs: [], ctx: null, ctxT: Infinity, first: x.first, did: false, ours: false, bot: false });
+      p.devs.push(x);
+      if (x.first < p.first) p.first = x.first;
+      if (x.ctx && x.first < p.ctxT) { p.ctx = x.ctx; p.ctxT = x.first; }
+      if (x.did) p.did = true;
+      if (internal.has(x.id) || isOurs(x.ctx)) p.ours = true;
+    });
+    people.forEach(p => {
+      p.bot = !p.ours && p.devs.some(x => isBot(x.ctx, p.did));
+      p.country = p.ctx ? countryOf(p.ctx.tz) : "Unknown";
+      p.device = deviceOf(p.ctx);
+    });
+    /* 3. visits: the 30-minute rule, per person */
+    const byP = new Map();
+    ev.forEach(e => {
+      if (e.event === "internal") return;
+      const p = people.get(find(e.device_id));
+      if (!p || p.ours || p.bot) return;
+      if (!byP.has(p)) byP.set(p, []);
+      byP.get(p).push(e);
+    });
+    const visits = [];
+    byP.forEach((list, p) => {
+      let v = null;
+      list.forEach(e => {
+        const t = tOf(e);
+        if (!v || t - v.end > 30 * 60e3) {
+          v = { p, start: t, end: t, sids: [], pages: new Set(), places: new Set(), maps: new Set(),
+                f: {}, land: null, ms: new Map(), searches: [], errors: [], welShown: false, welAct: null };
+          visits.push(v);
+        }
+        v.end = t;
+        const pr = propsOf(e), sid = pr.sid;
+        if (sid && !v.sids.includes(sid)) v.sids.push(sid);
+        switch (e.event) {
+          case "view": { const tb = normTab(pr.tab) || "wadis"; v.pages.add(tb); if (!v.land) v.land = tb; break; }
+          case "spot": if (pr.id) v.places.add(pr.id); v.f.spot = 1; break;
+          case "maps_click": v.f.maps = 1; if (pr.spot) v.maps.add(pr.spot); break;
+          case "whatsapp_click": v.f.wa = 1; break;
+          case "lead": v.f.form = 1; break;
+          case "trip_intent": v.f.email = 1; break;
+          case "book_cta": case "book_click": v.f.book = 1; break;
+          case "aff_click": if (/whatsapp|wa\.me/i.test(String(pr.href || ""))) v.f.wa = 1; else v.f.partner = 1; break;
+          case "insta_click": v.f.insta = 1; break;
+          case "search": if (pr.q) v.searches.push([t, String(pr.q).trim().toLowerCase(), +pr.n || 0]); break;
+          case "save": if (pr.on !== false) v.f.save = 1; break;
+          case "been": v.f.been = 1; break;
+          case "plan": v.f.planner = 1; break;
+          case "welcome_shown": v.welShown = true; break;
+          case "welcome": if (!v.welAct) v.welAct = pr.action || "dismissed"; break;
+          case "session": if (sid) v.ms.set(sid, Math.max(v.ms.get(sid) || 0, +pr.ms || 0)); break;
+          case "error": v.errors.push(String(pr.msg || "error").slice(0, 140)); break;
+        }
+      });
+    });
+    visits.forEach(v => {
+      v.f.reach = !!(v.f.wa || v.f.form || v.f.book || v.f.email);
+      let ss = null;
+      for (const s of v.sids) { if (sidStart.has(s)) { ss = sidStart.get(s); break; } }
+      if (!ss && v.start - v.p.first < 30 * 60e3) ss = v.p.ctx;     // first visit, start signal not linked
+      v.src = sourceOf(ss);
+      if (!v.land) v.land = ss && ss.land ? landKey(ss.land) : "wadis";
+      let active = 0; v.ms.forEach(ms => { active += ms; });
+      v.len = Math.max(active, v.end - v.start);
+      v.day = localDay(v.start);
+      v.country = v.p.country;
+      v.device = v.p.device;
+    });
+    const inCur = v => v.start >= R.cs && v.start < R.ce;
+    const cur = visits.filter(inCur);
+    const prev = R.ps != null ? visits.filter(v => v.start >= R.ps && v.start < R.cs) : null;
+    // what the old tabs read: this range's events of counted people, one id per person
+    const curEvents = [];
+    for (let i = ev.length - 1; i >= 0; i--) {
+      const e = ev[i], t = tOf(e);
+      if (t < R.cs || t >= R.ce || e.event === "internal") continue;
+      const p = people.get(find(e.device_id));
+      if (!p || p.ours || p.bot) continue;
+      curEvents.push(Object.assign({}, e, { device_id: p.id }));
+    }
+    const seenNow = new Set();
+    ev.forEach(e => { if (tOf(e) >= R.cs && tOf(e) < R.ce) seenNow.add(find(e.device_id)); });
+    let ours = 0, bots = 0;
+    seenNow.forEach(id => { const p = people.get(id); if (p && p.ours) ours++; else if (p && p.bot) bots++; });
+    const live = new Set();
+    ev.forEach(e => { if (NOW - tOf(e) < 5 * 60e3) { const p = people.get(find(e.device_id)); if (p && !p.ours && !p.bot) live.add(p.id); } });
+    return { cur, prev, curEvents, R, ours, bots, live: live.size,
+             merged: [...people.values()].filter(p => p.devs.length > 1 && !p.ours && !p.bot).length,
+             oldest: ev.length ? tOf(ev[0]) : NOW };
+  }
+
+  /* ----------------------------------------------- counting a set of visits */
+  function metricsOf(V) {
+    const P = new Set(), O = new Set(), Rr = new Set();
+    V.forEach(v => { P.add(v.p.id); if (v.f.spot) O.add(v.p.id); if (v.f.reach) Rr.add(v.p.id); });
+    return { people: P.size, visits: V.length, opened: O.size, reached: Rr.size };
+  }
+  const peopleWhere = (V, f) => { const s = new Set(); V.forEach(v => { if (f(v)) s.add(v.p.id); }); return s.size; };
+
+  const DIMS = {
+    source:  { tab: "Sources",   col: "Source",     keys: v => [v.src.ch],                label: k => k },
+    sub:     { tab: "Sources",   col: "Tag",        keys: v => [v.src.sub || SUBNONE],     label: k => k },
+    land:    { tab: "Landed on", col: "First page", keys: v => [v.land],                  label: pageName },
+    page:    { tab: "Pages",     col: "Page",       keys: v => [...v.pages],              label: pageName },
+    place:   { tab: "Places",    col: "Place",      keys: v => [...v.places],             label: placeName },
+    country: { tab: "Countries", col: "Country",    keys: v => [v.country],               label: k => k },
+    device:  { tab: "Devices",   col: "Device",     keys: v => [v.device],                label: k => k },
+    day:     { tab: "Days",      col: "Day",        keys: v => [v.day],                   label: k => dayLabelOf(k) }
+  };
+  const DIM_ORDER = ["source", "land", "page", "place", "country", "device", "day"];
+  const FILTER_NAMES = { source: "Source", sub: "Tag", land: "Landed on", page: "Page", place: "Place",
+    country: "Country", device: "Device" };
+  const passes = v => filters.every(f => DIMS[f.dim].keys(v).includes(f.key));
+
+  function rowsOf(V, dim) {
+    const m = new Map();
+    V.forEach(v => new Set(DIMS[dim].keys(v)).forEach(k => {
+      if (!m.has(k)) m.set(k, []); m.get(k).push(v);
+    }));
+    return [...m.entries()].map(([key, list]) => {
+      const r = Object.assign({ key }, metricsOf(list));
+      if (dim === "place") r.dirs = peopleWhere(list, v => v.maps.has(key));
+      return r;
+    });
+  }
+
+  /* chart slots: hours for one day or the last 24 hours, else days */
+  function slotsOf(V, R, oldest) {
+    let S;
+    if (R.hourly && day) {
+      S = Array.from({ length: 24 }, (_, h) => ({ key: h, short: pad(h) + ":00",
+        long: dayLabelOf(day) + ", " + pad(h) + ":00" }));
+      const by = S.map(() => []);
+      V.forEach(v => by[new Date(v.start).getHours()].push(v));
+      return S.map((s, i) => Object.assign(s, metricsOf(by[i])));
+    }
+    if (R.hourly) {
+      const base = Math.floor(NOW / 3600e3) * 3600e3 - 23 * 3600e3;
+      S = Array.from({ length: 24 }, (_, i) => { const d = new Date(base + i * 3600e3);
+        return { key: i, short: pad(d.getHours()) + ":00", long: dayLabelOf(localDay(d)) + ", " + pad(d.getHours()) + ":00" }; });
+      const by = S.map(() => []);
+      V.forEach(v => by[Math.max(0, Math.min(23, Math.floor((v.start - base) / 3600e3)))].push(v));
+      return S.map((s, i) => Object.assign(s, metricsOf(by[i])));
+    }
+    const first = localDay(R.cs || oldest), last = today();
+    S = [];
+    for (let k = first, guard = 0; k <= last && guard < 4000; k = addDays(k, 1), guard++)
+      S.push({ key: k, short: dayStart(k).toLocaleDateString("en-GB", { day: "numeric", month: "short" }), long: dayLabelOf(k) });
+    const idx = new Map(S.map((s, i) => [s.key, i])), by = S.map(() => []);
+    V.forEach(v => { const i = idx.get(v.day); if (i != null) by[i].push(v); });
+    return S.map((s, i) => Object.assign(s, metricsOf(by[i])));
+  }
+
+  const rangeText = () => day
+    ? (day === today() ? "Today" : day === addDays(today(), -1) ? "Yesterday" : dayLabelOf(day))
+    : days === 1 ? "Last 24 hours" : days === 90 ? "Last 3 months" : days ? "Last " + days + " days" : "All time";
+  const cmpText = () => day ? "vs the day before" : days === 1 ? "vs the 24 hours before"
+    : days === 90 ? "vs the 3 months before" : days ? "vs the " + days + " days before" : "";
+  function delta(a, b) {
+    if (b == null) return { t: "", c: "" };
+    if (!b) return a ? { t: "new", c: "up" } : { t: "no change", c: "" };
+    const d = Math.round((a - b) / b * 100);
+    return d === 0 ? { t: "no change", c: "" } : { t: (d > 0 ? "▲ " : "▼ ") + Math.abs(d) + "%", c: d > 0 ? "up" : "down" };
+  }
+  const pct = (n, of) => of ? Math.round(n / of * 100) + "%" : "";
+
+  function drawPerf(v) {
+    const M = DATA.M;
+    const V = M.cur.filter(passes), PV = M.prev ? M.prev.filter(passes) : null;
+    const tot = metricsOf(V), ptot = PV ? metricsOf(PV) : null;
+    if (!MET.some(m => selM[m.id])) selM.people = true;
+    const sel = MET.filter(m => selM[m.id]);
+    const dim = dimTab === "source" && filters.some(f => f.dim === "source") ? "sub" : dimTab;
+    const upd = new Date(NOW).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+
+    /* ---- table rows: sort, page ---- */
+    const cols = [
+      { id: "people", h: "People", s: "People" }, { id: "visits", h: "Visits", s: "Visits" },
+      dim === "place" ? { id: "dirs", h: "Took directions", s: "Directions" } : { id: "opened", h: "Opened a place", s: "Opened" },
+      { id: "reached", h: "Reached out", s: "Reached" }
+    ];
+    let rows = rowsOf(V, dim);
+    const sKey = sortBy && (sortBy === "key" || cols.some(c => c.id === sortBy)) ? sortBy
+      : dim === "day" ? "key" : (sel[0] ? sel[0].id : "people");
+    const sDir = sortBy ? sortDir : -1;
+    rows.sort((a, b) => sKey === "key"
+      ? (a.key < b.key ? -1 : a.key > b.key ? 1 : 0) * sDir
+      : ((a[sKey] - b[sKey]) * sDir) || (b.people - a.people) || String(a.key).localeCompare(String(b.key)));
+    const PER = 10, pages = Math.max(1, Math.ceil(rows.length / PER));
+    if (pageNo >= pages) pageNo = pages - 1;
+    const shown = rows.slice(pageNo * PER, pageNo * PER + PER);
+    const lbl = k => DIMS[dim].label(k);
+
+    /* ---- what people did ---- */
+    const did = [
+      ["Opened a place", x => x.f.spot, "#00897b"],
+      ["Opened the Plan page", x => x.pages.has("plan")],
+      ["Tapped WhatsApp", x => x.f.wa, "#e8710a"],
+      ["Tapped Book", x => x.f.book, "#e8710a"],
+      ["Sent the trip form", x => x.f.form, "#e8710a"],
+      ["Gave an email", x => x.f.email, "#e8710a"],
+      ["Took directions (Google Maps)", x => x.f.maps],
+      ["Tapped car rental or a partner link", x => x.f.partner],
+      ["Opened Hussain's Instagram", x => x.f.insta],
+      ["Searched", x => x.searches.length],
+      ["Saved a place", x => x.f.save],
+      ["Ticked “been there”", x => x.f.been],
+      ["Used the trip planner", x => x.f.planner]
+    ].map(([l, f, c]) => ({ l, n: peopleWhere(V, f), c })).filter((r, i) => r.n || i < 3);
+    const didMax = Math.max(1, ...did.map(r => r.n));
+
+    /* ---- welcome screen, same people basis ---- */
+    const sawP = new Set(V.filter(x => x.welShown).map(x => x.p.id));
+    const actP = new Map();
+    V.forEach(x => { if (x.welAct && sawP.has(x.p.id) && !actP.has(x.p.id)) actP.set(x.p.id, x.welAct); });
+    const wn = a => [...actP.values()].filter(x => x === a).length;
+    const wel = { saw: sawP.size, plan: wn("plan"), explore: wn("explore"), left: sawP.size - actP.size };
+
+    /* ---- visit length ---- */
+    const LB = [["Under 30 seconds", 30e3], ["30 sec to 2 min", 120e3], ["2 to 5 min", 300e3],
+                ["5 to 15 min", 900e3], ["Over 15 min", Infinity]];
+    const lens = LB.map(([l]) => ({ l, n: 0 }));
+    V.forEach(x => { lens[LB.findIndex(b => x.len < b[1])].n++; });
+    const lenMax = Math.max(1, ...lens.map(r => r.n));
+    const medLen = median(V.map(x => x.len));
+
+    /* ---- searches: the search box logs as they type ("d", "da", "day"), so
+       only the last word of each burst of typing counts: what they stopped on ---- */
+    const sq = new Map();
+    V.forEach(x => {
+      const list = x.searches.slice().sort((a, b) => a[0] - b[0]);
+      list.forEach((s, i) => {
+        const next = list[i + 1];
+        if (next && next[0] - s[0] < 20e3) return;          // still typing
+        if (s[1].length < 2) return;
+        const cur = sq.get(s[1]) || { q: s[1], who: new Set(), none: false };
+        cur.who.add(x.p.id); if (!s[2]) cur.none = true; sq.set(s[1], cur);
+      });
+    });
+    const searches = [...sq.values()].map(s => ({ q: s.q, n: s.who.size, none: s.none }))
+      .sort((a, b) => b.n - a.n || a.q.localeCompare(b.q)).slice(0, 10);
+    const sMax = Math.max(1, ...searches.map(s => s.n));
+
+    /* ---- errors ---- */
+    const errs = new Map();
+    V.forEach(x => x.errors.forEach(m => { if (!errs.has(m)) errs.set(m, new Set()); errs.get(m).add(x.p.id); }));
+
+    const hb = (l, n, max, of, extra, color) => `<div class="hb"${color ? ` style="--c:${color}"` : ""}>
+      <span class="l">${esc(l)}${extra || ""}</span>
+      <span class="n">${nf(n)}${of != null ? `<small>${pct(n, of)}</small>` : ""}</span>
+      <span class="bar"><i style="width:${(n / max * 100).toFixed(1)}%"></i></span></div>`;
+
+    v.innerHTML = `<div class="pf">
+      <div class="pf-top">
+        <div><h1>Performance</h1><div class="upd">Updated ${esc(upd)} · everyone who opened exploresoman.com</div></div>
+        ${M.live ? `<span class="live"><i></i>${nf(M.live)} on the site now</span>` : ""}
+      </div>
+      <div class="chips">
+        <span class="chip date">Date: <b>${esc(rangeText())}</b></span>
+        ${filters.map((f, i) => `<span class="chip">${esc(FILTER_NAMES[f.dim])}: <b>${esc(DIMS[f.dim].label(f.key))}</b>
+          <button data-unf="${i}" aria-label="Remove filter" title="Remove filter">×</button></span>`).join("")}
+        <span class="hint">${filters.length ? "Everything below is filtered." : "Click any row in the table to filter the whole page."}</span>
+      </div>
+      <div class="cards">${MET.map(m => { const d = delta(tot[m.id], ptot ? ptot[m.id] : null);
+        return `<button class="card${selM[m.id] ? " on" : ""}" data-m="${m.id}" style="--c:${m.c}" aria-pressed="${!!selM[m.id]}">
+          <span class="lbl"><span class="ck"></span>${esc(m.label)}</span>
+          <span class="v">${nf(tot[m.id])}</span>
+          <span class="d ${d.c}">${d.t ? esc(d.t) + `<em> ${esc(cmpText())}</em>` : esc(rangeText())}</span></button>`; }).join("")}</div>
+      <div class="chartp" id="chartp"><div class="tip" id="tip"></div></div>
+      ${ptot ? `<div class="cmpnote">Arrows compare with ${esc(cmpText().replace(/^vs /, ""))}.</div>` : ""}
+
+      <div class="dimp">
+        <div class="dtabs">${DIM_ORDER.map(k => `<button data-dim="${k}" class="${dimTab === k ? "on" : ""}">${esc(DIMS[k].tab)}</button>`).join("")}</div>
+        <div class="dtbl">${rows.length ? `<table><thead><tr>
+          <th data-sort="key" class="${sKey === "key" ? "sorted" : ""}">${esc(DIMS[dim].col)}${sKey === "key" ? `<span class="ar">${sDir > 0 ? "↑" : "↓"}</span>` : ""}</th>
+          ${cols.map(c => `<th class="num ${sKey === c.id ? "sorted" : ""}" data-sort="${c.id}">${sKey === c.id ? `<span class="ar">${sDir > 0 ? "↑" : "↓"}</span>` : ""}<span class="lg">${esc(c.h)}</span><span class="sm">${esc(c.s)}</span></th>`).join("")}
+          </tr></thead><tbody>${shown.map(r => `<tr data-key="${esc(r.key)}">
+            <td class="nm">${esc(lbl(r.key))}</td>
+            ${cols.map(c => `<td class="num">${r[c.id] ? nf(r[c.id]) : `<span class="zero">0</span>`}</td>`).join("")}
+          </tr>`).join("")}</tbody></table>` : `<div class="empty">Nobody in this range${filters.length ? " with these filters" : ""}.</div>`}</div>
+        <div class="pager"><button class="ex" id="pfCsv">Export</button>
+          ${rows.length ? `${pageNo * PER + 1}–${Math.min(rows.length, pageNo * PER + PER)} of ${rows.length}` : ""}
+          <button id="pgPrev" aria-label="Previous page" ${pageNo ? "" : "disabled"}>‹</button>
+          <button id="pgNext" aria-label="Next page" ${pageNo < pages - 1 ? "" : "disabled"}>›</button></div>
+      </div>
+
+      <div class="grid2">
+        <div class="box"><h3>What people did</h3><p class="bs">People who did it at least once, of the ${nf(tot.people)} who came</p>
+          ${did.map(r => hb(r.l, r.n, didMax, tot.people, "", r.c)).join("")}</div>
+        <div class="box"><h3>Welcome screen</h3><p class="bs">The first visit to the front page. Counting since 17 Oct.</p>
+          ${wel.saw ? `<div class="wel">
+            <div><b>${nf(wel.saw)}</b><span>saw it</span></div>
+            <div><b>${nf(wel.plan)}</b><span>“I'm planning a trip” ${pct(wel.plan, wel.saw)}</span></div>
+            <div><b>${nf(wel.explore)}</b><span>“Just show me” ${pct(wel.explore, wel.saw)}</span></div>
+            <div><b>${nf(wel.left)}</b><span>left without tapping ${pct(wel.left, wel.saw)}</span></div></div>`
+            : `<div class="empty">Nobody saw it in this range.</div>`}
+          <h3 style="margin-top:22px">How long visits last</h3><p class="bs">Typical visit ${medLen ? secs(medLen) : "—"} · attention time, idle minutes not counted</p>
+          ${lens.map(r => hb(r.l, r.n, lenMax, tot.visits, "", "#5e35b1")).join("")}</div>
+        <div class="box"><h3>What they searched for</h3><p class="bs">What they finished typing, by people</p>
+          ${searches.length ? searches.map(s => hb(s.q, s.n, sMax, null, s.none ? `<span class="pill down">no results</span>` : "")).join("")
+            : `<div class="empty">No searches in this range.</div>`}</div>
+        ${errs.size ? `<div class="box warn"><h3>The site broke for someone</h3><p class="bs">Error messages, by people who hit them</p>
+          ${[...errs.entries()].sort((a, b) => b[1].size - a[1].size).slice(0, 6).map(([m, s]) => hb(m, s.size, Math.max(...[...errs.values()].map(x => x.size)), null, "", "#d93025")).join("")}</div>` : ""}
+      </div>
+
+      <p class="howto"><b>How this is counted.</b> <b>People</b> are different people: one phone counts once even if it
+        opens the link in Instagram and again in Safari${M.merged ? ` (${nf(M.merged)} such double ids merged in this range)` : ""}.
+        A <b>visit</b> ends after 30 minutes with nothing happening, so People ≤ Visits always.
+        <b>Opened a place</b> and <b>Reached out</b> (tapped WhatsApp or Book, sent the trip form, or gave an email) count people, not taps.
+        A person who comes on two days counts once in the total and once on each day.
+        Countries come from the phone's clock, never an address.
+        <b>Not counted:</b> ${nf(M.ours)} of our own device${M.ours === 1 ? "" : "s"} (Ali's laptop, test browsers, and phones opened once with
+        <b>exploresoman.com/?me=on</b>) and ${nf(M.bots)} bot${M.bots === 1 ? "" : "s"} and link checkers.</p>
+    </div>`;
+
+    /* ---- wiring ---- */
+    v.querySelectorAll(".card").forEach(b => b.onclick = () => {
+      const id = b.dataset.m;
+      selM[id] = !selM[id];
+      if (!MET.some(m => selM[m.id])) selM[id] = true;
+      saveView(); draw();
+    });
+    v.querySelectorAll("[data-unf]").forEach(b => b.onclick = () => {
+      filters.splice(+b.dataset.unf, 1); pageNo = 0; draw(); });
+    v.querySelectorAll("[data-dim]").forEach(b => b.onclick = () => {
+      dimTab = b.dataset.dim; sortBy = null; pageNo = 0; saveView(); draw(); });
+    v.querySelectorAll("th[data-sort]").forEach(th => th.onclick = () => {
+      const k = th.dataset.sort;
+      if (sKey === k) { sortBy = k; sortDir = -sDir; } else { sortBy = k; sortDir = k === "key" ? 1 : -1; }
+      draw(); });
+    v.querySelectorAll("tr[data-key]").forEach(tr => tr.onclick = () => {
+      const k = tr.dataset.key;
+      if (dim === "day") return setDay(k);
+      if (!filters.some(f => f.dim === dim && f.key === k)) filters.push({ dim, key: k });
+      pageNo = 0; sortBy = null; draw();
+    });
+    const pp = $("#pgPrev"), pn = $("#pgNext");
+    if (pp) pp.onclick = () => { pageNo--; draw(); };
+    if (pn) pn.onclick = () => { pageNo++; draw(); };
+    $("#pfCsv").onclick = () => csv(rows, [{ h: DIMS[dim].col, raw: r => lbl(r.key) }]
+      .concat(cols.map(c => ({ h: c.h, raw: r => r[c.id] }))), "exploring-oman-" + DIMS[dim].tab.toLowerCase().replace(/\s+/g, "-") + ".csv");
+    drawChart(slotsOf(V, M.R, M.oldest), sel);
+  }
+
+  /* ---------------------------------------------------------- the line chart
+     One line per selected card, each on its own scale (the way Search
+     Console does it): the first selected number labels the left axis, the
+     second the right. Hover or tap anywhere for that day's numbers. */
+  function drawChart(S, sel) {
+    const box = $("#chartp");
+    if (!box) return;
+    const tip = $("#tip");
+    [...box.querySelectorAll("svg")].forEach(x => x.remove());
+    const W = Math.max(280, box.clientWidth - 16), H = W < 560 ? 210 : 260;
+    const pl = 44, pr = sel.length > 1 ? 44 : 16, pt = 12, pb = 28, iw = W - pl - pr, ih = H - pt - pb, n = S.length;
+    const X = i => pl + (n <= 1 ? iw / 2 : i * iw / (n - 1));
+    const step = x => { if (x <= 1) return 1; const p = Math.pow(10, Math.floor(Math.log10(x))), f = x / p;
+      return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; };
+    const tops = sel.map(m => step(Math.max(1, ...S.map(s => s[m.id])) / 4) * 4);
+    const Y = (val, k) => pt + ih - (val / tops[k]) * ih;
+    const NS = "http://www.w3.org/2000/svg";
+    let g = "";
+    for (let q = 0; q <= 4; q++) {
+      const y = pt + ih - q / 4 * ih;
+      g += `<line x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}" stroke="${q ? "#e8eaed" : "#dadce0"}"/>`;
+      if (q && sel[0]) g += `<text x="${pl - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#5f6368">${nf(tops[0] * q / 4)}</text>`;
+      if (q && sel[1]) g += `<text x="${W - pr + 8}" y="${y + 4}" font-size="11" fill="#5f6368">${nf(tops[1] * q / 4)}</text>`;
+    }
+    const every = Math.max(1, Math.ceil(n / (W < 560 ? 4 : 8)));
+    S.forEach((s, i) => { if (i % every === 0 || (n <= 8)) g += `<text x="${X(i)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="#5f6368">${esc(s.short)}</text>`; });
+    sel.forEach((m, k) => {
+      if (n === 1) { g += `<circle cx="${X(0)}" cy="${Y(S[0][m.id], k)}" r="4" fill="${m.c}"/>`; return; }
+      const d = S.map((s, i) => (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(s[m.id], k).toFixed(1)).join(" ");
+      g += `<path d="${d}" fill="none" stroke="${m.c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    });
+    g += `<line id="vl" x1="0" x2="0" y1="${pt}" y2="${pt + ih}" stroke="#80868b" stroke-width="1" visibility="hidden"/>`;
+    sel.forEach((m, k) => { g += `<circle class="dot" data-k="${k}" r="4.5" fill="${m.c}" stroke="#fff" stroke-width="2" visibility="hidden"/>`; });
+    g += `<rect x="${pl}" y="0" width="${iw}" height="${H}" fill="transparent" id="hit"/>`;
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("width", W); svg.setAttribute("height", H); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", sel.map(m => m.label).join(" and ") + " over " + rangeText().toLowerCase());
+    svg.innerHTML = g;
+    box.insertBefore(svg, tip);
+    const vl = svg.querySelector("#vl"), dots = [...svg.querySelectorAll(".dot")];
+    const show = ev => {
+      const r = svg.getBoundingClientRect(), x = ev.clientX - r.left;
+      const i = Math.max(0, Math.min(n - 1, Math.round(n <= 1 ? 0 : (x - pl) / iw * (n - 1))));
+      const cx = X(i);
+      vl.setAttribute("x1", cx); vl.setAttribute("x2", cx); vl.setAttribute("visibility", "visible");
+      dots.forEach(dt => { const k = +dt.dataset.k; dt.setAttribute("cx", cx); dt.setAttribute("cy", Y(S[i][sel[k].id], k)); dt.setAttribute("visibility", "visible"); });
+      tip.innerHTML = `<div class="t">${esc(S[i].long)}</div>` + sel.map(m =>
+        `<div class="r"><i style="background:${m.c}"></i>${esc(m.label)}<b>${nf(S[i][m.id])}</b></div>`).join("");
+      tip.style.display = "block";
+      const tw = tip.offsetWidth, left = cx + 8 + 14 + tw > box.clientWidth ? cx + 8 - 14 - tw : cx + 8 + 14;
+      tip.style.left = Math.max(4, left) + "px"; tip.style.top = "18px";
+    };
+    const hide = () => { vl.setAttribute("visibility", "hidden"); dots.forEach(dt => dt.setAttribute("visibility", "hidden")); tip.style.display = "none"; };
+    const hit = svg.querySelector("#hit");
+    hit.addEventListener("pointermove", show);
+    hit.addEventListener("pointerdown", show);
+    hit.addEventListener("pointerleave", hide);
+  }
+  let rsT = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(rsT);
+    rsT = setTimeout(() => { if (tab === "performance" && DATA && DATA.M && $("#chartp")) draw(); }, 150);
+  });
+
   /* ------------------------------------------------------------- rendering */
   function tile(k, v, s, cls) {
     return `<div class="tile ${cls || ""}"><div class="k">${esc(k)}</div>
@@ -976,19 +1681,17 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
   }
 
   const TABS = [
-    ["overview", "Overview", d => ""],
-    ["people",   "People",   d => d.ctxCount],
-    ["users",    "Accounts", d => d.accounts ? d.accounts.length : ""],
-    ["places",   "Places",   d => d.spots.length],
-    ["locked",   "Locked interest", d => d.held.length],
-    ["emails",   "Emails",   d => d.subs.length],
+    ["performance", "Performance", d => ""],
     ["leads",    "Leads",    d => d.bookings.length],
+    ["emails",   "Emails",   d => d.subs.length],
     ["reviews",  "Reviews",  d => d.reviews.length],
+    ["users",    "Accounts", d => d.accounts ? d.accounts.length : ""],
+    ["locked",   "Locked interest", d => d.held.length, d => !d.held.length],
     ["events",   "Raw events", d => d.events]
   ];
 
   function renderTabs(c) {
-    $("#tabs").innerHTML = TABS.map(([id, label, n]) => {
+    $("#tabs").innerHTML = TABS.filter(t => !t[3] || !t[3](c) || tab === t[0]).map(([id, label, n]) => {
       const v = n(c);
       return `<button data-t="${id}" class="${tab === id ? "on" : ""}">${esc(label)}
         ${v ? `<span class="n">${nf(v)}</span>` : ""}</button>`;
@@ -1002,337 +1705,9 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     const v = $("#view");
     const rangeLabel = day
       ? (day === today() ? "today" : day === addDays(today(), -1) ? "yesterday" : dayLabelOf(day))
-      : days ? "last " + days + " days" : "all time";
+      : rangeText().toLowerCase();
 
-    if (tab === "overview") {
-      v.innerHTML = `
-        <h2 class="sec">The numbers, ${esc(rangeLabel)}</h2>
-        <div class="tiles">
-          ${tile("People", nf(c.devices), "unique visitors who did something", "teal")}
-          ${tile("Visits", nf(c.visits), "sessions, 30-min rule", "teal")}
-          ${tile("Engagement rate", c.engagementRate + "%",
-                 "bounce rate " + c.bounceRate + "%", "gold")}
-          ${tile("Typical visit", c.derivedDuration ? secs(c.derivedDuration) : "—",
-                 c.sessionMedian ? "measured: " + secs(c.sessionMedian) : "from event gaps", "gold")}
-          ${tile("Views per visit", c.viewsPerVisit, "screens opened per session")}
-          ${tile("Places opened", nf(c.spotOpens), "spot sheets")}
-          ${tile("Took directions", nf(c.mapsTotal || 0), "tapped Google Maps")}
-          ${tile("Emails", nf(c.subs.length), "on the list")}
-        </div>
-        ${(() => { const w = c.welcome, pc = n => w.shown ? " · " + Math.round(n / w.shown * 100) + "% of those who saw it" : "";
-          return `<h2 class="sec">Welcome screen (first visit to the homepage)</h2>
-        <div class="tiles">
-          ${tile("Saw it", w.shown ? nf(w.shown) : "—", w.since ? "counted since " + fmtDate(w.since) : "counting starts with the next visitor", "teal")}
-          ${tile("I'm planning a trip", w.shown ? nf(w.planOfShown) : "—", w.shown ? "tapped it" + pc(w.planOfShown) : "", "teal")}
-          ${tile("Just show me the places", w.shown ? nf(w.exploreOfShown) : "—", w.shown ? "tapped it" + pc(w.exploreOfShown) : "")}
-          ${tile("Left without tapping", w.shown ? nf(w.noTap) : "—", w.shown ? "saw it, never tapped" + pc(w.noTap) : "needs a few days of 'saw it'", "gold")}
-        </div>
-        <div class="note">All four boxes count the same people: everyone who saw the screen since it started being
-          counted${w.since ? " (" + fmtDate(w.since) + ")" : ""}, so they add up to "Saw it"${w.closedOfShown ? ` (${nf(w.closedOfShown)} closed it another way)` : ""}.
-          People landing on a place or Info link never see this screen, and nor does anyone who has seen it before.
-          ${(w.plan - w.planOfShown) || (w.explore - w.exploreOfShown) ? `<br>Older taps, from before "saw it" was counted (so no "left" number exists for them),
-          in this date range: <b>${nf(w.plan - w.planOfShown)}</b> "I'm planning a trip" · <b>${nf(w.explore - w.exploreOfShown)}</b> "Just show me the places".` : ""}</div>`; })()}
-        ${c.dropped ? `<div class="note"><b>${nf(c.dropped)}</b> device${c.dropped === 1 ? "" : "s"} not counted anywhere on
-          this page: Ali's laptop and the test browsers on it, devices marked with
-          <code>?me=on</code> (open <b>exploresoman.com/?me=on</b> once on a phone to stop counting it), and crawlers.</div>` : ""}
-        ${c.liveNow ? `<div class="note" style="border-left-color:var(--good)">
-          <b>${nf(c.liveNow)}</b> ${c.liveNow === 1 ? "person is" : "people are"} on the site right now.</div>` : ""}
-        <div class="note">
-          <b>Engagement rate</b> uses Google Analytics' own test: a visit counts as engaged if it
-          lasted over 10 seconds, opened 2+ screens, or included a real action. Bounce rate is
-          simply its inverse — not "left after one page", but "left without doing anything".
-          Visits are cut the way Plausible and GA4 cut them: a new visit begins after 30 minutes
-          of no activity, worked out from your event history, so these numbers cover all your
-          data and not just since the last deploy.
-        </div>
-        <div class="note">
-          <b>${nf(c.devices)} people</b> is devices that actually did something — opened a
-          place, searched, tapped Maps. A further <b>${nf(c.passers)}</b> device${c.passers === 1 ? "" : "s"}
-          loaded the page and did nothing at all; those are mostly crawlers and link previews,
-          and they are excluded from every number above.
-        </div>
-        <h2 class="sec">Traffic — people per ${day ? "hour" : "day"}</h2>
-        ${chart(c.series)}
-        ${c.daily.length ? `<h2 class="sec">Day by day
-          <button class="ghost" id="expDaily" style="margin-left:auto">Export CSV</button></h2>
-        <div class="panel">${dataTable(c.daily, dailyCols(c))}</div>
-        <div class="note">Tap a day to see the whole dashboard for just that day.
-          <b>People</b> uses the same test as the People tile, so someone who comes back on two
-          days counts once on each. Days run midnight to midnight on this computer's clock.</div>` : ""}
-        <h2 class="sec">How long a visit lasts</h2>
-        <div class="panel">${barTable(c.sessionStats ? c.sessionStats.buckets : [], ["Length of visit", "Visits"])}</div>
-        ${c.sessionStats && c.sessionStats.n ? `<div class="note">
-          Longest visit so far: <b>${secs(c.sessionStats.max)}</b>. Idle time is not counted —
-          the clock stops when the page is hidden or untouched for a minute, so these are
-          minutes of actual attention.</div>` : `<div class="note">
-          Visit timing starts collecting from the build you deploy next.</div>`}
-        <h2 class="sec">Where they go</h2>
-        <div class="panel">${barTable(c.tabs, ["Screen", "Views"])}</div>
-        <h2 class="sec">Where visits start and end</h2>
-        <div class="panel">${barTable(c.entryTabs, ["Landed on", "Visits"])}</div>
-        <div class="panel">${barTable(c.exitTabs, ["Last screen before leaving", "Visits"])}</div>
-        <div class="note">Entry tells you what the front door is doing. Exit tells you where
-          people give up — a screen high on both lists is usually the problem one.</div>
-        ${c.errors.length ? `<h2 class="sec">⚠ Errors — the app broke for someone</h2>
-        <div class="panel">${barTable(c.errors, ["Error", "Times"], { limit: 10 })}</div>
-        <div class="panel"><div class="k" style="font-size:11.5px;color:var(--muted)">
-          Hit ${nf(c.errorPeople)} ${c.errorPeople === 1 ? "person" : "people"}.
-          A syntax slip in content.js shows up here first.</div></div>` : ""}
-        <h2 class="sec">Where they drop off</h2>
-        <div class="panel">${barTable(c.funnel, ["Step (people, not clicks)", "People"])}</div>
-        <h2 class="sec">Every tracked action</h2>
-        <div class="panel">${barTable(c.names, ["Event", "Times"], { limit: 40 })}</div>`;
-      v.querySelectorAll("[data-day]").forEach(b => b.onclick = () => setDay(b.dataset.day));
-      const exp = $("#expDaily");
-      if (exp) exp.onclick = () => csv(c.daily, dailyCols(c), "exploring-oman-by-day.csv");
-      return;
-    }
-
-    if (tab === "people") {
-      const note = c.ctxCount
-        ? ""
-        : `<div class="empty">Nothing yet — this only fills up from visits AFTER
-             the build that added device and time-zone collection. Give it a day.</div>`;
-      v.innerHTML = `
-        <h2 class="sec">Where they are, ${esc(rangeLabel)} <span class="pill">counted per device</span></h2>
-        ${note}
-        <div class="panel">${barTable(c.countries, ["Country (from time zone)", "Visits"], { limit: 30 })}</div>
-        <h2 class="sec">What they are on <span class="pill">${nf(c.knownDevices)} devices</span></h2>
-        <div class="panel">${barTable(c.kinds, ["Device type", "Devices"])}</div>
-        <div class="panel">${barTable(c.screens, ["Screen size", "Devices"])}</div>
-        <div class="panel">${barTable(c.oses, ["Operating system", "Devices"])}</div>
-        <div class="panel">${barTable(c.browsers, ["Browser", "Devices"])}</div>
-        <h2 class="sec">Language</h2>
-        <div class="panel">${barTable(c.langs, ["Browser language", "Visits"], { limit: 15 })}</div>
-        <h2 class="sec">Which post sent them (?r= on your links)</h2>
-        <div class="panel">${barTable(c.campaigns, ["Campaign tag", "Visits"], { limit: 20 })}</div>
-        <div class="panel">${barTable(c.campSrc, ["utm_source", "Visits"], { limit: 20 })}</div>
-        <div class="panel" style="display:flex;gap:10px;flex-wrap:wrap">
-          ${tile("Arrived via a shared page", nf(c.viaPage), "landed on an s/ or p/ page")}
-        </div>
-        <h2 class="sec">Traffic channels</h2>
-        <div class="panel">${barTable(c.channels, ["Channel", "Visits"])}</div>
-        <div class="note">Messaging apps and typed URLs both arrive with no referrer, so they
-          land in Direct — that is where most WhatsApp shares show up. It is the standard
-          limitation everywhere, which is why the <b>?r=</b> tags matter.</div>
-        <h2 class="sec">How they got here</h2>
-        <div class="panel">${barTable(c.refs, ["Came from", "Visits"], { limit: 15 })}</div>
-        <h2 class="sec">Exact time zones</h2>
-        <div class="panel">${barTable(c.zones, ["Time zone", "Visits"], { limit: 30 })}</div>`;
-      return;
-    }
-
-    if (tab === "users") {
-      /* -------------------------------------------------- registered users
-         Everything on this tab is ACCOUNTS, not devices: people who signed
-         up, what they hoard (♥) and what they've actually done (✓). */
-      if (!c.accounts) {
-        v.innerHTML = `
-          <h2 class="sec">Accounts</h2>
-          <div class="note"><b>One-time setup:</b> run
-          <code>delivery/stats-users-access.sql</code> in Supabase → SQL Editor
-          (after <code>accounts-schema.sql</code>), then reload this page.
-          Until then the dashboard has no permission to read the accounts.</div>`;
-        return;
-      }
-      const acc = c.accounts;
-      const banned = r => r.banned_until && new Date(r.banned_until) > new Date();
-      const devByUser = new Map();
-      c.udevices.forEach(dv => {
-        const cur = devByUser.get(dv.user_id);
-        if (!cur || new Date(dv.last_seen) > new Date(cur.last_seen)) devByUser.set(dv.user_id, dv);
-      });
-      // "From": what they DECLARED at signup wins; the device time zone fills in.
-      const whereOf = r => {
-        if (r.country) return r.country;
-        const dv = devByUser.get(r.id);
-        return dv ? countryOf(dv.tz) : "—";
-      };
-      const wireUops = scope => scope.querySelectorAll("button[data-uop]").forEach(btn => btn.onclick = async () => {
-        const { uop, uid, uemail } = btn.dataset;
-        if (uop === "del" &&
-            !confirm("Delete " + (uemail || "this user") + " permanently?\n\nTheir profile, saves and been-theres go too. Cannot be undone.")) return;
-        btn.disabled = true;
-        try {
-          if (uop === "del") {
-            await rpc("dashboard_delete_user", { uid });
-            const i = acc.findIndex(x => x.id === uid);
-            if (i > -1) acc.splice(i, 1);
-            if (userDetail === uid) userDetail = null;
-            toast("Account deleted.");
-          } else {
-            await rpc("dashboard_ban_user", { uid, ban: uop === "ban" });
-            const row = acc.find(x => x.id === uid);
-            if (row) row.banned_until = uop === "ban" ? "3000-01-01T00:00:00Z" : null;
-            toast(uop === "ban" ? "Banned — they can no longer sign in." : "Unbanned.");
-          }
-          draw();
-        } catch (e) {
-          btn.disabled = false;
-          toast("Could not do that: " + String(e.message || e).slice(0, 120), true);
-        }
-      });
-
-      /* ================= one user's page ================= */
-      if (userDetail) {
-        const u = acc.find(x => x.id === userDetail);
-        if (!u) { userDetail = null; draw(); return; }
-        const devs = c.udevices.filter(d => d.user_id === u.id);
-        const saves = c.usaves.filter(x => x.user_id === u.id);
-        const visits = c.uvisits.filter(x => x.user_id === u.id);
-        const urevs = c.reviews.filter(r => r.user_id === u.id);
-        const stars = n => n ? "★".repeat(n) + "☆".repeat(5 - n) : "—";
-        const idList = rows => rows.length
-          ? `<div class="tblwrap"><table><tbody>` + rows.map(x =>
-              `<tr><td>${esc(x.spot_id)}</td><td class="num">${esc(fmtDate(x.created_at || ""))}</td></tr>`).join("") +
-            `</tbody></table></div>`
-          : `<div class="empty">Nothing yet.</div>`;
-        v.innerHTML = `
-          <p><button class="ghost" id="uBack">‹ All accounts</button></p>
-          <h2 class="sec">${esc(u.name || u.email || "Account")}
-            ${banned(u) ? `<span class="pill down">banned</span>` : `<span class="pill up">active</span>`}</h2>
-          <div class="tiles">
-            ${tile("Email", u.email || "—", "")}
-            ${tile("From", u.country || "—", devs.length ? "device says " + esc(countryOf((devByUser.get(u.id)||{}).tz)) : "no device seen yet")}
-            ${tile("Joined", fmtDate(u.created_at), u.confirmed_at ? "confirmed " + fmtDate(u.confirmed_at) : "NOT confirmed")}
-            ${tile("Last seen", u.last_sign_in ? fmtDate(u.last_sign_in) : "—", "")}
-            ${tile("♥ / ✓ / ⭐", nf(u.saves) + " / " + nf(u.visits) + " / " + nf(u.reviews), "saves / been / reviews")}
-          </div>
-          <p>
-            ${banned(u)
-              ? `<button class="act" data-uop="unban" data-uid="${esc(u.id)}">Unban</button>`
-              : `<button class="act" data-uop="ban" data-uid="${esc(u.id)}">Ban</button>`}
-            <button class="act bad" data-uop="del" data-uid="${esc(u.id)}" data-uemail="${esc(u.email || "")}">Delete account</button>
-          </p>
-          <h2 class="sec">Devices <span class="pill">${nf(devs.length)}</span></h2>
-          <div class="panel">${devs.length ? `<div class="tblwrap"><table><thead><tr>
-              <th>Where</th><th>Device</th><th>Browser</th><th class="num">Last seen</th></tr></thead><tbody>` +
-            devs.map(d => `<tr><td>${esc(countryOf(d.tz))}</td><td>${esc([d.kind, d.os].filter(Boolean).join(" · ") || "—")}</td>
-              <td>${esc(d.browser || "—")}</td><td class="num">${esc(fmtDate(d.last_seen))}</td></tr>`).join("") +
-            `</tbody></table></div>` : `<div class="empty">No signed-in visit recorded yet.</div>`}</div>
-          <h2 class="sec">♥ Saved <span class="pill">${nf(saves.length)}</span></h2>
-          <div class="panel">${idList(saves)}</div>
-          <h2 class="sec">✓ Been there <span class="pill">${nf(visits.length)}</span></h2>
-          <div class="panel">${idList(visits)}</div>
-          <h2 class="sec">⭐ Their reviews <span class="pill">${nf(urevs.length)}</span></h2>
-          <div class="panel">${urevs.length ? `<div class="tblwrap"><table><thead><tr>
-              <th>When</th><th>Place</th><th>Stars</th><th>What they wrote</th><th>Live</th><th>Action</th></tr></thead><tbody>` +
-            urevs.map(r => `<tr><td>${esc(fmtDate(r.created_at))}</td><td>${esc(r.spot || "—")}</td>
-              <td><span class="stars">${stars(r.stars)}</span></td><td class="wrap">${esc(r.tip || "—")}</td>
-              <td>${r.published ? `<span class="pill up">live</span>` : `<span class="pill down">hidden</span>`}</td>
-              <td>${r.published
-                  ? `<button class="act" data-table="reviews" data-id="${esc(r.id)}" data-field="published" data-value="false">Hide</button>`
-                  : `<button class="act go" data-table="reviews" data-id="${esc(r.id)}" data-field="published" data-value="true">Publish</button>`}
-                <button class="act bad" data-table="reviews" data-id="${esc(r.id)}" data-del="1">Delete</button></td></tr>`).join("") +
-            `</tbody></table></div>` : `<div class="empty">No reviews yet.</div>`}</div>`;
-        $("#uBack").onclick = () => { userDetail = null; draw(); };
-        wireUops(v);
-        wireActions(v);
-        return;
-      }
-
-      const accNew = acc.filter(a => inWindow(a.created_at));
-      const confirmed = acc.filter(a => a.confirmed_at).length;
-      const active = acc.filter(a => a.last_sign_in && inWindow(a.last_sign_in)).length;
-      // signups per day, same series shape the traffic chart eats
-      const sBySlot = new Map();
-      acc.filter(a => !day || inWindow(a.created_at)).forEach(a => {
-        const k = slotOf(a.created_at); sBySlot.set(k, (sBySlot.get(k) || 0) + 1); });
-      const signupSeries = slots(days || 30).map(x => Object.assign(x, { n: sBySlot.get(x.key) || 0 }));
-      const cols = [
-        { h: "Name",       get: r => `<button class="act go" data-uview="${esc(r.id)}">${esc(r.name || r.email || "—")}</button>`, raw: r => r.name || "" },
-        { h: "Email",      get: r => `<span class="mono">${esc(r.email || "")}</span>`, raw: r => r.email || "" },
-        { h: "Joined",     get: r => fmtDate(r.created_at), raw: r => r.created_at },
-        { h: "Confirmed",  get: r => r.confirmed_at ? "✓" : `<span style="color:var(--warn)">not yet</span>`, raw: r => r.confirmed_at ? "yes" : "no" },
-        { h: "Last seen",  get: r => r.last_sign_in ? fmtDate(r.last_sign_in) : "—", raw: r => r.last_sign_in || "" },
-        { h: "From",       get: r => esc(whereOf(r)), raw: r => whereOf(r) },
-        { h: "♥",          get: r => nf(r.saves), cls: "num", raw: r => r.saves },
-        { h: "✓",          get: r => nf(r.visits), cls: "num", raw: r => r.visits },
-        { h: "Reviews",    get: r => nf(r.reviews), cls: "num", raw: r => r.reviews },
-        { h: "Status",     get: r => banned(r)
-            ? `<span class="pill down">banned</span>` : `<span class="pill up">active</span>`,
-          raw: r => banned(r) ? "banned" : "active" },
-        { h: "Action",     get: r => {
-            const ban = banned(r)
-              ? `<button class="act" data-uop="unban" data-uid="${esc(r.id)}">Unban</button>`
-              : `<button class="act" data-uop="ban" data-uid="${esc(r.id)}">Ban</button>`;
-            return ban + `<button class="act bad" data-uop="del" data-uid="${esc(r.id)}"
-              data-uemail="${esc(r.email || "")}">Delete</button>`;
-          }, raw: r => "" }
-      ];
-      v.innerHTML = `
-        <h2 class="sec">Accounts, ${esc(rangeLabel)}</h2>
-        <div class="tiles">
-          ${tile("Accounts", nf(acc.length), "registered, all time", "teal")}
-          ${tile("New", nf(accNew.length), rangeLabel, "teal")}
-          ${tile("Confirmed", acc.length ? Math.round(confirmed / acc.length * 100) + "%" : "—",
-                 nf(confirmed) + " confirmed the email", "gold")}
-          ${tile("Signed in", nf(active), rangeLabel)}
-          ${tile("Synced ♥", nf(c.usaves.length), "saves living on accounts")}
-          ${tile("Synced ✓", nf(c.uvisits.length), "been-theres on accounts")}
-        </div>
-        <h2 class="sec">Signups per ${day ? "hour" : "day"}</h2>
-        ${chart(signupSeries)}
-        <h2 class="sec">Every account
-          <span class="pill">${nf(acc.length)}</span>
-          <button class="ghost" id="expUsers" style="margin-left:auto">Export CSV</button></h2>
-        <div class="panel">${dataTable(acc, cols)}</div>
-        <div class="note">An account that never confirms its email usually means the mail
-          went to spam — if you see a cluster of "not yet", check the Brevo log.
-          The ♥ / ✓ counts here are what's synced to the account; devices without
-          accounts still track anonymously under People.</div>
-        <h2 class="sec">Where account holders are <span class="pill">one count per person per country</span></h2>
-        ${c.udevices.length ? `
-        <div class="panel">${barTable((() => {
-          const seen = new Map();
-          c.udevices.forEach(dv => seen.set(dv.user_id + "|" + countryOf(dv.tz), countryOf(dv.tz)));
-          return tally([...seen.values()], x => x);
-        })(), ["Country (from device time zone)", "People"], { limit: 20 })}</div>
-        <h2 class="sec">What account holders sign in on <span class="pill">${nf(c.udevices.length)} device${c.udevices.length === 1 ? "" : "s"}</span></h2>
-        <div class="panel">${barTable(tally(c.udevices, dv => [dv.kind, dv.os].filter(Boolean).join(" · ") || "unknown"), ["Device", "Count"])}</div>
-        <div class="panel">${barTable(tally(c.udevices, dv => dv.browser || "unknown"), ["Browser", "Count"])}</div>`
-        : `<div class="empty">Fills in as people open the app signed-in after this update —
-           each sign-in records that device's type, OS, browser and time zone
-           against the account (run <code>delivery/user-devices.sql</code> once).</div>`}
-        <h2 class="sec">Most saved by account holders (♥)</h2>
-        <div class="panel">${barTable(tally(c.usaves, r => r.spot_id), ["Place", "Saves"], { limit: 25 })}</div>
-        <h2 class="sec">Most been-there by account holders (✓)</h2>
-        <div class="panel">${barTable(tally(c.uvisits, r => r.spot_id), ["Place", "Been"], { limit: 25 })}</div>`;
-      const exp = $("#expUsers");
-      if (exp) exp.onclick = () => csv(acc, cols.filter(x => x.h !== "Action"), "oman-accounts.csv");
-      // A name click opens that account's own page: everything they saved,
-      // ticked, reviewed and signed in on, plus the admin buttons.
-      v.querySelectorAll("button[data-uview]").forEach(b =>
-        b.onclick = () => { userDetail = b.dataset.uview; draw(); });
-      wireUops(v);
-      return;
-    }
-
-    if (tab === "places") {
-      v.innerHTML = `
-        <h2 class="sec">What they searched for</h2>
-        <div class="panel">${barTable(c.searches, ["Search term", "Times"], { limit: 30 })}</div>
-        <h2 class="sec">Searches that found NOTHING — your content to-do list</h2>
-        <div class="panel">${barTable(c.zeroSearches, ["Typed this, got no results", "Times"], { limit: 30 })}</div>
-        <h2 class="sec">Took directions (tapped Google Maps)</h2>
-        <div class="panel" style="display:flex;gap:10px;flex-wrap:wrap">
-          ${tile("Maps taps", nf(c.mapsTotal), "by " + nf(c.mapsPeople) + " people")}
-        </div>
-        <div class="panel">${barTable(c.maps, ["Place they set off for", "Taps"], { limit: 30 })}</div>
-        <h2 class="sec">How long they stay</h2>
-        <div class="panel" style="display:flex;gap:10px;flex-wrap:wrap">
-          ${tile("Typical read", c.dwellMedian ? secs(c.dwellMedian) : "—", c.dwellReads + " reads timed")}
-          ${tile("Typical visit", c.sessionMedian ? secs(c.sessionMedian) : "—", c.sessionCount + " visits timed")}
-        </div>
-        <div class="panel">${barTable(
-            c.dwellBySpot.map(([k, ms]) => [k, Math.round(ms / 1000)]),
-            ["Place — median seconds spent reading", "Seconds"], { limit: 30 })}</div>
-        <h2 class="sec">Most opened places, ${esc(rangeLabel)}</h2>
-        <div class="panel">${barTable(c.spots, ["Place", "Opens"], { limit: 40 })}</div>
-        <h2 class="sec">Most saved (♥)</h2>
-        <div class="panel">${barTable(c.saves, ["Place", "Saves"], { limit: 25 })}</div>`;
-      return;
-    }
+    if (tab === "performance") return drawPerf(v);
 
     if (tab === "locked") {
       v.innerHTML = `
@@ -1506,7 +1881,10 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     $("#view").innerHTML = `<div class="empty">Loading…</div>`;
     try {
       const raw = await loadAll();
-      DATA = crunch(raw);
+      const M = buildModel(raw.events, raw.internalIds, raw.R);
+      DATA = crunch(Object.assign({}, raw, { events: M.curEvents, dropped: M.ours + M.bots }));
+      DATA.M = M;
+      if (!TABS.some(t => t[0] === tab)) tab = "performance";
       draw();
       const who = (session && session.user && session.user.email) || "signed in";
       $("#who").textContent = who;
@@ -1561,6 +1939,8 @@ tbody tr:first-child .bar-cell span{color:var(--ink);font-weight:600}
     if (b.dataset.day != null) return setDay(addDays(today(), +b.dataset.day));
     day = null;
     days = +b.dataset.d;
+    pageNo = 0;
+    saveView();
     syncRange();
     boot();
   });
