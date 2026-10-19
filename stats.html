@@ -1173,22 +1173,32 @@ td.num{color:var(--ink)}
        Explore or Plan (a welcome button had already moved the address) or
        comes from our own page. That is a reload or "Open in Safari", and
        Instagram's browser drops its storage on a reload too. */
+    /* ...and a FIRST visit that says it came from our own page is never a
+       newcomer (nobody arrives from exploresoman.com for the first time):
+       it is someone already here whose id was lost on a reload, often after
+       they came back to Instagram's browser 20+ minutes later. It joins the
+       same phone that was last on the site, up to 6 hours before. */
+    const t0 = ev.length ? tOf(ev[0]) : 0;
     groups.forEach(list => {
       if (list.length < 2) return;
       list.sort((a, b) => a.first - b.first);
       for (let j = 1; j < list.length; j++) {
         const b = list[j], bs = sourceOf(b.ctx).ch, bh = hostOf(b.ctx.ref), ours = /(^|\.)exploresoman\.com$/.test(bh);
         const carriesOn = (!bh || ours) && (ours || (!!b.firstView && b.firstView !== "wadis"));
+        const ownFirst = ours && b.first - t0 > 6 * 3600e3;     // its true first visit is inside the loaded data
+        let best = null, bestGap = Infinity;
         for (let i = j - 1; i >= 0; i--) {
           const a = list[i];
-          if (b.first - a.first > 3 * 3600e3) break;
+          if (b.first - a.first > 12 * 3600e3) break;
           if (find(a.id) === find(b.id)) continue;
           const gap = b.first - a.last, as = sourceOf(a.ctx).ch;
           const quick = gap >= -30e3 && gap <= 90e3 &&
             (as === bs || as === "Direct or shared link" || bs === "Direct or shared link");
           const reopen = carriesOn && gap >= -600e3 && gap <= 600e3;
-          if (quick || reopen) { join(a.id, b.id); break; }
+          const own = ownFirst && gap >= -600e3 && gap <= 6 * 3600e3;
+          if ((quick || reopen || own) && Math.abs(gap) < bestGap) { best = a; bestGap = Math.abs(gap); }
         }
+        if (best) join(best.id, b.id);
       }
     });
     /* 2. people, and who is not counted */
