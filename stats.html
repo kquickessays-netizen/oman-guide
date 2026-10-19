@@ -1265,10 +1265,12 @@ td.num{color:var(--ink)}
           case "view": { const tb = normTab(pr.tab) || "wadis"; v.pages.add(tb); if (!v.land) v.land = tb; break; }
           case "spot": if (pr.id) v.places.add(pr.id); v.f.spot = 1; break;
           case "maps_click": v.f.maps = 1; if (pr.spot) v.maps.add(pr.spot); break;
-          case "whatsapp_click": v.f.wa = 1; break;
-          case "lead": v.f.form = 1; break;
+          case "whatsapp_click": v.f.wa = 1; if (pr.source === "plan") v.f.planWa = 1; break;
+          case "header_cta": v.f.waTop = 1; break;                    // the WhatsApp button top right
+          case "lead": v.f.form = 1; break;                           // the lead pop-up (Leads tab), not the Plan page
           case "trip_intent": v.f.email = 1; break;
-          case "book_cta": case "book_click": v.f.book = 1; break;
+          case "book_cta": v.f.book = 1; break;                       // "Book" only scrolls to the plan section
+          case "book_click": v.f.planForm = 1; break;                 // the Plan page form, sent
           case "aff_click": if (/whatsapp|wa\.me/i.test(String(pr.href || ""))) v.f.wa = 1; else v.f.partner = 1; break;
           case "insta_click": v.f.insta = 1; break;
           case "search": if (pr.q) v.searches.push([t, String(pr.q).trim().toLowerCase(), +pr.n || 0]); break;
@@ -1281,7 +1283,10 @@ td.num{color:var(--ink)}
       });
     });
     visits.forEach(v => {
-      v.f.reach = !!(v.f.wa || v.f.form || v.f.book || v.f.email);
+      /* REACHED OUT = real contact only (Ali, 19 Oct): any WhatsApp button
+         (the one top right included) or the Plan page form sent. Not the
+         "Book" button, not an email sign-up, not the lead pop-up. */
+      v.f.reach = !!(v.f.wa || v.f.waTop || v.f.planForm);
       let ss = null;
       for (const s of v.sids) { if (sidStart.has(s)) { ss = sidStart.get(s); break; } }
       if (!ss && v.start - v.p.first < 30 * 60e3) ss = v.p.ctx;     // first visit, start signal not linked
@@ -1421,10 +1426,13 @@ td.num{color:var(--ink)}
     const did = [
       ["Opened a place", x => x.f.spot, "#00897b"],
       ["Opened the Plan page", x => x.pages.has("plan")],
-      ["Tapped WhatsApp", x => x.f.wa, "#e8710a"],
-      ["Tapped Book", x => x.f.book, "#e8710a"],
-      ["Sent the trip form", x => x.f.form, "#e8710a"],
-      ["Gave an email", x => x.f.email, "#e8710a"],
+      ["Reached out (any of the three below)", x => x.f.reach, "#e8710a"],
+      ["  Tapped a WhatsApp button", x => x.f.wa, "#e8710a"],
+      ["  Tapped WhatsApp top right", x => x.f.waTop, "#e8710a"],
+      ["  Sent the Plan page form", x => x.f.planForm, "#e8710a"],
+      ["Sent the lead pop-up (Leads tab)", x => x.f.form],
+      ["Tapped Book (scrolls to the plan)", x => x.f.book],
+      ["Gave an email", x => x.f.email],
       ["Took directions (Google Maps)", x => x.f.maps],
       ["Tapped car rental or a partner link", x => x.f.partner],
       ["Opened Hussain's Instagram", x => x.f.insta],
@@ -1533,7 +1541,7 @@ td.num{color:var(--ink)}
         opens the link in Instagram, then reloads or opens it again in Safari${M.merged ? ` (${nf(M.merged)} such double ids merged in this range)` : ""}.
         A <b>visit</b> ends after 30 minutes with nothing happening, and a page left open in the background is not a visit,
         so People ≤ Visits always. Visit length is attention time: the page on screen and touched in the last minute.
-        <b>Opened a place</b> and <b>Reached out</b> (tapped WhatsApp or Book, sent the trip form, or gave an email) count people, not taps.
+        <b>Opened a place</b> and <b>Reached out</b> (tapped any WhatsApp button, the one top right included, or sent the Plan page form; not the Book button, an email or the lead pop-up) count people, not taps.
         A person who comes on two days counts once in the total and once on each day.
         Countries come from the phone's clock, never an address.
         <b>Not counted:</b> ${nf(M.ours)} of our own device${M.ours === 1 ? "" : "s"} (Ali's laptop, test browsers, and phones opened once with
