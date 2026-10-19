@@ -1155,8 +1155,9 @@ td.num{color:var(--ink)}
       const d = e.device_id, t = tOf(e), p = propsOf(e);
       if (!par.has(d)) par.set(d, d);
       let x = dev.get(d);
-      if (!x) dev.set(d, x = { id: d, first: t, last: t, ctx: null, did: false });
+      if (!x) dev.set(d, x = { id: d, first: t, last: t, ctx: null, did: false, firstView: null });
       x.last = t;
+      if (e.event === "view" && x.firstView == null) x.firstView = normTab(p.tab) || "wadis";
       if (e.event === "internal") internal.add(d);
       if (e.event === "session_start") { if (!x.ctx) x.ctx = p; if (p.sid && !sidStart.has(p.sid)) sidStart.set(p.sid, p); }
       if (DID.has(e.event)) x.did = true;
@@ -1167,18 +1168,26 @@ td.num{color:var(--ink)}
     dev.forEach(x => { if (!x.ctx) return;
       const s = [x.ctx.os, x.ctx.w, x.ctx.dpr, x.ctx.tz, x.ctx.lang].join("|");
       if (!groups.has(s)) groups.set(s, []); groups.get(s).push(x); });
+    /* ...and so is a new id that CARRIES ON mid-site within 10 minutes of
+       the last one: no Instagram link in front of it, and it starts on
+       Explore or Plan (a welcome button had already moved the address) or
+       comes from our own page. That is a reload or "Open in Safari", and
+       Instagram's browser drops its storage on a reload too. */
     groups.forEach(list => {
       if (list.length < 2) return;
       list.sort((a, b) => a.first - b.first);
       for (let j = 1; j < list.length; j++) {
-        const b = list[j], bs = sourceOf(b.ctx).ch;
+        const b = list[j], bs = sourceOf(b.ctx).ch, bh = hostOf(b.ctx.ref), ours = /(^|\.)exploresoman\.com$/.test(bh);
+        const carriesOn = (!bh || ours) && (ours || (!!b.firstView && b.firstView !== "wadis"));
         for (let i = j - 1; i >= 0; i--) {
           const a = list[i];
           if (b.first - a.first > 3 * 3600e3) break;
-          const gap = b.first - a.last;
-          if (gap < -30e3 || gap > 90e3 || find(a.id) === find(b.id)) continue;
-          const as = sourceOf(a.ctx).ch;
-          if (as === bs || as === "Direct or shared link" || bs === "Direct or shared link") { join(a.id, b.id); break; }
+          if (find(a.id) === find(b.id)) continue;
+          const gap = b.first - a.last, as = sourceOf(a.ctx).ch;
+          const quick = gap >= -30e3 && gap <= 90e3 &&
+            (as === bs || as === "Direct or shared link" || bs === "Direct or shared link");
+          const reopen = carriesOn && gap >= -600e3 && gap <= 600e3;
+          if (quick || reopen) { join(a.id, b.id); break; }
         }
       }
     });
@@ -1211,15 +1220,28 @@ td.num{color:var(--ink)}
     const visits = [];
     byP.forEach((list, p) => {
       let v = null;
+      const seenMs = new Map();
       list.forEach(e => {
-        const t = tOf(e);
+        const t = tOf(e), pr = propsOf(e), sid = pr.sid;
+        /* "Still here" from an open page adds its new attention time to the
+           visit it belongs to, and never starts or stretches one: a tab left
+           open in the background is not a visit (one laptop in Brisbane was
+           31 "visits", 27 of them this). */
+        if (e.event === "session") {
+          const ms = +pr.ms || 0, was = sid ? (seenMs.get(sid) || 0) : 0;
+          if (sid) seenMs.set(sid, Math.max(was, ms));
+          if (v && t - v.end <= 30 * 60e3) {
+            v.active += Math.max(0, ms - was);
+            if (sid && !v.sids.includes(sid)) v.sids.push(sid);
+          }
+          return;
+        }
         if (!v || t - v.end > 30 * 60e3) {
           v = { p, start: t, end: t, sids: [], pages: new Set(), places: new Set(), maps: new Set(),
-                f: {}, land: null, ms: new Map(), searches: [], errors: [], welShown: false, welAct: null };
+                f: {}, land: null, active: 0, searches: [], errors: [], welShown: false, welAct: null };
           visits.push(v);
         }
         v.end = t;
-        const pr = propsOf(e), sid = pr.sid;
         if (sid && !v.sids.includes(sid)) v.sids.push(sid);
         switch (e.event) {
           case "view": { const tb = normTab(pr.tab) || "wadis"; v.pages.add(tb); if (!v.land) v.land = tb; break; }
@@ -1237,7 +1259,6 @@ td.num{color:var(--ink)}
           case "plan": v.f.planner = 1; break;
           case "welcome_shown": v.welShown = true; break;
           case "welcome": if (!v.welAct) v.welAct = pr.action || "dismissed"; break;
-          case "session": if (sid) v.ms.set(sid, Math.max(v.ms.get(sid) || 0, +pr.ms || 0)); break;
           case "error": v.errors.push(String(pr.msg || "error").slice(0, 140)); break;
         }
       });
@@ -1249,8 +1270,7 @@ td.num{color:var(--ink)}
       if (!ss && v.start - v.p.first < 30 * 60e3) ss = v.p.ctx;     // first visit, start signal not linked
       v.src = sourceOf(ss);
       if (!v.land) v.land = ss && ss.land ? landKey(ss.land) : "wadis";
-      let active = 0; v.ms.forEach(ms => { active += ms; });
-      v.len = Math.max(active, v.end - v.start);
+      v.len = v.active > 0 ? v.active : v.end - v.start;     // attention time; under 15 s it is the gap between taps
       v.day = localDay(v.start);
       v.country = v.p.country;
       v.device = v.p.device;
@@ -1493,8 +1513,9 @@ td.num{color:var(--ink)}
       </div>
 
       <p class="howto"><b>How this is counted.</b> <b>People</b> are different people: one phone counts once even if it
-        opens the link in Instagram and again in Safari${M.merged ? ` (${nf(M.merged)} such double ids merged in this range)` : ""}.
-        A <b>visit</b> ends after 30 minutes with nothing happening, so People ≤ Visits always.
+        opens the link in Instagram, then reloads or opens it again in Safari${M.merged ? ` (${nf(M.merged)} such double ids merged in this range)` : ""}.
+        A <b>visit</b> ends after 30 minutes with nothing happening, and a page left open in the background is not a visit,
+        so People ≤ Visits always. Visit length is attention time: the page on screen and touched in the last minute.
         <b>Opened a place</b> and <b>Reached out</b> (tapped WhatsApp or Book, sent the trip form, or gave an email) count people, not taps.
         A person who comes on two days counts once in the total and once on each day.
         Countries come from the phone's clock, never an address.
