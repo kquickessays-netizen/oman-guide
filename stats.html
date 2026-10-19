@@ -1123,6 +1123,11 @@ td.num{color:var(--ink)}
     if (tz === "America/Los_Angeles" && dpr === 1 && !did) return true;       // Meta's ad review fleet
     return false;
   }
+  /* Signals the page sends by itself (attention pings, the "ask" nudge, how
+     long a sheet stayed open, errors): they belong to a visit already
+     happening and never start one, so a page waking up in a background tab
+     is not a visit. */
+  const PASSIVE = new Set(["session", "ask_earned", "spot_time", "error"]);
   const DID = new Set(["spot", "search", "maps_click", "save", "been", "plan", "type_filter", "whatsapp_click",
     "share", "insta_click", "aff_click", "buy_click", "product_click", "trip_intent", "unlock", "view_mode",
     "tripday", "spot_time", "book_click", "book_cta", "welcome", "lead", "lead_open"]);
@@ -1214,7 +1219,9 @@ td.num{color:var(--ink)}
       if (internal.has(x.id) || isOurs(x.ctx)) p.ours = true;
     });
     people.forEach(p => {
-      p.bot = !p.ours && p.devs.some(x => isBot(x.ctx, p.did));
+      // no phone details on any visit and never touched anything: one "page opened" signal and
+      // nothing after it, which a real phone never does (it always sends its details a moment later)
+      p.bot = !p.ours && (p.devs.some(x => isBot(x.ctx, p.did)) || (!p.ctx && !p.did));
       p.country = p.ctx ? countryOf(p.ctx.tz) : "Unknown";
       p.device = deviceOf(p.ctx);
     });
@@ -1237,11 +1244,12 @@ td.num{color:var(--ink)}
            visit it belongs to, and never starts or stretches one: a tab left
            open in the background is not a visit (one laptop in Brisbane was
            31 "visits", 27 of them this). */
-        if (e.event === "session") {
+        if (PASSIVE.has(e.event)) {
           const ms = +pr.ms || 0, was = sid ? (seenMs.get(sid) || 0) : 0;
-          if (sid) seenMs.set(sid, Math.max(was, ms));
+          if (e.event === "session" && sid) seenMs.set(sid, Math.max(was, ms));
           if (v && t - v.end <= 30 * 60e3) {
-            v.active += Math.max(0, ms - was);
+            if (e.event === "session") v.active += Math.max(0, ms - was);
+            if (e.event === "error") v.errors.push(String(pr.msg || "error").slice(0, 140));
             if (sid && !v.sids.includes(sid)) v.sids.push(sid);
           }
           return;
@@ -1269,7 +1277,6 @@ td.num{color:var(--ink)}
           case "plan": v.f.planner = 1; break;
           case "welcome_shown": v.welShown = true; break;
           case "welcome": if (!v.welAct) v.welAct = pr.action || "dismissed"; break;
-          case "error": v.errors.push(String(pr.msg || "error").slice(0, 140)); break;
         }
       });
     });
