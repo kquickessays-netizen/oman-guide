@@ -3540,3 +3540,17 @@ body{
 /* header WhatsApp pill (17 Oct 2026) */
 #unlockBtn.pill-cta{display:inline-flex;align-items:center;gap:6px}
 #unlockBtn.pill-cta svg{width:16px;height:16px;flex:none}
+
+/* Plan for me form: dates + chips (19 Oct 2026) */
+.bk-dates{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.bk-dates label{display:grid;gap:4px;min-width:0;font-size:12px;font-weight:700;color:var(--muted)}
+.bookbox .bk-dates input{min-width:0;width:100%;min-height:42px;padding:10px 9px;font-size:16px;color:var(--ink)}
+.bk-opts{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.bk-opt{
+  padding:9px 13px;border-radius:999px;border:1.5px solid var(--line);
+  background:#fff;color:var(--ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer;
+  transition:background .12s,border-color .12s,color .12s;
+}
+.bk-opt[aria-pressed="true"]{background:var(--water);border-color:var(--water);color:#fff}
+.bk-opt:active{transform:scale(.97)}
+.bookbox #bkMsg .msg{margin-top:10px}
