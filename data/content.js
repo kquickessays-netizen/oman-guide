@@ -426,7 +426,7 @@ window.OMAN_DATA = {
 
     // Shown in the banner at the top of every tab. Change the date each month, 
     // this line is the whole reason an app beats a PDF.
-    lastUpdated: "August 2026",
+    lastUpdated: "October 2026",
     updateNote: "I add new spots and re-check prices, opening hours and road conditions every month.",
 
     // Where shared plans point people (your bio link / deployed app URL).
