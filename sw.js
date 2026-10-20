@@ -1,7 +1,7 @@
 /* Service worker, makes the app installable and usable offline in a wadi
    with no signal. Bump CACHE when you change content, or users keep the old
    version until the cache expires. */
-const CACHE = "oman-v157";
+const CACHE = "oman-v158";
 
 const CORE = [
   "./",
@@ -52,6 +52,8 @@ self.addEventListener("fetch", e => {
   // Never cache the Gumroad licence check, analytics or Google sign-in, straight to network.
   if (req.url.includes("api.gumroad.com") || req.url.includes(".supabase.co") ||
       req.url.includes("accounts.google.com")) return;
+  // Google Analytics: its script and its hits always go straight to Google.
+  if (req.url.includes("googletagmanager.com") || req.url.includes("google-analytics.com")) return;
   // PayPal checkout and the Calendly booking widget are live services:
   // never serve them from cache, never store them.
   if (req.url.includes("paypal.com") || req.url.includes("calendly.com")) return;
