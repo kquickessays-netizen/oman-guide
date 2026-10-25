@@ -1251,9 +1251,11 @@ td.num{color:var(--ink)}
             if (e.event === "session") v.active += Math.max(0, ms - was);
             if (e.event === "error") v.errors.push(String(pr.msg || "error").slice(0, 140));
             if (e.event === "vsl_watch") {                       // watch time, sent when they leave the video
-              const q = v.vsl || (v.vsl = {});
+              const q = v.vsl || (v.vsl = {}), D = q.dur || 142;
               q.secs = Math.max(q.secs || 0, +pr.secs || 0); q.ss = Math.max(q.ss || 0, +pr.snd_secs || 0);
-              q.max = Math.max(q.max || 0, +pr.pct || 0); q.smax = Math.max(q.smax || 0, +pr.snd_pct || 0);
+              q.sfar = Math.max(q.sfar || 0, pr.snd_far != null ? +pr.snd_far : (+pr.snd_pct || 0) / 100 * D);
+              q.mfar = Math.max(q.mfar || 0, pr.far != null ? +pr.far : (+pr.pct || 0) / 100 * D);
+              if (pr.at != null) q.exitAt = +pr.at;
             }
             if (sid && !v.sids.includes(sid)) v.sids.push(sid);
           }
@@ -1270,19 +1272,28 @@ td.num{color:var(--ink)}
           case "view": { const tb = normTab(pr.tab) || "wadis"; v.pages.add(tb); if (!v.land) v.land = tb; break; }
           case "spot": if (pr.id) v.places.add(pr.id); v.f.spot = 1; break;
           case "maps_click": v.f.maps = 1; if (pr.spot) v.maps.add(pr.spot); break;
-          case "whatsapp_click": v.f.wa = 1; if (pr.source === "plan") v.f.planWa = 1; v.reachT || (v.reachT = t); break;
-          case "header_cta": v.f.waTop = 1; v.reachT || (v.reachT = t); break;    // the WhatsApp button top right
+          case "whatsapp_click": v.f.wa = 1; if (pr.source === "plan") v.f.planWa = 1;
+            if (!v.reachT) { v.reachT = t; v.reachVia = pr.source === "plan" ? "WhatsApp on the form" : "WhatsApp button"; v.reachHeard = pr.vsl_heard != null ? +pr.vsl_heard : null; } break;
+          case "header_cta": v.f.waTop = 1;                                        // the WhatsApp button top right
+            if (!v.reachT) { v.reachT = t; v.reachVia = "WhatsApp top right"; v.reachHeard = pr.vsl_heard != null ? +pr.vsl_heard : null; } break;
           case "lead": v.f.form = 1; break;                           // the lead pop-up (Leads tab), not the Plan page
           case "trip_intent": v.f.email = 1; break;
           case "book_cta": v.f.book = 1; break;                       // "Book" only scrolls to the plan section
-          case "book_click": v.f.planForm = 1; v.reachT || (v.reachT = t); break;    // the Plan page form, sent
+          case "book_click": v.f.planForm = 1;                                     // the Plan page form, sent
+            if (!v.reachT) { v.reachT = t; v.reachVia = "Sent the form"; v.reachHeard = pr.vsl_heard != null ? +pr.vsl_heard : null; } break;
           /* THE VIDEO on Plan for me (25 Oct): see the VSL notes in app.js */
-          case "vsl_start": { const q = v.vsl || (v.vsl = {}); if (!q.t0) { q.t0 = t; q.mode = pr.mode || "muted"; q.dur = +pr.dur || 0; } break; }
-          case "vsl_sound": { const q = v.vsl || (v.vsl = {}); if (!q.sndT) { q.sndT = t; q.how = pr.via || ""; } break; }
-          case "vsl_progress": { const q = v.vsl || (v.vsl = {}), P = +pr.pct || 0; (q.pr || (q.pr = [])).push([t, P, !!pr.snd]);
-            q.max = Math.max(q.max || 0, P); if (pr.snd) q.smax = Math.max(q.smax || 0, P); break; }
-          case "vsl_end": { const q = v.vsl || (v.vsl = {}); q.end = 1; (q.pr || (q.pr = [])).push([t, 100, !!pr.snd]);
-            q.max = 100; if (pr.snd) q.smax = 100; break; }
+          case "vsl_start": { const q = v.vsl || (v.vsl = {}); q.starts = (q.starts || 0) + 1;
+            if (!q.t0) { q.t0 = t; q.mode = pr.mode || "muted"; q.dur = +pr.dur || 0; } break; }
+          case "vsl_sound": { const q = v.vsl || (v.vsl = {});
+            if (!q.sndT) { q.sndT = t; q.how = pr.via || ""; if (pr.at != null) q.onAt = +pr.at; } break; }
+          case "vsl_progress": { const q = v.vsl || (v.vsl = {});     // seconds into the video (10 s marks; older: % marks)
+            const S = pr.at != null ? +pr.at : (+pr.pct || 0) / 100 * (q.dur || 142);
+            (q.pr || (q.pr = [])).push([t, S, !!pr.snd]);
+            if (pr.snd) q.sfar = Math.max(q.sfar || 0, S); else q.mfar = Math.max(q.mfar || 0, S); break; }
+          case "vsl_end": { const q = v.vsl || (v.vsl = {}), S = q.dur || 142; (q.pr || (q.pr = [])).push([t, S, !!pr.snd]);
+            if (pr.snd) { q.sfar = S; q.send = 1; } else q.mfar = S; break; }
+          case "vsl_pause": { const q = v.vsl || (v.vsl = {}); (q.pauses || (q.pauses = [])).push([t, +pr.at || 0, !!pr.snd]); break; }
+          case "vsl_seek": { const q = v.vsl || (v.vsl = {}); (q.seeks || (q.seeks = [])).push([t, +pr.from || 0, +pr.to || 0]); break; }
           case "vsl_fs": (v.vsl || (v.vsl = {})).fs = 1; break;
           case "aff_click": if (/whatsapp|wa\.me/i.test(String(pr.href || ""))) v.f.wa = 1; else v.f.partner = 1; break;
           case "insta_click": v.f.insta = 1; break;
@@ -1463,44 +1474,11 @@ td.num{color:var(--ink)}
     const wn = a => [...actP.values()].filter(x => x === a).length;
     const wel = { saw: sawP.size, plan: wn("plan"), explore: wn("explore"), left: sawP.size - actP.size };
 
-    /* ---- the video (VSL at the top of Plan for me), people basis ----
-       Heard = played with the sound on. Muted autoplay that nobody turned up
-       does not count as watching. Watch time = seconds actually played with
-       sound (sent when they leave the video), else estimated from how far
-       they got. "Before / after" compares each person's first contact with
-       how much of the video they had heard by then. */
-    const VP = new Map();
-    V.forEach(x => {
-      const q = x.vsl, k = x.p.id;
-      const o = VP.get(k) || { st: 0, auto: 0, on: 0, how: "", smax: 0, ss: 0, fs: 0, pr: [], reachT: 0, reach: 0 };
-      if (q && q.t0) {
-        o.st = 1; if (q.mode === "sound") o.auto = 1; if (q.sndT) { o.on = 1; o.how = o.how || q.how; }
-        o.smax = Math.max(o.smax, q.smax || 0); o.fs = o.fs || q.fs ? 1 : 0;
-        o.ss += q.ss || ((q.smax || 0) / 100 * (q.dur || 0));
-        (q.pr || []).forEach(r => o.pr.push(r));
-      }
-      if (x.f.reach) { o.reach = 1; if (x.reachT && (!o.reachT || x.reachT < o.reachT)) o.reachT = x.reachT; }
-      VP.set(k, o);
-    });
-    const VPv = [...VP.values()], vCount = f => VPv.filter(f).length;
-    const heardAt = o => { let m = 0; o.pr.forEach(([t, P, snd]) => { if (snd && t <= o.reachT) m = Math.max(m, P); }); return m; };
-    const vid = { st: vCount(o => o.st) };
-    vid.heard = vCount(o => o.st && (o.auto || o.on));
-    vid.auto = vCount(o => o.st && o.auto); vid.on = vCount(o => o.st && !o.auto && o.on);
-    vid.onTap = vCount(o => o.st && !o.auto && o.on && o.how === "tap"); vid.onBtn = vid.on - vid.onTap;
-    vid.muteOnly = vid.st - vid.heard; vid.fs = vCount(o => o.st && o.fs);
-    vid.fun = [[10, "Heard the first 10%"], [25, "Heard a quarter"], [50, "Heard half"], [75, "Heard three quarters"], [95, "Heard it to the end"]]
-      .map(([m, l]) => ({ l, n: vCount(o => o.st && o.smax >= m) }));
-    const wts = VPv.filter(o => o.st && o.ss > 0).map(o => o.ss).sort((a, b) => a - b);
-    vid.avg = wts.length ? wts.reduce((a, b) => a + b, 0) / wts.length : 0;
-    vid.med = wts.length ? wts[Math.floor(wts.length / 2)] : 0;
-    vid.end = vid.fun[4].n;
-    vid.rAfter = vCount(o => o.reach && o.st && o.reachT && heardAt(o) >= 25);
-    vid.rBefore = vCount(o => o.reach && o.st && !(o.reachT && heardAt(o) >= 25));
-    vid.rNone = vCount(o => o.reach && !o.st);
-    vid.half = vCount(o => o.st && o.smax >= 50); vid.halfR = vCount(o => o.st && o.smax >= 50 && o.reach);
-    vid.less = vCount(o => o.st && o.smax < 50); vid.lessR = vCount(o => o.st && o.smax < 50 && o.reach);
-    vid.noVid = vCount(o => !o.st); vid.noVidR = vid.rNone;
+    /* ---- the video, headline only: the full picture is the Video tab ---- */
+    const VM = vslModel(V), vS = VM.P.filter(o => o.st), vH = vS.filter(o => o.heard),
+          vL = vH.map(o => o.ss).filter(x => x > 0),
+          vid = { st: vS.length, heard: vH.length, end: vH.filter(o => o.end).length,
+                  avg: vL.length ? vL.reduce((x, y) => x + y, 0) / vL.length : 0 };
 
     /* ---- visit length ---- */
     const LB = [["Under 30 seconds", 30e3], ["30 sec to 2 min", 120e3], ["2 to 5 min", 300e3],
@@ -1582,27 +1560,12 @@ td.num{color:var(--ink)}
             : `<div class="empty">Nobody saw it in this range.</div>`}
           <h3 style="margin-top:22px">How long visits last</h3><p class="bs">Typical visit ${medLen ? secs(medLen) : "—"} · attention time, idle minutes not counted</p>
           ${lens.map(r => hb(r.l, r.n, lenMax, tot.visits, "", "#5e35b1")).join("")}</div>
-        <div class="box"><h3>The video</h3><p class="bs">The video at the top of Plan for me. Heard = played with the sound on. Counting since the video went up.</p>
+        <div class="box"><h3>The video</h3><p class="bs">The video at the top of Plan for me. Everything else about it is in the <b>Video</b> tab.</p>
           ${vid.st ? `<div class="wel">
             <div><b>${nf(vid.st)}</b><span>saw it start</span></div>
             <div><b>${nf(vid.heard)}</b><span>heard it with sound ${pct(vid.heard, vid.st)}</span></div>
-            <div><b>${vid.avg ? secs(vid.avg * 1000) : "—"}</b><span>average listen${vid.med ? ` · typical ${secs(vid.med * 1000)}` : ""}</span></div>
-            <div><b>${nf(vid.end)}</b><span>heard it to the end ${pct(vid.end, vid.st)}</span></div></div>
-          <h3 style="margin-top:22px">How far they got, with sound</h3><p class="bs">Of the ${nf(vid.st)} who saw it start</p>
-          ${vid.fun.map(r => hb(r.l, r.n, Math.max(1, vid.st), vid.st, "", "#4285f4")).join("")}
-          <h3 style="margin-top:22px">Sound and full screen</h3><p class="bs">Of the ${nf(vid.st)} who saw it start</p>
-          ${hb("Started with sound by itself", vid.auto, Math.max(1, vid.st), vid.st, "", "#00897b")}
-          ${hb("Turned the sound on with a tap", vid.onTap, Math.max(1, vid.st), vid.st, "", "#00897b")}
-          ${hb("Turned the sound on with the button", vid.onBtn, Math.max(1, vid.st), vid.st, "", "#00897b")}
-          ${hb("Only ever saw it muted", vid.muteOnly, Math.max(1, vid.st), vid.st, "", "#9aa0a6")}
-          ${hb("Went full screen", vid.fs, Math.max(1, vid.st), vid.st, "", "#5e35b1")}
-          <h3 style="margin-top:22px">Reaching out and the video</h3><p class="bs">People who reached out, by how much they had heard at that moment</p>
-          ${hb("Reached out after hearing a quarter or more", vid.rAfter, Math.max(1, vid.rAfter + vid.rBefore + vid.rNone), null, "", "#e8710a")}
-          ${hb("Reached out before hearing a quarter", vid.rBefore, Math.max(1, vid.rAfter + vid.rBefore + vid.rNone), null, "", "#e8710a")}
-          ${hb("Reached out without the video playing", vid.rNone, Math.max(1, vid.rAfter + vid.rBefore + vid.rNone), null, "", "#e8710a")}
-          <p class="bs" style="margin-top:12px">Reach-out rate: heard half or more <b>${pct(vid.halfR, vid.half) || "—"}</b> (${nf(vid.halfR)} of ${nf(vid.half)})
-            · heard less <b>${pct(vid.lessR, vid.less) || "—"}</b> (${nf(vid.lessR)} of ${nf(vid.less)})
-            · never played it <b>${pct(vid.noVidR, vid.noVid) || "—"}</b> (${nf(vid.noVidR)} of ${nf(vid.noVid)})</p>`
+            <div><b>${vid.avg ? secs(vid.avg * 1000) : "—"}</b><span>average listen</span></div>
+            <div><b>${nf(vid.end)}</b><span>heard it to the end ${pct(vid.end, vid.st)}</span></div></div>`
             : `<div class="empty">Nobody played the video in this range.</div>`}</div>
         <div class="box"><h3>What they searched for</h3><p class="bs">What they finished typing, by people</p>
           ${searches.length ? searches.map(s => hb(s.q, s.n, sMax, null, s.none ? `<span class="pill down">no results</span>` : "")).join("")
@@ -1802,6 +1765,7 @@ td.num{color:var(--ink)}
 
   const TABS = [
     ["performance", "Performance", d => ""],
+    ["video",    "Video",    d => ""],
     ["leads",    "Leads",    d => d.bookings.length],
     ["emails",   "Emails",   d => d.subs.length],
     ["reviews",  "Reviews",  d => d.reviews.length],
@@ -1819,6 +1783,218 @@ td.num{color:var(--ink)}
     [...$("#tabs").children].forEach(b => b.onclick = () => { tab = b.dataset.t; draw(); });
   }
 
+  /* ========================= THE VIDEO (Ali, 25 Oct) ===========================
+     The VSL at the top of Plan for me, in SECONDS. One row per person, all
+     their visits in the range added up.
+       heard   = played with the sound on (muted autoplay nobody turned up
+                 is not watching)
+       far     = the furthest second they reached with sound
+       ss      = seconds actually played with sound (vsl_watch); if that never
+                 arrived, the furthest second stands in and the row says "~"
+       rS      = seconds heard when they FIRST reached out: sent with the tap
+                 since 25 Oct (exact), older taps from the 10-second marks (~)
+     ============================================================================ */
+  function vslModel(V) {
+    const VP = new Map();
+    V.forEach(x => {
+      const q = x.vsl, k = x.p.id;
+      let o = VP.get(k);
+      if (!o) VP.set(k, o = { p: x.p, src: x.src, first: 0, st: 0, starts: 0, auto: 0, on: 0, how: "", onAt: null,
+        far: 0, mfar: 0, ss: 0, est: 0, fs: 0, end: 0, dur: 0, pr: [], pauses: [], seeks: [], exitAt: null,
+        reach: 0, reachT: 0, rHeard: null, rVia: "" });
+      if (q && q.t0) {
+        o.st = 1; o.starts += q.starts || 1;
+        if (!o.first || q.t0 < o.first) { o.first = q.t0; o.src = x.src; }
+        if (q.mode === "sound") o.auto = 1;
+        if (q.sndT) { o.on = 1; o.how = o.how || q.how; if (o.onAt == null && q.onAt != null) o.onAt = q.onAt; }
+        o.far = Math.max(o.far, q.sfar || 0); o.mfar = Math.max(o.mfar, q.mfar || 0);
+        if (q.fs) o.fs = 1; if (q.send) o.end = 1; o.dur = Math.max(o.dur, q.dur || 0);
+        if (q.ss) o.ss += q.ss; else if (q.sfar) { o.ss += q.sfar; o.est = 1; }
+        (q.pr || []).forEach(r => o.pr.push(r));
+        (q.pauses || []).forEach(r => o.pauses.push(r));
+        (q.seeks || []).forEach(r => o.seeks.push(r));
+        if (q.exitAt != null) o.exitAt = q.exitAt;
+      }
+      if (x.f.reach) {
+        o.reach = 1;
+        if (x.reachT && (!o.reachT || x.reachT < o.reachT)) { o.reachT = x.reachT; o.rHeard = x.reachHeard; o.rVia = x.reachVia || ""; }
+      }
+    });
+    const P = [...VP.values()];
+    const DUR = Math.max(142, ...P.map(o => o.dur || 0));
+    P.forEach(o => {
+      o.heard = !!(o.st && (o.auto || o.on));
+      if (o.heard && (o.end || o.far >= DUR - 2)) { o.end = 1; o.far = DUR; }
+      if (o.reach && o.st && o.reachT) {
+        if (o.rHeard != null) { o.rS = +o.rHeard; o.rEst = false; }
+        else { let m = 0; o.pr.forEach(([t, S, snd]) => { if (snd && t <= o.reachT) m = Math.max(m, S); }); o.rS = m; o.rEst = true; }
+      }
+    });
+    return { P, DUR };
+  }
+
+  function drawVideo(v) {
+    const { P, DUR } = vslModel(DATA.M.cur);
+    const S = P.filter(o => o.st), H = S.filter(o => o.heard);
+    const mmss = s => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+    const sx = s => secs(Math.round(s) * 1000);
+    const hb = (l, n, max, of, extra, color) => `<div class="hb"${color ? ` style="--c:${color}"` : ""}>
+      <span class="l">${esc(l)}${extra || ""}</span>
+      <span class="n">${nf(n)}${of != null ? `<small>${pct(n, of)}</small>` : ""}</span>
+      <span class="bar"><i style="width:${(n / max * 100).toFixed(1)}%"></i></span></div>`;
+    const avgOf = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
+    const medOf = a => { const b = [...a].sort((x, y) => x - y); return b.length ? b[Math.floor(b.length / 2)] : 0; };
+    if (!S.length) {
+      v.innerHTML = `<h2 class="sec">The video</h2><div class="panel"><div class="empty">Nobody played the video in this range.</div></div>`;
+      return;
+    }
+    /* headline */
+    const lis = H.map(o => o.ss).filter(x => x > 0), lisEst = H.some(o => o.est);
+    const ends = H.filter(o => o.end).length;
+    const RV = P.filter(o => o.reach && o.st && o.reachT && o.rS != null);
+    const rNone = P.filter(o => o.reach && !o.st).length;
+    const rAvg = avgOf(RV.map(o => o.rS)), rEst = RV.some(o => o.rEst);
+    /* still listening, every 5 seconds */
+    const curve = [];
+    for (let s = 0; s <= DUR; s += 5) curve.push({ label: mmss(s), n: H.filter(o => o.far >= s).length });
+    /* 10-second ranges */
+    const NB = Math.ceil(DUR / 10), lab = b => b * 10 + "–" + Math.min(DUR, b * 10 + 10) + "s";
+    const bin = s => Math.min(NB - 1, Math.max(0, Math.floor(s / 10)));
+    const rows = Array.from({ length: NB }, (_, b) => ({ b, l: lab(b), stop: 0, pause: 0, skip: 0, left: 0, reach: 0 }));
+    H.forEach(o => { if (!o.end) rows[bin(o.far)].stop++; });
+    S.forEach(o => {
+      o.pauses.forEach(r => rows[bin(r[1])].pause++);
+      o.seeks.forEach(r => rows[bin(r[1])].skip++);
+      if (o.exitAt != null && !o.end) rows[bin(o.exitAt)].left++;
+    });
+    RV.forEach(o => { if (o.rS >= 1) rows[bin(o.rS)].reach++; });
+    const worst = rows.reduce((a, r) => r.stop > a.stop ? r : a, rows[0]);
+    const rowCols = [
+      { h: "Part of the video", get: r => esc(r.l), raw: r => r.l },
+      { h: "Stopped listening here", cls: "num", get: r => r.stop ? `${nf(r.stop)} <small class="zero">${pct(r.stop, H.length)}</small>` : z(0), raw: r => r.stop },
+      { h: "Left the page here", cls: "num", get: r => z(r.left), raw: r => r.left },
+      { h: "Paused here", cls: "num", get: r => z(r.pause), raw: r => r.pause },
+      { h: "Skipped from here", cls: "num", get: r => z(r.skip), raw: r => r.skip },
+      { h: "Reached out after hearing up to here", cls: "num", get: r => z(r.reach), raw: r => r.reach }
+    ];
+    /* sound */
+    const auto = S.filter(o => o.auto).length, onTap = S.filter(o => !o.auto && o.on && o.how === "tap").length,
+          onBtn = S.filter(o => !o.auto && o.on && o.how !== "tap").length, mute = S.length - H.length;
+    const onAts = S.filter(o => !o.auto && o.on && o.onAt != null).map(o => o.onAt);
+    const muteFar = S.filter(o => !o.heard).map(o => o.mfar);
+    const fs = S.filter(o => o.fs).length, again = S.filter(o => o.starts > 1).length;
+    /* reaching out, 10-second ranges */
+    const rr = Array.from({ length: NB }, (_, b) => ({ l: "Heard " + lab(b), n: 0 }));
+    let rZero = 0;
+    RV.forEach(o => { if (o.rS < 1) rZero++; else rr[bin(o.rS)].n++; });
+    const rrMax = Math.max(1, rZero, rNone, ...rr.map(r => r.n));
+    const rate = f => { const a = P.filter(f); return { n: a.filter(o => o.reach).length, of: a.length }; };
+    const R60 = rate(o => o.heard && o.far >= 60), R30 = rate(o => o.heard && o.far >= 30 && o.far < 60),
+          R0 = rate(o => o.st && !(o.heard && o.far >= 30)), RN = rate(o => !o.st);
+    /* breakdowns */
+    const brk = key => {
+      const m = new Map();
+      S.forEach(o => {
+        const k = key(o) || "Unknown", r = m.get(k) || { k, st: 0, heard: 0, lis: [], far: [], end: 0, reach: 0 };
+        r.st++; if (o.heard) { r.heard++; r.far.push(o.far); if (o.ss > 0) r.lis.push(o.ss); }
+        if (o.end) r.end++; if (o.reach) r.reach++; m.set(k, r);
+      });
+      return [...m.values()].sort((a, b) => b.st - a.st);
+    };
+    const brkCols = name => [
+      { h: name, get: r => esc(r.k), raw: r => r.k },
+      { h: "Saw it start", cls: "num", get: r => z(r.st), raw: r => r.st },
+      { h: "Heard it with sound", cls: "num", get: r => `${z(r.heard)} <small class="zero">${pct(r.heard, r.st)}</small>`, raw: r => r.heard },
+      { h: "Average listen", cls: "num", get: r => r.lis.length ? sx(avgOf(r.lis)) : "—", raw: r => Math.round(avgOf(r.lis)) },
+      { h: "Typical stop", cls: "num", get: r => r.far.length ? mmss(medOf(r.far)) : "—", raw: r => Math.round(medOf(r.far)) },
+      { h: "To the end", cls: "num", get: r => z(r.end), raw: r => r.end },
+      { h: "Reached out", cls: "num", get: r => `${z(r.reach)} <small class="zero">${pct(r.reach, r.st)}</small>`, raw: r => r.reach }
+    ];
+    /* daily */
+    const dm = new Map();
+    S.forEach(o => { const d = localDay(o.first); dm.set(d, (dm.get(d) || 0) + 1); });
+    const daily = [...dm.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1).map(([day, n]) => ({ day, n }));
+    /* every person */
+    const people = [...S].sort((a, b) => b.first - a.first);
+    const soundTxt = o => o.auto ? "by itself" : o.on ? (o.how === "tap" ? "tap" : "button") + (o.onAt != null ? " at " + mmss(o.onAt) : "") : "never";
+    const reachTxt = o => !o.reach ? "—" : !o.reachT || o.rS == null ? "yes" :
+      `${esc(o.rVia || "yes")} after ${o.rEst ? "~" : ""}${sx(o.rS)}`;
+    const pCols = [
+      { h: "When", get: o => esc(fmtDate(new Date(o.first).toISOString())), raw: o => new Date(o.first).toISOString() },
+      { h: "Phone", get: o => esc(o.p.device || "—"), raw: o => o.p.device },
+      { h: "Country", get: o => esc(o.p.country || "—"), raw: o => o.p.country },
+      { h: "Came from", get: o => esc((o.src && o.src.ch) || "—"), raw: o => o.src && o.src.ch },
+      { h: "Sound on", get: o => esc(soundTxt(o)), raw: o => soundTxt(o) },
+      { h: "Got to", cls: "num", get: o => o.heard ? (o.end ? "the end" : mmss(o.far)) : `<span class="zero">muted ${mmss(o.mfar)}</span>`, raw: o => o.heard ? Math.round(o.far) : "" },
+      { h: "Listened", cls: "num", get: o => o.ss > 0 ? (o.est ? "~" : "") + sx(o.ss) : z(0), raw: o => Math.round(o.ss) },
+      { h: "Left at", cls: "num", get: o => o.exitAt != null && !o.end ? mmss(o.exitAt) : "—", raw: o => o.exitAt },
+      { h: "Paused", cls: "num", get: o => z(o.pauses.length), raw: o => o.pauses.length },
+      { h: "Skipped", cls: "num", get: o => z(o.seeks.length), raw: o => o.seeks.length },
+      { h: "Full screen", get: o => o.fs ? "yes" : "—", raw: o => o.fs ? "yes" : "" },
+      { h: "Plays", cls: "num", get: o => nf(o.starts), raw: o => o.starts },
+      { h: "Reached out", get: o => reachTxt(o), raw: o => !o.reach ? "" : (o.rVia || "yes") + (o.rS != null ? " after " + Math.round(o.rS) + "s" : "") }
+    ];
+
+    v.innerHTML = `
+      <h2 class="sec">The video</h2>
+      <p class="note">The ${mmss(DUR)} video at the top of Plan for me, ${esc(rangeText().toLowerCase())}. <b>Heard</b> means played with
+        the sound on: a muted autoplay nobody turned up is not counted as watching. Every time is a point in the video,
+        <b>0:30</b> = thirty seconds in. Counting since 25 Oct; exact seconds before reaching out since the evening of 25 Oct
+        (earlier ones are marked ~).</p>
+      <div class="box"><div class="wel">
+        <div><b>${nf(S.length)}</b><span>saw it start</span></div>
+        <div><b>${nf(H.length)}</b><span>heard it with sound ${pct(H.length, S.length)}</span></div>
+        <div><b>${lis.length ? (lisEst ? "~" : "") + sx(avgOf(lis)) : "—"}</b><span>average listen${lis.length ? " · typical " + sx(medOf(lis)) : ""}</span></div>
+        <div><b>${nf(ends)}</b><span>heard it to the end ${pct(ends, S.length)}</span></div>
+        <div><b>${nf(RV.length + rNone)}</b><span>reached out ${pct(RV.length + rNone, P.length)} of everyone in range</span></div>
+        <div><b>${RV.length ? (rEst ? "~" : "") + sx(rAvg) : "—"}</b><span>heard on average before reaching out</span></div>
+        <div><b>${nf(fs)}</b><span>went full screen</span></div>
+        <div><b>${nf(again)}</b><span>played it more than once</span></div></div></div>
+
+      <h2 class="sec">Still listening</h2>
+      <p class="note">Of the ${nf(H.length)} who heard it with sound, how many were still listening at each point.
+        ${worst.stop ? `The most stopped between <b>${esc(worst.l)}</b>: ${nf(worst.stop)} ${worst.stop === 1 ? "person" : "people"}.` : ""}</p>
+      ${H.length ? chart(curve) : `<div class="panel"><div class="empty">Nobody heard it with sound yet.</div></div>`}
+
+      <h2 class="sec">Where they clicked off</h2>
+      <p class="note">Every 10 seconds of the video. <b>Stopped listening</b> = the furthest point they reached with sound.
+        <b>Left the page</b> = where the video was when they left.</p>
+      <div class="panel">${dataTable(rows, rowCols)}</div>
+
+      <div class="grid2">
+        <div class="box"><h3>Sound</h3><p class="bs">Of the ${nf(S.length)} who saw it start</p>
+          ${hb("Started with sound by itself", auto, Math.max(1, S.length), S.length, "", "#00897b")}
+          ${hb("Turned the sound on with a tap", onTap, Math.max(1, S.length), S.length, "", "#00897b")}
+          ${hb("Turned the sound on with the button", onBtn, Math.max(1, S.length), S.length, "", "#00897b")}
+          ${hb("Only ever saw it muted", mute, Math.max(1, S.length), S.length, "", "#9aa0a6")}
+          <p class="bs" style="margin-top:12px">${onAts.length ? `Turned sound on at <b>${mmss(avgOf(onAts))}</b> on average (it then restarts from 0:00).` : ""}
+            ${muteFar.length ? ` Muted-only viewers got to <b>${mmss(avgOf(muteFar))}</b> on average.` : ""}</p></div>
+        <div class="box"><h3>Reaching out</h3><p class="bs">Everyone who reached out, by how much of the video they had heard at that moment</p>
+          ${rr.map(r => r.n ? hb(r.l, r.n, rrMax, null, "", "#e8710a") : "").join("")}
+          ${hb("Heard none of it (muted)", rZero, rrMax, null, "", "#9aa0a6")}
+          ${hb("Never played the video", rNone, rrMax, null, "", "#9aa0a6")}
+          <p class="bs" style="margin-top:12px">Reach-out rate: heard a minute or more <b>${pct(R60.n, R60.of) || "—"}</b> (${nf(R60.n)} of ${nf(R60.of)})
+            · heard 30–60s <b>${pct(R30.n, R30.of) || "—"}</b> (${nf(R30.n)} of ${nf(R30.of)})
+            · heard under 30s <b>${pct(R0.n, R0.of) || "—"}</b> (${nf(R0.n)} of ${nf(R0.of)})
+            · never played it <b>${pct(RN.n, RN.of) || "—"}</b> (${nf(RN.n)} of ${nf(RN.of)})</p></div>
+      </div>
+
+      <h2 class="sec">Plays by day</h2>
+      ${chart(daily)}
+
+      <h2 class="sec">By where they came from</h2>
+      <div class="panel">${dataTable(brk(o => o.src && o.src.ch), brkCols("Came from"))}</div>
+      <h2 class="sec">By phone</h2>
+      <div class="panel">${dataTable(brk(o => o.p.device), brkCols("Phone"))}</div>
+      <h2 class="sec">By country</h2>
+      <div class="panel">${dataTable(brk(o => o.p.country), brkCols("Country"))}</div>
+
+      <h2 class="sec">Everyone who saw it start <button class="ex" id="vidCsv" style="margin-left:8px">Export</button></h2>
+      <div class="panel">${dataTable(people, pCols)}</div>`;
+    const ex = $("#vidCsv");
+    if (ex) ex.onclick = () => csv(people, pCols, "video-viewers.csv");
+  }
+
   function draw() {
     const c = DATA;
     renderTabs(c);
@@ -1828,6 +2004,7 @@ td.num{color:var(--ink)}
       : rangeText().toLowerCase();
 
     if (tab === "performance") return drawPerf(v);
+    if (tab === "video") return drawVideo(v);
 
     if (tab === "locked") {
       v.innerHTML = `
