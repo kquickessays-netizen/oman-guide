@@ -1127,7 +1127,7 @@ td.num{color:var(--ink)}
      long a sheet stayed open, errors): they belong to a visit already
      happening and never start one, so a page waking up in a background tab
      is not a visit. */
-  const PASSIVE = new Set(["session", "ask_earned", "spot_time", "error"]);
+  const PASSIVE = new Set(["session", "ask_earned", "spot_time", "error", "vsl_watch"]);
   const DID = new Set(["spot", "search", "maps_click", "save", "been", "plan", "type_filter", "whatsapp_click",
     "share", "insta_click", "aff_click", "buy_click", "product_click", "trip_intent", "unlock", "view_mode",
     "tripday", "spot_time", "book_click", "book_cta", "welcome", "lead", "lead_open"]);
@@ -1250,6 +1250,11 @@ td.num{color:var(--ink)}
           if (v && t - v.end <= 30 * 60e3) {
             if (e.event === "session") v.active += Math.max(0, ms - was);
             if (e.event === "error") v.errors.push(String(pr.msg || "error").slice(0, 140));
+            if (e.event === "vsl_watch") {                       // watch time, sent when they leave the video
+              const q = v.vsl || (v.vsl = {});
+              q.secs = Math.max(q.secs || 0, +pr.secs || 0); q.ss = Math.max(q.ss || 0, +pr.snd_secs || 0);
+              q.max = Math.max(q.max || 0, +pr.pct || 0); q.smax = Math.max(q.smax || 0, +pr.snd_pct || 0);
+            }
             if (sid && !v.sids.includes(sid)) v.sids.push(sid);
           }
           return;
@@ -1265,12 +1270,20 @@ td.num{color:var(--ink)}
           case "view": { const tb = normTab(pr.tab) || "wadis"; v.pages.add(tb); if (!v.land) v.land = tb; break; }
           case "spot": if (pr.id) v.places.add(pr.id); v.f.spot = 1; break;
           case "maps_click": v.f.maps = 1; if (pr.spot) v.maps.add(pr.spot); break;
-          case "whatsapp_click": v.f.wa = 1; if (pr.source === "plan") v.f.planWa = 1; break;
-          case "header_cta": v.f.waTop = 1; break;                    // the WhatsApp button top right
+          case "whatsapp_click": v.f.wa = 1; if (pr.source === "plan") v.f.planWa = 1; v.reachT || (v.reachT = t); break;
+          case "header_cta": v.f.waTop = 1; v.reachT || (v.reachT = t); break;    // the WhatsApp button top right
           case "lead": v.f.form = 1; break;                           // the lead pop-up (Leads tab), not the Plan page
           case "trip_intent": v.f.email = 1; break;
           case "book_cta": v.f.book = 1; break;                       // "Book" only scrolls to the plan section
-          case "book_click": v.f.planForm = 1; break;                 // the Plan page form, sent
+          case "book_click": v.f.planForm = 1; v.reachT || (v.reachT = t); break;    // the Plan page form, sent
+          /* THE VIDEO on Plan for me (25 Oct): see the VSL notes in app.js */
+          case "vsl_start": { const q = v.vsl || (v.vsl = {}); if (!q.t0) { q.t0 = t; q.mode = pr.mode || "muted"; q.dur = +pr.dur || 0; } break; }
+          case "vsl_sound": { const q = v.vsl || (v.vsl = {}); if (!q.sndT) { q.sndT = t; q.how = pr.via || ""; } break; }
+          case "vsl_progress": { const q = v.vsl || (v.vsl = {}), P = +pr.pct || 0; (q.pr || (q.pr = [])).push([t, P, !!pr.snd]);
+            q.max = Math.max(q.max || 0, P); if (pr.snd) q.smax = Math.max(q.smax || 0, P); break; }
+          case "vsl_end": { const q = v.vsl || (v.vsl = {}); q.end = 1; (q.pr || (q.pr = [])).push([t, 100, !!pr.snd]);
+            q.max = 100; if (pr.snd) q.smax = 100; break; }
+          case "vsl_fs": (v.vsl || (v.vsl = {})).fs = 1; break;
           case "aff_click": if (/whatsapp|wa\.me/i.test(String(pr.href || ""))) v.f.wa = 1; else v.f.partner = 1; break;
           case "insta_click": v.f.insta = 1; break;
           case "search": if (pr.q) v.searches.push([t, String(pr.q).trim().toLowerCase(), +pr.n || 0]); break;
@@ -1450,6 +1463,45 @@ td.num{color:var(--ink)}
     const wn = a => [...actP.values()].filter(x => x === a).length;
     const wel = { saw: sawP.size, plan: wn("plan"), explore: wn("explore"), left: sawP.size - actP.size };
 
+    /* ---- the video (VSL at the top of Plan for me), people basis ----
+       Heard = played with the sound on. Muted autoplay that nobody turned up
+       does not count as watching. Watch time = seconds actually played with
+       sound (sent when they leave the video), else estimated from how far
+       they got. "Before / after" compares each person's first contact with
+       how much of the video they had heard by then. */
+    const VP = new Map();
+    V.forEach(x => {
+      const q = x.vsl, k = x.p.id;
+      const o = VP.get(k) || { st: 0, auto: 0, on: 0, how: "", smax: 0, ss: 0, fs: 0, pr: [], reachT: 0, reach: 0 };
+      if (q && q.t0) {
+        o.st = 1; if (q.mode === "sound") o.auto = 1; if (q.sndT) { o.on = 1; o.how = o.how || q.how; }
+        o.smax = Math.max(o.smax, q.smax || 0); o.fs = o.fs || q.fs ? 1 : 0;
+        o.ss += q.ss || ((q.smax || 0) / 100 * (q.dur || 0));
+        (q.pr || []).forEach(r => o.pr.push(r));
+      }
+      if (x.f.reach) { o.reach = 1; if (x.reachT && (!o.reachT || x.reachT < o.reachT)) o.reachT = x.reachT; }
+      VP.set(k, o);
+    });
+    const VPv = [...VP.values()], vCount = f => VPv.filter(f).length;
+    const heardAt = o => { let m = 0; o.pr.forEach(([t, P, snd]) => { if (snd && t <= o.reachT) m = Math.max(m, P); }); return m; };
+    const vid = { st: vCount(o => o.st) };
+    vid.heard = vCount(o => o.st && (o.auto || o.on));
+    vid.auto = vCount(o => o.st && o.auto); vid.on = vCount(o => o.st && !o.auto && o.on);
+    vid.onTap = vCount(o => o.st && !o.auto && o.on && o.how === "tap"); vid.onBtn = vid.on - vid.onTap;
+    vid.muteOnly = vid.st - vid.heard; vid.fs = vCount(o => o.st && o.fs);
+    vid.fun = [[10, "Heard the first 10%"], [25, "Heard a quarter"], [50, "Heard half"], [75, "Heard three quarters"], [95, "Heard it to the end"]]
+      .map(([m, l]) => ({ l, n: vCount(o => o.st && o.smax >= m) }));
+    const wts = VPv.filter(o => o.st && o.ss > 0).map(o => o.ss).sort((a, b) => a - b);
+    vid.avg = wts.length ? wts.reduce((a, b) => a + b, 0) / wts.length : 0;
+    vid.med = wts.length ? wts[Math.floor(wts.length / 2)] : 0;
+    vid.end = vid.fun[4].n;
+    vid.rAfter = vCount(o => o.reach && o.st && o.reachT && heardAt(o) >= 25);
+    vid.rBefore = vCount(o => o.reach && o.st && !(o.reachT && heardAt(o) >= 25));
+    vid.rNone = vCount(o => o.reach && !o.st);
+    vid.half = vCount(o => o.st && o.smax >= 50); vid.halfR = vCount(o => o.st && o.smax >= 50 && o.reach);
+    vid.less = vCount(o => o.st && o.smax < 50); vid.lessR = vCount(o => o.st && o.smax < 50 && o.reach);
+    vid.noVid = vCount(o => !o.st); vid.noVidR = vid.rNone;
+
     /* ---- visit length ---- */
     const LB = [["Under 30 seconds", 30e3], ["30 sec to 2 min", 120e3], ["2 to 5 min", 300e3],
                 ["5 to 15 min", 900e3], ["Over 15 min", Infinity]];
@@ -1530,6 +1582,28 @@ td.num{color:var(--ink)}
             : `<div class="empty">Nobody saw it in this range.</div>`}
           <h3 style="margin-top:22px">How long visits last</h3><p class="bs">Typical visit ${medLen ? secs(medLen) : "—"} · attention time, idle minutes not counted</p>
           ${lens.map(r => hb(r.l, r.n, lenMax, tot.visits, "", "#5e35b1")).join("")}</div>
+        <div class="box"><h3>The video</h3><p class="bs">The video at the top of Plan for me. Heard = played with the sound on. Counting since the video went up.</p>
+          ${vid.st ? `<div class="wel">
+            <div><b>${nf(vid.st)}</b><span>saw it start</span></div>
+            <div><b>${nf(vid.heard)}</b><span>heard it with sound ${pct(vid.heard, vid.st)}</span></div>
+            <div><b>${vid.avg ? secs(vid.avg * 1000) : "—"}</b><span>average listen${vid.med ? ` · typical ${secs(vid.med * 1000)}` : ""}</span></div>
+            <div><b>${nf(vid.end)}</b><span>heard it to the end ${pct(vid.end, vid.st)}</span></div></div>
+          <h3 style="margin-top:22px">How far they got, with sound</h3><p class="bs">Of the ${nf(vid.st)} who saw it start</p>
+          ${vid.fun.map(r => hb(r.l, r.n, Math.max(1, vid.st), vid.st, "", "#4285f4")).join("")}
+          <h3 style="margin-top:22px">Sound and full screen</h3><p class="bs">Of the ${nf(vid.st)} who saw it start</p>
+          ${hb("Started with sound by itself", vid.auto, Math.max(1, vid.st), vid.st, "", "#00897b")}
+          ${hb("Turned the sound on with a tap", vid.onTap, Math.max(1, vid.st), vid.st, "", "#00897b")}
+          ${hb("Turned the sound on with the button", vid.onBtn, Math.max(1, vid.st), vid.st, "", "#00897b")}
+          ${hb("Only ever saw it muted", vid.muteOnly, Math.max(1, vid.st), vid.st, "", "#9aa0a6")}
+          ${hb("Went full screen", vid.fs, Math.max(1, vid.st), vid.st, "", "#5e35b1")}
+          <h3 style="margin-top:22px">Reaching out and the video</h3><p class="bs">People who reached out, by how much they had heard at that moment</p>
+          ${hb("Reached out after hearing a quarter or more", vid.rAfter, Math.max(1, vid.rAfter + vid.rBefore + vid.rNone), null, "", "#e8710a")}
+          ${hb("Reached out before hearing a quarter", vid.rBefore, Math.max(1, vid.rAfter + vid.rBefore + vid.rNone), null, "", "#e8710a")}
+          ${hb("Reached out without the video playing", vid.rNone, Math.max(1, vid.rAfter + vid.rBefore + vid.rNone), null, "", "#e8710a")}
+          <p class="bs" style="margin-top:12px">Reach-out rate: heard half or more <b>${pct(vid.halfR, vid.half) || "—"}</b> (${nf(vid.halfR)} of ${nf(vid.half)})
+            · heard less <b>${pct(vid.lessR, vid.less) || "—"}</b> (${nf(vid.lessR)} of ${nf(vid.less)})
+            · never played it <b>${pct(vid.noVidR, vid.noVid) || "—"}</b> (${nf(vid.noVidR)} of ${nf(vid.noVid)})</p>`
+            : `<div class="empty">Nobody played the video in this range.</div>`}</div>
         <div class="box"><h3>What they searched for</h3><p class="bs">What they finished typing, by people</p>
           ${searches.length ? searches.map(s => hb(s.q, s.n, sMax, null, s.none ? `<span class="pill down">no results</span>` : "")).join("")
             : `<div class="empty">No searches in this range.</div>`}</div>
