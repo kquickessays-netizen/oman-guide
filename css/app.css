@@ -3604,3 +3604,91 @@ body{
 html.on-vsl #stickyCta{display:none!important}
 .vsl-v:fullscreen{object-fit:contain;background:#000}
 .vsl-v:-webkit-full-screen{object-fit:contain;background:#000}
+
+/* 27 Oct: Book & plan (bpBox in app.js). What you want first, one phone screen. */
+.bp-head{margin:-8px 0 8px}
+.bookbox.bp{padding:12px 12px 10px;margin:0 0 8px}
+.bp-search{position:relative;margin-bottom:8px}
+.bp-search svg{position:absolute;left:13px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.bookbox .bp-search input{-webkit-appearance:none;appearance:none;height:42px;padding:0 14px 0 38px;border-radius:999px;font-size:16px}
+.bp-search input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+.bp-sugg{position:absolute;left:0;right:0;top:48px;z-index:20;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);overflow:hidden}
+.bp-sg{-webkit-appearance:none;appearance:none;display:block;width:100%;text-align:left;padding:11px 14px;border:0;border-bottom:1px solid var(--line);background:#fff;font:inherit;font-size:14.5px;color:var(--ink);cursor:pointer}
+.bp-sg-free{border-bottom:0;color:var(--water);font-weight:700}
+.bp-places{display:flex;flex-wrap:wrap;gap:6px}
+.bp-places:not(:empty){margin-bottom:10px}
+.bp-place{-webkit-appearance:none;appearance:none;padding:7px 12px;border-radius:999px;border:0;background:var(--water);color:#fff;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}
+.bp-place b{margin-left:6px;opacity:.75}
+.bp-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;border-radius:16px}
+.bp-tile{-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;padding:6px 4px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font:inherit;text-align:center;cursor:pointer;transition:background .12s,border-color .12s}
+.bp-ic{font-size:19px;line-height:1}
+.bp-tl{font-size:12.5px;font-weight:700;line-height:1.15}
+.bp-tile[aria-pressed="true"]{border-color:var(--water);background:var(--water-soft);box-shadow:inset 0 0 0 1px var(--water)}
+.bp-tile:active,.bp-chip:active,.bp-place:active{transform:scale(.97)}
+.bp-row{display:flex;align-items:center;gap:8px;margin:0 0 8px}
+.bp-lab{flex:none;width:76px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.bp-chips{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.bp-scroll{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:1px 0 2px}
+.bp-scroll::-webkit-scrollbar{display:none}
+.bp-chip{-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;flex:none;padding:8px 12px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-size:13.5px;font-weight:600;line-height:1.2;white-space:nowrap;cursor:pointer}
+.bp-chip[aria-pressed="true"]{background:var(--water);border-color:var(--water);color:#fff}
+.bp-duo .bp-chip{flex:1 1 0;min-width:0;padding:9px 6px;text-align:center;font-size:13px}
+.bookbox.bp .bp-info{margin:6px 0 0;font-size:12px;line-height:1.45;text-align:center;color:var(--muted)}
+.bp-info a{font-weight:700;color:var(--water);text-decoration:none}
+.bookbox.bp .bp-need{margin:2px 0 8px;font-size:13px;font-weight:700;color:var(--clay)}
+.bp-tiles.need,.bp-row.need{animation:bpShake .35s}
+.bp-tiles.need{box-shadow:0 0 0 2px var(--clay-soft)}
+.bp-row.need .bp-lab{color:var(--clay)}
+@keyframes bpShake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.bp-send{margin-top:6px;min-height:52px;font-size:15.5px}
+@media(max-width:640px){.bp-send{position:sticky;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:5;box-shadow:0 6px 18px rgba(8,54,28,.28)}}
+
+.bookbox.bp .bp-trust{display:flex;align-items:center;justify-content:center;gap:8px;margin:9px 0 0;font-size:12.5px;color:var(--muted);line-height:1.3}
+.bp-trust img{width:26px;height:26px;border-radius:50%;object-fit:cover;flex:none}
+.bp-maillink{-webkit-appearance:none;appearance:none;display:block;margin:2px auto 0;padding:6px;border:0;background:none;font:inherit;font-size:12.5px;font-weight:700;color:var(--water);text-decoration:underline;cursor:pointer}
+.bp-mail{display:grid;gap:8px;margin-top:6px}
+.bookbox .bp-mail input{font-size:16px}
+.bookbox.bp .bp-fine{margin:8px 0 0;font-size:11px;line-height:1.4;text-align:center;color:var(--muted)}
+@media(min-width:620px){.bp-tiles{grid-template-columns:repeat(5,1fr)}}
+/* pass 5: the "Where?" choices pop up in a sheet; the tile shows the pick */
+.bp-pk{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10.5px;font-weight:800;color:var(--water);line-height:1.1}
+.bp-pk:empty{display:none}
+.bp-tile.pop{animation:bpPop .3s ease}
+@keyframes bpPop{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
+.bp-pop{position:fixed;inset:0;z-index:1200}
+.bp-pop-bg{position:absolute;inset:0;background:rgba(20,26,24,.42);animation:bpFade .18s ease}
+.bp-pop-card{position:absolute;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;background:#fff;border-radius:20px 20px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));box-shadow:var(--shadow-lg);animation:bpUp .26s cubic-bezier(.2,.9,.3,1.15)}
+.bp-pop-h{display:flex;align-items:center;gap:8px;font-size:17px;color:var(--ink)}
+.bp-pop-h span{font-size:24px;line-height:1}
+.bp-pop-q{margin:4px 0 12px;font-size:13px;color:var(--muted)}
+.bp-pop .bp-chips{gap:8px}
+.bp-pop .bp-chip{padding:10px 14px;font-size:14.5px}
+.bp-pop .bp-note{-webkit-appearance:none;appearance:none;display:block;width:100%;box-sizing:border-box;margin-top:12px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;font:inherit;font-size:16px;background:var(--sand-2);color:var(--ink)}
+.bp-pop-act{display:flex;gap:10px;margin-top:16px}
+.bp-pop-act button{-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;flex:1;min-height:46px;border-radius:999px;font:inherit;font-size:15px;font-weight:800;cursor:pointer}
+.bp-pop-rm{border:1.5px solid var(--line);background:#fff;color:var(--muted)}
+.bp-pop-act .bp-pop-ok{flex:2;border:0;background:var(--water);color:#fff}
+@keyframes bpUp{from{transform:translateY(100%)}to{transform:none}}
+@keyframes bpFade{from{opacity:0}to{opacity:1}}
+/* pass 9: more air (Ali: "way too compressed"), dates under the months, what Hussain does */
+.bp-head{margin:0 0 14px}
+.bookbox.bp .bp-how,.bp-how{display:grid;gap:5px;margin:8px 0 0;font-size:14px;line-height:1.4;color:var(--muted)}
+.bp-how b{color:var(--ink)}
+.bookbox.bp{padding:18px 16px 16px}
+.bp-search{margin-bottom:14px}
+.bookbox .bp-search input{height:48px}
+.bp-tiles{gap:10px;margin-bottom:18px}
+.bp-tile{min-height:88px;padding:12px 6px;gap:6px;border-radius:16px}
+.bp-ic{font-size:27px}
+.bp-tl{font-size:13.5px}
+.bp-pk{font-size:11.5px}
+.bp-row{margin:0 0 14px}
+.bp-chip{padding:10px 14px;font-size:14px}
+.bp-dates{margin:-4px 0 14px}
+.bp-dates.need{animation:bpShake .35s}
+.bp-dates.need label{color:var(--clay)}
+.bp-send{margin-top:8px;min-height:54px}
+.bookbox.bp .bp-trust{margin-top:12px}
+/* pass 11: the button stays faded until what, when and how many are answered */
+.bp-send{transition:opacity .18s,box-shadow .18s,filter .18s}
+.bp-send.bp-off{opacity:.45;filter:saturate(.55);box-shadow:none}
