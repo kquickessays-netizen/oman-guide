@@ -3858,3 +3858,9 @@ html.on-vsl #stickyCta{display:none!important}
 /* Cheat Sheet: PayPal's in-page card button when it loads (preorder35) */
 .po-ppbox{flex:1 1 100%;min-height:48px}
 .po-pperr{flex:1 1 100%;margin:6px 0 0}
+
+/* Cheat Sheet: feedback while PayPal opens its card form (preorder38) */
+.po-ppload{flex:1 1 100%;display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0 0;font-size:14px;font-weight:700;color:var(--water)}
+.po-ppload[hidden]{display:none}
+.po-spin{width:18px;height:18px;border:2.5px solid rgba(13,92,99,.2);border-top-color:var(--water);border-radius:50%;animation:poSpin .7s linear infinite}
+@keyframes poSpin{to{transform:rotate(360deg)}}
