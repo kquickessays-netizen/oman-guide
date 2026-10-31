@@ -3854,3 +3854,7 @@ html.on-vsl #stickyCta{display:none!important}
 
 /* Cheat Sheet: checkout sits once at the bottom of the sheet, not pinned (preorder34) */
 .po-pay .po-bar2{margin:8px 0 0;padding:0 0 calc(6px + env(safe-area-inset-bottom,0px));border:0;box-shadow:none;background:none;overflow:visible}
+
+/* Cheat Sheet: PayPal's in-page card button when it loads (preorder35) */
+.po-ppbox{flex:1 1 100%;min-height:48px}
+.po-pperr{flex:1 1 100%;margin:6px 0 0}
