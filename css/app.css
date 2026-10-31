@@ -3851,3 +3851,6 @@ html.on-vsl #stickyCta{display:none!important}
 .po-mail,.po-usewa{-webkit-appearance:none;appearance:none;border:0;background:none;padding:6px 0 0;font:inherit;font-size:13px;color:var(--muted);text-decoration:underline;cursor:pointer}
 .po-usewa{padding:0}
 .po-paybtn.po-going{opacity:.7;pointer-events:none}
+
+/* Cheat Sheet: checkout sits once at the bottom of the sheet, not pinned (preorder34) */
+.po-pay .po-bar2{margin:8px 0 0;padding:0 0 calc(6px + env(safe-area-inset-bottom,0px));border:0;box-shadow:none;background:none;overflow:visible}
