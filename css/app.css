@@ -3820,3 +3820,20 @@ html.on-vsl #stickyCta{display:none!important}
 
 /* Cheat Sheet banner: text stays beside the cover on narrow phones (preorder19) */
 .po-body{flex:1 1 0}
+
+/* Cheat Sheet checkout: footer bar, full-height checkout when PayPal's card form opens (preorder21) */
+.po-sheet{display:flex;flex-direction:column;overflow:hidden}
+.po-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px 14px}
+.po-bar2{position:static;flex:none;margin:0 -16px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.po-bar2 .pay-powered{flex:1 1 100%;margin:0}
+.po-bar2 .pay-fine{display:none;flex:1 1 100%;margin:0;font-size:12px;line-height:1.5;color:var(--muted);text-align:center}
+.po-bar2 .pay-fine a{color:var(--muted)}
+.po-coh{display:none}
+.po-pop .bp-pop-bg{touch-action:none}
+.po-co .po-scroll{display:none}
+.po-co .po-sheet{height:92vh;height:92dvh}
+.po-co .po-bar2{flex:1 1 auto;min-height:0;align-content:flex-start;border-top:0;box-shadow:none;padding-top:18px}
+.po-co .po-coh{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:1 1 100%}
+.po-co .po-bar2 .pay-fine{display:block;padding-bottom:8px}
+.po-coh b{font-size:18px;line-height:1.25}
+.po-x2{-webkit-appearance:none;appearance:none;flex:none;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink);font-size:16px;line-height:1;cursor:pointer}
