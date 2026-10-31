@@ -1109,6 +1109,13 @@ td.num{color:var(--ink)}
   /* Our own devices: marked with ?me=on, Ali's laptop (Windows, Oman time,
      a screen of 0/390/1280/1440/1536 that no visitor's Windows PC reports
      together with that clock), anything on a localhost preview. */
+  /* Test phones and browsers that never got ?me=on: Ali's iPhone and the
+     second phone the Cheat Sheet checkout was tested on (31 Oct), and the
+     browsers of the 13 Oct form tests ("TEST Sara", "TEST Omar", "a"). Like
+     ?me=on, they drop out of every count; so does any phone that leaves the
+     same WhatsApp number as one of ours (oursIds below). */
+  const TEST_DEVICES = ["3d05488d-f9a9-45cc-ad52-e14828bc9159", "53d66328-cd11-460d-907d-44b59e83ce53",
+                        "c08184eb-20f8-457a-8dc0-4d299003dcb8", "0286ff66-b0c7-40e4-8503-1ed73a66a25b"];
   const isOurs = c => !!c && ((c.os === "Windows" && /^Asia\/(Muscat|Dubai)$/.test(String(c.tz || "")) &&
     [0, 390, 1280, 1440, 1536].includes(+c.w || 0)) || /localhost|127\.0\.0\.1/.test(String(c.ref || "")));
   function isBot(c, did) {
@@ -1347,6 +1354,7 @@ td.num{color:var(--ink)}
     const live = new Set();
     ev.forEach(e => { if (NOW - tOf(e) < 5 * 60e3) { const p = people.get(find(e.device_id)); if (p && !p.ours && !p.bot) live.add(p.id); } });
     return { cur, prev, curEvents, R, ours, bots, live: live.size,
+             oursDev: [...dev.keys()].filter(d => { const p = people.get(find(d)); return p && p.ours; }),
              merged: [...people.values()].filter(p => p.devs.length > 1 && !p.ours && !p.bot).length,
              oldest: ev.length ? tOf(ev[0]) : NOW };
   }
@@ -1470,12 +1478,7 @@ td.num{color:var(--ink)}
       ["Searched", x => x.searches.length],
       ["Saved a place", x => x.f.save],
       ["Ticked “been there”", x => x.f.been],
-      ["Used the trip planner", x => x.f.planner],
-      ["Saw the Cheat Sheet banner", x => x.f.pdfSeen, "#c8892f"],
-      ["  Opened it", x => x.f.pdfOpen, "#c8892f"],
-      ["  Tapped Debit or Credit Card", x => x.f.pdfCheckout, "#c8892f"],
-      ["  Bought it", x => x.f.pdfBuy, "#c8892f"],
-      ["  Left their WhatsApp", x => x.f.pdfWa, "#c8892f"]
+      ["Used the trip planner", x => x.f.planner]
     ].map(([l, f, c]) => ({ l, n: peopleWhere(V, f), c })).filter((r, i) => r.n || i < 3);
     const didMax = Math.max(1, ...did.map(r => r.n));
 
@@ -1491,6 +1494,10 @@ td.num{color:var(--ink)}
           vL = vH.map(o => o.ss).filter(x => x > 0),
           vid = { st: vS.length, heard: vH.length, end: vH.filter(o => o.end).length,
                   avg: vL.length ? vL.reduce((x, y) => x + y, 0) / vL.length : 0 };
+
+    /* ---- the Cheat Sheet, same people basis (31 Oct) ---- */
+    const pdf = { saw: peopleWhere(V, x => x.f.pdfSeen), open: peopleWhere(V, x => x.f.pdfOpen),
+                  tap: peopleWhere(V, x => x.f.pdfCheckout), buy: peopleWhere(V, x => x.f.pdfBuy) };
 
     /* ---- visit length ---- */
     const LB = [["Under 30 seconds", 30e3], ["30 sec to 2 min", 120e3], ["2 to 5 min", 300e3],
@@ -1579,6 +1586,13 @@ td.num{color:var(--ink)}
             <div><b>${vid.avg ? secs(vid.avg * 1000) : "—"}</b><span>average listen</span></div>
             <div><b>${nf(vid.end)}</b><span>heard it to the end ${pct(vid.end, vid.st)}</span></div></div>`
             : `<div class="empty">Nobody played the video in this range.</div>`}</div>
+        <div class="box"><h3>Cheat Sheet</h3><p class="bs">The $4.99 pre-order, by people, our phones left out. Who paid is in the <b>Leads</b> tab.</p>
+          ${pdf.saw ? `<div class="wel">
+            <div><b>${nf(pdf.saw)}</b><span>saw the banner</span></div>
+            <div><b>${nf(pdf.open)}</b><span>opened it to read ${pct(pdf.open, pdf.saw)}</span></div>
+            <div><b>${nf(pdf.tap)}</b><span>tapped Debit or Credit Card ${pct(pdf.tap, pdf.open)}</span></div>
+            <div><b>${nf(pdf.buy)}</b><span>paid ${pct(pdf.buy, pdf.tap)}</span></div></div>`
+            : `<div class="empty">Nobody saw it in this range.</div>`}</div>
         <div class="box"><h3>What they searched for</h3><p class="bs">What they finished typing, by people</p>
           ${searches.length ? searches.map(s => hb(s.q, s.n, sMax, null, s.none ? `<span class="pill down">no results</span>` : "")).join("")
             : `<div class="empty">No searches in this range.</div>`}</div>
@@ -1717,6 +1731,42 @@ td.num{color:var(--ink)}
       `<td class="${c.cls || ""}">${c.get(r)}</td>`).join("") + "</tr>").join("");
     return `<div class="tblwrap"><table><thead><tr>${head}</tr></thead>
       <tbody>${body}</tbody></table></div>`;
+  }
+
+  /* CHEAT SHEET PRE-ORDERS (31 Oct): the "Cheat Sheet buyer" bookings rows,
+     our phones left out, one row per WhatsApp number (a buyer who tapped Pay
+     five times is one person). Paid = the site saw the payment come back.
+     Started = they opened PayPal and the site never heard back, which can
+     still be a payment (PayPal's page without Auto Return): check PayPal. */
+  function poRows() {
+    const g = new Map();
+    (DATA.pdfOrders || []).forEach(b => {
+      const n = String(b.contact || "").replace(/\D/g, ""), k = n.length >= 7 ? n : "row" + b.id;
+      let o = g.get(k);
+      if (!o) g.set(k, o = { contact: b.contact || "", last: b.created_at, tries: 0, paid: null, note: "" });
+      o.tries++;
+      if (b.created_at > o.last) o.last = b.created_at;
+      if (/^(PAID|EMAIL THE PDF)/.test(b.note || "")) o.paid = b;
+      o.note = (o.paid || b).note || "";
+    });
+    return [...g.values()].sort((a, b) => (!!b.paid - !!a.paid) || (a.last < b.last ? 1 : -1));
+  }
+  const PO_COLS = [
+    { h: "Status", get: r => r.paid ? `<span class="pill up">paid</span>` : `<span class="pill">started, check PayPal</span>`,
+      raw: r => r.paid ? "paid" : "started" },
+    { h: "When", get: r => esc(fmtDate(r.last)), raw: r => r.last },
+    { h: "Send it to", get: r => esc(r.contact || "—"), raw: r => r.contact },
+    { h: "Tries", cls: "num", get: r => nf(r.tries), raw: r => r.tries },
+    { h: "Note", cls: "wrap", get: r => esc(r.note || "—"), raw: r => r.note }
+  ];
+  function poSection() {
+    const rows = poRows(), paid = rows.filter(r => r.paid).length, t = DATA.testRows || 0;
+    return `<h2 class="sec" style="margin-top:28px">Cheat Sheet pre-orders — ${nf(paid)} paid${rows.length > paid ? `, ${nf(rows.length - paid)} started` : ""}</h2>
+      <p class="note">Every pre-order so far, whatever the range above. On 10 Nov send the PDF to each <b>paid</b> row.
+        <b>Started</b> means they opened PayPal and the site never heard back: find their $4.99 in PayPal before sending.
+        ${t ? `${nf(t)} row${t === 1 ? "" : "s"} from our own test phones left out of both lists.` : ""}
+        ${rows.length ? `<button class="ghost" id="csvPo">Download CSV</button>` : ""}</p>
+      <div class="panel">${rows.length ? dataTable(rows, PO_COLS) : `<div class="empty">No pre-orders yet.</div>`}</div>`;
   }
 
   const fmtDate = iso => {
@@ -2101,9 +2151,12 @@ td.num{color:var(--ink)}
         <p class="note">Reply within 48 hours, that is what the site promises them.
           Leads can be archived but never deleted.
           <button class="ghost" id="csvLeads">Download CSV</button></p>
-        <div class="panel">${dataTable(leads, cols)}</div>`;
+        <div class="panel">${dataTable(leads, cols)}</div>
+        ${poSection()}`;
       const b = $("#csvLeads");
       if (b) b.onclick = () => csv(leads, cols.filter(x => x.h !== "Action"), "exploring-oman-leads.csv");
+      const bp = $("#csvPo");
+      if (bp) bp.onclick = () => csv(poRows(), PO_COLS, "cheat-sheet-orders.csv");
       wireActions(v);
       return;
     }
@@ -2183,6 +2236,17 @@ td.num{color:var(--ink)}
     }
   }
 
+  /* Our phones, for the leads lists: marked with ?me=on, on TEST_DEVICES,
+     caught by isOurs, or leaving the same WhatsApp number as one of those. */
+  function oursIds(raw, ids) {
+    const s = new Set(ids);
+    const num = c => String(c || "").replace(/\D/g, "");
+    const nums = new Set(raw.bookings.filter(b => s.has(b.device_id)).map(b => num(b.contact)).filter(n => n.length >= 7));
+    raw.bookings.forEach(b => { if (b.device_id && nums.has(num(b.contact))) s.add(b.device_id); });
+    return s;
+  }
+  const isPdfRow = b => b.name === "Cheat Sheet buyer";
+
   /* --------------------------------------------------------------- booting */
   async function boot() {
     $("#gate").classList.add("hide");
@@ -2190,9 +2254,17 @@ td.num{color:var(--ink)}
     $("#view").innerHTML = `<div class="empty">Loading…</div>`;
     try {
       const raw = await loadAll();
-      const M = buildModel(raw.events, raw.internalIds, raw.R);
-      DATA = crunch(Object.assign({}, raw, { events: M.curEvents, dropped: M.ours + M.bots }));
+      const base = raw.internalIds.concat(TEST_DEVICES);
+      let M = buildModel(raw.events, base, raw.R);
+      const ours = oursIds(raw, base.concat(M.oursDev));
+      if (ours.size > new Set(base.concat(M.oursDev)).size) M = buildModel(raw.events, [...ours], raw.R);   // a same-number phone: out of every count too
+      // our test rows out of every list; Cheat Sheet orders get their own list, not Leads
+      const realB = raw.bookings.filter(b => !ours.has(b.device_id));
+      DATA = crunch(Object.assign({}, raw, { events: M.curEvents, dropped: M.ours + M.bots,
+                                             bookings: realB.filter(b => !isPdfRow(b)) }));
       DATA.M = M;
+      DATA.pdfOrders = realB.filter(isPdfRow);
+      DATA.testRows = raw.bookings.length - realB.length;
       if (!TABS.some(t => t[0] === tab)) tab = "performance";
       draw();
       const who = (session && session.user && session.user.email) || "signed in";
