@@ -102,6 +102,7 @@ header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.97);
 .daynav input{background:var(--panel);border:1px solid var(--line);color:var(--ink-2);
   border-radius:999px;padding:5px 10px;font:inherit;font-size:12.5px;font-weight:500}
 .daynav input.on{border-color:var(--brand);color:var(--brand)}
+.rgto{font-size:12.5px;color:var(--muted)}
 .daylink{border:0;background:none;padding:0;font:inherit;font-weight:500;color:var(--ink);
   cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 .daylink:hover{color:var(--brand);text-decoration-color:var(--brand)}
@@ -355,6 +356,11 @@ td.num{color:var(--ink)}
         <input type="date" id="dayPick" aria-label="Show one day" title="Show one day">
         <button class="ghost" id="dayNext" aria-label="Next day" title="Next day">›</button>
       </div>
+      <div class="daynav">
+        <input type="date" id="rgFrom" aria-label="From" title="From this day">
+        <span class="rgto">to</span>
+        <input type="date" id="rgTo" aria-label="To" title="To this day">
+      </div>
       <button class="ghost" id="refresh">Refresh</button>
       <button class="ghost" id="out">Sign out</button>
     </div>
@@ -383,8 +389,9 @@ td.num{color:var(--ink)}
   const nf = n => (n == null ? "0" : Number(n).toLocaleString("en-GB"));
 
   /* The range: `days` back from now (0 = all time), or ONE local day when
-     `day` is set ("2026-09-30"), which then wins over `days`. */
-  let session = null, DATA = null, days = 28, day = null, tab = "performance";
+     `day` is set ("2026-09-30"), which then wins over `days`, or a run of
+     local days when `custom` is set ({ from, to }, both days included). */
+  let session = null, DATA = null, days = 28, day = null, custom = null, tab = "performance";
   let userDetail = null;   // account id whose drill-down page is open (Accounts tab)
   try { session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); } catch {}
 
@@ -503,12 +510,13 @@ td.num{color:var(--ink)}
   }
 
   /* PostgREST hands out 1000 rows a request. The first request asks for the
-     total, then the rest are fetched 8 at a time instead of one after another:
+     total, then the rest are fetched 4 at a time instead of one after another:
      28 days of events loads in a couple of seconds, not twenty. */
   async function readAll(table, query, cap) {
     cap = cap || 400000;
     const PAGE = 1000;
     const one = async (from, count) => {
+      let tries = 0;
       for (;;) {
         const r = await fetch(URL_ + "/rest/v1/" + table + "?" + query, {
           headers: Object.assign({
@@ -524,6 +532,9 @@ td.num{color:var(--ink)}
         }
         if (!r.ok) {
           const t = await r.text().catch(() => "");
+          // The database gives up on a page it can't finish in time when many
+          // heavy reads land at once (28 days, 31 Oct): wait and ask again.
+          if (/57014/.test(t) && tries++ < 3) { await new Promise(z => setTimeout(z, 800 * tries)); continue; }
           // A missing table or a missing SELECT policy both land here.
           throw new Error(table + ": " + r.status + " " + t.slice(0, 160));
         }
@@ -546,7 +557,7 @@ td.num{color:var(--ink)}
     for (let f = PAGE; f < Math.min(first.total, cap); f += PAGE) starts.push(f);
     const pages = new Array(starts.length);
     let k = 0;
-    await Promise.all(Array.from({ length: Math.min(8, starts.length) }, async () => {
+    await Promise.all(Array.from({ length: Math.min(4, starts.length) }, async () => {
       while (k < starts.length) { const j = k++; pages[j] = (await one(starts[j], false)).rows; }
     }));
     pages.forEach(rows => out.push.apply(out, rows));
@@ -566,9 +577,11 @@ td.num{color:var(--ink)}
     { weekday: "short", day: "numeric", month: "short" });
 
   const sinceISO = () => day ? dayStart(day).toISOString()
+    : custom ? dayStart(custom.from).toISOString()
     : days ? new Date(Date.now() - days * 864e5).toISOString()
     : "1970-01-01T00:00:00Z";
-  const untilISO = () => day ? dayStart(addDays(day, 1)).toISOString() : null;
+  const untilISO = () => day ? dayStart(addDays(day, 1)).toISOString()
+    : custom ? dayStart(addDays(custom.to, 1)).toISOString() : null;
   const inWindow = iso => { const t = new Date(iso);
     return t >= new Date(sinceISO()) && (!untilISO() || t < new Date(untilISO())); };
 
@@ -578,6 +591,7 @@ td.num{color:var(--ink)}
   function slots(spanDays) {
     if (day) return Array.from({ length: 24 }, (_, h) => ({ key: h, day, hour: h, label: pad(h) + ":00" }));
     const out = [];
+    if (custom) { for (let k = custom.from; k <= custom.to; k = addDays(k, 1)) out.push({ key: k, day: k }); return out; }
     for (let i = spanDays - 1; i >= 0; i--) { const k = addDays(today(), -i); out.push({ key: k, day: k }); }
     return out;
   }
@@ -604,7 +618,7 @@ td.num{color:var(--ink)}
     const R = rangeNow();
     const lo = R.ps != null ? R.ps : R.cs;
     const since = "created_at=gte." + (lo > 0 ? new Date(lo).toISOString() : "1970-01-01T00:00:00Z")
-      + (day ? "&created_at=lt." + new Date(R.ce).toISOString() : "");
+      + (day || custom ? "&created_at=lt." + new Date(R.ce).toISOString() : "");
     const [events, subs, bookings, reviews] = await Promise.all([
       readAll("events", since + "&select=created_at,event,props,device_id,email&order=created_at.desc"),
       readAll("subscribers", "select=*&order=created_at.desc"),
@@ -1150,6 +1164,8 @@ td.num{color:var(--ink)}
     NOW = Date.now();
     if (day) return { cs: dayStart(day).getTime(), ce: dayStart(addDays(day, 1)).getTime(),
                       ps: dayStart(addDays(day, -1)).getTime(), hourly: true };
+    if (custom) { const cs = dayStart(custom.from).getTime(), ce = dayStart(addDays(custom.to, 1)).getTime();
+                  return { cs, ce, ps: cs - (ce - cs), hourly: false }; }
     if (!days) return { cs: 0, ce: NOW + 1, ps: null, hourly: false };
     const cs = NOW - days * 864e5;
     return { cs, ce: NOW + 1, ps: cs - days * 864e5, hourly: days === 1 };
@@ -1412,7 +1428,7 @@ td.num{color:var(--ink)}
       V.forEach(v => by[Math.max(0, Math.min(23, Math.floor((v.start - base) / 3600e3)))].push(v));
       return S.map((s, i) => Object.assign(s, metricsOf(by[i])));
     }
-    const first = localDay(R.cs || oldest), last = today();
+    const first = localDay(R.cs || oldest), last = custom ? custom.to : today();
     S = [];
     for (let k = first, guard = 0; k <= last && guard < 4000; k = addDays(k, 1), guard++)
       S.push({ key: k, short: dayStart(k).toLocaleDateString("en-GB", { day: "numeric", month: "short" }), long: dayLabelOf(k) });
@@ -1421,10 +1437,13 @@ td.num{color:var(--ink)}
     return S.map((s, i) => Object.assign(s, metricsOf(by[i])));
   }
 
+  const shortDay = k => dayStart(k).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  const customDays = () => Math.round((dayStart(custom.to) - dayStart(custom.from)) / 864e5) + 1;
   const rangeText = () => day
     ? (day === today() ? "Today" : day === addDays(today(), -1) ? "Yesterday" : dayLabelOf(day))
+    : custom ? shortDay(custom.from) + " to " + shortDay(custom.to)
     : days === 1 ? "Last 24 hours" : days === 90 ? "Last 3 months" : days ? "Last " + days + " days" : "All time";
-  const cmpText = () => day ? "vs the day before" : days === 1 ? "vs the 24 hours before"
+  const cmpText = () => day ? "vs the day before" : custom ? "vs the " + customDays() + " days before" : days === 1 ? "vs the 24 hours before"
     : days === 90 ? "vs the 3 months before" : days ? "vs the " + days + " days before" : "";
   function delta(a, b) {
     if (b == null) return { t: "", c: "" };
@@ -1999,7 +2018,7 @@ td.num{color:var(--ink)}
 
     v.innerHTML = `
       <h2 class="sec">The video</h2>
-      <p class="note">The ${mmss(DUR)} video at the top of Plan for me, ${esc(rangeText().toLowerCase())}. <b>Heard</b> means played with
+      <p class="note">The ${mmss(DUR)} video at the top of Plan for me, ${esc(custom ? "from " + rangeText() : rangeText().toLowerCase())}. <b>Heard</b> means played with
         the sound on: a muted autoplay nobody turned up is not counted as watching. Every time is a point in the video,
         <b>0:30</b> = thirty seconds in. Counting since 25 Oct; exact seconds before reaching out since the evening of 25 Oct
         (earlier ones are marked ~).</p>
@@ -2063,7 +2082,7 @@ td.num{color:var(--ink)}
     const v = $("#view");
     const rangeLabel = day
       ? (day === today() ? "today" : day === addDays(today(), -1) ? "yesterday" : dayLabelOf(day))
-      : rangeText().toLowerCase();
+      : custom ? rangeText() : rangeText().toLowerCase();
 
     if (tab === "performance") return drawPerf(v);
     if (tab === "video") return drawVideo(v);
@@ -2093,7 +2112,7 @@ td.num{color:var(--ink)}
       const noCols = c.subs.length && c.subs.every(s => s.trip_month === undefined);
       const csvCols = cols.filter(x => x.h !== "Action");
       v.innerHTML = `
-        <h2 class="sec">The email list — ${nf(c.subs.length)} ${day ? (day === today() || day === addDays(today(), -1) ? "" : "on ") + esc(rangeLabel) : days ? "in the " + esc(rangeLabel) : "total"}</h2>
+        <h2 class="sec">The email list — ${nf(c.subs.length)} ${day ? (day === today() || day === addDays(today(), -1) ? "" : "on ") + esc(rangeLabel) : custom ? "from " + esc(rangeLabel) : days ? "in the " + esc(rangeLabel) : "total"}</h2>
         <p class="note">
           <button class="ghost" id="csvSubs">Download CSV</button>
           ${noCols ? " &nbsp; Trip dates are blank because the trip columns are not in the database yet: run <code>delivery/dashboard-access.sql</code> once. The dates are safe in Raw events meanwhile." : ""}
@@ -2248,12 +2267,15 @@ td.num{color:var(--ink)}
   const isPdfRow = b => b.name === "Cheat Sheet buyer";
 
   /* --------------------------------------------------------------- booting */
+  let bootN = 0;
   async function boot() {
+    const n = ++bootN;
     $("#gate").classList.add("hide");
     $("#app").classList.remove("hide");
     $("#view").innerHTML = `<div class="empty">Loading…</div>`;
     try {
       const raw = await loadAll();
+      if (n !== bootN) return;              // a newer range was picked while this one loaded
       const base = raw.internalIds.concat(TEST_DEVICES);
       let M = buildModel(raw.events, base, raw.R);
       const ours = oursIds(raw, base.concat(M.oursDev));
@@ -2271,6 +2293,7 @@ td.num{color:var(--ink)}
       $("#who").textContent = who;
     } catch (e) {
       if (e.auth) { signOut(); return; }
+      if (n !== bootN) return;
       $("#view").innerHTML = `<h2 class="sec">Could not load</h2>
         <div class="panel"><p style="margin:0 0 8px">${esc(e.message)}</p>
         <p class="note" style="margin:0">If this says <b>401</b> or the tables come back
@@ -2303,7 +2326,8 @@ td.num{color:var(--ink)}
     const t = today();
     [...$("#range").children].forEach(x => x.classList.toggle("on", x.dataset.day != null
       ? day === addDays(t, +x.dataset.day)
-      : !day && days === +x.dataset.d));
+      : !day && !custom && days === +x.dataset.d));
+    [$("#rgFrom"), $("#rgTo")].forEach((x, i) => { x.max = t; x.value = custom ? (i ? custom.to : custom.from) : ""; x.classList.toggle("on", !!custom); });
     const pick = $("#dayPick");
     pick.max = t;
     pick.value = day || "";
@@ -2312,6 +2336,7 @@ td.num{color:var(--ink)}
   }
   function setDay(k) {
     if (!k) return;
+    custom = null;
     day = k > today() ? today() : k;
     syncRange();
     boot();
@@ -2319,6 +2344,7 @@ td.num{color:var(--ink)}
   [...$("#range").children].forEach(b => b.onclick = () => {
     if (b.dataset.day != null) return setDay(addDays(today(), +b.dataset.day));
     day = null;
+    custom = null;
     days = +b.dataset.d;
     pageNo = 0;
     saveView();
@@ -2326,6 +2352,22 @@ td.num{color:var(--ink)}
     boot();
   });
   $("#dayPick").onchange = e => setDay(e.target.value);
+  /* FROM-TO: once both boxes are filled (either order); one day in both is the one-day view */
+  function setCustom() {
+    let a = $("#rgFrom").value, b = $("#rgTo").value;
+    if (!a || !b) return;
+    const t = today();
+    if (a > b) [a, b] = [b, a];
+    if (b > t) b = t;
+    if (a > t) a = t;
+    if (a === b) return setDay(a);
+    day = null;
+    custom = { from: a, to: b };
+    pageNo = 0;
+    syncRange();
+    boot();
+  }
+  $("#rgFrom").onchange = $("#rgTo").onchange = setCustom;
   $("#dayPrev").onclick = () => setDay(addDays(day || today(), -1));
   $("#dayNext").onclick = () => setDay(addDays(day || addDays(today(), -1), 1));
   syncRange();
