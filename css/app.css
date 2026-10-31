@@ -3711,8 +3711,8 @@ html.on-vsl #stickyCta{display:none!important}
 .po-cdb i:last-child{margin-right:0}
 .po-clock .po-cdb b{font-size:20px}
 .po-clock .po-cdb i{font-size:13px}
-.po-t s,.po-perks s,.po-sum s{color:var(--muted);font-weight:600}
-.po-go{flex:none;padding:9px 14px;border-radius:999px;background:var(--water);color:#fff;font-size:13.5px;font-weight:800}
+.po-t s,.po-sum s{color:var(--muted);font-weight:600}
+
 .po-in.po-bar,.po-bar.po-in{cursor:default;background:#eaf6ee;border-color:rgba(26,127,55,.25)}
 .po-bar.po-in b{color:#1a7f37}
 .po-sheet{max-height:92vh;overflow-y:auto;padding-top:0;padding-bottom:0}
@@ -3725,21 +3725,21 @@ html.on-vsl #stickyCta{display:none!important}
 .po-cnt{position:absolute;right:10px;bottom:10px;padding:3px 9px;border-radius:999px;background:rgba(20,26,24,.6);color:#fff;font-size:12px;font-weight:800}
 .po-k{display:inline-block;padding:3px 9px;border-radius:999px;background:var(--gold);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
 .po-h{margin:6px 0 0;font-size:21px;line-height:1.15}
-.po-sub{margin:4px 0 10px;font-size:14px;line-height:1.45;color:var(--muted)}
-.po-perks{display:grid;gap:3px;padding:10px 12px;border-radius:12px;background:#eaf6ee;font-size:13px;font-weight:700;color:#1a7f37}
+
+
 .po-h3{margin:14px 0 6px;font-size:14px}
 .po-inc{list-style:none;margin:0;padding:0;display:grid;gap:5px}
 .po-inc li{position:relative;padding-left:24px;font-size:14px;line-height:1.35}
 .po-inc li::before{content:"✓";position:absolute;left:2px;top:0;color:var(--water);font-weight:800}
-.po-form .field label small{font-weight:600;color:var(--muted)}
-.po-form .lead-q{margin:4px 0 0}
+
+
 .po-need{margin:10px 0 0;font-size:13px;font-weight:800;color:var(--clay);text-align:center}
 .po-bar2{position:sticky;bottom:0;display:flex;align-items:center;gap:12px;margin:14px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 18px rgba(27,35,32,.08)}
 .po-sum{display:flex;flex-direction:column;flex:1}
 .po-sum b{font-size:20px}
 .po-sum small{font-size:12px;color:var(--muted)}
-.po-cta{min-height:50px;padding:0 22px;border:0;border-radius:999px;background:var(--water);color:#fff;font:inherit;font-size:16px;font-weight:800;cursor:pointer}
-.po-cta:disabled{opacity:.6}
+
+
 .po-done{padding:20px 10px 24px;text-align:center}
 .po-done b{font-size:19px;color:#1a7f37}
 .po-done p{margin:6px 0 0;font-size:14px;line-height:1.45;color:var(--muted)}
@@ -3749,7 +3749,6 @@ html.on-vsl #stickyCta{display:none!important}
 .po-strip{flex:0 0 100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:7px 10px;border-radius:10px;background:var(--clay-soft);color:var(--clay);font-size:12.5px;font-weight:800}
 
 /* pre-order banner: the prices hook under the title */
-.po-t .po-what{font-size:13px;font-weight:700;color:var(--ink)}
 
 /* pre-order banner, round 6: the older Cheat Sheet card look + countdown */
 .po-card{-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;display:flex;gap:14px;align-items:stretch;width:100%;padding:12px;border:1.5px solid rgba(200,137,47,.35);border-radius:18px;background:linear-gradient(135deg,var(--gold-soft),#fff 70%);color:var(--ink);font:inherit;text-align:left;cursor:pointer;box-shadow:var(--shadow)}
@@ -3761,7 +3760,7 @@ html.on-vsl #stickyCta{display:none!important}
 .po-ct{font-size:16px;line-height:1.2}
 .po-cl{font-size:12.5px;font-weight:800;color:var(--clay)}
 .po-cdsc{font-size:12.5px;line-height:1.4;color:var(--muted)}
-.po-cg{font-size:12px;font-weight:800;line-height:1.35;color:#1a7f37}
+
 .po-cm{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 8px;margin-top:auto;padding-top:4px}
 .po-cm b{font-size:17px;color:var(--water)}
 .po-cm s{font-size:13px;font-weight:600;color:var(--muted)}
@@ -3775,7 +3774,6 @@ html.on-vsl #stickyCta{display:none!important}
 .po-ph{aspect-ratio:1/1}
 
 /* pre-order, round 9: what's inside first, WhatsApp-or-email, typed trip date */
-.po-form [hidden]{display:none}
 .po-inc + .po-clock{margin-top:14px}
 .po-k + .po-h + .po-h3{margin-top:10px}
 
@@ -3801,8 +3799,8 @@ html.on-vsl #stickyCta{display:none!important}
 .po-price span{font-size:12.5px;color:var(--muted)}
 .po-pay .pay-fine{font-size:12px;color:var(--muted);line-height:1.5;margin:10px 0 0}
 .po-pay .pay-fine a{color:var(--muted)}
-.po-msg .msg{margin-top:8px}
-.po-dl{display:block;max-width:320px;margin:14px auto 0;padding:14px 18px;border-radius:999px;background:var(--water);color:#fff;font-size:16px;font-weight:800;text-align:center;text-decoration:none}
+
+
 .po-after{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
 .po-h3 small{font-size:12px;font-weight:600;color:var(--muted)}
 .po-after-p{margin:0 0 10px;font-size:13.5px;line-height:1.45;color:var(--muted)}
@@ -3812,11 +3810,11 @@ html.on-vsl #stickyCta{display:none!important}
 /* Cheat Sheet: the PayPal card button lives in the sticky bar (preorder16) */
 .po-bar2{flex-wrap:wrap;gap:8px 12px}
 .po-bar2 .po-sum{flex:1 1 100%;flex-direction:row;align-items:baseline;flex-wrap:wrap;gap:2px 8px}
-.po-bar2 .po-msg,.po-bar2 .pay-btns{flex:1 1 100%;min-width:0}
-.po-bar2 .po-msg:empty{display:none}
-.po-bar2 .pay-btns{margin:0;min-height:48px}
-.po-bar2 .pay-wait{padding:13px 0}
-.po-bar2.po-open{position:static;box-shadow:none}
+
+
+
+
+
 
 /* Cheat Sheet banner: text stays beside the cover on narrow phones (preorder19) */
 .po-body{flex:1 1 0}
@@ -3826,18 +3824,22 @@ html.on-vsl #stickyCta{display:none!important}
 .po-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px 14px}
 .po-bar2{position:static;flex:none;margin:0 -16px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .po-bar2 .pay-powered{flex:1 1 100%;margin:0}
-.po-bar2 .pay-fine{display:none;flex:1 1 100%;margin:0;font-size:12px;line-height:1.5;color:var(--muted);text-align:center}
-.po-bar2 .pay-fine a{color:var(--muted)}
-.po-coh{display:none}
-.po-pop .bp-pop-bg{touch-action:none}
-.po-co .po-scroll{display:none}
-.po-co .po-sheet{height:92vh;height:92dvh}
-.po-co .po-bar2{flex:1 1 auto;min-height:0;align-content:flex-start;border-top:0;box-shadow:none;padding-top:18px}
-.po-co .po-coh{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:1 1 100%}
-.po-co .po-bar2 .pay-fine{display:block;padding-bottom:8px}
-.po-coh b{font-size:18px;line-height:1.25}
-.po-x2{-webkit-appearance:none;appearance:none;flex:none;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink);font-size:16px;line-height:1;cursor:pointer}
 
-/* Cheat Sheet: PayPal slow-load retry (preorder24) */
-.po-slow{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.po-retry{-webkit-appearance:none;appearance:none;flex:none;min-height:38px;padding:0 16px;border:0;border-radius:999px;background:var(--water);color:#fff;font:inherit;font-size:14px;font-weight:800;cursor:pointer}
+
+
+.po-pop .bp-pop-bg{touch-action:none}
+
+
+
+
+
+
+
+
+
+/* Cheat Sheet: pay on PayPal's own page (preorder28) */
+.po-paybtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;border-radius:999px;background:#111;color:#fff;font-size:17px;font-weight:800;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.po-paybtn:active{transform:scale(.98)}
+
+/* Cheat Sheet: the pay link fills the footer (preorder29) */
+.po-bar2 .po-paybtn{flex:1 1 100%}
