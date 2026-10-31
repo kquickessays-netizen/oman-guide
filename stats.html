@@ -1130,7 +1130,8 @@ td.num{color:var(--ink)}
   const PASSIVE = new Set(["session", "ask_earned", "spot_time", "error", "vsl_watch"]);
   const DID = new Set(["spot", "search", "maps_click", "save", "been", "plan", "type_filter", "whatsapp_click",
     "share", "insta_click", "aff_click", "buy_click", "product_click", "trip_intent", "unlock", "view_mode",
-    "tripday", "spot_time", "book_click", "book_cta", "welcome", "lead", "lead_open"]);
+    "tripday", "spot_time", "book_click", "book_cta", "welcome", "lead", "lead_open",
+    "pdf_open", "pdf_checkout", "purchase", "pdf_wa"]);
   const deviceOf = c => !c ? "Unknown"
     : c.os === "iOS" ? ((+c.w || 0) >= 700 || c.k === "tablet" ? "iPad" : "iPhone")
     : c.os === "Android" ? (c.k === "tablet" ? "Android tablet" : "Android phone")
@@ -1295,6 +1296,12 @@ td.num{color:var(--ink)}
           case "vsl_pause": { const q = v.vsl || (v.vsl = {}); (q.pauses || (q.pauses = [])).push([t, +pr.at || 0, !!pr.snd]); break; }
           case "vsl_seek": { const q = v.vsl || (v.vsl = {}); (q.seeks || (q.seeks = [])).push([t, +pr.from || 0, +pr.to || 0]); break; }
           case "vsl_fs": (v.vsl || (v.vsl = {})).fs = 1; break;
+          /* CHEAT SHEET (30 Oct 2026): banner seen -> opened -> started paying -> bought (purchase, product pdf:...) */
+          case "pdf_seen": v.f.pdfSeen = 1; break;
+          case "pdf_open": v.f.pdfOpen = 1; break;
+          case "pdf_checkout": v.f.pdfCheckout = 1; break;
+          case "purchase": if (/^pdf:/.test(String(pr.product || ""))) v.f.pdfBuy = 1; break;
+          case "pdf_wa": v.f.pdfWa = 1; break;
           case "aff_click": if (/whatsapp|wa\.me/i.test(String(pr.href || ""))) v.f.wa = 1; else v.f.partner = 1; break;
           case "insta_click": v.f.insta = 1; break;
           case "search": if (pr.q) v.searches.push([t, String(pr.q).trim().toLowerCase(), +pr.n || 0]); break;
@@ -1463,7 +1470,12 @@ td.num{color:var(--ink)}
       ["Searched", x => x.searches.length],
       ["Saved a place", x => x.f.save],
       ["Ticked “been there”", x => x.f.been],
-      ["Used the trip planner", x => x.f.planner]
+      ["Used the trip planner", x => x.f.planner],
+      ["Saw the Cheat Sheet banner", x => x.f.pdfSeen, "#c8892f"],
+      ["  Opened it", x => x.f.pdfOpen, "#c8892f"],
+      ["  Started paying", x => x.f.pdfCheckout, "#c8892f"],
+      ["  Bought it", x => x.f.pdfBuy, "#c8892f"],
+      ["  Left WhatsApp after buying", x => x.f.pdfWa, "#c8892f"]
     ].map(([l, f, c]) => ({ l, n: peopleWhere(V, f), c })).filter((r, i) => r.n || i < 3);
     const didMax = Math.max(1, ...did.map(r => r.n));
 

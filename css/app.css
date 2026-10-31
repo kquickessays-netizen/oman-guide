@@ -3692,3 +3692,131 @@ html.on-vsl #stickyCta{display:none!important}
 /* pass 11: the button stays faded until what, when and how many are answered */
 .bp-send{transition:opacity .18s,box-shadow .18s,filter .18s}
 .bp-send.bp-off{opacity:.45;filter:saturate(.55);box-shadow:none}
+
+/* ── Cheat Sheet pre-order (30 Oct 2026): slim banner at the top of Explore, Book & plan, Info ── */
+.po-wrap{margin:0 0 12px}
+.po-bar{-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:11px;width:100%;padding:9px 10px 9px 9px;border:1.5px solid rgba(200,137,47,.38);border-radius:16px;background:linear-gradient(120deg,var(--gold-soft),#fff 75%);color:var(--ink);font:inherit;text-align:left;cursor:pointer;box-shadow:var(--shadow)}
+.po-bar img{flex:none;width:40px;height:72px;object-fit:cover;border-radius:6px;box-shadow:0 4px 10px rgba(27,35,32,.25);transform:rotate(-4deg)}
+.po-t{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0}
+.po-t i{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#9a6619}
+.po-t > b{font-size:14.5px;line-height:1.2}
+.po-t span{font-size:12.5px;color:var(--muted)}
+.po-t span b{color:var(--water)}
+.po-t em{font-style:normal;font-weight:800;color:var(--clay);font-variant-numeric:tabular-nums}
+.po-clock{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:11px 14px;border-radius:12px;background:var(--clay-soft);color:var(--clay)}
+.po-clock > span{font-size:13px;font-weight:800;line-height:1.25}
+.po-cdb{white-space:nowrap;font-variant-numeric:tabular-nums}
+.po-cdb b{font-size:15px;font-weight:800}
+.po-cdb i{font-style:normal;font-size:11.5px;font-weight:700;opacity:.75;margin:0 5px 0 1px}
+.po-cdb i:last-child{margin-right:0}
+.po-clock .po-cdb b{font-size:20px}
+.po-clock .po-cdb i{font-size:13px}
+.po-t s,.po-perks s,.po-sum s{color:var(--muted);font-weight:600}
+.po-go{flex:none;padding:9px 14px;border-radius:999px;background:var(--water);color:#fff;font-size:13.5px;font-weight:800}
+.po-in.po-bar,.po-bar.po-in{cursor:default;background:#eaf6ee;border-color:rgba(26,127,55,.25)}
+.po-bar.po-in b{color:#1a7f37}
+.po-sheet{max-height:92vh;overflow-y:auto;padding-top:0;padding-bottom:0}
+.po-gal{position:relative;margin:0 -16px 12px}
+.po-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:20px 20px 0 0;background:#e9e3d8}
+.po-row::-webkit-scrollbar{display:none}
+.po-ph{flex:0 0 100%;margin:0;scroll-snap-align:start;aspect-ratio:3/4}
+.po-ph img{display:block;width:100%;height:100%;object-fit:contain;padding:12px;box-sizing:border-box;filter:drop-shadow(0 6px 14px rgba(27,35,32,.25))}
+.po-x{position:absolute;top:10px;right:10px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.92);color:var(--ink);font-size:15px;font-weight:800;cursor:pointer;box-shadow:var(--shadow)}
+.po-cnt{position:absolute;right:10px;bottom:10px;padding:3px 9px;border-radius:999px;background:rgba(20,26,24,.6);color:#fff;font-size:12px;font-weight:800}
+.po-k{display:inline-block;padding:3px 9px;border-radius:999px;background:var(--gold);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.po-h{margin:6px 0 0;font-size:21px;line-height:1.15}
+.po-sub{margin:4px 0 10px;font-size:14px;line-height:1.45;color:var(--muted)}
+.po-perks{display:grid;gap:3px;padding:10px 12px;border-radius:12px;background:#eaf6ee;font-size:13px;font-weight:700;color:#1a7f37}
+.po-h3{margin:14px 0 6px;font-size:14px}
+.po-inc{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.po-inc li{position:relative;padding-left:24px;font-size:14px;line-height:1.35}
+.po-inc li::before{content:"✓";position:absolute;left:2px;top:0;color:var(--water);font-weight:800}
+.po-form .field label small{font-weight:600;color:var(--muted)}
+.po-form .lead-q{margin:4px 0 0}
+.po-need{margin:10px 0 0;font-size:13px;font-weight:800;color:var(--clay);text-align:center}
+.po-bar2{position:sticky;bottom:0;display:flex;align-items:center;gap:12px;margin:14px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 18px rgba(27,35,32,.08)}
+.po-sum{display:flex;flex-direction:column;flex:1}
+.po-sum b{font-size:20px}
+.po-sum small{font-size:12px;color:var(--muted)}
+.po-cta{min-height:50px;padding:0 22px;border:0;border-radius:999px;background:var(--water);color:#fff;font:inherit;font-size:16px;font-weight:800;cursor:pointer}
+.po-cta:disabled{opacity:.6}
+.po-done{padding:20px 10px 24px;text-align:center}
+.po-done b{font-size:19px;color:#1a7f37}
+.po-done p{margin:6px 0 0;font-size:14px;line-height:1.45;color:var(--muted)}
+
+/* pre-order banner: countdown strip (days, hours, minutes, seconds) */
+.po-bar{flex-wrap:wrap;row-gap:8px}
+.po-strip{flex:0 0 100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:7px 10px;border-radius:10px;background:var(--clay-soft);color:var(--clay);font-size:12.5px;font-weight:800}
+
+/* pre-order banner: the prices hook under the title */
+.po-t .po-what{font-size:13px;font-weight:700;color:var(--ink)}
+
+/* pre-order banner, round 6: the older Cheat Sheet card look + countdown */
+.po-card{-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;display:flex;gap:14px;align-items:stretch;width:100%;padding:12px;border:1.5px solid rgba(200,137,47,.35);border-radius:18px;background:linear-gradient(135deg,var(--gold-soft),#fff 70%);color:var(--ink);font:inherit;text-align:left;cursor:pointer;box-shadow:var(--shadow)}
+.po-cover{flex:none;width:86px;border-radius:10px;overflow:hidden;box-shadow:0 6px 16px rgba(27,35,32,.22);transform:rotate(-3deg);align-self:center}
+.po-cover img{display:block;width:100%;height:auto}
+.po-body{display:flex;flex-direction:column;gap:4px;min-width:0}
+.po-ck{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#9a6619}
+.po-ck em{font-style:normal;color:var(--clay)}
+.po-ct{font-size:16px;line-height:1.2}
+.po-cl{font-size:12.5px;font-weight:800;color:var(--clay)}
+.po-cdsc{font-size:12.5px;line-height:1.4;color:var(--muted)}
+.po-cg{font-size:12px;font-weight:800;line-height:1.35;color:#1a7f37}
+.po-cm{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 8px;margin-top:auto;padding-top:4px}
+.po-cm b{font-size:17px;color:var(--water)}
+.po-cm s{font-size:13px;font-weight:600;color:var(--muted)}
+.po-cm em{font-style:normal;font-size:11.5px;color:var(--muted)}
+.po-ck em{display:block}
+
+/* pre-order, round 8: one clear tap target, shorter previews */
+.po-card{flex-wrap:wrap;row-gap:10px}
+.po-cm{align-items:center}
+.po-cgo{margin-left:auto;padding:7px 14px;border-radius:999px;background:var(--water);color:#fff;font-size:13px;font-weight:800;white-space:nowrap}
+.po-ph{aspect-ratio:1/1}
+
+/* pre-order, round 9: what's inside first, WhatsApp-or-email, typed trip date */
+.po-form [hidden]{display:none}
+.po-inc + .po-clock{margin-top:14px}
+.po-k + .po-h + .po-h3{margin-top:10px}
+
+/* pre-order, round 10: page count on the previews; laptop card = cover | text | countdown + Reserve */
+.po-len{position:absolute;top:10px;left:10px;padding:5px 11px;border-radius:999px;background:var(--water);color:#fff;font-size:12.5px;font-weight:800;box-shadow:var(--shadow)}
+.po-cgo-d{display:none}
+@media (min-width:760px){
+  .po-card{display:grid;grid-template-columns:86px 1fr auto;grid-template-rows:auto auto;column-gap:20px;row-gap:10px;align-items:center;padding:14px 18px 14px 14px}
+  .po-cover{grid-column:1;grid-row:1/3}
+  .po-body{grid-column:2;grid-row:1/3}
+  .po-strip{grid-column:3;grid-row:1;align-self:end;padding:9px 16px}
+  .po-cgo.po-cgo-d{display:block;grid-column:3;grid-row:2;align-self:start;margin:0;padding:12px 18px;font-size:15px;text-align:center}
+  .po-cm .po-cgo{display:none}
+}
+
+/* Cheat Sheet, round 12: sold through PayPal (pay section, download, optional WhatsApp) */
+.po-wrap a.po-bar{text-decoration:none;color:var(--ink)}
+.po-card:not(:has(.po-strip)) .po-cgo-d{grid-row:1/3;align-self:center}
+.po-pay{margin-top:4px;scroll-margin:20px}
+.po-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px;margin:0 0 10px}
+.po-price b{font-size:22px;color:var(--water)}
+.po-price s{font-size:14px;font-weight:600;color:var(--muted)}
+.po-price span{font-size:12.5px;color:var(--muted)}
+.po-pay .pay-fine{font-size:12px;color:var(--muted);line-height:1.5;margin:10px 0 0}
+.po-pay .pay-fine a{color:var(--muted)}
+.po-msg .msg{margin-top:8px}
+.po-dl{display:block;max-width:320px;margin:14px auto 0;padding:14px 18px;border-radius:999px;background:var(--water);color:#fff;font-size:16px;font-weight:800;text-align:center;text-decoration:none}
+.po-after{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.po-h3 small{font-size:12px;font-weight:600;color:var(--muted)}
+.po-after-p{margin:0 0 10px;font-size:13.5px;line-height:1.45;color:var(--muted)}
+.po-send{width:100%;min-height:46px;border:1.5px solid var(--water);border-radius:999px;background:#fff;color:var(--water);font:inherit;font-size:15px;font-weight:800;cursor:pointer}
+.po-saved{margin:6px 0 10px;font-size:14px;font-weight:800;color:#1a7f37;text-align:center}
+
+/* Cheat Sheet: the PayPal card button lives in the sticky bar (preorder16) */
+.po-bar2{flex-wrap:wrap;gap:8px 12px}
+.po-bar2 .po-sum{flex:1 1 100%;flex-direction:row;align-items:baseline;flex-wrap:wrap;gap:2px 8px}
+.po-bar2 .po-msg,.po-bar2 .pay-btns{flex:1 1 100%;min-width:0}
+.po-bar2 .po-msg:empty{display:none}
+.po-bar2 .pay-btns{margin:0;min-height:48px}
+.po-bar2 .pay-wait{padding:13px 0}
+.po-bar2.po-open{position:static;box-shadow:none}
+
+/* Cheat Sheet banner: text stays beside the cover on narrow phones (preorder19) */
+.po-body{flex:1 1 0}
