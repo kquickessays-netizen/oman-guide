@@ -1131,7 +1131,7 @@ td.num{color:var(--ink)}
   const DID = new Set(["spot", "search", "maps_click", "save", "been", "plan", "type_filter", "whatsapp_click",
     "share", "insta_click", "aff_click", "buy_click", "product_click", "trip_intent", "unlock", "view_mode",
     "tripday", "spot_time", "book_click", "book_cta", "welcome", "lead", "lead_open",
-    "pdf_open", "pdf_card_tap", "pdf_checkout", "purchase", "pdf_wa"]);
+    "pdf_open", "pdf_card_tap", "pdf_checkout", "purchase", "pdf_wa", "pdf_wa_pre"]);
   const deviceOf = c => !c ? "Unknown"
     : c.os === "iOS" ? ((+c.w || 0) >= 700 || c.k === "tablet" ? "iPad" : "iPhone")
     : c.os === "Android" ? (c.k === "tablet" ? "Android tablet" : "Android phone")
@@ -1301,7 +1301,7 @@ td.num{color:var(--ink)}
           case "pdf_open": v.f.pdfOpen = 1; break;
           case "pdf_card_tap": case "pdf_checkout": v.f.pdfCheckout = 1; break;
           case "purchase": if (/^pdf:/.test(String(pr.product || ""))) v.f.pdfBuy = 1; break;
-          case "pdf_wa": v.f.pdfWa = 1; break;
+          case "pdf_wa": case "pdf_wa_pre": v.f.pdfWa = 1; break;
           case "aff_click": if (/whatsapp|wa\.me/i.test(String(pr.href || ""))) v.f.wa = 1; else v.f.partner = 1; break;
           case "insta_click": v.f.insta = 1; break;
           case "search": if (pr.q) v.searches.push([t, String(pr.q).trim().toLowerCase(), +pr.n || 0]); break;
@@ -1475,7 +1475,7 @@ td.num{color:var(--ink)}
       ["  Opened it", x => x.f.pdfOpen, "#c8892f"],
       ["  Tapped Debit or Credit Card", x => x.f.pdfCheckout, "#c8892f"],
       ["  Bought it", x => x.f.pdfBuy, "#c8892f"],
-      ["  Left WhatsApp after buying", x => x.f.pdfWa, "#c8892f"]
+      ["  Left their WhatsApp", x => x.f.pdfWa, "#c8892f"]
     ].map(([l, f, c]) => ({ l, n: peopleWhere(V, f), c })).filter((r, i) => r.n || i < 3);
     const didMax = Math.max(1, ...did.map(r => r.n));
 

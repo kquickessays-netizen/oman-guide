@@ -3843,3 +3843,11 @@ html.on-vsl #stickyCta{display:none!important}
 
 /* Cheat Sheet: the pay link fills the footer (preorder29) */
 .po-bar2 .po-paybtn{flex:1 1 100%}
+
+/* Cheat Sheet: WhatsApp before PayPal (preorder32) */
+.po-wa1{flex:1 1 100%}
+.po-wa1-l{margin:0 0 6px;font-size:14px;line-height:1.35;color:var(--ink)}
+.po-need1{margin:6px 0 0}
+.po-mail,.po-usewa{-webkit-appearance:none;appearance:none;border:0;background:none;padding:6px 0 0;font:inherit;font-size:13px;color:var(--muted);text-decoration:underline;cursor:pointer}
+.po-usewa{padding:0}
+.po-paybtn.po-going{opacity:.7;pointer-events:none}
