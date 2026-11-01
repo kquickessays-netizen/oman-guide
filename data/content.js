@@ -199,6 +199,11 @@ window.OMAN_DATA = {
     plansPaid: true,
     paidPlans: ["classic-5day", "loop-7day"],
     planPrices: { "classic-5day": 14.99, "loop-7day": 19.99 },
+    /* offPlans (1 Nov 2026, Ali): routes taken off the site for now. app.js drops them
+       from itineraries at boot, so no list, search, link or price shows them. Their
+       content stays below; empty this list to bring them back (and restore
+       /p/<id>.html + the sitemap lines from git, see tools/offers_off1.py). */
+    offPlans: ["classic-5day", "loop-7day"],
 
     /* ===== THE TWO PLANS BEHIND THE 30-SECOND FORM, 14 Oct 2026 ===========
        The Muscat Day and the 3-day Escape are FREE, but only after the
@@ -443,8 +448,7 @@ window.OMAN_DATA = {
     // history is kept without anyone having to scroll past it.
     changelog: [
       { date: "October 2026", items: [
-        "💬 Plan my trip for me starts on WhatsApp again: send your dates from the Plan tab and I reply personally.",
-        "🗺️ The 3, 5 and 7-day routes are the paid part of the guide: one payment through PayPal opens the route you pick, hour by hour. Every place and the 1-day plans stay free."
+        "💬 Plan my trip for me starts on WhatsApp again: send your dates from the Plan tab and I reply personally."
       ]},
 
       { date: "September 2026", items: [
