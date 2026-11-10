@@ -320,6 +320,15 @@ td.num{color:var(--ink)}
   .bars{height:120px}
 }
 </style>
+<style>
+  /* Questions tab, 10 Nov 2026 */
+  .qrow{padding:14px 16px;margin:0 0 12px}
+  .qmeta{font-size:12.5px;opacity:.85;margin-bottom:6px;line-height:1.6}
+  .qtext{font-size:15px;font-weight:600;margin:4px 0 10px;white-space:pre-wrap}
+  .qans{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:10px 12px;border-radius:10px;border:1px solid rgba(127,127,127,.35);background:transparent;color:inherit;resize:vertical}
+  .qbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+  .qpub{display:inline-flex;gap:6px;align-items:center;margin-right:auto;font-size:14px;cursor:pointer}
+</style>
 </head>
 <body>
 
@@ -643,7 +652,11 @@ td.num{color:var(--ink)}
     } catch (e) { accounts = null; usaves = []; uvisits = []; }
     let internalIds = [];
     try { internalIds = (await readAll("events", "event=eq.internal&select=device_id")).map(r => r.device_id); } catch (e3) {}
-    return { events, R, internalIds, subs, bookings, reviews, accounts, usaves, uvisits, udevices };
+    /* Questions (delivery/questions.sql) fail soft too: before the SQL runs,
+       the read errors and the tab shows how to switch it on. */
+    let questions = null;
+    try { questions = await readAll("questions", "select=*&order=created_at.desc"); } catch (e4) { questions = null; }
+    return { events, R, internalIds, subs, bookings, reviews, accounts, usaves, uvisits, udevices, questions };
   }
 
   /* ------------------------------------------------------------- crunching */
@@ -1848,6 +1861,7 @@ td.num{color:var(--ink)}
     ["performance", "Performance", d => ""],
     ["video",    "Video",    d => ""],
     ["leads",    "Leads",    d => d.bookings.length],
+    ["questions", "Questions", d => d.questions ? d.questions.filter(q => !q.answer).length : ""],
     ["emails",   "Emails",   d => d.subs.length],
     ["reviews",  "Reviews",  d => d.reviews.length],
     ["users",    "Accounts", d => d.accounts ? d.accounts.length : ""],
@@ -2180,6 +2194,65 @@ td.num{color:var(--ink)}
       return;
     }
 
+    if (tab === "questions") {
+      /* TRIP QUESTIONS, Booking.com style (10 Nov 2026). A signed-in visitor
+         asks at the bottom of a trip; it lands here, private. Answer it and
+         tick "Show on site" and it appears under that trip as "Travellers are
+         asking" (public_questions view: question + answer only, never a name
+         or an email). Unticked answers stay private: reply by email. */
+      const Q = c.questions;
+      if (!Q) {
+        v.innerHTML = `<h2 class="sec">Questions</h2>
+          <div class="note">Not switched on yet. Run <code>delivery/questions.sql</code> once in
+          Supabase (SQL Editor, paste, Run), then reload this page.</div>`;
+        return;
+      }
+      const waiting = Q.filter(q => !q.answer);
+      const rows = Q.slice().sort((a1, b1) => (!!a1.answer - !!b1.answer)
+        || (new Date(b1.created_at) - new Date(a1.created_at)));
+      v.innerHTML = `
+        <h2 class="sec">Questions — ${nf(waiting.length)} waiting for an answer</h2>
+        <p class="note">Asked by signed-in visitors at the bottom of each trip. Write the answer,
+          tick <b>Show on site</b> for the ones worth sharing, then <b>Save</b>. Shown ones appear
+          under that trip as "Travellers are asking", with no name or email. Unticked ones stay
+          private: reply to them by email.</p>
+        ${rows.length ? rows.map(q => `<div class="panel qrow" data-id="${esc(q.id)}">
+          <div class="qmeta">${esc(fmtDate(q.created_at))} · <b>${esc(q.trip_name || q.trip || "—")}</b>
+            · ${esc(q.name || "—")}${q.email ? ` · <a href="mailto:${esc(q.email)}">${esc(q.email)}</a>` : ""}
+            ${q.answer ? (q.public ? `<span class="pill up">on site</span>` : `<span class="pill">answered, private</span>`)
+                       : `<span class="pill down">waiting</span>`}</div>
+          <p class="qtext">${esc(q.question)}</p>
+          <textarea class="qans" rows="3" placeholder="Your answer">${esc(q.answer || "")}</textarea>
+          <div class="qbar"><label class="qpub"><input type="checkbox" class="qshow"${q.public ? " checked" : ""}> Show on site</label>
+            <button class="act go qsave">Save</button><button class="act bad qdel">Delete</button></div>
+        </div>`).join("") : `<div class="panel"><div class="empty">No questions yet.</div></div>`}`;
+      v.querySelectorAll(".qrow").forEach(row => {
+        const id = row.dataset.id, q = Q.find(x => String(x.id) === String(id));
+        row.querySelector(".qsave").onclick = async e => {
+          const b = e.currentTarget, ans = row.querySelector(".qans").value.trim(),
+                pub = row.querySelector(".qshow").checked;
+          if (pub && !ans) { toast("Write an answer before showing it on the site.", true); return; }
+          b.disabled = true;
+          const patch = { answer: ans || null, public: !!(pub && ans),
+            answered_at: ans ? (q.answered_at || new Date().toISOString()) : null,
+            handled_at: new Date().toISOString() };
+          try {
+            await write("questions", id, patch);
+            Object.assign(q, patch);
+            toast(patch.public ? "Saved. It shows on the trip now." : ans ? "Saved, kept private." : "Saved.");
+            draw();
+          } catch (err) { b.disabled = false; toast("Could not save: " + String(err.message || err).slice(0, 120), true); }
+        };
+        row.querySelector(".qdel").onclick = async e => {
+          if (!confirm("Delete this question permanently? This cannot be undone.")) return;
+          const b = e.currentTarget; b.disabled = true;
+          try { await write("questions", id, null, "DELETE"); Q.splice(Q.indexOf(q), 1); toast("Deleted."); draw(); }
+          catch (err) { b.disabled = false; toast("Could not delete: " + String(err.message || err).slice(0, 120), true); }
+        };
+      });
+      return;
+    }
+
     if (tab === "reviews") {
       const stars = n => n ? `<span class="stars">${"★".repeat(n)}${"☆".repeat(5 - n)}</span>` : "—";
       const cols = [
@@ -2285,6 +2358,7 @@ td.num{color:var(--ink)}
       DATA = crunch(Object.assign({}, raw, { events: M.curEvents, dropped: M.ours + M.bots,
                                              bookings: realB.filter(b => !isPdfRow(b)) }));
       DATA.M = M;
+      DATA.questions = raw.questions;
       DATA.pdfOrders = realB.filter(isPdfRow);
       DATA.testRows = raw.bookings.length - realB.length;
       if (!TABS.some(t => t[0] === tab)) tab = "performance";
