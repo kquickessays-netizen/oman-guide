@@ -4225,3 +4225,4 @@ textarea.tr-in{resize:vertical;min-height:62px}
 .tr-pop .tr-sheet .tr-qq{margin:0 0 6px;font-size:15px;font-weight:800;color:var(--ink)}
 .tr-pop .tr-sheet .tr-qans{margin:0;font-size:14.5px;line-height:1.45;color:var(--ink)}
 .tr-pop .tr-sheet .tr-qans b{display:block;margin-bottom:2px;font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--water-dark)}
+.tr-pop .tr-bar{flex-wrap:wrap;row-gap:6px}.tr-opline{flex-basis:100%;font-size:12px;line-height:1.35;color:var(--muted);text-align:center;text-wrap:balance}.tr-opline[hidden]{display:none}
