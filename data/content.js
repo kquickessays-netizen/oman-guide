@@ -5883,7 +5883,7 @@ region: "muscat", coords: [23.5996602, 58.2488221],
       licence: "Licensed operator", noSmall: true,
       photos: ["assets/trips/dhow/1.jpg", "assets/trips/dhow/2.jpg", "assets/trips/dhow/3.jpg", "assets/trips/dhow/4.jpg", "assets/trips/dhow/5.jpg", "assets/trips/dhow/6.jpg", "assets/trips/dhow/7.jpg"],
       opts: [
-        { id: "sunset", name: "Sunset dhow cruise", desc: "From Marina Bandar Al Rowdha to Mutrah, about 2 hours", adult: 10, child: 4 } ],
+        { id: "sunset", name: "Sunset dhow cruise", desc: "From Marina Bandar Al Rowdha to Mutrah, about 2 hours", adult: 10, child: 5 } ],
       inc: ["Omani dates and coffee, served on the boat", "An Arabic seating area", "Life jackets", "A toilet and a sink on board"],
       day: ["Board at Marina Bandar Al Rowdha", "Sail along the coast to Mutrah", "Pass Al Mirani Fort, Al Alam Palace and Al Jalali Fort", "Watch the sunset from the water", "About 2 hours in total"],
       spots: ["dhow-bandar-rowdha"],
