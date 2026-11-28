@@ -49,14 +49,13 @@ html, body { height: 100%; }
 body { margin: 0; background: #0f2a2b; overflow: hidden; }
 .ar-top { position: fixed; top: 0; left: 0; right: 0; height: 8vh; min-height: 30px; display: grid; place-items: center; z-index: 1; }
 .ar-top a { color: rgba(255,255,255,.9); font: 600 14px/1 Outfit, "Readex Pro", "Segoe UI", sans-serif; text-decoration: none; }
-#sheet.ar .sheet-close.ar-en { width: max-content; padding: 0 14px; border-radius: 20px;
-  font: 600 13px/1 Outfit, "Readex Pro", "Segoe UI", sans-serif; text-decoration: none; }
+#sheet.ar a.sheet-close { text-decoration: none; }
 </style>
 </head>
 <body>
 <div class="ar-top"><a href="https://exploresoman.com/" lang="en" dir="ltr">Exploring Oman</a></div>
 <main class="sheet ar" id="sheet" dir="rtl" lang="ar">
-  <a class="sheet-close ar-en" href="https://exploresoman.com/s/wadi-hawer.html" hreflang="en" lang="en" dir="ltr">English</a>
+  <a class="sheet-close ar-en" id="sheetClose" href="https://exploresoman.com/?r=ar#/explore" hreflang="en" aria-label="إغلاق">✕</a>
   <div class="sheet-body" id="sheetBody"><div class="sheet-hero poster gal">
       <div class="gal-track"><div class="gal-slide"><img src="/assets/wadis/wadi-hawer.jpg" alt="وادي حاور، صورة 1" decoding="async" fetchpriority="high"></div><div class="gal-slide"><img src="/assets/wadis/wadi-hawer-2.jpg" loading="lazy" alt="وادي حاور، صورة 2" decoding="async"></div>
         </div>
@@ -162,6 +161,9 @@ window.OMAN_DATA = { meta: { backend: {"url": "https://bfneutpsjyfqferkublh.supa
     if (p) p.addEventListener('click', function () { go(at() - 1); });
     if (x) x.addEventListener('click', function () { go(at() + 1); });
   }
+  // the X: leave for the Explore page, like closing a card in the app (no welcome pop-up in front)
+  var x0 = s.querySelector('.sheet-close');
+  if (x0) x0.addEventListener('click', function () { try { localStorage.setItem('oman_welcomed', '1'); } catch (e) {} });
   // the same events the app sends when this card is open in English
   var A = window.Analytics, id = 'wadi-hawer', t0 = Date.now(), timed = false;
   if (!A || !A.track) return;
